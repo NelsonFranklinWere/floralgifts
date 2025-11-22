@@ -289,8 +289,14 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
   };
 
   const handleWhatsAppOrder = async (data: CheckoutFormData) => {
-    // Get base URL for image links
-    const getImageUrl = (imagePath: string): string => {
+    setIsSubmitting(true);
+    setPaymentMethod("whatsapp");
+    
+    let whatsappLink: string | undefined;
+    
+    try {
+      // Get base URL for image links
+      const getImageUrl = (imagePath: string): string => {
       if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
         return imagePath; // Already a full URL
       }
@@ -372,7 +378,7 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
       notes: message,
     };
 
-    const whatsappLink = generateWhatsAppLink(whatsappData);
+    whatsappLink = generateWhatsAppLink(whatsappData);
     
     // Send email notification for WhatsApp orders
     try {
@@ -428,12 +434,24 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
         html: emailHtml,
         message: message,
       });
+      
+      // Email sent successfully, now redirect to WhatsApp
+      window.open(whatsappLink, "_blank");
     } catch (emailError) {
       console.error("Email sending error:", emailError);
-      // Continue even if email fails
+      // Even if email fails, still redirect to WhatsApp
+      window.open(whatsappLink, "_blank");
     }
-    
-    window.open(whatsappLink, "_blank");
+    } catch (error) {
+      console.error("Error processing WhatsApp order:", error);
+      // Even if there's an error, try to redirect to WhatsApp if we have the link
+      if (whatsappLink) {
+        window.open(whatsappLink, "_blank");
+      }
+    } finally {
+      setIsSubmitting(false);
+      setPaymentMethod(null);
+    }
   };
 
   const onSubmit = handleSubmit(async (data) => {
@@ -458,7 +476,8 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
     if (paymentMethod === "mpesa") {
       await handleMpesaCheckout(sanitizedData);
     } else {
-      handleWhatsAppOrder(sanitizedData);
+      // Default: Submit order (send email then redirect to WhatsApp)
+      await handleWhatsAppOrder(sanitizedData);
     }
   });
 
@@ -690,10 +709,16 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
           <span className="text-brand-green">{formatCurrency(total)}</span>
         </div>
 
-        <div className="space-y-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <button
-            type="submit"
-            onClick={() => setPaymentMethod("mpesa")}
+            type="button"
+            onClick={() => {
+              handleSubmit(async (data) => {
+                setIsSubmitting(true);
+                setPaymentMethod("mpesa");
+                await handleMpesaCheckout(data);
+              })();
+            }}
             disabled={isSubmitting}
             className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             aria-label="Pay with M-Pesa"
@@ -709,16 +734,20 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
           </button>
 
           <button
-            type="button"
-            onClick={() => {
-              handleSubmit((data) => {
-                handleWhatsAppOrder(data);
-              })();
-            }}
-            className="btn-secondary w-full"
-            aria-label="Order via WhatsApp"
+            type="submit"
+            onClick={() => setPaymentMethod("whatsapp")}
+            disabled={isSubmitting}
+            className="btn-secondary w-full disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            aria-label="Submit Order"
           >
-            Order via WhatsApp
+            {isSubmitting && paymentMethod === "whatsapp" ? (
+              <>
+                <div className="w-4 h-4 border-2 border-brand-gray-900 border-t-transparent rounded-full animate-spin" />
+                Sending Order...
+              </>
+            ) : (
+              "Submit Order"
+            )}
           </button>
         </div>
       </div>
