@@ -32,7 +32,7 @@ MPESA_CONSUMER_KEY=your_consumer_key_here      # Get from Safaricom Developer Po
 MPESA_CONSUMER_SECRET=your_consumer_secret_here # Get from Safaricom Developer Portal after applying for Online PayBill
 MPESA_SHORTCODE=400200               # Your PayBill Number
 MPESA_PASSKEY=your_passkey_here      # Get from Safaricom Developer Portal after applying for Online PayBill
-MPESA_CALLBACK_URL=https://yourdomain.com/api/mpesa/callback
+MPESA_CALLBACK_URL=https://whispersfloralgifts.coke/api/mpesa/callback
 ```
 
 ## Step-by-Step Setup

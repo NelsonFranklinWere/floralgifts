@@ -19,18 +19,18 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     };
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispers.co.ke";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts.co.ke";
   const productUrl = `${baseUrl}/product/${slug}`;
   const categoryKeywords: Record<string, string[]> = {
-    flowers: ["flower delivery Nairobi", "roses Nairobi", "bouquet Nairobi"],
-    teddy: ["teddy bears Kenya", "teddy bear gift"],
-    hampers: ["gift hampers Kenya", "luxury gift hampers Nairobi"],
-    wines: ["wines Nairobi", "wine gift hampers Kenya"],
-    chocolates: ["chocolates Kenya", "chocolate gift hampers Nairobi"],
+    flowers: ["flower delivery Nairobi", "roses Nairobi", "bouquet Nairobi", "flower delivery Nairobi CBD", "flower delivery Westlands", "flower delivery Karen", "flower delivery Lavington", "flower delivery Kilimani"],
+    teddy: ["teddy bears Kenya", "teddy bear gift", "teddy bears Nairobi"],
+    hampers: ["gift hampers Kenya", "luxury gift hampers Nairobi", "gift hampers Nairobi CBD", "gift hampers Westlands"],
+    wines: ["wines Nairobi", "wine gift hampers Kenya", "wines Nairobi CBD", "wines Westlands"],
+    chocolates: ["chocolates Kenya", "chocolate gift hampers Nairobi", "chocolates Nairobi CBD", "chocolates Westlands"],
   };
 
   return {
-    title: `${product.title} | Floral Whispers Gifts - ${product.category === "flowers" ? "Flower Delivery Nairobi" : product.category === "teddy" ? "Teddy Bears Kenya" : product.category === "hampers" ? "Gift Hampers Kenya" : product.category === "wines" ? "Wines Nairobi" : "Chocolates Kenya"}`,
+    title: `${product.title} | Whispers Floral Gifts - ${product.category === "flowers" ? "Flower Delivery Nairobi" : product.category === "teddy" ? "Teddy Bears Kenya" : product.category === "hampers" ? "Gift Hampers Kenya" : product.category === "wines" ? "Wines Nairobi" : "Chocolates Kenya"}`,
     description: `${product.short_description || product.description} - ${product.category === "flowers" ? "Premium flower delivery Nairobi" : product.category === "teddy" ? "Cuddly teddy bears Kenya" : product.category === "hampers" ? "Luxury gift hampers Kenya" : product.category === "wines" ? "Premium wines Nairobi" : "Premium chocolates Kenya"}. Same-day delivery available.`,
     keywords: categoryKeywords[product.category] || [],
     alternates: {

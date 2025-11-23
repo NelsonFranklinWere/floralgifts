@@ -3,31 +3,36 @@ import Link from "next/link";
 import Image from "next/image";
 import JsonLd from "@/components/JsonLd";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispers.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Collections | Floral Whispers Gifts - Flowers, Teddy Bears, Gift Hampers Nairobi",
-  description: "Browse our collections: premium flowers Nairobi, teddy bears Kenya, gift hampers Kenya, wines Nairobi, chocolates Kenya. Same-day delivery available.",
+  title: "Collections | Whispers Floral Gifts - Flowers, Teddy Bears, Gift Hampers Nairobi",
+  description: "Browse our collections: premium flowers Nairobi, teddy bears Kenya, gift hampers Kenya, wines Nairobi, chocolates Kenya. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Fast delivery across Nairobi.",
   keywords: [
     "flower collections Nairobi",
     "teddy bear collections Kenya",
     "gift hamper collections Kenya",
     "wine collections Nairobi",
     "chocolate collections Kenya",
+    "flowers Nairobi CBD",
+    "gift hampers Westlands",
+    "teddy bears Karen",
+    "wines Lavington",
+    "chocolates Kilimani",
   ],
   alternates: {
     canonical: `${baseUrl}/collections`,
   },
   openGraph: {
-    title: "Collections | Floral Whispers Gifts - Flowers, Teddy Bears, Gift Hampers",
-    description: "Browse our collections: premium flowers, teddy bears, gift hampers, wines, and chocolates in Nairobi.",
+    title: "Collections | Whispers Floral Gifts - Flowers, Teddy Bears, Gift Hampers",
+    description: "Browse our collections: premium flowers, teddy bears, gift hampers, wines, and chocolates in Nairobi. Same-day delivery available.",
     url: `${baseUrl}/collections`,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Collections | Floral Whispers Gifts",
-    description: "Browse our collections: premium flowers, teddy bears, gift hampers, wines, and chocolates.",
+    title: "Collections | Whispers Floral Gifts",
+    description: "Browse our collections: premium flowers, teddy bears, gift hampers, wines, and chocolates in Nairobi.",
   },
 };
 

@@ -76,16 +76,16 @@ export default function ProductCard({
               <>
                 <Image
                   src={image}
-                  alt={`${name} - ${category === "flowers" ? "Premium flower delivery Nairobi" : category === "teddy" ? "Teddy bears Kenya" : category === "hampers" ? "Gift hampers Kenya" : category === "wines" ? "Wines Nairobi" : "Chocolates Kenya"} | Floral Whispers Gifts`}
+                  alt={`${name} - ${category === "flowers" ? "Premium flower delivery Nairobi CBD, Westlands, Karen" : category === "teddy" ? "Teddy bears Kenya, Nairobi" : category === "hampers" ? "Gift hampers Kenya, Nairobi CBD" : category === "wines" ? "Wines Nairobi, Westlands" : "Chocolates Kenya, Nairobi"} | Whispers Floral Gifts`}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                   sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   loading="lazy"
+                  quality={85}
                   onError={(e) => {
                     console.error("[ProductCard] Image failed to load:", image);
                     console.error("[ProductCard] Error:", e);
                   }}
-                  unoptimized={image.startsWith('/images/')}
                 />
                 {/* Click indicator overlay */}
                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover/image:bg-opacity-10 transition-opacity duration-300 flex items-center justify-center">

@@ -1,30 +1,33 @@
 import { Metadata } from "next";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispers.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Contact Us | Floral Whispers Gifts - Flower Delivery Nairobi",
+  title: "Contact Us | Whispers Floral Gifts - Flower Delivery Nairobi",
   description:
-    "Contact Floral Whispers Gifts for premium flower delivery Nairobi. Phone: +2547221554393, Email: whispersfloral@gmail.com. Same-day delivery available. Located in Nairobi CBD.",
+    "Contact Whispers Floral Gifts for premium flower delivery Nairobi. Phone: +2547221554393, Email: whispersfloral@gmail.com. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Located in Nairobi.",
   keywords: [
-    "contact Floral Whispers Gifts",
+    "contact Whispers Floral Gifts",
     "flower shop contact Nairobi",
     "florist phone number Nairobi",
     "flower delivery contact",
+    "contact florist Nairobi CBD",
+    "contact florist Westlands",
+    "contact florist Karen",
   ],
   alternates: {
     canonical: `${baseUrl}/contact`,
   },
   openGraph: {
-    title: "Contact Us | Floral Whispers Gifts - Flower Delivery Nairobi",
-    description: "Contact Floral Whispers Gifts for premium flower delivery Nairobi. Same-day delivery available.",
+    title: "Contact Us | Whispers Floral Gifts - Flower Delivery Nairobi",
+    description: "Contact Whispers Floral Gifts for premium flower delivery Nairobi. Same-day delivery available.",
     url: `${baseUrl}/contact`,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Contact Us | Floral Whispers Gifts",
-    description: "Contact Floral Whispers Gifts for premium flower delivery Nairobi.",
+    title: "Contact Us | Whispers Floral Gifts",
+    description: "Contact Whispers Floral Gifts for premium flower delivery Nairobi. Same-day delivery available.",
   },
 };
 

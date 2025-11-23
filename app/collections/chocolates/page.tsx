@@ -3,18 +3,23 @@ import ChocolatesPageClient from "./ChocolatesPageClient";
 import { getProducts } from "@/lib/db";
 import { CHOCOLATE_PRODUCTS, getPredefinedProducts } from "@/lib/predefinedProducts";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispers.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Premium Chocolates Kenya | Chocolate Gift Hampers Nairobi | Ferrero Rocher Chocolates",
+  title: "Premium Chocolates Kenya | Chocolate Gift Hampers Nairobi | Ferrero Rocher Chocolates | Whispers Floral Gifts",
   description:
-    "Premium chocolates Kenya: Ferrero Rocher chocolates (8 pieces, 16 pieces, 24 pieces). Chocolate gift hampers Nairobi. Perfect for gifts, celebrations, and sweet moments.",
+    "Premium chocolates Kenya: Ferrero Rocher chocolates (8 pieces, 16 pieces, 24 pieces). Chocolate gift hampers Nairobi. Perfect for gifts, celebrations, and sweet moments. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
   keywords: [
     "chocolates Kenya",
     "chocolate gift hampers Nairobi",
     "Ferrero Rocher chocolates",
     "premium chocolates Kenya",
     "chocolate gifts Nairobi",
+    "chocolates Nairobi CBD",
+    "chocolates Westlands",
+    "chocolates Karen",
+    "chocolates Lavington",
+    "chocolates Kilimani",
   ],
   alternates: {
     canonical: `${baseUrl}/collections/chocolates`,
@@ -27,8 +32,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Premium Chocolates Kenya | Floral Whispers Gifts",
-    description: "Premium chocolates Kenya: Ferrero Rocher chocolates. Chocolate gift hampers.",
+    title: "Premium Chocolates Kenya | Whispers Floral Gifts",
+    description: "Premium chocolates Kenya: Ferrero Rocher chocolates. Chocolate gift hampers. Same-day delivery Nairobi.",
   },
 };
 

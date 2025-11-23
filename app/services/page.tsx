@@ -3,12 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispers.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Services | Floral Whispers Gifts - Wedding Flowers, Corporate Gifts, Event Styling Nairobi",
+  title: "Services | Whispers Floral Gifts - Wedding Flowers, Corporate Gifts, Event Styling Nairobi",
   description:
-    "Comprehensive floral and gift services Nairobi: wedding flowers, graduation celebrations, corporate gifts, flower styling, sympathy & condolences, special occasions. Same-day delivery available.",
+    "Comprehensive floral and gift services Nairobi: wedding flowers, graduation celebrations, corporate gifts, flower styling, sympathy & condolences, special occasions. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
   keywords: [
     "wedding flowers Nairobi",
     "corporate gifts Kenya",
@@ -16,20 +16,24 @@ export const metadata: Metadata = {
     "event flowers Nairobi",
     "graduation flowers Kenya",
     "sympathy flowers Nairobi",
+    "wedding flowers Nairobi CBD",
+    "corporate gifts Westlands",
+    "event flowers Karen",
+    "graduation flowers Lavington",
   ],
   alternates: {
     canonical: `${baseUrl}/services`,
   },
   openGraph: {
-    title: "Services | Floral Whispers Gifts - Wedding Flowers, Corporate Gifts Nairobi",
-    description: "Comprehensive floral and gift services Nairobi: wedding flowers, corporate gifts, event styling, special occasions.",
+    title: "Services | Whispers Floral Gifts - Wedding Flowers, Corporate Gifts Nairobi",
+    description: "Comprehensive floral and gift services Nairobi: wedding flowers, corporate gifts, event styling, special occasions. Same-day delivery available.",
     url: `${baseUrl}/services`,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Services | Floral Whispers Gifts",
-    description: "Comprehensive floral and gift services Nairobi: wedding flowers, corporate gifts, event styling.",
+    title: "Services | Whispers Floral Gifts",
+    description: "Comprehensive floral and gift services Nairobi: wedding flowers, corporate gifts, event styling. Same-day delivery available.",
   },
 };
 

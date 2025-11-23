@@ -2,12 +2,12 @@ import { Metadata } from "next";
 import TeddyBearsPageClient from "./TeddyBearsPageClient";
 import { getProducts } from "@/lib/db";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispers.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Teddy Bears Kenya | Red, White, Brown, Pink, Blue Teddy Bears | Various Sizes 25cm-200cm",
+  title: "Teddy Bears Kenya | Red, White, Brown, Pink, Blue Teddy Bears | Various Sizes 25cm-200cm | Whispers Floral Gifts",
   description:
-    "Cuddly teddy bears Kenya in various sizes (25cm, 50cm, 100cm, 120cm, 160cm, 180cm, 200cm) and colors (red teddy bear, white teddy bear, brown teddy bear, blue teddy bear, pink teddy bear). Perfect for gifts and special occasions.",
+    "Cuddly teddy bears Kenya in various sizes (25cm, 50cm, 100cm, 120cm, 160cm, 180cm, 200cm) and colors (red teddy bear, white teddy bear, brown teddy bear, blue teddy bear, pink teddy bear). Perfect for gifts and special occasions. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
   keywords: [
     "teddy bears Kenya",
     "red teddy bear",
@@ -22,6 +22,10 @@ export const metadata: Metadata = {
     "160cm teddy bear",
     "180cm teddy bear",
     "200cm teddy bear",
+    "teddy bears Nairobi",
+    "teddy bears Nairobi CBD",
+    "teddy bears Westlands",
+    "teddy bears Karen",
   ],
   alternates: {
     canonical: `${baseUrl}/collections/teddy-bears`,
@@ -34,8 +38,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Teddy Bears Kenya | Floral Whispers Gifts",
-    description: "Cuddly teddy bears Kenya in various sizes and colors. Perfect for gifts and special occasions.",
+    title: "Teddy Bears Kenya | Whispers Floral Gifts",
+    description: "Cuddly teddy bears Kenya in various sizes and colors. Perfect for gifts and special occasions. Same-day delivery Nairobi.",
   },
 };
 

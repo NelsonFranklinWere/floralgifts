@@ -2,12 +2,12 @@ import { Metadata } from "next";
 import FlowersPageClient from "./FlowersPageClient";
 import { getProducts } from "@/lib/db";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispers.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Flower Delivery Nairobi | Birthday Flowers, Anniversary Flowers, Roses Nairobi | Floral Whispers Gifts",
+  title: "Flower Delivery Nairobi | Birthday Flowers, Anniversary Flowers, Roses Nairobi | Whispers Floral Gifts",
   description:
-    "Premium flower delivery Nairobi. Birthday flowers Nairobi, anniversary flowers Kenya, get well soon flowers, funeral wreaths Nairobi, congratulatory flowers Kenya, roses Nairobi. Same-day delivery available.",
+    "Premium flower delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Birthday flowers Nairobi, anniversary flowers Kenya, get well soon flowers, funeral wreaths Nairobi, congratulatory flowers Kenya, roses Nairobi. Same-day delivery available. Fast flower delivery across Nairobi.",
   keywords: [
     "flower delivery Nairobi",
     "roses Nairobi",
@@ -19,20 +19,29 @@ export const metadata: Metadata = {
     "congratulatory flowers Kenya",
     "romantic flowers Nairobi",
     "bouquet delivery Nairobi",
+    "flower delivery Nairobi CBD",
+    "flower delivery Westlands",
+    "flower delivery Karen",
+    "flower delivery Lavington",
+    "flower delivery Kilimani",
+    "florist Nairobi",
+    "online flower shop Nairobi",
+    "M-Pesa flower delivery Nairobi",
+    "fast flower delivery Nairobi",
   ],
   alternates: {
     canonical: `${baseUrl}/collections/flowers`,
   },
   openGraph: {
     title: "Flower Delivery Nairobi | Birthday Flowers, Anniversary Flowers, Roses Nairobi",
-    description: "Premium flower delivery Nairobi. Birthday flowers, anniversary flowers, get well soon flowers, funeral wreaths, roses. Same-day delivery available.",
+    description: "Premium flower delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Birthday flowers, anniversary flowers, get well soon flowers, funeral wreaths, roses. Same-day delivery available.",
     url: `${baseUrl}/collections/flowers`,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Flower Delivery Nairobi | Floral Whispers Gifts",
-    description: "Premium flower delivery Nairobi. Birthday flowers, anniversary flowers, get well soon flowers, funeral wreaths, roses.",
+    title: "Flower Delivery Nairobi | Whispers Floral Gifts",
+    description: "Premium flower delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Birthday flowers, anniversary flowers, get well soon flowers, funeral wreaths, roses.",
   },
 };
 

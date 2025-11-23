@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     template: "%s | Floral Whispers Gifts",
   },
   description:
-    "Premium flower delivery Nairobi, gift hampers Kenya, teddy bears Kenya. Same-day delivery Nairobi CBD. Birthday flowers, anniversary flowers, funeral wreaths, roses Nairobi. Order online with M-Pesa.",
+    "Premium flower delivery Nairobi, gift hampers Kenya, teddy bears Kenya. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Birthday flowers, anniversary flowers, funeral wreaths, roses Nairobi. Order online with M-Pesa. Fast delivery across Nairobi.",
   keywords: [
     "flower delivery Nairobi",
     "roses Nairobi",
@@ -53,18 +53,27 @@ export const metadata: Metadata = {
     "wine gift hampers Nairobi",
     "corporate gift hampers Kenya",
     "romantic gift hampers Nairobi",
+    "flower delivery Nairobi CBD",
+    "flower delivery Westlands",
+    "flower delivery Karen",
+    "flower delivery Lavington",
+    "flower delivery Kilimani",
+    "florist Nairobi",
+    "online flower shop Nairobi",
+    "M-Pesa flower delivery Nairobi",
+    "fast flower delivery Nairobi",
   ],
   authors: [{ name: "Floral Whispers Gifts" }],
   creator: "Floral Whispers Gifts",
   publisher: "Floral Whispers Gifts",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispers.co.ke"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts.co.ke"),
   alternates: {
-    canonical: process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispers.co.ke",
+    canonical: process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts.co.ke",
   },
   openGraph: {
     type: "website",
     locale: "en_KE",
-    url: process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispers.co.ke",
+    url: process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts.co.ke",
     siteName: "Floral Whispers Gifts",
     title: "Floral Whispers Gifts | Premium Flower Delivery Nairobi | Same-Day Delivery",
     description:
@@ -100,7 +109,7 @@ export const metadata: Metadata = {
   },
 };
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispers.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts.co.ke";
 
 const organizationJsonLd = {
   "@context": "https://schema.org",

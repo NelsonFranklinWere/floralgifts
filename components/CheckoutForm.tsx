@@ -486,68 +486,68 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
       <div className="border-b border-brand-gray-200 pb-6 mb-6">
         <h3 className="font-heading font-semibold text-lg mb-4">Your Information</h3>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-brand-gray-900 mb-2">
+            <label htmlFor="name" className="block text-xs sm:text-sm font-medium text-brand-gray-900 mb-1.5 sm:mb-2">
               Your Name <span className="text-brand-red">*</span>
             </label>
             <input
               id="name"
               type="text"
               {...register("name")}
-              className="input-field"
-              placeholder="Enter your full name"
+              className="input-field text-sm sm:text-base"
+              placeholder="Full name"
               aria-required="true"
               aria-invalid={errors.name ? "true" : "false"}
             />
-            {errors.name && <p className="mt-1 text-sm text-brand-red">{errors.name.message}</p>}
+            {errors.name && <p className="mt-1 text-xs sm:text-sm text-brand-red">{errors.name.message}</p>}
           </div>
 
           <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-brand-gray-900 mb-2">
-              Your Phone Number <span className="text-brand-red">*</span>
+            <label htmlFor="phone" className="block text-xs sm:text-sm font-medium text-brand-gray-900 mb-1.5 sm:mb-2">
+              Your Phone <span className="text-brand-red">*</span>
             </label>
             <input
               id="phone"
               type="tel"
               placeholder="2547XXXXXXXX"
               {...register("phone")}
-              className="input-field"
+              className="input-field text-sm sm:text-base"
               aria-required="true"
               aria-invalid={errors.phone ? "true" : "false"}
             />
-            {errors.phone && <p className="mt-1 text-sm text-brand-red">{errors.phone.message}</p>}
+            {errors.phone && <p className="mt-1 text-xs sm:text-sm text-brand-red">{errors.phone.message}</p>}
           </div>
 
           <div>
-            <label htmlFor="whatsapp" className="block text-sm font-medium text-brand-gray-900 mb-2">
-              Your WhatsApp Number (Optional)
+            <label htmlFor="whatsapp" className="block text-xs sm:text-sm font-medium text-brand-gray-900 mb-1.5 sm:mb-2">
+              WhatsApp (Optional)
             </label>
             <input
               id="whatsapp"
               type="tel"
               placeholder="2547XXXXXXXX"
               {...register("whatsapp")}
-              className="input-field"
+              className="input-field text-sm sm:text-base"
               aria-invalid={errors.whatsapp ? "true" : "false"}
             />
-            {errors.whatsapp && <p className="mt-1 text-sm text-brand-red">{errors.whatsapp.message}</p>}
+            {errors.whatsapp && <p className="mt-1 text-xs sm:text-sm text-brand-red">{errors.whatsapp.message}</p>}
           </div>
 
           <div>
-            <label htmlFor="paymentPhone" className="block text-sm font-medium text-brand-gray-900 mb-2">
-              Payment Phone Number (Optional)
+            <label htmlFor="paymentPhone" className="block text-xs sm:text-sm font-medium text-brand-gray-900 mb-1.5 sm:mb-2">
+              Payment Phone (Optional)
             </label>
             <input
               id="paymentPhone"
               type="tel"
-              placeholder="2547XXXXXXXX (Leave empty to use your phone number)"
+              placeholder="2547XXXXXXXX"
               {...register("paymentPhone")}
-              className="input-field"
+              className="input-field text-sm sm:text-base"
               aria-invalid={errors.paymentPhone ? "true" : "false"}
             />
-            {errors.paymentPhone && <p className="mt-1 text-sm text-brand-red">{errors.paymentPhone.message}</p>}
-            <p className="mt-1 text-xs text-brand-gray-500">
+            {errors.paymentPhone && <p className="mt-1 text-xs sm:text-sm text-brand-red">{errors.paymentPhone.message}</p>}
+            <p className="mt-1 text-xs text-brand-gray-500 hidden sm:block">
               If different from your phone number above. This is the number that will receive the M-Pesa payment prompt.
             </p>
           </div>
@@ -557,52 +557,52 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
       <div className="border-b border-brand-gray-200 pb-6 mb-6">
         <h3 className="font-heading font-semibold text-lg mb-4">Recipient Information</h3>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4">
           <div>
-            <label htmlFor="recipientName" className="block text-sm font-medium text-brand-gray-900 mb-2">
+            <label htmlFor="recipientName" className="block text-xs sm:text-sm font-medium text-brand-gray-900 mb-1.5 sm:mb-2">
               Recipient Name <span className="text-brand-red">*</span>
             </label>
             <input
               id="recipientName"
               type="text"
               {...register("recipientName")}
-              className="input-field"
-              placeholder="Enter recipient's full name"
+              className="input-field text-sm sm:text-base"
+              placeholder="Full name"
               aria-required="true"
               aria-invalid={errors.recipientName ? "true" : "false"}
             />
-            {errors.recipientName && <p className="mt-1 text-sm text-brand-red">{errors.recipientName.message}</p>}
+            {errors.recipientName && <p className="mt-1 text-xs sm:text-sm text-brand-red">{errors.recipientName.message}</p>}
           </div>
 
           <div>
-            <label htmlFor="recipientPhone" className="block text-sm font-medium text-brand-gray-900 mb-2">
-              Recipient Phone Number <span className="text-brand-red">*</span>
+            <label htmlFor="recipientPhone" className="block text-xs sm:text-sm font-medium text-brand-gray-900 mb-1.5 sm:mb-2">
+              Recipient Phone <span className="text-brand-red">*</span>
             </label>
             <input
               id="recipientPhone"
               type="tel"
               placeholder="2547XXXXXXXX"
               {...register("recipientPhone")}
-              className="input-field"
+              className="input-field text-sm sm:text-base"
               aria-required="true"
               aria-invalid={errors.recipientPhone ? "true" : "false"}
             />
-            {errors.recipientPhone && <p className="mt-1 text-sm text-brand-red">{errors.recipientPhone.message}</p>}
+            {errors.recipientPhone && <p className="mt-1 text-xs sm:text-sm text-brand-red">{errors.recipientPhone.message}</p>}
           </div>
 
-          <div>
-            <label htmlFor="recipientWhatsapp" className="block text-sm font-medium text-brand-gray-900 mb-2">
-              Recipient WhatsApp Number (Optional)
+          <div className="col-span-2">
+            <label htmlFor="recipientWhatsapp" className="block text-xs sm:text-sm font-medium text-brand-gray-900 mb-1.5 sm:mb-2">
+              Recipient WhatsApp (Optional)
             </label>
             <input
               id="recipientWhatsapp"
               type="tel"
               placeholder="2547XXXXXXXX"
               {...register("recipientWhatsapp")}
-              className="input-field"
+              className="input-field text-sm sm:text-base"
               aria-invalid={errors.recipientWhatsapp ? "true" : "false"}
             />
-            {errors.recipientWhatsapp && <p className="mt-1 text-sm text-brand-red">{errors.recipientWhatsapp.message}</p>}
+            {errors.recipientWhatsapp && <p className="mt-1 text-xs sm:text-sm text-brand-red">{errors.recipientWhatsapp.message}</p>}
           </div>
         </div>
       </div>
@@ -610,14 +610,14 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
       <div>
         <label
           htmlFor="deliveryLocation"
-          className="block text-sm font-medium text-brand-gray-900 mb-2"
+          className="block text-xs sm:text-sm font-medium text-brand-gray-900 mb-1.5 sm:mb-2"
         >
           Delivery Location <span className="text-brand-red">*</span>
         </label>
         <select
           id="deliveryLocation"
           {...register("deliveryLocation")}
-          className="input-field"
+          className="input-field text-sm sm:text-base"
           aria-required="true"
           aria-invalid={errors.deliveryLocation ? "true" : "false"}
         >
@@ -629,7 +629,7 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
           ))}
         </select>
         {errors.deliveryLocation && (
-          <p className="mt-1 text-sm text-brand-red">{errors.deliveryLocation.message}</p>
+          <p className="mt-1 text-xs sm:text-sm text-brand-red">{errors.deliveryLocation.message}</p>
         )}
         {selectedLocation && deliveryFeeInCents > 0 && (
           <p className="mt-1 text-xs text-brand-gray-600">
@@ -641,7 +641,7 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
       <div>
         <label
           htmlFor="deliveryAddress"
-          className="block text-sm font-medium text-brand-gray-900 mb-2"
+          className="block text-xs sm:text-sm font-medium text-brand-gray-900 mb-1.5 sm:mb-2"
         >
           Delivery Address <span className="text-brand-red">*</span>
         </label>
@@ -649,54 +649,54 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
           id="deliveryAddress"
           rows={3}
           {...register("deliveryAddress")}
-          className="input-field resize-none"
+          className="input-field resize-none text-sm sm:text-base"
           placeholder="Enter your detailed address (street, building, apartment, etc.)"
           aria-required="true"
           aria-invalid={errors.deliveryAddress ? "true" : "false"}
         />
         {errors.deliveryAddress && (
-          <p className="mt-1 text-sm text-brand-red">{errors.deliveryAddress.message}</p>
+          <p className="mt-1 text-xs sm:text-sm text-brand-red">{errors.deliveryAddress.message}</p>
         )}
       </div>
 
       <div>
-        <label htmlFor="giftMessage" className="block text-sm font-medium text-brand-gray-900 mb-2">
+        <label htmlFor="giftMessage" className="block text-xs sm:text-sm font-medium text-brand-gray-900 mb-1.5 sm:mb-2">
           Message for the Gift (Optional)
         </label>
         <textarea
           id="giftMessage"
           rows={4}
           {...register("giftMessage")}
-          className="input-field resize-none"
+          className="input-field resize-none text-sm sm:text-base"
           placeholder="Write a personal message to be included with the gift..."
           aria-invalid={errors.giftMessage ? "true" : "false"}
         />
-        {errors.giftMessage && <p className="mt-1 text-sm text-brand-red">{errors.giftMessage.message}</p>}
+        {errors.giftMessage && <p className="mt-1 text-xs sm:text-sm text-brand-red">{errors.giftMessage.message}</p>}
       </div>
 
       <div>
-        <label htmlFor="deliveryInstructions" className="block text-sm font-medium text-brand-gray-900 mb-2">
+        <label htmlFor="deliveryInstructions" className="block text-xs sm:text-sm font-medium text-brand-gray-900 mb-1.5 sm:mb-2">
           Delivery & Packaging Instructions (Optional)
         </label>
         <textarea
           id="deliveryInstructions"
           rows={4}
           {...register("deliveryInstructions")}
-          className="input-field resize-none"
+          className="input-field resize-none text-sm sm:text-base"
           placeholder="How should the gift be packaged, delivered, or presented? Include delivery date and time if needed. (e.g., 'Deliver on Dec 25th at 2 PM', 'Surprise delivery', 'Wrap in pink paper', 'Deliver to reception desk')"
           aria-invalid={errors.deliveryInstructions ? "true" : "false"}
         />
-        {errors.deliveryInstructions && <p className="mt-1 text-sm text-brand-red">{errors.deliveryInstructions.message}</p>}
+        {errors.deliveryInstructions && <p className="mt-1 text-xs sm:text-sm text-brand-red">{errors.deliveryInstructions.message}</p>}
       </div>
 
-      <div className="pt-4 border-t border-brand-gray-200">
-        <div className="space-y-2 mb-4">
-          <div className="flex justify-between text-sm">
+      <div className="pt-3 sm:pt-4 border-t border-brand-gray-200">
+        <div className="space-y-2 mb-3 sm:mb-4">
+          <div className="flex justify-between text-xs sm:text-sm">
             <span className="text-brand-gray-600">Subtotal:</span>
             <span className="font-medium">{formatCurrency(subtotal)}</span>
           </div>
           {selectedLocation && (
-            <div className="flex justify-between text-sm">
+            <div className="flex justify-between text-xs sm:text-sm">
               <span className="text-brand-gray-600">Delivery Fee ({selectedLocation}):</span>
               <span className="font-medium">
                 {deliveryFeeInCents === 0 ? "Free" : formatCurrency(deliveryFeeInCents)}
@@ -704,12 +704,12 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
             </div>
           )}
         </div>
-        <div className="flex items-center justify-between mb-6 text-lg font-semibold border-t border-brand-gray-200 pt-4">
+        <div className="flex items-center justify-between mb-4 sm:mb-6 text-base sm:text-lg font-semibold border-t border-brand-gray-200 pt-3 sm:pt-4">
           <span>Total:</span>
           <span className="text-brand-green">{formatCurrency(total)}</span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3">
           <button
             type="button"
             onClick={() => {
@@ -720,16 +720,19 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
               })();
             }}
             disabled={isSubmitting}
-            className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base py-2.5 sm:py-3"
             aria-label="Pay with M-Pesa"
           >
             {isSubmitting && paymentMethod === "mpesa" ? (
               <>
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                Processing Payment...
+                <span className="hidden sm:inline">Processing...</span>
+                <span className="sm:hidden">Processing</span>
               </>
             ) : (
-              "Pay with M-Pesa"
+              <>
+                <span>Pay with M-Pesa</span>
+              </>
             )}
           </button>
 
@@ -737,16 +740,20 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
             type="submit"
             onClick={() => setPaymentMethod("whatsapp")}
             disabled={isSubmitting}
-            className="btn-secondary w-full disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="btn-secondary w-full disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base py-2.5 sm:py-3"
             aria-label="Submit Order"
           >
             {isSubmitting && paymentMethod === "whatsapp" ? (
               <>
                 <div className="w-4 h-4 border-2 border-brand-gray-900 border-t-transparent rounded-full animate-spin" />
-                Sending Order...
+                <span className="hidden sm:inline">Sending Order...</span>
+                <span className="sm:hidden">Sending...</span>
               </>
             ) : (
-              "Submit Order"
+              <>
+                <span className="hidden sm:inline">Submit Order</span>
+                <span className="sm:hidden">Submit</span>
+              </>
             )}
           </button>
         </div>

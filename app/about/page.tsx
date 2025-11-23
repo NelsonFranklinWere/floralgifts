@@ -4,32 +4,37 @@ import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
 import { SHOP_INFO } from "@/lib/constants";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispers.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "About Us | Floral Whispers Gifts - Premium Flower Delivery Nairobi",
+  title: "About Us | Whispers Floral Gifts - Premium Flower Delivery Nairobi",
   description:
-    "Learn about Floral Whispers Gifts - Nairobi's trusted florist for premium flowers, gift hampers, and teddy bears. 5+ years experience, 10,000+ happy customers. Same-day delivery Nairobi CBD.",
+    "Learn about Whispers Floral Gifts - Nairobi's trusted florist for premium flowers, gift hampers, and teddy bears. 5+ years experience, 10,000+ happy customers. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
   keywords: [
     "florist Nairobi",
     "flower shop Nairobi",
-    "about Floral Whispers Gifts",
+    "about Whispers Floral Gifts",
     "Nairobi florist",
     "premium flowers Nairobi",
+    "florist Nairobi CBD",
+    "florist Westlands",
+    "florist Karen",
+    "florist Lavington",
+    "florist Kilimani",
   ],
   alternates: {
     canonical: `${baseUrl}/about`,
   },
   openGraph: {
-    title: "About Us | Floral Whispers Gifts - Premium Flower Delivery Nairobi",
-    description: "Learn about Floral Whispers Gifts - Nairobi's trusted florist. 5+ years experience, 10,000+ happy customers.",
+    title: "About Us | Whispers Floral Gifts - Premium Flower Delivery Nairobi",
+    description: "Learn about Whispers Floral Gifts - Nairobi's trusted florist. 5+ years experience, 10,000+ happy customers. Same-day delivery Nairobi.",
     url: `${baseUrl}/about`,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "About Us | Floral Whispers Gifts",
-    description: "Learn about Floral Whispers Gifts - Nairobi's trusted florist for premium flowers and gifts.",
+    title: "About Us | Whispers Floral Gifts",
+    description: "Learn about Whispers Floral Gifts - Nairobi's trusted florist for premium flowers and gifts.",
   },
 };
 

@@ -3,12 +3,12 @@ import WinesPageClient from "./WinesPageClient";
 import { getProducts } from "@/lib/db";
 import { WINE_PRODUCTS, getPredefinedProducts } from "@/lib/predefinedProducts";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispers.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Premium Wines Nairobi | Wine Gift Hampers Kenya | Celebration Wines",
+  title: "Premium Wines Nairobi | Wine Gift Hampers Kenya | Celebration Wines | Whispers Floral Gifts",
   description:
-    "Premium wines Nairobi for every occasion. Wine gift hampers Kenya, celebration wines, Belaire brut, Robertson Red Wine, Rosso Nobile Red Wine. Perfect for gifts and special moments.",
+    "Premium wines Nairobi for every occasion. Wine gift hampers Kenya, celebration wines, Belaire brut, Robertson Red Wine, Rosso Nobile Red Wine. Perfect for gifts and special moments. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
   keywords: [
     "wines Nairobi",
     "wine gift hampers Kenya",
@@ -17,6 +17,11 @@ export const metadata: Metadata = {
     "Belaire brut 750ml",
     "Robertson Red Wine",
     "Rosso Nobile Red Wine",
+    "wines Nairobi CBD",
+    "wines Westlands",
+    "wines Karen",
+    "wines Lavington",
+    "wines Kilimani",
   ],
   alternates: {
     canonical: `${baseUrl}/collections/wines`,
@@ -29,8 +34,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Premium Wines Nairobi | Floral Whispers Gifts",
-    description: "Premium wines Nairobi for every occasion. Wine gift hampers, celebration wines.",
+    title: "Premium Wines Nairobi | Whispers Floral Gifts",
+    description: "Premium wines Nairobi for every occasion. Wine gift hampers, celebration wines. Same-day delivery Nairobi.",
   },
 };
 

@@ -4,12 +4,12 @@ import Image from "next/image";
 import JsonLd from "@/components/JsonLd";
 import HeroCarousel from "@/components/HeroCarousel";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispers.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Premium Flower Delivery Nairobi | Same-Day Delivery | Floral Whispers Gifts",
+  title: "Premium Flower Delivery Nairobi | Same-Day Delivery | Whispers Floral Gifts",
   description:
-    "Premium flower delivery Nairobi, gift hampers Kenya, teddy bears Kenya. Same-day delivery Nairobi CBD. Birthday flowers, anniversary flowers, funeral wreaths, roses Nairobi. Order online with M-Pesa payment.",
+    "Premium flower delivery Nairobi, gift hampers Kenya, teddy bears Kenya. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Birthday flowers, anniversary flowers, funeral wreaths, roses Nairobi. Order online with M-Pesa payment. Fast delivery across Nairobi.",
   keywords: [
     "flower delivery Nairobi",
     "roses Nairobi",
@@ -20,13 +20,22 @@ export const metadata: Metadata = {
     "teddy bears Kenya",
     "same-day delivery Nairobi",
     "romantic flowers Nairobi",
+    "flower delivery Nairobi CBD",
+    "flower delivery Westlands",
+    "flower delivery Karen",
+    "flower delivery Lavington",
+    "flower delivery Kilimani",
+    "florist Nairobi",
+    "online flower shop Nairobi",
+    "M-Pesa flower delivery Nairobi",
+    "fast flower delivery Nairobi",
   ],
   alternates: {
     canonical: baseUrl,
   },
   openGraph: {
-    title: "Floral Whispers Gifts | Premium Flower Delivery Nairobi | Same-Day Delivery",
-    description: "Premium flower delivery Nairobi, gift hampers Kenya, teddy bears Kenya. Same-day delivery Nairobi CBD. Birthday flowers, anniversary flowers, roses Nairobi.",
+    title: "Whispers Floral Gifts | Premium Flower Delivery Nairobi | Same-Day Delivery",
+    description: "Premium flower delivery Nairobi, gift hampers Kenya, teddy bears Kenya. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Birthday flowers, anniversary flowers, roses Nairobi.",
     url: baseUrl,
     siteName: "Floral Whispers Gifts",
     images: [
@@ -42,8 +51,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Floral Whispers Gifts | Premium Flower Delivery Nairobi",
-    description: "Premium flower delivery Nairobi, gift hampers Kenya, teddy bears Kenya. Same-day delivery available.",
+    title: "Whispers Floral Gifts | Premium Flower Delivery Nairobi",
+    description: "Premium flower delivery Nairobi, gift hampers Kenya, teddy bears Kenya. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
     images: ["/images/logo.jpg"],
   },
 };
