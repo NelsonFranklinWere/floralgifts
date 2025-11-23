@@ -90,5 +90,16 @@ export const DELIVERY_LOCATIONS = [
   { name: "Thindigua", fee: 500 },
   { name: "Karen", fee: 600 },
   { name: "Upcountry", fee: 500 },
+  { name: "Uthiru", fee: 400 },
+  { name: "Kawangware", fee: 500 },
+  { name: "Satellite", fee: 500 },
+  { name: "Dagoreti", fee: 500 },
+  { name: "Corner", fee: 400 },
+  { name: "Hurlingham", fee: 350 },
+  { name: "Bomas", fee: 500 },
+  { name: "Langata", fee: 400 },
+  { name: "Zambezi", fee: 600 },
+  { name: "Kinoo", fee: 700 },
+  { name: "Kikuyu", fee: 700 },
 ] as const;
 
