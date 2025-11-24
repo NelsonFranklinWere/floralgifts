@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -19,18 +19,21 @@ function AdminLoginForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: yupResolver(schema),
   });
 
-  const handleAutoLogin = async (email: string, password: string) => {
+  // Clear any existing token on mount to force fresh login
+  useEffect(() => {
+    localStorage.removeItem("admin_token");
+  }, []);
+
+  const onSubmit = handleSubmit(async (data) => {
     setIsSubmitting(true);
     setError(null);
 
@@ -38,7 +41,7 @@ function AdminLoginForm() {
       const response = await fetch("/api/admin/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: data.email, password: data.password }),
       });
 
       const result = await response.json();
@@ -47,40 +50,17 @@ function AdminLoginForm() {
         throw new Error(result.message || "Login failed");
       }
 
-      // Store token
+      // Store token only if login is successful
       if (result.token) {
         localStorage.setItem("admin_token", result.token);
+        router.push("/admin");
+      } else {
+        throw new Error("No token received from server");
       }
-
-      router.push("/admin");
     } catch (err: any) {
       setError(err.message || "Login failed. Please try again.");
       setIsSubmitting(false);
     }
-  };
-
-  // Auto-login if credentials are provided in URL
-  useEffect(() => {
-    const email = searchParams.get("email");
-    const password = searchParams.get("password");
-
-    if (email && password) {
-      // Decode URL-encoded values
-      const decodedEmail = decodeURIComponent(email);
-      const decodedPassword = decodeURIComponent(password);
-      
-      // Set form values
-      setValue("email", decodedEmail);
-      setValue("password", decodedPassword);
-      
-      // Auto-submit the form
-      handleAutoLogin(decodedEmail, decodedPassword);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams, setValue]);
-
-  const onSubmit = handleSubmit(async (data) => {
-    await handleAutoLogin(data.email, data.password);
   });
 
   return (
@@ -169,14 +149,6 @@ function AdminLoginForm() {
 }
 
 export default function AdminLoginPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-brand-gray-50">
-        <div className="text-brand-gray-600">Loading...</div>
-      </div>
-    }>
-      <AdminLoginForm />
-    </Suspense>
-  );
+  return <AdminLoginForm />;
 }
 

@@ -18,29 +18,34 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Simple auth check - in production, use Supabase Auth or proper password hashing
-    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-      const token = jwt.sign({ email, role: "admin" }, JWT_SECRET, { expiresIn: "7d" });
+    // RESTRICTED ACCESS: Only whispersfloral@gmail.com is allowed
+    const ALLOWED_EMAIL = "whispersfloral@gmail.com";
+    const ALLOWED_PASSWORD = "Admin@2025";
 
-      return NextResponse.json({
-        message: "Login successful",
-        token,
-      });
+    // Check if email is the allowed email
+    if (email.toLowerCase() !== ALLOWED_EMAIL.toLowerCase()) {
+      return NextResponse.json(
+        { message: "Access denied. Only authorized administrators can access this dashboard." },
+        { status: 403 }
+      );
     }
 
-    // Alternative: Check against admins table in Supabase
+    // Check against admins table in Supabase first
     try {
       const { data: admin, error } = await supabaseAdmin
         .from("admins")
         .select("*")
-        .eq("email", email)
+        .eq("email", ALLOWED_EMAIL)
         .single();
 
       if (!error && admin) {
-        // In production, use bcrypt to compare hashed passwords
-        // For now, simple check (NOT SECURE FOR PRODUCTION)
-        if (admin.password_hash === password || password === ADMIN_PASSWORD) {
-          const token = jwt.sign({ email: admin.email, role: admin.role || "admin", id: admin.id }, JWT_SECRET, { expiresIn: "7d" });
+        // Check password from database or fallback to allowed password
+        if (admin.password_hash === password || password === ALLOWED_PASSWORD) {
+          const token = jwt.sign({ 
+            email: admin.email, 
+            role: admin.role || "admin", 
+            id: admin.id 
+          }, JWT_SECRET, { expiresIn: "7d" });
 
           return NextResponse.json({
             message: "Login successful",
@@ -52,19 +57,13 @@ export async function POST(request: NextRequest) {
       console.error("Database auth error:", dbError);
     }
 
-    // Allow specific email/password combination for quick access
-    // This is for development/testing purposes
-    if (email === "solutionsnelson@gmail.com" && password === "frank516#N") {
-      const token = jwt.sign({ email, role: "admin" }, JWT_SECRET, { expiresIn: "7d" });
-      return NextResponse.json({
-        message: "Login successful",
-        token,
-      });
-    }
-
-    // Allow whispersfloral@gmail.com with Admin@2025
-    if (email === "whispersfloral@gmail.com" && password === "Admin@2025") {
-      const token = jwt.sign({ email, role: "admin" }, JWT_SECRET, { expiresIn: "7d" });
+    // Fallback: Direct check for whispersfloral@gmail.com with Admin@2025
+    if (email.toLowerCase() === ALLOWED_EMAIL.toLowerCase() && password === ALLOWED_PASSWORD) {
+      const token = jwt.sign({ 
+        email: ALLOWED_EMAIL, 
+        role: "admin" 
+      }, JWT_SECRET, { expiresIn: "7d" });
+      
       return NextResponse.json({
         message: "Login successful",
         token,

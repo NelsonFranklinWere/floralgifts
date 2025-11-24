@@ -66,6 +66,16 @@ CREATE TABLE IF NOT EXISTS admins (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Site Settings table (for logo, site name, etc.)
+CREATE TABLE IF NOT EXISTS site_settings (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  key TEXT UNIQUE NOT NULL,
+  value TEXT NOT NULL,
+  description TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- ============================================
 -- INDEXES
 -- ============================================
@@ -74,6 +84,7 @@ CREATE INDEX IF NOT EXISTS idx_products_category ON products(category);
 CREATE INDEX IF NOT EXISTS idx_products_slug ON products(slug);
 CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);
 CREATE INDEX IF NOT EXISTS idx_orders_mpesa_checkout ON orders(mpesa_checkout_request_id);
+CREATE INDEX IF NOT EXISTS idx_site_settings_key ON site_settings(key);
 
 -- ============================================
 -- RLS (Row Level Security) POLICIES
@@ -81,16 +92,21 @@ CREATE INDEX IF NOT EXISTS idx_orders_mpesa_checkout ON orders(mpesa_checkout_re
 
 ALTER TABLE products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
+ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
 
 -- Drop existing policies if they exist
 DROP POLICY IF EXISTS "Public can read products" ON products;
 DROP POLICY IF EXISTS "Service role can manage orders" ON orders;
+DROP POLICY IF EXISTS "Public can read site settings" ON site_settings;
 
 -- Allow public read access to products
 CREATE POLICY "Public can read products" ON products FOR SELECT USING (true);
 
 -- Allow service role full access to orders
 CREATE POLICY "Service role can manage orders" ON orders FOR ALL USING (true);
+
+-- Allow public read access to site settings
+CREATE POLICY "Public can read site settings" ON site_settings FOR SELECT USING (true);
 
 -- ============================================
 -- FUNCTIONS AND TRIGGERS
@@ -112,6 +128,10 @@ CREATE TRIGGER update_products_updated_at BEFORE UPDATE ON products
 
 DROP TRIGGER IF EXISTS update_orders_updated_at ON orders;
 CREATE TRIGGER update_orders_updated_at BEFORE UPDATE ON orders
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_site_settings_updated_at ON site_settings;
+CREATE TRIGGER update_site_settings_updated_at BEFORE UPDATE ON site_settings
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- ============================================
@@ -210,12 +230,33 @@ SET title = EXCLUDED.title,
 -- ============================================
 
 -- Add admin user for whispersfloral@gmail.com
+-- IMPORTANT: Only whispersfloral@gmail.com is allowed to access the admin dashboard
+-- Password: Admin@2025
 -- Note: In production, use bcrypt to hash passwords properly
 INSERT INTO admins (email, password_hash, role)
 VALUES ('whispersfloral@gmail.com', 'Admin@2025', 'admin')
 ON CONFLICT (email) DO UPDATE
 SET password_hash = EXCLUDED.password_hash,
     role = EXCLUDED.role,
+    updated_at = NOW();
+
+-- Remove any other admin users (security: only whispersfloral@gmail.com should have access)
+DELETE FROM admins WHERE email != 'whispersfloral@gmail.com';
+
+-- ============================================
+-- SITE SETTINGS
+-- ============================================
+
+-- Insert site settings including logo path
+INSERT INTO site_settings (key, value, description) VALUES
+('logo_path', '/images/logo.jpg', 'Path to the site logo image'),
+('site_name', 'Floral Whispers Gifts', 'Name of the website'),
+('site_email', 'whispersfloral@gmail.com', 'Contact email for the site'),
+('site_phone', '254721554393', 'Contact phone number'),
+('site_url', 'https://whispersfloralgifts.co.ke', 'Main website URL')
+ON CONFLICT (key) DO UPDATE
+SET value = EXCLUDED.value,
+    description = EXCLUDED.description,
     updated_at = NOW();
 
 -- ============================================
@@ -316,5 +357,20 @@ WHERE slug = 'pure-serenity-bouquet';
 -- 2. All product data with correct prices
 -- 3. Stock set to NULL (always available)
 -- 4. Data updates to ensure existing records are correct
+-- 5. Admin access restricted to whispersfloral@gmail.com only
+-- 6. Site settings table with logo path: /images/logo.jpg
+-- 
+-- ADMIN CREDENTIALS:
+-- Email: whispersfloral@gmail.com
+-- Password: Admin@2025
+-- 
+-- SECURITY: Only this email can access the admin dashboard.
+-- All other admin accounts are automatically removed.
+-- 
+-- LOGO CONFIGURATION:
+-- Logo path is configured in site_settings table: /images/logo.jpg
+-- IMPORTANT: Replace the actual image file at public/images/logo.jpg
+-- with your Floral Whispers Gifts logo (remove any Vercel branding)
+-- The logo is used in: Header, Admin Login, SEO metadata, JSON-LD
 -- ============================================
 

@@ -26,18 +26,22 @@ export default function AdminDashboard() {
       return;
     }
 
-    async function fetchStats() {
+    // Validate token by making an API call
+    async function validateAndFetchStats() {
       try {
-        const response = await axios.get("/api/admin/stats", {
+        // First validate the token by checking if it's valid
+        const statsResponse = await axios.get("/api/admin/stats", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        setStats(response.data);
+        setStats(statsResponse.data);
       } catch (error: any) {
-        if (error.response?.status === 401) {
+        // If unauthorized, clear token and redirect to login
+        if (error.response?.status === 401 || error.response?.status === 403) {
           localStorage.removeItem("admin_token");
           router.push("/admin/login");
+          return;
         } else {
           console.error("Error fetching stats:", error);
         }
@@ -46,7 +50,7 @@ export default function AdminDashboard() {
       }
     }
 
-    fetchStats();
+    validateAndFetchStats();
   }, [router]);
 
   const handleLogout = () => {
