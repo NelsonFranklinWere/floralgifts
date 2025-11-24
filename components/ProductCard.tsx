@@ -101,10 +101,10 @@ export default function ProductCard({
                   <button
                     type="button"
                     onClick={handleBasketClick}
-                    className="absolute top-1.5 right-1.5 z-10 bg-white rounded-full p-1.5 shadow-md hover:bg-brand-green hover:text-white transition-all duration-300"
+                    className="absolute top-0 right-0 z-10 bg-white rounded-full p-1.5 shadow-lg hover:bg-brand-red hover:text-white transition-all duration-300"
                     aria-label={`Add ${name} to cart`}
                   >
-                    <ShoppingCartIconSolid className="w-3.5 h-3.5" />
+                    <ShoppingCartIconSolid className="w-3.5 h-3.5 text-brand-red" />
                   </button>
                 )}
                 {/* Click indicator overlay */}

@@ -71,10 +71,10 @@ export default function Header() {
               <button
                 type="button"
                 onClick={() => setCartOpen(true)}
-                className="relative p-2 text-brand-gray-900 hover:text-brand-green transition-colors"
+                className="relative p-2 text-brand-red hover:text-brand-red/80 transition-colors"
                 aria-label="Open shopping cart"
               >
-                <ShoppingCartIcon className="h-6 w-6" />
+                <ShoppingCartIcon className="h-6 w-6 text-brand-red" />
                 {mounted && itemCount > 0 && (
                   <span className="absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-brand-red text-xs font-medium text-white">
                     {itemCount}
