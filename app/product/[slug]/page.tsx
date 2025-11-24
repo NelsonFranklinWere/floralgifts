@@ -123,7 +123,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       url: productUrl,
       priceCurrency: "KES",
       price: product.price / 100,
-      availability: product.stock && product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      availability: "https://schema.org/InStock",
       priceValidUntil: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
       seller: {
         "@type": "Organization",
@@ -165,11 +165,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 <p className="font-mono font-semibold text-brand-green text-3xl mb-2">
                   {formatCurrency(product.price)}
                 </p>
-                {product.stock !== null && product.stock !== undefined && (
-                  <p className="text-sm text-brand-gray-600">
-                    {product.stock > 0 ? `In Stock (${product.stock} available)` : "Out of Stock"}
-                  </p>
-                )}
               </div>
 
               {product.short_description && (

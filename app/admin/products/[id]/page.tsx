@@ -19,7 +19,7 @@ const schema = yup.object({
   tags: yup.array().of(yup.string()).optional(),
   teddy_size: yup.number().nullable().optional(),
   teddy_color: yup.string().nullable().optional(),
-  stock: yup.number().min(0).default(0),
+  stock: yup.number().nullable().optional(),
 });
 
 type ProductFormData = yup.InferType<typeof schema>;
@@ -102,7 +102,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
           tags: prod.tags || [],
           teddy_size: prod.teddy_size,
           teddy_color: prod.teddy_color,
-          stock: prod.stock || 0,
+          stock: prod.stock ?? null,
         });
         setError(null);
       } catch (error: any) {
@@ -155,8 +155,14 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
     setIsSubmitting(true);
     const token = localStorage.getItem("admin_token");
 
+    if (!token) {
+      alert("Authentication required. Please log in again.");
+      router.push("/admin/login");
+      return;
+    }
+
     try {
-      await axios.put(
+      const response = await axios.put(
         `/api/admin/products/${productId}`,
         {
           ...data,
@@ -170,9 +176,21 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      router.push("/admin/products");
+      
+      if (response.data) {
+        alert("Product updated successfully! Changes will appear on the frontend immediately.");
+        router.push("/admin/products");
+      }
     } catch (error: any) {
-      alert(error.response?.data?.message || "Failed to update product");
+      console.error("Update error:", error);
+      if (error.response?.status === 401) {
+        alert("Authentication failed. Please log in again.");
+        localStorage.removeItem("admin_token");
+        router.push("/admin/login");
+      } else {
+        const errorMessage = error.response?.data?.message || error.message || "Failed to update product. Please check the console for details.";
+        alert(errorMessage);
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -385,13 +403,14 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
 
           <div>
             <label htmlFor="stock" className="block text-sm font-medium text-brand-gray-900 mb-2">
-              Stock
+              Stock (Optional - Leave empty for always available)
             </label>
             <input
               id="stock"
               type="number"
-              {...register("stock", { valueAsNumber: true })}
+              {...register("stock", { valueAsNumber: true, setValueAs: (v) => v === '' ? null : v })}
               className="input-field"
+              placeholder="Leave empty for always available"
             />
           </div>
 

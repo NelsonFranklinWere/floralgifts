@@ -15,12 +15,15 @@ export function verifyAdminToken(request: NextRequest): AdminTokenPayload | null
     const token = authHeader?.replace("Bearer ", "") || request.cookies.get("admin_token")?.value;
 
     if (!token) {
+      console.log("[Auth] No token found in request");
       return null;
     }
 
     const decoded = jwt.verify(token, JWT_SECRET) as AdminTokenPayload;
+    console.log("[Auth] Token verified successfully for:", decoded.email);
     return decoded;
-  } catch (error) {
+  } catch (error: any) {
+    console.error("[Auth] Token verification failed:", error.message);
     return null;
   }
 }

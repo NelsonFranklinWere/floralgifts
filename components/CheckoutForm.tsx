@@ -49,13 +49,6 @@ const schema = yup.object({
       if (!value) return true; // Optional field
       return validatePhone(value);
     }),
-  paymentPhone: yup
-    .string()
-    .optional()
-    .test("phone-format", "Invalid payment phone number format", (value) => {
-      if (!value) return true; // Optional field
-      return validatePhone(value);
-    }),
   deliveryLocation: yup.string().required("Delivery location is required"),
   deliveryAddress: yup.string().required("Delivery address is required"),
   giftMessage: yup.string().optional(),
@@ -96,193 +89,43 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
     setPaymentMethod("mpesa");
 
     try {
-      // Get base URL for image links
-      const getImageUrl = (imagePath: string): string => {
-        if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-          return imagePath; // Already a full URL
-        }
-        // Convert relative path to absolute URL
-        const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-        return `${baseUrl}${imagePath.startsWith('/') ? imagePath : `/${imagePath}`}`;
-      };
-
-      // Use payment phone if provided, otherwise use the customer's phone number
-      const paymentPhoneNumber = data.paymentPhone ? formatPhone(data.paymentPhone) : formatPhone(data.phone);
-
-      // Build notes with all order details
-      let orderNotes = `Ordered By: ${data.name} (${formatPhone(data.phone)})`;
-      if (data.whatsapp) {
-        orderNotes += `\nCustomer WhatsApp: https://wa.me/${formatPhone(data.whatsapp).replace(/^\+/, "")}`;
-      }
-      if (data.paymentPhone && data.paymentPhone !== data.phone) {
-        orderNotes += `\nPayment Phone: ${paymentPhoneNumber} (M-Pesa payment will be sent to this number)`;
-      } else {
-        orderNotes += `\nPayment Phone: ${paymentPhoneNumber} (same as customer phone)`;
-      }
-      orderNotes += `\n\nRecipient: ${data.recipientName} (${formatPhone(data.recipientPhone)})`;
-      if (data.recipientWhatsapp) {
-        orderNotes += `\nRecipient WhatsApp: https://wa.me/${formatPhone(data.recipientWhatsapp).replace(/^\+/, "")}`;
-      }
-      
-      orderNotes += `\n\n*Products Ordered:*\n`;
-      items.forEach((item, index) => {
-        orderNotes += `${index + 1}. ${item.name} x${item.quantity} - ${formatCurrency(item.price * item.quantity)}\n`;
-        if (item.options) {
-          orderNotes += `   Options: ${Object.entries(item.options).map(([k, v]) => `${k}: ${v}`).join(", ")}\n`;
-        }
-        // Add product image link
-        const imageUrl = getImageUrl(item.image);
-        orderNotes += `   📷 Product Image: ${imageUrl}\n`;
-      });
-      
-      if (data.giftMessage) {
-        orderNotes += `\n\nGift Message:\n${data.giftMessage}`;
-      }
-      if (data.deliveryInstructions) {
-        orderNotes += `\n\nDelivery Instructions:\n${data.deliveryInstructions}`;
-      }
-
-      const orderResponse = await axios.post("/api/orders", {
+      // Save order data to sessionStorage for payment page
+      const orderData = {
+        customer: {
+          name: data.name,
+          phone: formatPhone(data.phone),
+          whatsapp: data.whatsapp ? formatPhone(data.whatsapp) : null,
+        },
+        recipient: {
+          name: data.recipientName,
+          phone: formatPhone(data.recipientPhone),
+          whatsapp: data.recipientWhatsapp ? formatPhone(data.recipientWhatsapp) : null,
+        },
+        delivery: {
+          location: data.deliveryLocation,
+          address: data.deliveryAddress,
+          instructions: data.deliveryInstructions || null,
+        },
+        giftMessage: data.giftMessage || null,
         items: items.map((item) => ({
-          productId: item.id,
+          id: item.id,
           name: item.name,
           quantity: item.quantity,
           price: item.price,
+          image: item.image,
+          slug: item.slug,
           options: item.options,
         })),
+        subtotal,
+        deliveryFee: deliveryFeeInCents,
         total,
-        customer_name: data.name,
-        phone: formatPhone(data.phone),
-        email: null,
-        delivery_address: `${data.deliveryLocation}, ${data.deliveryAddress}`,
-        delivery_city: data.deliveryLocation || "Nairobi",
-        delivery_date: data.deliveryInstructions || "As per instructions",
-        payment_method: "mpesa",
-        notes: orderNotes,
-      });
+      };
 
-      const orderId = orderResponse.data.id;
-
-      // Send email notification
-      try {
-        const emailSubject = `New Order #${orderId} - M-Pesa Payment`;
-        const emailHtml = `
-          <h2>New Order Received</h2>
-          <p><strong>Order ID:</strong> ${orderId}</p>
-          <p><strong>Payment Method:</strong> M-Pesa</p>
-          
-          <h3>Customer Information</h3>
-          <p><strong>Name:</strong> ${data.name}</p>
-          <p><strong>Phone:</strong> ${formatPhone(data.phone)}</p>
-          ${data.whatsapp ? `<p><strong>WhatsApp:</strong> <a href="https://wa.me/${formatPhone(data.whatsapp).replace(/^\+/, "")}">${formatPhone(data.whatsapp)}</a></p>` : ''}
-          ${data.paymentPhone && data.paymentPhone !== data.phone ? `<p><strong>Payment Phone:</strong> ${paymentPhoneNumber} (M-Pesa payment will be sent to this number)</p>` : ''}
-          
-          <h3>Recipient Information</h3>
-          <p><strong>Name:</strong> ${data.recipientName}</p>
-          <p><strong>Phone:</strong> ${formatPhone(data.recipientPhone)}</p>
-          ${data.recipientWhatsapp ? `<p><strong>WhatsApp:</strong> <a href="https://wa.me/${formatPhone(data.recipientWhatsapp).replace(/^\+/, "")}">${formatPhone(data.recipientWhatsapp)}</a></p>` : ''}
-          
-          <h3>Delivery Details</h3>
-          <p><strong>Location:</strong> ${data.deliveryLocation}</p>
-          <p><strong>Address:</strong> ${data.deliveryAddress}</p>
-          
-          <h3>Order Items</h3>
-          <ul>
-            ${items.map((item, index) => {
-              const imageUrl = getImageUrl(item.image);
-              return `
-                <li>
-                  <strong>${item.name}</strong> x${item.quantity} - ${formatCurrency(item.price * item.quantity)}
-                  ${item.options ? `<br/>Options: ${Object.entries(item.options).map(([k, v]) => `${k}: ${v}`).join(", ")}` : ''}
-                  <br/><a href="${imageUrl}">📷 View Product Image</a>
-                </li>
-              `;
-            }).join('')}
-          </ul>
-          
-          <h3>Pricing</h3>
-          <p><strong>Subtotal:</strong> ${formatCurrency(subtotal)}</p>
-          <p><strong>Delivery Fee:</strong> ${deliveryFeeInCents === 0 ? "Free" : formatCurrency(deliveryFeeInCents)}</p>
-          <p><strong>Total:</strong> ${formatCurrency(total)}</p>
-          
-          ${data.giftMessage ? `<h3>Gift Message</h3><p>${data.giftMessage.replace(/\n/g, '<br>')}</p>` : ''}
-          ${data.deliveryInstructions ? `<h3>Delivery Instructions</h3><p>${data.deliveryInstructions.replace(/\n/g, '<br>')}</p>` : ''}
-          
-          <hr/>
-          <p><small>Order Notes:</small></p>
-          <pre style="white-space: pre-wrap; font-family: monospace; background: #f5f5f5; padding: 10px; border-radius: 4px;">${orderNotes}</pre>
-        `;
-
-        await axios.post("/api/email", {
-          type: "order",
-          subject: emailSubject,
-          html: emailHtml,
-          message: orderNotes,
-        });
-      } catch (emailError) {
-        console.error("Email sending error:", emailError);
-        // Continue even if email fails
-      }
-
-      // Convert amount from cents to KES for M-Pesa (M-Pesa expects amount in KES, not cents)
-      const amountInKES = Math.ceil(total / 100);
-
-      const stkResponse = await axios.post("/api/mpesa/stkpush", {
-        phone: paymentPhoneNumber,
-        amount: amountInKES,
-        accountRef: orderId,
-        orderId,
-      });
-
-      if (stkResponse.data.ResponseCode === "0") {
-        // Track purchase
-        Analytics.trackPurchase(orderId, total, "mpesa");
-        
-        // STK push initiated successfully - show success message
-        alert("M-Pesa STK Push initiated! Please check your phone and enter your M-Pesa PIN to complete the payment.");
-        
-        clearCart();
-        // Start polling for order status update
-        let pollCount = 0;
-        const maxPolls = 30; // Poll for 30 seconds (30 * 1s)
-        const pollInterval = setInterval(async () => {
-          pollCount++;
-          try {
-            const orderResponse = await axios.get(`/api/orders/${orderId}`);
-            const orderStatus = orderResponse.data.status;
-            
-            if (orderStatus === "paid" || orderStatus === "failed" || pollCount >= maxPolls) {
-              clearInterval(pollInterval);
-              router.push(`/order/success?id=${orderId}`);
-            }
-          } catch (error) {
-            console.error("Polling error:", error);
-            if (pollCount >= maxPolls) {
-              clearInterval(pollInterval);
-              router.push(`/order/success?id=${orderId}`);
-            }
-          }
-        }, 1000); // Poll every 1 second
-        
-        // Fallback: navigate after max polls even if status not updated
-        setTimeout(() => {
-          clearInterval(pollInterval);
-          router.push(`/order/success?id=${orderId}`);
-        }, maxPolls * 1000);
-      } else {
-        throw new Error(stkResponse.data.CustomerMessage || "Payment initiation failed");
-      }
+      sessionStorage.setItem("pendingOrder", JSON.stringify(orderData));
+      router.push("/checkout");
     } catch (error: any) {
-      console.error("Checkout error:", error);
-      const errorMessage = error.response?.data?.message || error.message || "Checkout failed. Please try again.";
-      
-      // Show more detailed error for missing configuration
-      if (errorMessage.includes("MPESA_PASSKEY") || errorMessage.includes("Passkey")) {
-        alert(`M-Pesa Configuration Error:\n\n${errorMessage}\n\nTo get your Passkey:\n1. Go to https://developer.safaricom.co.ke/\n2. Log in to your account\n3. Navigate to your app\n4. Go to STK Push section\n5. Copy the Passkey value\n6. Add it to .env.local as: MPESA_PASSKEY=your_passkey`);
-      } else {
-        alert(errorMessage);
-      }
-    } finally {
+      console.error("Error saving order data:", error);
+      alert("Error preparing order. Please try again.");
       setIsSubmitting(false);
       setPaymentMethod(null);
     }
@@ -519,23 +362,6 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
             {errors.phone && <p className="mt-1 text-xs sm:text-sm text-brand-red">{errors.phone.message}</p>}
           </div>
 
-          <div>
-            <label htmlFor="paymentPhone" className="block text-xs sm:text-sm font-medium text-brand-gray-900 mb-1.5 sm:mb-2">
-              Payment Phone (Optional)
-            </label>
-            <input
-              id="paymentPhone"
-              type="tel"
-              placeholder="2547XXXXXXXX"
-              {...register("paymentPhone")}
-              className="input-field text-sm sm:text-base"
-              aria-invalid={errors.paymentPhone ? "true" : "false"}
-            />
-            {errors.paymentPhone && <p className="mt-1 text-xs sm:text-sm text-brand-red">{errors.paymentPhone.message}</p>}
-            <p className="mt-1 text-xs text-brand-gray-500 hidden sm:block">
-              If different from your phone number above. This is the number that will receive the M-Pesa payment prompt.
-            </p>
-          </div>
         </div>
       </div>
 

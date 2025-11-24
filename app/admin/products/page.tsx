@@ -42,16 +42,31 @@ export default function AdminProductsPage() {
   }, [router]);
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this product?")) return;
+    if (!confirm("Are you sure you want to delete this product? This action cannot be undone.")) return;
 
     const token = localStorage.getItem("admin_token");
+    if (!token) {
+      alert("Authentication required. Please log in again.");
+      router.push("/admin/login");
+      return;
+    }
+
     try {
       await axios.delete(`/api/admin/products/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      alert("Product deleted successfully! Changes will appear on the frontend immediately.");
       setProducts(products.filter((p) => p.id !== id));
-    } catch (error) {
-      alert("Failed to delete product");
+    } catch (error: any) {
+      console.error("Delete error:", error);
+      if (error.response?.status === 401) {
+        alert("Authentication failed. Please log in again.");
+        localStorage.removeItem("admin_token");
+        router.push("/admin/login");
+      } else {
+        const errorMessage = error.response?.data?.message || error.message || "Failed to delete product. Please check the console for details.";
+        alert(errorMessage);
+      }
     }
   };
 
@@ -139,7 +154,7 @@ export default function AdminProductsPage() {
                       {formatCurrency(product.price)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-brand-gray-600">
-                      {product.stock !== null ? product.stock : "—"}
+                      {product.stock !== null && product.stock !== undefined ? product.stock : "Always Available"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                       <Link

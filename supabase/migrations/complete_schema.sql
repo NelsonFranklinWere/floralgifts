@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS products (
   images TEXT[] DEFAULT '{}',
   included_items JSONB,
   upsells TEXT[],
-  stock INTEGER DEFAULT 0,
+  stock INTEGER DEFAULT NULL,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -126,10 +126,10 @@ DELETE FROM products WHERE slug = 'luxury-gift-hamper' OR (title ILIKE '%luxury 
 
 -- FLOWERS (8 products)
 INSERT INTO products (slug, title, short_description, description, price, category, tags, images, teddy_size, teddy_color) VALUES
-('classic-rose-romance', 'Classic Rose Romance', 'Mixed Roses with a touch of gypsophilia, Cuddburry Chocolate 80g', 'Mixed Roses with a touch of gypsophilia, Cuddburry Chocolate 80g', 550000, 'flowers', ARRAY[]::text[], ARRAY['/images/products/flowers/BouquetFlowers1.jpg']::text[], NULL, NULL),
-('sweet-whisper-bouquet', 'Sweet Whisper Bouquet', '60 Roses with touch of gypsophilia, Ferrero rocher chocolate T8', '60 Roses with touch of gypsophilia, Ferrero rocher chocolate T8', 550000, 'flowers', ARRAY[]::text[], ARRAY['/images/products/flowers/BouquetFlowers2.jpg']::text[], NULL, NULL),
+('classic-rose-romance', 'Classic Rose Romance', 'Mixed Roses with a touch of gypsophilia, Cuddburry Chocolate 80g', 'Mixed Roses with a touch of gypsophilia, Cuddburry Chocolate 80g', 350000, 'flowers', ARRAY[]::text[], ARRAY['/images/products/flowers/BouquetFlowers1.jpg']::text[], NULL, NULL),
+('sweet-whisper-bouquet', 'Sweet Whisper Bouquet', '60 Roses with touch of gypsophilia, Ferrero rocher chocolate T8', '60 Roses with touch of gypsophilia, Ferrero rocher chocolate T8', 350000, 'flowers', ARRAY[]::text[], ARRAY['/images/products/flowers/BouquetFlowers2.jpg']::text[], NULL, NULL),
 ('blush-and-bloom-dreams', 'Blush and Bloom Dreams', 'Baby Pink and white Roses with a touch of gypsophila, Cuddburry chocolate', 'Baby Pink and white Roses with a touch of gypsophila, Cuddburry chocolate', 350000, 'flowers', ARRAY[]::text[], ARRAY['/images/products/flowers/BouquetFlowers4.jpg']::text[], NULL, NULL),
-('pure-serenity-bouquet', 'Pure Serenity Bouquet', 'Yellow mumbs mixed with white and Red Roses, Ferrero rocher chocolate T8', 'Yellow mumbs mixed with white and Red Roses, Ferrero rocher chocolate T8', 550000, 'flowers', ARRAY[]::text[], ARRAY['/images/products/flowers/BouquetFlowers5.jpg']::text[], NULL, NULL),
+('pure-serenity-bouquet', 'Pure Serenity Bouquet', 'Yellow mumbs mixed with white and Red Roses, Ferrero rocher chocolate T8', 'Yellow mumbs mixed with white and Red Roses, Ferrero rocher chocolate T8', 350000, 'flowers', ARRAY[]::text[], ARRAY['/images/products/flowers/BouquetFlowers5.jpg']::text[], NULL, NULL),
 ('radiant-love-collection', 'Radiant Love Collection', 'Pink and Red Roses mixed with a touch of gypsophila', 'Pink and Red Roses mixed with a touch of gypsophila', 300000, 'flowers', ARRAY[]::text[], ARRAY['/images/products/flowers/BouquetFlowers6.jpg']::text[], NULL, NULL),
 ('midnight-bloom-surprises-bouquet', 'Midnight Bloom Surprises Bouquet', 'Red Yellow, Pink, Roses mixed with white mumbs with touch of gypsophilla', 'Red Yellow, Pink, Roses mixed with white mumbs with touch of gypsophilla', 350000, 'flowers', ARRAY[]::text[], ARRAY['/images/products/flowers/BouquetFlowers7.jpg']::text[], NULL, NULL),
 ('sunset-romance-bouquet', 'Sunset Romance Bouquet', '80 Roses of red Roses and white with a touch of gypsophilla', '80 Roses of red Roses and white with a touch of gypsophilla', 450000, 'flowers', ARRAY[]::text[], ARRAY['/images/products/flowers/BouquetFlowers8.jpg']::text[], NULL, NULL),
@@ -144,7 +144,7 @@ SET title = EXCLUDED.title,
 
 -- TEDDY BEARS (7 products)
 INSERT INTO products (slug, title, short_description, description, price, category, tags, images, teddy_size, teddy_color) VALUES
-('dream-soft-teddy', 'Dream Soft Teddy', '25cm pink teddy bear. Available in brown, white, red, pink, and blue.', '25cm pink teddy bear. Available in brown, white, red, pink, and blue.', 250000, 'teddy', ARRAY[]::text[], ARRAY['/images/products/teddies/Teddybear1.jpg']::text[], 25, 'pink'),
+('dream-soft-teddy', 'Dream Soft Teddy', '25cm pink teddy bear. Available in brown, white, red, pink, and blue.', '25cm pink teddy bear. Available in brown, white, red, pink, and blue.', 350000, 'teddy', ARRAY[]::text[], ARRAY['/images/products/teddies/Teddybear1.jpg']::text[], 25, 'pink'),
 ('fluffyjoy-bear', 'FluffyJoy Bear', '50cm teddy bear. Available in brown, white, red, pink, and blue.', '50cm teddy bear. Available in brown, white, red, pink, and blue.', 450000, 'teddy', ARRAY[]::text[], ARRAY['/images/products/teddies/TeddyBears1.jpg']::text[], 50, NULL),
 ('blisshug-teddy', 'BlissHug Teddy', '100cm teddy bear. Available in brown, white, red, pink, and blue.', '100cm teddy bear. Available in brown, white, red, pink, and blue.', 850000, 'teddy', ARRAY[]::text[], ARRAY['/images/products/teddies/TeddyBears2.jpg']::text[], 100, NULL),
 ('tender-heart-bear', 'Tender Heart Bear', '120cm teddy bear with customized Stanley mug. Available in brown, white, red, pink, and blue.', '120cm teddy bear with customized Stanley mug. Available in brown, white, red, pink, and blue.', 1250000, 'teddy', ARRAY[]::text[], ARRAY['/images/products/teddies/TeddyBears3.jpg']::text[], 120, NULL),
@@ -180,10 +180,10 @@ SET title = EXCLUDED.title,
 
 -- WINES (4 products)
 INSERT INTO products (slug, title, short_description, description, price, category, tags, images, teddy_size, teddy_color) VALUES
-('luc-belaire-rare-luxe-750ml-jays', 'LUC BELAIRE RARE LUXE 750ML(12.5%) - Jays', 'Premium sparkling wine 750ml', 'Premium sparkling wine 750ml', 550000, 'wines', ARRAY[]::text[], ARRAY['/images/products/wines/Wines1.jpg']::text[], NULL, NULL),
+('luc-belaire-rare-luxe-750ml-jays', 'LUC BELAIRE RARE LUXE 750ML(12.5%) - Jays', 'Premium sparkling wine 750ml', 'Premium sparkling wine 750ml', 350000, 'wines', ARRAY[]::text[], ARRAY['/images/products/wines/Wines1.jpg']::text[], NULL, NULL),
 ('belaire-brut-750ml', 'Belaire brut 750ml', 'Premium brut sparkling wine 750ml', 'Premium brut sparkling wine 750ml', 750000, 'wines', ARRAY[]::text[], ARRAY['/images/products/wines/Wines2.jpg']::text[], NULL, NULL),
-('robertson-red-wine', 'Robertson Red Wine', '750ml Red sweet Wine', '750ml Red sweet Wine', 250000, 'wines', ARRAY[]::text[], ARRAY['/images/products/wines/Wines3.jpg']::text[], NULL, NULL),
-('rosso-nobile-red-wine', 'Rosso Nobile Red Wine', '750ml Red wine', '750ml Red wine', 250000, 'wines', ARRAY[]::text[], ARRAY['/images/products/wines/Wines4.jpg']::text[], NULL, NULL)
+('robertson-red-wine', 'Robertson Red Wine', '750ml Red sweet Wine', '750ml Red sweet Wine', 350000, 'wines', ARRAY[]::text[], ARRAY['/images/products/wines/Wines3.jpg']::text[], NULL, NULL),
+('rosso-nobile-red-wine', 'Rosso Nobile Red Wine', '750ml Red wine', '750ml Red wine', 350000, 'wines', ARRAY[]::text[], ARRAY['/images/products/wines/Wines4.jpg']::text[], NULL, NULL)
 ON CONFLICT (slug) DO UPDATE
 SET title = EXCLUDED.title,
     short_description = EXCLUDED.short_description,
@@ -260,6 +260,55 @@ ON storage.objects FOR DELETE
 USING (bucket_id = 'product-images');
 
 -- ============================================
+-- DATA UPDATES (Ensure existing data is correct)
+-- ============================================
+
+-- Ensure all products have stock = NULL (always available)
+UPDATE products SET stock = NULL WHERE stock IS NOT NULL;
+
+-- Ensure all products with incorrect prices are updated to 3500 KES
+-- Update flowers priced at 5500 KES or 550 KES to 3500 KES
+UPDATE products 
+SET price = 350000, updated_at = NOW()
+WHERE category = 'flowers' 
+  AND (price = 550000 OR price = 55000 OR price = 5000);
+
+-- Update wines priced at 2500 KES, 5500 KES, 250 KES, 550 KES, or 50 KES to 3500 KES
+UPDATE products 
+SET price = 350000, updated_at = NOW()
+WHERE category = 'wines' 
+  AND (price = 250000 OR price = 550000 OR price = 25000 OR price = 55000 OR price = 5000);
+
+-- Update teddy bears priced at 2500 KES, 250 KES, or 50 KES to 3500 KES
+UPDATE products 
+SET price = 350000, updated_at = NOW()
+WHERE category = 'teddy' 
+  AND (price = 250000 OR price = 25000 OR price = 5000);
+
+-- Update gift hampers priced at 50, 250, 550 KES to 3500 KES
+UPDATE products 
+SET price = 350000, updated_at = NOW()
+WHERE category = 'hampers' 
+  AND (price = 5000 OR price = 25000 OR price = 55000);
+
+-- Update chocolates priced at 50, 250, 550 KES to 3500 KES
+UPDATE products 
+SET price = 350000, updated_at = NOW()
+WHERE category = 'chocolates' 
+  AND (price = 5000 OR price = 25000 OR price = 55000);
+
+-- Ensure Sweet Whisper Bouquet is 3500 KES
+UPDATE products 
+SET price = 350000, updated_at = NOW()
+WHERE slug = 'sweet-whisper-bouquet';
+
+-- ============================================
 -- SCHEMA COMPLETE
+-- ============================================
+-- This schema includes:
+-- 1. All tables, indexes, RLS policies, triggers
+-- 2. All product data with correct prices
+-- 3. Stock set to NULL (always available)
+-- 4. Data updates to ensure existing records are correct
 -- ============================================
 

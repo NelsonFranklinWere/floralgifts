@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { getProductById } from "@/lib/db";
 import { supabaseAdmin } from "@/lib/supabase";
+import { revalidatePath } from "next/cache";
 
 export async function GET(
   request: NextRequest,
@@ -52,7 +53,7 @@ export async function PUT(
         images: body.images || [],
         included_items: body.included_items || null,
         upsells: body.upsells || null,
-        stock: body.stock || 0,
+        stock: body.stock ?? null,
         updated_at: new Date().toISOString(),
       })
       .eq("id", id)
@@ -61,6 +62,23 @@ export async function PUT(
 
     if (error) {
       return NextResponse.json({ message: error.message }, { status: 400 });
+    }
+
+    // Get old product before update to revalidate old slug if changed
+    const oldProduct = await getProductById(id);
+    
+    // Revalidate product pages
+    revalidatePath("/");
+    revalidatePath("/collections");
+    revalidatePath("/collections/flowers");
+    revalidatePath("/collections/teddy-bears");
+    revalidatePath("/collections/gift-hampers");
+    revalidatePath("/collections/wines");
+    revalidatePath("/collections/chocolates");
+    revalidatePath(`/product/${data.slug}`);
+    if (oldProduct && oldProduct.slug !== data.slug) {
+      // If slug changed, revalidate old slug too
+      revalidatePath(`/product/${oldProduct.slug}`);
     }
 
     return NextResponse.json(data);
@@ -83,10 +101,25 @@ export async function DELETE(
     requireAdmin(request);
     const { id } = await params;
 
+    // Get product before deletion to revalidate its pages
+    const product = await getProductById(id);
+    
     const { error } = await supabaseAdmin.from("products").delete().eq("id", id);
 
     if (error) {
       return NextResponse.json({ message: error.message }, { status: 400 });
+    }
+
+    // Revalidate product pages
+    if (product) {
+      revalidatePath("/");
+      revalidatePath("/collections");
+      revalidatePath("/collections/flowers");
+      revalidatePath("/collections/teddy-bears");
+      revalidatePath("/collections/gift-hampers");
+      revalidatePath("/collections/wines");
+      revalidatePath("/collections/chocolates");
+      revalidatePath(`/product/${product.slug}`);
     }
 
     return NextResponse.json({ message: "Product deleted" });

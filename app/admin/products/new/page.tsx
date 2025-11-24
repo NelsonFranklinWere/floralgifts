@@ -18,7 +18,7 @@ const schema = yup.object({
   tags: yup.array().of(yup.string()).optional(),
   teddy_size: yup.number().nullable().optional(),
   teddy_color: yup.string().nullable().optional(),
-  stock: yup.number().min(0).default(0),
+  stock: yup.number().nullable().optional(),
 });
 
 type ProductFormData = yup.InferType<typeof schema>;
@@ -39,7 +39,7 @@ export default function NewProductPage() {
     resolver: yupResolver(schema),
     defaultValues: {
       tags: [],
-      stock: 0,
+      stock: null,
     },
   });
 
@@ -49,11 +49,18 @@ export default function NewProductPage() {
     setIsSubmitting(true);
     const token = localStorage.getItem("admin_token");
 
+    if (!token) {
+      alert("Authentication required. Please log in again.");
+      router.push("/admin/login");
+      return;
+    }
+
     try {
-      await axios.post(
+      const response = await axios.post(
         "/api/admin/products",
         {
           ...data,
+          price: Math.round(data.price * 100), // Convert to cents
           images,
           category: data.category as "flowers" | "hampers" | "teddy" | "wines" | "chocolates",
           teddy_size: category === "teddy" ? data.teddy_size : null,
@@ -63,9 +70,21 @@ export default function NewProductPage() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      router.push("/admin/products");
+      
+      if (response.data) {
+        alert("Product created successfully! It will appear on the frontend immediately.");
+        router.push("/admin/products");
+      }
     } catch (error: any) {
-      alert(error.response?.data?.message || "Failed to create product");
+      console.error("Create error:", error);
+      if (error.response?.status === 401) {
+        alert("Authentication failed. Please log in again.");
+        localStorage.removeItem("admin_token");
+        router.push("/admin/login");
+      } else {
+        const errorMessage = error.response?.data?.message || error.message || "Failed to create product. Please check the console for details.";
+        alert(errorMessage);
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -265,14 +284,14 @@ export default function NewProductPage() {
 
           <div>
             <label htmlFor="stock" className="block text-sm font-medium text-brand-gray-900 mb-2">
-              Stock
+              Stock (Optional - Leave empty for always available)
             </label>
             <input
               id="stock"
               type="number"
-              {...register("stock", { valueAsNumber: true })}
+              {...register("stock", { valueAsNumber: true, setValueAs: (v) => v === '' ? null : v })}
               className="input-field"
-              placeholder="0"
+              placeholder="Leave empty for always available"
             />
           </div>
 

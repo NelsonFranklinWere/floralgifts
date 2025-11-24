@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { getProducts } from "@/lib/db";
 import { supabaseAdmin } from "@/lib/supabase";
+import { revalidatePath } from "next/cache";
 
 export async function GET(request: NextRequest) {
   try {
@@ -39,7 +40,7 @@ export async function POST(request: NextRequest) {
         images: body.images || [],
         included_items: body.included_items || null,
         upsells: body.upsells || null,
-        stock: body.stock || 0,
+        stock: body.stock ?? null,
       })
       .select()
       .single();
@@ -47,6 +48,16 @@ export async function POST(request: NextRequest) {
     if (error) {
       return NextResponse.json({ message: error.message }, { status: 400 });
     }
+
+    // Revalidate product pages
+    revalidatePath("/");
+    revalidatePath("/collections");
+    revalidatePath("/collections/flowers");
+    revalidatePath("/collections/teddy-bears");
+    revalidatePath("/collections/gift-hampers");
+    revalidatePath("/collections/wines");
+    revalidatePath("/collections/chocolates");
+    revalidatePath(`/product/${data.slug}`);
 
     return NextResponse.json(data);
   } catch (error: any) {
