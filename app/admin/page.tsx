@@ -85,7 +85,7 @@ export default function AdminDashboard() {
       </header>
 
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-4 gap-6 mb-8">
           <div className="card p-6">
             <h3 className="text-sm font-medium text-brand-gray-600 mb-2">Total Orders</h3>
             <p className="text-3xl font-bold text-brand-gray-900">{stats?.totalOrders || 0}</p>
@@ -106,7 +106,7 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 gap-6">
           <Link href="/admin/products" className="card p-6 hover:shadow-cardHover transition-shadow block">
             <h2 className="font-heading font-bold text-xl text-brand-gray-900 mb-2">Manage Products</h2>
             <p className="text-brand-gray-600 mb-4">Add, edit, or remove products from your catalog</p>

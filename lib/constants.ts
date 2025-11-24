@@ -7,8 +7,8 @@ export const BRAND_COLORS = {
 
 export const SHOP_INFO = {
   name: "Floral Whispers Gifts",
-  phone: "2547221554393",
-  whatsapp: "2547221554393",
+  phone: "254721554393",
+  whatsapp: "254721554393",
   email: "whispersfloral@gmail.com",
   address: "Delta House, University Way",
   instagram: "@floralwhispersgifts",
@@ -16,6 +16,11 @@ export const SHOP_INFO = {
   twitter: "@FloralWhispers",
   tiktok: "@floralwhispers",
   hours: "Mon-Sat: 9AM-7PM, Sun: 10AM-5PM",
+  mpesa: {
+    paybill: "400200",
+    account: "40040549",
+    till: "8618626",
+  },
 } as const;
 
 export const DELIVERY_ZONES = {

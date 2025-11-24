@@ -294,7 +294,7 @@ export default function ContactPage() {
                     href={`tel:+${SHOP_INFO.phone}`}
                     className="text-brand-gray-700 hover:text-brand-green transition-colors"
                   >
-                    +{SHOP_INFO.phone}
+                    +{SHOP_INFO.phone} / 0721554393
                   </a>
                 </div>
               </div>
@@ -402,8 +402,11 @@ export default function ContactPage() {
               <h3 className="font-heading font-semibold text-lg text-brand-gray-900 mb-3">
                 WhatsApp Us
               </h3>
-              <p className="text-brand-gray-700 mb-4">
+              <p className="text-brand-gray-700 mb-2">
                 For quick inquiries, order updates, or to chat with us directly:
+              </p>
+              <p className="text-brand-gray-600 text-sm mb-4">
+                WhatsApp: +{SHOP_INFO.whatsapp} / 0721554393
               </p>
               <a
                 href={`https://wa.me/${SHOP_INFO.whatsapp}`}

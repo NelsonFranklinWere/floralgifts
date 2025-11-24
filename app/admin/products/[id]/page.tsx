@@ -27,10 +27,32 @@ type ProductFormData = yup.InferType<typeof schema>;
 export default function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const [productId, setProductId] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
-    params.then((p) => setProductId(p.id));
+    let isMounted = true;
+    
+    async function getParams() {
+      try {
+        const resolvedParams = await params;
+        if (isMounted) {
+          setProductId(resolvedParams.id);
+        }
+      } catch (err) {
+        console.error("Error getting params:", err);
+        if (isMounted) {
+          setError("Failed to load product ID");
+        }
+      }
+    }
+    
+    getParams();
+    
+    return () => {
+      isMounted = false;
+    };
   }, [params]);
+  
   const [product, setProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -57,7 +79,12 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
       return;
     }
 
+    if (!productId) {
+      return;
+    }
+
     async function fetchProduct() {
+      setIsLoading(true);
       try {
         const response = await axios.get(`/api/admin/products/${productId}`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -77,26 +104,49 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
           teddy_color: prod.teddy_color,
           stock: prod.stock || 0,
         });
+        setError(null);
       } catch (error: any) {
+        console.error("Error fetching product:", error);
         if (error.response?.status === 401) {
           router.push("/admin/login");
+        } else if (error.response?.status === 404) {
+          setError("Product not found");
         } else {
-          alert("Failed to load product");
+          setError(error.response?.data?.message || "Failed to load product. Please try again.");
         }
       } finally {
         setIsLoading(false);
       }
     }
 
-    if (productId) {
-      fetchProduct();
-    }
+    fetchProduct();
   }, [productId, router, reset]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-brand-gray-50 flex items-center justify-center">
+        <div className="text-brand-gray-600">Loading product...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-brand-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-brand-red mb-4">{error}</p>
+          <Link href="/admin/products" className="btn-primary">
+            Back to Products
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   if (!productId) {
     return (
       <div className="min-h-screen bg-brand-gray-50 flex items-center justify-center">
-        <div className="text-brand-gray-600">Loading...</div>
+        <div className="text-brand-gray-600">Loading product ID...</div>
       </div>
     );
   }

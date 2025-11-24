@@ -5,7 +5,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts
 export const metadata: Metadata = {
   title: "Contact Us | Whispers Floral Gifts - Flower Delivery Nairobi",
   description:
-    "Contact Whispers Floral Gifts for premium flower delivery Nairobi. Phone: +2547221554393, Email: whispersfloral@gmail.com. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Located in Nairobi.",
+    "Contact Whispers Floral Gifts for premium flower delivery Nairobi. Phone: +254721554393 / 0721554393, Email: whispersfloral@gmail.com. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Located in Nairobi.",
   keywords: [
     "contact Whispers Floral Gifts",
     "flower shop contact Nairobi",

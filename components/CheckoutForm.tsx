@@ -13,7 +13,7 @@ import {
 import { useCartStore } from "@/lib/store/cart";
 import { generateWhatsAppLink, type WhatsAppOrderData } from "@/lib/whatsapp";
 import { formatCurrency } from "@/lib/utils";
-import { DELIVERY_LOCATIONS } from "@/lib/constants";
+import { DELIVERY_LOCATIONS, SHOP_INFO } from "@/lib/constants";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Analytics } from "@/lib/analytics";
@@ -520,21 +520,6 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
           </div>
 
           <div>
-            <label htmlFor="whatsapp" className="block text-xs sm:text-sm font-medium text-brand-gray-900 mb-1.5 sm:mb-2">
-              WhatsApp (Optional)
-            </label>
-            <input
-              id="whatsapp"
-              type="tel"
-              placeholder="2547XXXXXXXX"
-              {...register("whatsapp")}
-              className="input-field text-sm sm:text-base"
-              aria-invalid={errors.whatsapp ? "true" : "false"}
-            />
-            {errors.whatsapp && <p className="mt-1 text-xs sm:text-sm text-brand-red">{errors.whatsapp.message}</p>}
-          </div>
-
-          <div>
             <label htmlFor="paymentPhone" className="block text-xs sm:text-sm font-medium text-brand-gray-900 mb-1.5 sm:mb-2">
               Payment Phone (Optional)
             </label>
@@ -590,20 +575,6 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
             {errors.recipientPhone && <p className="mt-1 text-xs sm:text-sm text-brand-red">{errors.recipientPhone.message}</p>}
           </div>
 
-          <div className="col-span-2">
-            <label htmlFor="recipientWhatsapp" className="block text-xs sm:text-sm font-medium text-brand-gray-900 mb-1.5 sm:mb-2">
-              Recipient WhatsApp (Optional)
-            </label>
-            <input
-              id="recipientWhatsapp"
-              type="tel"
-              placeholder="2547XXXXXXXX"
-              {...register("recipientWhatsapp")}
-              className="input-field text-sm sm:text-base"
-              aria-invalid={errors.recipientWhatsapp ? "true" : "false"}
-            />
-            {errors.recipientWhatsapp && <p className="mt-1 text-xs sm:text-sm text-brand-red">{errors.recipientWhatsapp.message}</p>}
-          </div>
         </div>
       </div>
 
@@ -707,6 +678,24 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
         <div className="flex items-center justify-between mb-4 sm:mb-6 text-base sm:text-lg font-semibold border-t border-brand-gray-200 pt-3 sm:pt-4">
           <span>Total:</span>
           <span className="text-brand-green">{formatCurrency(total)}</span>
+        </div>
+
+        <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-brand-green/5 border border-brand-green/20 rounded-lg">
+          <h3 className="font-semibold text-sm sm:text-base text-brand-gray-900 mb-2 sm:mb-3">M-Pesa Payment Details</h3>
+          <div className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-brand-gray-700">
+            <div className="flex items-center gap-2">
+              <span className="font-medium min-w-[80px] sm:min-w-[100px]">Paybill:</span>
+              <span className="font-mono font-semibold text-brand-green">{SHOP_INFO.mpesa.paybill}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="font-medium min-w-[80px] sm:min-w-[100px]">Account:</span>
+              <span className="font-mono font-semibold text-brand-green">{SHOP_INFO.mpesa.account}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="font-medium min-w-[80px] sm:min-w-[100px]">Till:</span>
+              <span className="font-mono font-semibold text-brand-green">{SHOP_INFO.mpesa.till}</span>
+            </div>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-3">

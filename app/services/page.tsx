@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
+import { SHOP_INFO } from "@/lib/constants";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts.co.ke";
 
@@ -150,16 +151,16 @@ export default function ServicesPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 mb-12">
+        <div className="flex overflow-x-auto gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8 mb-12 pb-3 md:pb-0 scrollbar-visible md:scrollbar-hide">
           {services.map((service, index) => (
-            <div key={index} className="card overflow-hidden group">
+            <div key={index} className="flex-shrink-0 w-[70vw] sm:w-[65vw] md:w-auto card overflow-hidden group">
               <div className="relative h-64 overflow-hidden">
                 <Image
                   src={service.image}
                   alt={`${service.title} - Floral Whispers Gifts Nairobi`}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  sizes="(max-width: 768px) 70vw, (max-width: 1024px) 50vw, 33vw"
                   loading="lazy"
                 />
               </div>
@@ -204,20 +205,25 @@ export default function ServicesPage() {
             <h3 className="font-heading font-bold text-sm md:text-xl text-brand-gray-900 mb-2 md:mb-4">
               Delivery Information
             </h3>
-            <ul className="space-y-1 md:space-y-2 text-xs md:text-base text-brand-gray-700">
+            <ul className="space-y-1 md:space-y-2 text-xs md:text-base text-brand-gray-700 mb-4">
               <li>
-                <span className="font-semibold">Nairobi CBD:</span> Free same-day delivery
+                <span className="font-semibold">Nairobi CBD:</span> Complimentary same-day delivery - your gifts arrive fresh and on time
               </li>
               <li>
-                <span className="font-semibold">Outside CBD:</span> Delivery within 24 hours at a nominal fee
+                <span className="font-semibold">Outside Nairobi:</span> Swift next-day delivery with transparent, location-based pricing
               </li>
               <li>
-                <span className="font-semibold">Nationwide:</span> 24-hour delivery across Kenya
+                <span className="font-semibold">Nationwide:</span> Reliable 24-hour delivery service across Kenya, bringing joy everywhere
               </li>
               <li>
-                <span className="font-semibold">Rush Orders:</span> Available upon request
+                <span className="font-semibold">Rush Orders:</span> Express delivery available - we&apos;ll make it happen when you need it most
               </li>
             </ul>
+            <div className="mt-4 pt-4 border-t border-brand-gray-200">
+              <p className="text-xs md:text-sm text-brand-gray-600 italic">
+                <span className="font-semibold text-brand-green">💡 Pro Tip:</span> During checkout, review your cart to see location-specific delivery fees and estimated arrival times tailored to your delivery address.
+              </p>
+            </div>
           </div>
 
           <div className="card p-3 md:p-6">
@@ -227,6 +233,14 @@ export default function ServicesPage() {
             <ul className="space-y-1 md:space-y-2 text-xs md:text-base text-brand-gray-700">
               <li>
                 <span className="font-semibold">M-Pesa:</span> Pay via STK Push on checkout
+              </li>
+              <li>
+                <span className="font-semibold">Till Number:</span>{" "}
+                <span className="font-mono font-semibold text-brand-green">{SHOP_INFO.mpesa.till}</span>
+              </li>
+              <li>
+                <span className="font-semibold">PayBill:</span>{" "}
+                <span className="font-mono font-semibold text-brand-green">{SHOP_INFO.mpesa.paybill}</span>
               </li>
               <li>
                 <span className="font-semibold">WhatsApp:</span> Order and arrange payment via
