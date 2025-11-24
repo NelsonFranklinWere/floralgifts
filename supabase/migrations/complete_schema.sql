@@ -127,9 +127,9 @@ DELETE FROM products WHERE slug = 'luxury-gift-hamper' OR (title ILIKE '%luxury 
 -- FLOWERS (8 products)
 INSERT INTO products (slug, title, short_description, description, price, category, tags, images, teddy_size, teddy_color) VALUES
 ('classic-rose-romance', 'Classic Rose Romance', 'Mixed Roses with a touch of gypsophilia, Cuddburry Chocolate 80g', 'Mixed Roses with a touch of gypsophilia, Cuddburry Chocolate 80g', 350000, 'flowers', ARRAY[]::text[], ARRAY['/images/products/flowers/BouquetFlowers1.jpg']::text[], NULL, NULL),
-('sweet-whisper-bouquet', 'Sweet Whisper Bouquet', '60 Roses with touch of gypsophilia, Ferrero rocher chocolate T8', '60 Roses with touch of gypsophilia, Ferrero rocher chocolate T8', 350000, 'flowers', ARRAY[]::text[], ARRAY['/images/products/flowers/BouquetFlowers2.jpg']::text[], NULL, NULL),
+('sweet-whisper-bouquet', 'Sweet Whisper Bouquet', '60 Roses with touch of gypsophilia, Ferrero rocher chocolate T8', '60 Roses with touch of gypsophilia, Ferrero rocher chocolate T8', 550000, 'flowers', ARRAY[]::text[], ARRAY['/images/products/flowers/BouquetFlowers2.jpg']::text[], NULL, NULL),
 ('blush-and-bloom-dreams', 'Blush and Bloom Dreams', 'Baby Pink and white Roses with a touch of gypsophila, Cuddburry chocolate', 'Baby Pink and white Roses with a touch of gypsophila, Cuddburry chocolate', 350000, 'flowers', ARRAY[]::text[], ARRAY['/images/products/flowers/BouquetFlowers4.jpg']::text[], NULL, NULL),
-('pure-serenity-bouquet', 'Pure Serenity Bouquet', 'Yellow mumbs mixed with white and Red Roses, Ferrero rocher chocolate T8', 'Yellow mumbs mixed with white and Red Roses, Ferrero rocher chocolate T8', 350000, 'flowers', ARRAY[]::text[], ARRAY['/images/products/flowers/BouquetFlowers5.jpg']::text[], NULL, NULL),
+('pure-serenity-bouquet', 'Pure Serenity Bouquet', 'Yellow mumbs mixed with white and Red Roses, Ferrero rocher chocolate T8', 'Yellow mumbs mixed with white and Red Roses, Ferrero rocher chocolate T8', 550000, 'flowers', ARRAY[]::text[], ARRAY['/images/products/flowers/BouquetFlowers5.jpg']::text[], NULL, NULL),
 ('radiant-love-collection', 'Radiant Love Collection', 'Pink and Red Roses mixed with a touch of gypsophila', 'Pink and Red Roses mixed with a touch of gypsophila', 300000, 'flowers', ARRAY[]::text[], ARRAY['/images/products/flowers/BouquetFlowers6.jpg']::text[], NULL, NULL),
 ('midnight-bloom-surprises-bouquet', 'Midnight Bloom Surprises Bouquet', 'Red Yellow, Pink, Roses mixed with white mumbs with touch of gypsophilla', 'Red Yellow, Pink, Roses mixed with white mumbs with touch of gypsophilla', 350000, 'flowers', ARRAY[]::text[], ARRAY['/images/products/flowers/BouquetFlowers7.jpg']::text[], NULL, NULL),
 ('sunset-romance-bouquet', 'Sunset Romance Bouquet', '80 Roses of red Roses and white with a touch of gypsophilla', '80 Roses of red Roses and white with a touch of gypsophilla', 450000, 'flowers', ARRAY[]::text[], ARRAY['/images/products/flowers/BouquetFlowers8.jpg']::text[], NULL, NULL),
@@ -266,12 +266,13 @@ USING (bucket_id = 'product-images');
 -- Ensure all products have stock = NULL (always available)
 UPDATE products SET stock = NULL WHERE stock IS NOT NULL;
 
--- Ensure all products with incorrect prices are updated to 3500 KES
--- Update flowers priced at 5500 KES or 550 KES to 3500 KES
+-- Ensure all products with incorrect prices are updated
+-- Update flowers priced at 550 KES or 50 KES to 3500 KES (but keep Sweet Whisper and Pure Serenity at 5500 KES)
 UPDATE products 
 SET price = 350000, updated_at = NOW()
 WHERE category = 'flowers' 
-  AND (price = 550000 OR price = 55000 OR price = 5000);
+  AND (price = 55000 OR price = 5000)
+  AND slug NOT IN ('sweet-whisper-bouquet', 'pure-serenity-bouquet');
 
 -- Update wines priced at 2500 KES, 5500 KES, 250 KES, 550 KES, or 50 KES to 3500 KES
 UPDATE products 
@@ -297,10 +298,15 @@ SET price = 350000, updated_at = NOW()
 WHERE category = 'chocolates' 
   AND (price = 5000 OR price = 25000 OR price = 55000);
 
--- Ensure Sweet Whisper Bouquet is 3500 KES
+-- Ensure Sweet Whisper Bouquet is 5500 KES
 UPDATE products 
-SET price = 350000, updated_at = NOW()
+SET price = 550000, updated_at = NOW()
 WHERE slug = 'sweet-whisper-bouquet';
+
+-- Ensure Pure Serenity Bouquet is 5500 KES
+UPDATE products 
+SET price = 550000, updated_at = NOW()
+WHERE slug = 'pure-serenity-bouquet';
 
 -- ============================================
 -- SCHEMA COMPLETE
