@@ -249,7 +249,7 @@ DELETE FROM admins WHERE email != 'whispersfloral@gmail.com';
 
 -- Insert site settings including logo path
 INSERT INTO site_settings (key, value, description) VALUES
-('logo_path', '/images/logo.jpg', 'Path to the site logo image'),
+('logo_path', '/images/logo/FloralLogo.jpg', 'Path to the site logo image'),
 ('site_name', 'Floral Whispers Gifts', 'Name of the website'),
 ('site_email', 'whispersfloral@gmail.com', 'Contact email for the site'),
 ('site_phone', '254721554393', 'Contact phone number'),
@@ -358,7 +358,7 @@ WHERE slug = 'pure-serenity-bouquet';
 -- 3. Stock set to NULL (always available)
 -- 4. Data updates to ensure existing records are correct
 -- 5. Admin access restricted to whispersfloral@gmail.com only
--- 6. Site settings table with logo path: /images/logo.jpg
+-- 6. Site settings table with logo path: /images/logo/FloralLogo.jpg
 -- 
 -- ADMIN CREDENTIALS:
 -- Email: whispersfloral@gmail.com
@@ -368,9 +368,9 @@ WHERE slug = 'pure-serenity-bouquet';
 -- All other admin accounts are automatically removed.
 -- 
 -- LOGO CONFIGURATION:
--- Logo path is configured in site_settings table: /images/logo.jpg
--- IMPORTANT: Replace the actual image file at public/images/logo.jpg
--- with your Floral Whispers Gifts logo (remove any Vercel branding)
+-- Logo path is configured in site_settings table: /images/logo/FloralLogo.jpg
+-- IMPORTANT: Place your Floral Whispers Gifts logo at public/images/logo/FloralLogo.jpg
+-- (remove any Vercel branding from the image)
 -- The logo is used in: Header, Admin Login, SEO metadata, JSON-LD
 -- ============================================
 

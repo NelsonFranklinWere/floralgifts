@@ -69,7 +69,7 @@ function AdminLoginForm() {
         <div className="text-center">
           <Link href="/" className="flex justify-center mb-4">
             <Image
-              src="/images/logo.jpg"
+              src="/images/logo/FloralLogo.jpg"
               alt="Floral Whispers Gifts Logo"
               width={80}
               height={80}

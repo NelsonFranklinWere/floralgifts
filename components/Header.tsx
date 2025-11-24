@@ -37,7 +37,7 @@ export default function Header() {
             <div className="flex items-center">
               <Link href="/" className="flex items-center space-x-3">
                 <Image
-                  src="/images/logo.jpg"
+                  src="/images/logo/FloralLogo.jpg"
                   alt="Floral Whispers Gifts Logo"
                   width={48}
                   height={48}
@@ -118,7 +118,7 @@ export default function Header() {
                 <div className="flex items-center justify-between mb-8 pb-6 border-b border-brand-gray-200">
                   <div className="flex items-center space-x-3">
                     <Image
-                      src="/images/logo.jpg"
+                      src="/images/logo/FloralLogo.jpg"
                       alt="Logo"
                       width={48}
                       height={48}

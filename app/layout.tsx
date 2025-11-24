@@ -80,7 +80,7 @@ export const metadata: Metadata = {
       "Premium flower delivery Nairobi, gift hampers Kenya, teddy bears Kenya. Same-day delivery Nairobi CBD. Birthday flowers, anniversary flowers, funeral wreaths, roses Nairobi.",
     images: [
       {
-        url: "/images/logo.jpg",
+        url: "/images/logo/FloralLogo.jpg",
         width: 1200,
         height: 630,
         alt: "Floral Whispers Gifts - Premium Flowers & Gifts in Nairobi",
@@ -91,7 +91,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Floral Whispers Gifts | Premium Flower Delivery Nairobi",
     description: "Premium flower delivery Nairobi, gift hampers Kenya, teddy bears Kenya. Same-day delivery available.",
-    images: ["/images/logo.jpg"],
+    images: ["/images/logo/FloralLogo.jpg"],
   },
   robots: {
     index: true,
@@ -116,7 +116,7 @@ const organizationJsonLd = {
   "@type": "Organization",
   name: SHOP_INFO.name,
   url: baseUrl,
-  logo: `${baseUrl}/images/logo.jpg`,
+  logo: `${baseUrl}/images/logo/FloralLogo.jpg`,
   contactPoint: {
     "@type": "ContactPoint",
     telephone: `+${SHOP_INFO.phone}`,
@@ -136,7 +136,7 @@ const localBusinessJsonLd = {
   "@type": "Florist",
   "@id": `${baseUrl}#business`,
   name: SHOP_INFO.name,
-  image: `${baseUrl}/images/logo.jpg`,
+  image: `${baseUrl}/images/logo/FloralLogo.jpg`,
   url: baseUrl,
   telephone: `+${SHOP_INFO.phone}`,
   email: SHOP_INFO.email,

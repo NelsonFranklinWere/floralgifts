@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     siteName: "Floral Whispers Gifts",
     images: [
       {
-        url: "/images/logo.jpg",
+        url: "/images/logo/FloralLogo.jpg",
         width: 1200,
         height: 630,
         alt: "Floral Whispers Gifts - Premium Flowers & Gifts in Nairobi",
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Whispers Floral Gifts | Premium Flower Delivery Nairobi",
     description: "Premium flower delivery Nairobi, gift hampers Kenya, teddy bears Kenya. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
-    images: ["/images/logo.jpg"],
+    images: ["/images/logo/FloralLogo.jpg"],
   },
 };
 
