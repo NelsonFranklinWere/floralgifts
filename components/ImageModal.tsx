@@ -210,8 +210,8 @@ export default function ImageModal({ isOpen, onClose, imageUrl, alt }: ImageModa
               width={1200}
               height={1200}
               className="max-w-full max-h-[90vh] object-contain"
-              unoptimized={imageUrl.startsWith('/images/')}
               priority
+              quality={90}
             />
           </div>
         </div>

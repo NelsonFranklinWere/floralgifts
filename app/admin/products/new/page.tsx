@@ -23,11 +23,42 @@ const schema = yup.object({
 
 type ProductFormData = yup.InferType<typeof schema>;
 
+// Common tags by category
+const COMMON_TAGS = {
+  flowers: [
+    "birthday", "anniversary", "romantic", "valentine", "wedding", "funeral", "condolence",
+    "get well soon", "sorry", "congrats", "graduation", "roses", "carnations", "gerberas",
+    "sunflowers", "lilies", "chrysanthemums", "heart box", "vase", "basket", "hat box",
+    "hand-tied", "envelope", "square box"
+  ],
+  hampers: [
+    "birthday", "anniversary", "corporate", "graduation", "wedding", "holiday", "end of year",
+    "chocolate", "wine", "fruit", "gourmet"
+  ],
+  teddy: [
+    "birthday", "anniversary", "valentine", "graduation", "baby", "kids", "gift"
+  ],
+  wines: [
+    "red", "white", "sparkling", "sweet", "dry", "premium", "gift"
+  ],
+  chocolates: [
+    "ferrero rocher", "birthday", "anniversary", "valentine", "gift", "premium"
+  ]
+};
+
+const COLORS = [
+  "brown", "red", "white", "pink", "blue", "black", "yellow", "green", "purple", "orange", "beige", "gray"
+];
+
 export default function NewProductPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [images, setImages] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState("");
+  const [includedItems, setIncludedItems] = useState<Array<{ name: string; qty: number; note?: string }>>([]);
+  const [upsells, setUpsells] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
@@ -35,6 +66,7 @@ export default function NewProductPage() {
     handleSubmit,
     formState: { errors },
     watch,
+    setValue,
   } = useForm<ProductFormData>({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -44,6 +76,47 @@ export default function NewProductPage() {
   });
 
   const category = watch("category");
+
+  const addTag = (tag: string) => {
+    const trimmedTag = tag.trim().toLowerCase();
+    if (trimmedTag && !tags.includes(trimmedTag)) {
+      const newTags = [...tags, trimmedTag];
+      setTags(newTags);
+      setValue("tags", newTags);
+      setTagInput("");
+    }
+  };
+
+  const removeTag = (tagToRemove: string) => {
+    const newTags = tags.filter(t => t !== tagToRemove);
+    setTags(newTags);
+    setValue("tags", newTags);
+  };
+
+  const addIncludedItem = () => {
+    setIncludedItems([...includedItems, { name: "", qty: 1 }]);
+  };
+
+  const updateIncludedItem = (index: number, field: string, value: string | number) => {
+    const updated = [...includedItems];
+    updated[index] = { ...updated[index], [field]: value };
+    setIncludedItems(updated);
+  };
+
+  const removeIncludedItem = (index: number) => {
+    setIncludedItems(includedItems.filter((_, i) => i !== index));
+  };
+
+  const addUpsell = (productSlug: string) => {
+    const trimmed = productSlug.trim();
+    if (trimmed && !upsells.includes(trimmed)) {
+      setUpsells([...upsells, trimmed]);
+    }
+  };
+
+  const removeUpsell = (slug: string) => {
+    setUpsells(upsells.filter(s => s !== slug));
+  };
 
   const onSubmit = handleSubmit(async (data) => {
     setIsSubmitting(true);
@@ -62,9 +135,12 @@ export default function NewProductPage() {
           ...data,
           price: Math.round(data.price * 100), // Convert to cents
           images,
+          tags,
           category: data.category as "flowers" | "hampers" | "teddy" | "wines" | "chocolates",
           teddy_size: category === "teddy" ? data.teddy_size : null,
           teddy_color: category === "teddy" ? data.teddy_color : null,
+          included_items: includedItems.length > 0 ? includedItems : null,
+          upsells: upsells.length > 0 ? upsells : null,
         },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -251,32 +327,99 @@ export default function NewProductPage() {
             </div>
           </div>
 
-          {category === "teddy" && (
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="teddy_size" className="block text-sm font-medium text-brand-gray-900 mb-2">
-                  Size (cm)
-                </label>
+          {/* Tags Section */}
+          <div>
+            <label className="block text-sm font-medium text-brand-gray-900 mb-2">
+              Tags (for filtering)
+            </label>
+            <div className="space-y-2">
+              <div className="flex gap-2">
                 <input
-                  id="teddy_size"
-                  type="number"
-                  {...register("teddy_size", { valueAsNumber: true })}
-                  className="input-field"
-                  placeholder="50"
+                  type="text"
+                  value={tagInput}
+                  onChange={(e) => setTagInput(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      addTag(tagInput);
+                    }
+                  }}
+                  className="input-field flex-1"
+                  placeholder="Type a tag and press Enter"
                 />
+                <button
+                  type="button"
+                  onClick={() => addTag(tagInput)}
+                  className="btn-outline"
+                >
+                  Add
+                </button>
               </div>
+              {category && COMMON_TAGS[category as keyof typeof COMMON_TAGS] && (
+                <div className="flex flex-wrap gap-2">
+                  <span className="text-xs text-brand-gray-500 mr-2">Suggestions:</span>
+                  {COMMON_TAGS[category as keyof typeof COMMON_TAGS].map((tag) => (
+                    <button
+                      key={tag}
+                      type="button"
+                      onClick={() => addTag(tag)}
+                      disabled={tags.includes(tag)}
+                      className="text-xs px-2 py-1 rounded bg-brand-gray-100 hover:bg-brand-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      + {tag}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {tags.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="inline-flex items-center gap-1 px-2 py-1 rounded bg-brand-green/10 text-sm text-brand-green"
+                    >
+                      {tag}
+                      <button
+                        type="button"
+                        onClick={() => removeTag(tag)}
+                        className="text-brand-green hover:text-brand-red"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Size and Color - Show for teddy bears, but also allow color for other categories */}
+          {(category === "teddy" || category === "flowers" || category === "hampers") && (
+            <div className="grid md:grid-cols-2 gap-4">
+              {category === "teddy" && (
+                <div>
+                  <label htmlFor="teddy_size" className="block text-sm font-medium text-brand-gray-900 mb-2">
+                    Size (cm)
+                  </label>
+                  <input
+                    id="teddy_size"
+                    type="number"
+                    {...register("teddy_size", { valueAsNumber: true })}
+                    className="input-field"
+                    placeholder="50"
+                  />
+                </div>
+              )}
 
               <div>
                 <label htmlFor="teddy_color" className="block text-sm font-medium text-brand-gray-900 mb-2">
-                  Color
+                  Color {category === "teddy" ? "" : "(Optional)"}
                 </label>
                 <select id="teddy_color" {...register("teddy_color")} className="input-field">
-                  <option value="">Select color</option>
-                  <option value="brown">Brown</option>
-                  <option value="red">Red</option>
-                  <option value="white">White</option>
-                  <option value="pink">Pink</option>
-                  <option value="blue">Blue</option>
+                  <option value="">Select color (optional)</option>
+                  {COLORS.map(color => (
+                    <option key={color} value={color}>{color.charAt(0).toUpperCase() + color.slice(1)}</option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -293,6 +436,98 @@ export default function NewProductPage() {
               className="input-field"
               placeholder="Leave empty for always available"
             />
+          </div>
+
+          {/* Included Items Section */}
+          <div>
+            <label className="block text-sm font-medium text-brand-gray-900 mb-2">
+              Included Items (Optional - for gift hampers)
+            </label>
+            <div className="space-y-2">
+              {includedItems.map((item, index) => (
+                <div key={index} className="flex gap-2 items-start">
+                  <input
+                    type="text"
+                    value={item.name}
+                    onChange={(e) => updateIncludedItem(index, "name", e.target.value)}
+                    className="input-field flex-1"
+                    placeholder="Item name"
+                  />
+                  <input
+                    type="number"
+                    value={item.qty}
+                    onChange={(e) => updateIncludedItem(index, "qty", parseInt(e.target.value) || 1)}
+                    className="input-field w-20"
+                    placeholder="Qty"
+                    min="1"
+                  />
+                  <input
+                    type="text"
+                    value={item.note || ""}
+                    onChange={(e) => updateIncludedItem(index, "note", e.target.value)}
+                    className="input-field flex-1"
+                    placeholder="Note (optional)"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeIncludedItem(index)}
+                    className="btn-outline text-sm px-3"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={addIncludedItem}
+                className="btn-outline text-sm"
+              >
+                + Add Included Item
+              </button>
+            </div>
+          </div>
+
+          {/* Upsells Section */}
+          <div>
+            <label className="block text-sm font-medium text-brand-gray-900 mb-2">
+              Upsells (Optional - Product slugs to suggest)
+            </label>
+            <div className="space-y-2">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      const target = e.target as HTMLInputElement;
+                      addUpsell(target.value);
+                      target.value = "";
+                    }
+                  }}
+                  className="input-field flex-1"
+                  placeholder="Enter product slug and press Enter"
+                />
+              </div>
+              {upsells.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {upsells.map((slug) => (
+                    <span
+                      key={slug}
+                      className="inline-flex items-center gap-1 px-2 py-1 rounded bg-brand-gray-100 text-sm"
+                    >
+                      {slug}
+                      <button
+                        type="button"
+                        onClick={() => removeUpsell(slug)}
+                        className="text-brand-gray-600 hover:text-brand-red"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           <div>

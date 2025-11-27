@@ -77,18 +77,54 @@ export default function HeroCarousel() {
             alt={slide.title}
             fill
             className="object-cover"
-            priority={index === 0}
+            priority={index <= 1}
             sizes="100vw"
+            quality={80}
           />
-          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-            <div className="text-center text-white px-4 max-w-2xl">
-              <h1 className="font-heading font-bold text-2xl md:text-3xl lg:text-4xl xl:text-5xl mb-2 md:mb-3 lg:mb-4">
-                {slide.title}
-              </h1>
-              <p className="text-sm md:text-base lg:text-lg xl:text-xl mb-4 md:mb-6 lg:mb-8 text-white/90">{slide.subtitle}</p>
-              <Link href={slide.ctaLink} className="btn-primary inline-block text-xs md:text-sm lg:text-base px-4 md:px-6 lg:px-8 py-2 md:py-3 lg:py-4">
-                {slide.ctaText}
-              </Link>
+          <div className="absolute inset-0 bg-black/40 flex items-center">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 w-full">
+              <div className="flex items-center justify-between gap-4 md:gap-8">
+                {/* Left side - Text content */}
+                <div className="text-left text-white max-w-2xl flex-1">
+                  <h1 className="font-heading font-bold text-2xl md:text-3xl lg:text-4xl xl:text-5xl mb-2 md:mb-3 lg:mb-4">
+                    {slide.title}
+                  </h1>
+                  <p className="text-sm md:text-base lg:text-lg xl:text-xl mb-4 md:mb-6 lg:mb-8 text-white/90">{slide.subtitle}</p>
+                  <Link href={slide.ctaLink} className="btn-primary inline-block text-xs md:text-sm lg:text-base px-4 md:px-6 lg:px-8 py-2 md:py-3 lg:py-4">
+                    {slide.ctaText}
+                  </Link>
+                </div>
+                
+                {/* Right side - Two overlapping images */}
+                <div className="hidden md:flex items-center justify-end flex-shrink-0 relative">
+                  <div className="relative w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48">
+                    {/* First image - behind, positioned at top-left, bottom-right corner overlaps second image's top-left by 68px */}
+                    <div className="absolute top-0 left-0 w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-lg overflow-hidden shadow-lg border-2 border-white/20 z-10" style={{ transform: 'translate(68px, 68px)' }}>
+                      <Image
+                        src={heroSlides[(index + 1) % heroSlides.length].image}
+                        alt={heroSlides[(index + 1) % heroSlides.length].title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 128px, (max-width: 1024px) 160px, 192px"
+                        quality={75}
+                        loading="lazy"
+                      />
+                    </div>
+                    {/* Second image - in front, positioned so its top-left corner overlaps first image's bottom-right corner by 68px */}
+                    <div className="absolute bottom-0 right-0 w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-lg overflow-hidden shadow-lg border-2 border-white/20 z-20" style={{ transform: 'translate(-68px, -68px)' }}>
+                      <Image
+                        src={heroSlides[(index + 2) % heroSlides.length].image}
+                        alt={heroSlides[(index + 2) % heroSlides.length].title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 128px, (max-width: 1024px) 160px, 192px"
+                        quality={75}
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -1,6 +1,129 @@
 -- ============================================
--- COMPLETE DATABASE SCHEMA FOR FLORAL WHISPERS GIFTS
--- Run this entire file in Supabase SQL Editor
+-- COMBINED DATABASE SCHEMA FOR FLORAL WHISPERS GIFTS
+-- This file contains TWO sections:
+-- 1. UPDATED SCHEMA - Safe additions to run on existing database
+-- 2. COMPLETE SCHEMA - Full schema matching your current database
+-- ============================================
+
+-- ============================================
+-- SECTION 1: UPDATED SCHEMA
+-- Run this section FIRST to add missing elements to your existing database
+-- This will NOT delete or modify any existing data
+-- ============================================
+
+-- ============================================
+-- ADD MISSING TABLES
+-- ============================================
+
+-- Blog Posts table (if it doesn't exist)
+CREATE TABLE IF NOT EXISTS blog_posts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug TEXT UNIQUE NOT NULL,
+  title TEXT NOT NULL,
+  excerpt TEXT NOT NULL,
+  content TEXT NOT NULL,
+  author TEXT NOT NULL DEFAULT 'Floral Whispers Team',
+  published_at TIMESTAMPTZ DEFAULT NOW(),
+  image TEXT NOT NULL,
+  category TEXT NOT NULL,
+  tags TEXT[] DEFAULT '{}',
+  read_time INTEGER NOT NULL DEFAULT 5,
+  featured BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ============================================
+-- ADD MISSING COLUMNS (if they don't exist)
+-- ============================================
+
+-- Add tip fields to orders table if they don't exist
+DO $$ 
+BEGIN
+  -- Add tip_percentage column if it doesn't exist
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'orders' AND column_name = 'tip_percentage'
+  ) THEN
+    ALTER TABLE orders ADD COLUMN tip_percentage INTEGER;
+  END IF;
+
+  -- Add tip_amount column if it doesn't exist
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'orders' AND column_name = 'tip_amount'
+  ) THEN
+    ALTER TABLE orders ADD COLUMN tip_amount INTEGER;
+  END IF;
+END $$;
+
+-- ============================================
+-- ADD MISSING INDEXES
+-- ============================================
+
+-- Blog posts indexes
+CREATE INDEX IF NOT EXISTS idx_blog_posts_slug ON blog_posts(slug);
+CREATE INDEX IF NOT EXISTS idx_blog_posts_category ON blog_posts(category);
+CREATE INDEX IF NOT EXISTS idx_blog_posts_featured ON blog_posts(featured);
+CREATE INDEX IF NOT EXISTS idx_blog_posts_published_at ON blog_posts(published_at DESC);
+
+-- Orders tip indexes (if columns exist)
+DO $$ 
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'orders' AND column_name = 'tip_amount'
+  ) THEN
+    CREATE INDEX IF NOT EXISTS idx_orders_tip_amount ON orders(tip_amount);
+  END IF;
+END $$;
+
+-- ============================================
+-- ADD MISSING RLS POLICIES
+-- ============================================
+
+-- Enable RLS on blog_posts if not already enabled
+ALTER TABLE blog_posts ENABLE ROW LEVEL SECURITY;
+
+-- Drop existing blog policies if they exist (to avoid conflicts)
+DROP POLICY IF EXISTS "Allow public read access" ON blog_posts;
+DROP POLICY IF EXISTS "Public can read blog posts" ON blog_posts;
+DROP POLICY IF EXISTS "Service role can manage blog posts" ON blog_posts;
+
+-- Allow public read access to blog posts
+CREATE POLICY "Allow public read access" ON blog_posts
+  FOR SELECT
+  USING (true);
+
+-- ============================================
+-- ADD MISSING TRIGGERS
+-- ============================================
+
+-- Ensure update_updated_at_column function exists
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+-- Blog posts updated_at trigger
+DROP TRIGGER IF EXISTS update_blog_posts_updated_at ON blog_posts;
+CREATE TRIGGER update_blog_posts_updated_at BEFORE UPDATE ON blog_posts
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- ============================================
+-- END OF UPDATED SCHEMA SECTION
+-- ============================================
+
+
+
+
+-- ============================================
+-- SECTION 2: COMPLETE SCHEMA
+-- This matches your current database structure exactly
+-- Use this as reference or to recreate the database from scratch
 -- ============================================
 
 -- ============================================
@@ -350,27 +473,35 @@ SET price = 550000, updated_at = NOW()
 WHERE slug = 'pure-serenity-bouquet';
 
 -- ============================================
--- SCHEMA COMPLETE
+-- END OF COMPLETE SCHEMA SECTION
 -- ============================================
--- This schema includes:
--- 1. All tables, indexes, RLS policies, triggers
--- 2. All product data with correct prices
--- 3. Stock set to NULL (always available)
--- 4. Data updates to ensure existing records are correct
--- 5. Admin access restricted to whispersfloral@gmail.com only
--- 6. Site settings table with logo path: /images/logo/FloralLogo.jpg
+
+-- ============================================
+-- SCHEMA SUMMARY
+-- ============================================
+-- 
+-- UPDATED SCHEMA adds:
+-- 1. Blog posts table
+-- 2. Tip fields (tip_percentage, tip_amount) to orders table
+-- 3. All necessary indexes, RLS policies, and triggers for blog posts
+-- 
+-- COMPLETE SCHEMA includes:
+-- 1. All tables (products, orders, admins, site_settings)
+-- 2. All indexes, RLS policies, triggers
+-- 3. All product data with correct prices
+-- 4. Admin user setup
+-- 5. Site settings
+-- 6. Storage bucket and policies
+-- 7. Data updates to ensure existing records are correct
 -- 
 -- ADMIN CREDENTIALS:
 -- Email: whispersfloral@gmail.com
 -- Password: Admin@2025
 -- 
--- SECURITY: Only this email can access the admin dashboard.
+-- SECURITY: Only whispersfloral@gmail.com can access the admin dashboard.
 -- All other admin accounts are automatically removed.
 -- 
 -- LOGO CONFIGURATION:
--- Logo path is configured in site_settings table: /images/logo/FloralLogo.jpg
--- IMPORTANT: Place your Floral Whispers Gifts logo at public/images/logo/FloralLogo.jpg
--- (remove any Vercel branding from the image)
--- The logo is used in: Header, Admin Login, SEO metadata, JSON-LD
+-- Logo path: /images/logo/FloralLogo.jpg
 -- ============================================
 

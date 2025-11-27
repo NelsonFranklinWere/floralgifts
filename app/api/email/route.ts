@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 
 const RECIPIENT_EMAIL = "whispersfloral@gmail.com";
-const RESEND_API_KEY = process.env.RESEND_API_KEY || "re_Nw56zMAM_8ETmNmG34UqrD8VBkWBbpdBy";
+const RESEND_API_KEY = process.env.RESEND_API_KEY || "re_jE9T351o_6gDh55gy8PHW4LWZJENwXFKR";
 // Use onboarding@resend.dev as default (always verified by Resend)
 // For production, verify your own domain in Resend dashboard and use that
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev";

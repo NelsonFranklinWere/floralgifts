@@ -4,9 +4,8 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { formatCurrency } from "@/lib/utils";
-import { generateProductWhatsAppLink } from "@/lib/whatsapp";
 import { useCartStore } from "@/lib/store/cart";
-import { ShoppingCartIcon, ChatBubbleLeftRightIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { ShoppingCartIcon as ShoppingCartIconSolid } from "@heroicons/react/24/solid";
 import ImageModal from "@/components/ImageModal";
 import { Analytics } from "@/lib/analytics";
@@ -21,6 +20,7 @@ interface ProductCardProps {
   category?: string;
   hideDetailsButton?: boolean;
   homePage?: boolean;
+  priority?: boolean;
 }
 
 export default function ProductCard({
@@ -33,6 +33,7 @@ export default function ProductCard({
   category,
   hideDetailsButton = false,
   homePage = false,
+  priority = false,
 }: ProductCardProps) {
 
   const { addItem } = useCartStore();
@@ -56,8 +57,6 @@ export default function ProductCard({
     // Track add to cart
     Analytics.trackAddToCart(id, name, price, 1);
   };
-
-  const whatsappLink = generateProductWhatsAppLink(name, price);
 
   const handleImageClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -89,24 +88,25 @@ export default function ProductCard({
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                   sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                  loading="lazy"
-                  quality={85}
+                  loading={priority ? undefined : "lazy"}
+                  priority={priority}
+                  quality={70}
+                  placeholder="blur"
+                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                   onError={(e) => {
                     console.error("[ProductCard] Image failed to load:", image);
                     console.error("[ProductCard] Error:", e);
                   }}
                 />
-                {/* Basket icon overlay for home page */}
-                {homePage && (
-                  <button
-                    type="button"
-                    onClick={handleBasketClick}
-                    className="absolute top-0 right-0 z-10 bg-white rounded-full p-1.5 shadow-lg hover:bg-brand-red hover:text-white transition-all duration-300"
-                    aria-label={`Add ${name} to cart`}
-                  >
-                    <ShoppingCartIconSolid className="w-3.5 h-3.5 text-brand-red" />
-                  </button>
-                )}
+                {/* Basket icon overlay - always visible */}
+                <button
+                  type="button"
+                  onClick={handleBasketClick}
+                  className="absolute top-2 right-2 z-10 bg-white rounded-full p-2 shadow-lg hover:bg-brand-red hover:text-white transition-all duration-300 group-hover:scale-110"
+                  aria-label={`Add ${name} to cart`}
+                >
+                  <ShoppingCartIconSolid className="w-4 h-4 md:w-5 md:h-5 text-brand-red group-hover:text-white transition-colors" />
+                </button>
                 {/* Click indicator overlay */}
                 {!homePage && (
                   <div className="absolute inset-0 bg-black bg-opacity-0 group-hover/image:bg-opacity-10 transition-opacity duration-300 flex items-center justify-center">
@@ -136,49 +136,15 @@ export default function ProductCard({
         </p>
       </Link>
 
-      {homePage && category === "hampers" && (
+      {/* View Details button - only for gift hampers */}
+      {category === "hampers" && !hideDetailsButton && (
         <Link
           href={`/product/${slug}`}
-          className="btn-outline w-full text-center text-xs py-1.5 mt-2"
+          className="btn-outline w-full text-center text-xs md:text-sm py-1.5 md:py-2 mt-2"
           aria-label={`View details for ${name}`}
         >
           View Details
         </Link>
-      )}
-
-      {!homePage && (
-        <div className="flex flex-col gap-1.5 md:gap-2">
-          <div className="flex gap-1.5 md:gap-2">
-            <button
-              type="button"
-              onClick={handleAddToCart}
-              className="btn-primary flex-1 flex items-center justify-center gap-1 md:gap-2 text-xs md:text-sm py-1.5 md:py-2"
-              aria-label={`Add ${name} to cart`}
-            >
-              <ShoppingCartIcon className="h-3 w-3 md:h-4 md:w-4" />
-              <span className="hidden sm:inline">Add to Cart</span>
-              <span className="sm:hidden">Add</span>
-            </button>
-            <a
-              href={whatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-secondary px-3 md:px-4 py-1.5 md:py-2 flex items-center justify-center"
-              aria-label={`Order ${name} via WhatsApp`}
-            >
-              <ChatBubbleLeftRightIcon className="h-4 w-4 md:h-5 md:w-5" />
-            </a>
-          </div>
-          {!hideDetailsButton && (
-            <Link
-              href={`/product/${slug}`}
-              className="btn-outline w-full text-center text-xs md:text-sm py-1.5 md:py-2"
-              aria-label={`View details for ${name}`}
-            >
-              View Details
-            </Link>
-          )}
-        </div>
       )}
       </div>
 

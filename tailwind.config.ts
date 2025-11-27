@@ -24,8 +24,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        heading: ["Poppins", "sans-serif"],
-        body: ["Inter", "sans-serif"],
+        heading: ["var(--font-heading)", "system-ui", "sans-serif"],
+        body: ["var(--font-body)", "system-ui", "sans-serif"],
         mono: ["Roboto Mono", "monospace"],
       },
       boxShadow: {

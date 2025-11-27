@@ -58,13 +58,50 @@ export default function FlowersPageClient({ products, allFlowerImages = [], flow
     Analytics.trackCollectionView("flowers", allDisplayItems.length);
   }, [allDisplayItems.length]);
 
+  // Helper function to categorize product by name
+  const getProductCategory = (productName: string): string[] => {
+    const name = productName.toLowerCase();
+    const categories: string[] = [];
+    
+    if (name.includes("birthday") || name.includes("bday")) {
+      categories.push("birthday");
+    }
+    if (name.includes("anniversary") || name.includes("anniv")) {
+      categories.push("anniversary");
+    }
+    if (name.includes("get well") || name.includes("well soon") || name.includes("recovery")) {
+      categories.push("get well soon");
+    }
+    if (name.includes("funeral") || name.includes("condolence") || name.includes("sympathy") || name.includes("rip")) {
+      categories.push("funeral");
+    }
+    if (name.includes("congrat") || name.includes("graduation") || name.includes("success")) {
+      categories.push("congrats");
+    }
+    if (name.includes("wedding") || name.includes("bridal") || name.includes("bride")) {
+      categories.push("wedding");
+    }
+    if (name.includes("valentine") || name.includes("romantic") || name.includes("love") || name.includes("rose")) {
+      categories.push("valentine");
+    }
+    
+    return categories;
+  };
+
   const filteredProducts = useMemo(() => {
     if (selectedTags.length === 0) {
       return allDisplayItems;
     }
-    return allDisplayItems.filter((product) =>
-      selectedTags.some((tag) => product.tags?.includes(tag))
-    );
+    return allDisplayItems.filter((product) => {
+      // Check both tags and product name for categorization
+      const productTags = product.tags || [];
+      const nameCategories = getProductCategory(product.title || "");
+      const allCategories = [...productTags, ...nameCategories];
+      
+      return selectedTags.some((tag) => 
+        allCategories.some(cat => cat.toLowerCase() === tag.toLowerCase())
+      );
+    });
   }, [selectedTags, allDisplayItems]);
 
   return (

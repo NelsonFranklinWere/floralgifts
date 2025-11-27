@@ -1,0 +1,44 @@
+# ============================================
+# FLORAL WHISPERS GIFTS - ENVIRONMENT VARIABLES
+# Copy this content to .env.local file
+# ============================================
+
+# ============================================
+# SUPABASE CONFIGURATION
+# ============================================
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url_here
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key_here
+
+# ============================================
+# BASE URL
+# ============================================
+NEXT_PUBLIC_BASE_URL=https://whispersfloralgifts.co.ke
+
+# ============================================
+# M-PESA CONFIGURATION
+# ============================================
+MPESA_ENV=sandbox
+MPESA_CONSUMER_KEY=gQE0zykwt3dXyXGemkfSdAGS1G6qGjGxjF5bwCBdGAsSHf0S
+MPESA_CONSUMER_SECRET=Hy6TP0ln3i4HoeH84OzVBvtmnRU9bSu0hpfXKQTITXn4uWOvjkL5fTPPkdyLMyMe
+MPESA_SHORTCODE=174379
+MPESA_PASSKEY=your_passkey_from_safaricom_portal
+MPESA_CALLBACK_URL=http://localhost:3000/api/mpesa/callback
+
+# ============================================
+# ADMIN AUTHENTICATION
+# ============================================
+JWT_SECRET=your-secret-key-change-in-production-use-strong-random-string
+ADMIN_EMAIL=admin@example.com
+ADMIN_PASSWORD=admin123
+
+# ============================================
+# EMAIL CONFIGURATION (Resend)
+# ============================================
+RESEND_API_KEY=re_Nw56zMAM_8ETmNmG34UqrD8VBkWBbpdBy
+RESEND_FROM_EMAIL=onboarding@resend.dev
+
+# ============================================
+# GOOGLE VERIFICATION (Optional)
+# ============================================
+GOOGLE_VERIFICATION=

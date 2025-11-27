@@ -20,8 +20,10 @@ const nextConfig = {
     // Enable image optimization
     dangerouslyAllowSVG: false,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    // Optimize for performance
+    // Optimize for performance - keep optimization enabled for all images
     unoptimized: false,
+    // Faster image loading
+    loader: 'default',
   },
   // Performance optimizations
   compress: true,

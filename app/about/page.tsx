@@ -149,6 +149,9 @@ export default function AboutPage() {
             <h2 className="font-heading font-bold text-xl md:text-2xl text-brand-gray-900 mb-4">
               Why Choose Us
             </h2>
+            <p className="text-brand-gray-700 text-base md:text-lg mb-6 text-center max-w-3xl mx-auto">
+              Same-day delivery in Nairobi means your perfect gift is just one click away. Don&apos;t wait—make someone&apos;s day extraordinary today!
+            </p>
             <div className="grid md:grid-cols-2 gap-4 md:gap-6">
               <div>
                 <h3 className="font-heading font-semibold text-base md:text-xl text-brand-green mb-2">

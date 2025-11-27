@@ -110,7 +110,7 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-3 gap-6">
           <Link href="/admin/products" className="card p-6 hover:shadow-cardHover transition-shadow block">
             <h2 className="font-heading font-bold text-xl text-brand-gray-900 mb-2">Manage Products</h2>
             <p className="text-brand-gray-600 mb-4">Add, edit, or remove products from your catalog</p>
@@ -121,6 +121,12 @@ export default function AdminDashboard() {
             <h2 className="font-heading font-bold text-xl text-brand-gray-900 mb-2">Manage Orders</h2>
             <p className="text-brand-gray-600 mb-4">View orders, update status, and process payments</p>
             <span className="text-brand-green font-medium">Go to Orders →</span>
+          </Link>
+
+          <Link href="/admin/blogs" className="card p-6 hover:shadow-cardHover transition-shadow block">
+            <h2 className="font-heading font-bold text-xl text-brand-gray-900 mb-2">Manage Blog</h2>
+            <p className="text-brand-gray-600 mb-4">Create, edit, or delete blog posts</p>
+            <span className="text-brand-green font-medium">Go to Blog →</span>
           </Link>
         </div>
       </main>

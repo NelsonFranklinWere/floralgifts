@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Poppins, Roboto_Mono } from "next/font/google";
+import { Montserrat, Lato, Roboto_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -8,16 +8,17 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
 import { SHOP_INFO } from "@/lib/constants";
 
-const inter = Inter({
+const montserrat = Montserrat({
   subsets: ["latin"],
-  variable: "--font-inter",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-heading",
   display: "swap",
 });
 
-const poppins = Poppins({
+const lato = Lato({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-poppins",
+  weight: ["300", "400", "700", "900"],
+  variable: "--font-body",
   display: "swap",
 });
 
@@ -233,7 +234,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${poppins.variable} ${robotoMono.variable}`}>
+    <html lang="en" className={`${montserrat.variable} ${lato.variable} ${robotoMono.variable}`}>
       <head>
         <script
           type="application/ld+json"
@@ -248,7 +249,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
       </head>
-      <body className={`${inter.className} flex flex-col min-h-screen`}>
+      <body className={`${lato.className} flex flex-col min-h-screen`}>
         <ErrorBoundary>
           <AnalyticsProvider>
             <a href="#main-content" className="skip-link">

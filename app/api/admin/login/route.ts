@@ -11,6 +11,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { email, password } = body;
 
+    console.log(`[Login] Attempt: email="${email}", password length=${password?.length || 0}`);
+
     if (!email || !password) {
       return NextResponse.json(
         { message: "Email and password are required" },
@@ -22,13 +24,22 @@ export async function POST(request: NextRequest) {
     const ALLOWED_EMAIL = "whispersfloral@gmail.com";
     const ALLOWED_PASSWORD = "Admin@2025";
 
+    // Normalize email (trim and lowercase)
+    const normalizedEmail = email.trim().toLowerCase();
+    const normalizedAllowedEmail = ALLOWED_EMAIL.toLowerCase();
+
+    console.log(`[Login] Normalized: "${normalizedEmail}" vs "${normalizedAllowedEmail}"`);
+
     // Check if email is the allowed email
-    if (email.toLowerCase() !== ALLOWED_EMAIL.toLowerCase()) {
+    if (normalizedEmail !== normalizedAllowedEmail) {
+      console.log(`[Login] Email mismatch: "${normalizedEmail}" !== "${normalizedAllowedEmail}"`);
       return NextResponse.json(
         { message: "Access denied. Only authorized administrators can access this dashboard." },
         { status: 403 }
       );
     }
+
+    console.log(`[Login] Email matches, checking password...`);
 
     // Check against admins table in Supabase first
     try {
@@ -47,28 +58,36 @@ export async function POST(request: NextRequest) {
             id: admin.id 
           }, JWT_SECRET, { expiresIn: "7d" });
 
+          console.log(`[Login] Success for ${admin.email}`);
           return NextResponse.json({
             message: "Login successful",
             token,
           });
+        } else {
+          console.log(`[Login] Password mismatch for ${admin.email}`);
         }
+      } else {
+        console.log(`[Login] Admin not found in database:`, error);
       }
     } catch (dbError) {
       console.error("Database auth error:", dbError);
     }
 
     // Fallback: Direct check for whispersfloral@gmail.com with Admin@2025
-    if (email.toLowerCase() === ALLOWED_EMAIL.toLowerCase() && password === ALLOWED_PASSWORD) {
+    if (normalizedEmail === normalizedAllowedEmail && password === ALLOWED_PASSWORD) {
       const token = jwt.sign({ 
         email: ALLOWED_EMAIL, 
         role: "admin" 
       }, JWT_SECRET, { expiresIn: "7d" });
       
+      console.log(`[Login] Fallback success for ${ALLOWED_EMAIL}`);
       return NextResponse.json({
         message: "Login successful",
         token,
       });
     }
+
+    console.log(`[Login] Final check failed for email: ${normalizedEmail}`);
 
     return NextResponse.json(
       { message: "Invalid email or password" },

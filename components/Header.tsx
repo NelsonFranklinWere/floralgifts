@@ -2,100 +2,288 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon, ShoppingCartIcon, MagnifyingGlassIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import { useCartStore } from "@/lib/store/cart";
 import { useUIStore } from "@/lib/store/ui";
 import CartSidebar from "./CartSidebar";
+import Logo from "./Logo";
+import { SHOP_INFO } from "@/lib/constants";
 
-const navigation = [
-  { name: "Home", href: "/" },
-  { name: "About", href: "/about" },
-  { name: "Collections", href: "/collections" },
-  { name: "Services", href: "/services" },
-  { name: "Contact", href: "/contact" },
+interface NavItem {
+  name: string;
+  href: string;
+  children?: {
+    title: string;
+    items: { name: string; href: string }[];
+  }[];
+}
+
+const navigation: NavItem[] = [
+  {
+    name: "Flower Bouquets",
+    href: "/collections/flowers",
+    children: [
+      {
+        title: "By Occasion",
+        items: [
+          { name: "View all", href: "/collections/flowers" },
+          { name: "Anniversary Flowers", href: "/collections/flowers?tags=anniversary" },
+          { name: "Birthday Flowers", href: "/collections/flowers?tags=birthday" },
+          { name: "Romantic Flowers", href: "/collections/flowers?tags=romantic" },
+          { name: "I'm Sorry Flowers", href: "/collections/flowers?tags=sorry" },
+          { name: "Get Well Soon Flowers", href: "/collections/flowers?tags=get well soon" },
+          { name: "Condolence Flowers", href: "/collections/flowers?tags=funeral" },
+        ],
+      },
+      {
+        title: "Flower Arrangements",
+        items: [
+          { name: "View all", href: "/collections/flowers" },
+          { name: "Heart Box Arrangements", href: "/collections/flowers" },
+          { name: "Vase Flowers", href: "/collections/flowers" },
+          { name: "Flower Baskets", href: "/collections/flowers" },
+          { name: "Hat Box Arrangements", href: "/collections/flowers" },
+          { name: "Hand-tied Bouquets", href: "/collections/flowers" },
+          { name: "Envelope Arrangements", href: "/collections/flowers" },
+          { name: "Square Box Arrangements", href: "/collections/flowers" },
+        ],
+      },
+      {
+        title: "By Type",
+        items: [
+          { name: "Carnations", href: "/collections/flowers" },
+          { name: "Roses", href: "/collections/flowers" },
+          { name: "Gerberas", href: "/collections/flowers" },
+          { name: "Sunflowers", href: "/collections/flowers" },
+          { name: "Lilies", href: "/collections/flowers" },
+          { name: "Chrysanthemums", href: "/collections/flowers" },
+        ],
+      },
+    ],
+  },
+  {
+    name: "Flower Hampers",
+    href: "/collections/gift-hampers",
+    children: [
+      {
+        title: "Flower Hampers",
+        items: [
+          { name: "View all", href: "/collections/gift-hampers" },
+          { name: "Chocolate Flower Hampers", href: "/collections/gift-hampers" },
+          { name: "Wine Flower Hampers", href: "/collections/gift-hampers" },
+          { name: "Cake Flower Hampers", href: "/collections/gift-hampers" },
+          { name: "Fruits Baskets", href: "/collections/gift-hampers" },
+          { name: "Flower Hampers & Teddy Bears", href: "/collections/gift-hampers" },
+        ],
+      },
+    ],
+  },
+  {
+    name: "Gift Hampers",
+    href: "/collections/gift-hampers",
+    children: [
+      {
+        title: "Gift Hampers",
+        items: [
+          { name: "View all", href: "/collections/gift-hampers" },
+          { name: "Gift Baskets", href: "/collections/gift-hampers" },
+          { name: "Fruit Baskets", href: "/collections/gift-hampers" },
+        ],
+      },
+    ],
+  },
+  {
+    name: "Cards",
+    href: "/collections",
+    children: [
+      {
+        title: "Occasions",
+        items: [
+          { name: "View all", href: "/collections" },
+          { name: "Birthdays", href: "/collections" },
+          { name: "Graduations", href: "/collections" },
+          { name: "Anniversaries", href: "/collections" },
+        ],
+      },
+      {
+        title: "Sentiment",
+        items: [
+          { name: "Congrats", href: "/collections" },
+          { name: "Sympathy", href: "/collections" },
+          { name: "Good Luck", href: "/collections" },
+        ],
+      },
+    ],
+  },
+  {
+    name: "Contact",
+    href: "/contact",
+  },
 ];
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [mobileExpanded, setMobileExpanded] = useState<{ [key: string]: boolean }>({});
   const [mounted, setMounted] = useState(false);
   const { cartOpen, setCartOpen } = useUIStore();
   const { getItemCount } = useCartStore();
   const itemCount = getItemCount();
+  const dropdownRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
-  // Only render cart count after component mounts to avoid hydration mismatch
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  const handleMouseEnter = (itemName: string) => {
+    if (navigation.find((item) => item.name === itemName)?.children) {
+      setActiveDropdown(itemName);
+    }
+  };
+
+  const handleMouseLeave = (itemName: string) => {
+    setTimeout(() => {
+      const dropdown = dropdownRefs.current[itemName];
+      if (dropdown && !dropdown.matches(":hover")) {
+        setActiveDropdown(null);
+      }
+    }, 100);
+  };
+
   return (
     <>
-      <header className="bg-white border-b border-brand-gray-200 sticky top-0 z-40">
+      <header className="bg-white border-b border-brand-gray-200 sticky top-0 z-50">
         <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" aria-label="Top">
-          <div className="flex h-16 items-center justify-between">
+          <div className="flex h-16 md:h-20 items-center justify-between">
+            {/* Logo */}
             <div className="flex items-center">
-              <Link href="/" className="flex items-center space-x-3">
-                <Image
-                  src="/images/logo/FloralLogo.jpg"
-                  alt="Floral Whispers Gifts Logo"
-                  width={48}
-                  height={48}
-                  className="rounded-full"
-                  priority
-                />
-                <span className="font-heading font-bold text-xl md:text-2xl">
-                  <span className="bg-gradient-to-r from-brand-green via-brand-pink to-brand-green bg-clip-text text-transparent">
-                    Floral Whispers
-                  </span>
-                  <span className="text-brand-gray-900 ml-1.5 font-semibold italic">
-                    Gifts
-                  </span>
-                </span>
+              <Link href="/" className="flex items-center">
+                <Logo className="h-12 md:h-16 w-auto" />
               </Link>
             </div>
 
-            <div className="hidden md:flex md:items-center md:space-x-8">
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex lg:items-center lg:space-x-6 xl:space-x-8">
               {navigation.map((item) => (
-                <Link
+                <div
                   key={item.name}
-                  href={item.href}
-                  className="text-brand-gray-900 hover:text-brand-green transition-colors font-medium"
+                  className="relative"
+                  onMouseEnter={() => handleMouseEnter(item.name)}
+                  onMouseLeave={() => handleMouseLeave(item.name)}
                 >
-                  {item.name}
-                </Link>
+                  <Link
+                    href={item.href}
+                    className="text-brand-gray-900 hover:text-brand-red transition-colors font-medium text-sm xl:text-base flex items-center gap-1 group"
+                  >
+                    {item.name}
+                    {item.children && (
+                      <ChevronDownIcon
+                        className={`h-4 w-4 transition-transform ${
+                          activeDropdown === item.name ? "rotate-180" : ""
+                        }`}
+                      />
+                    )}
+                  </Link>
+
+                  {/* Dropdown Menu */}
+                  {item.children && activeDropdown === item.name && (
+                    <div
+                      ref={(el) => (dropdownRefs.current[item.name] = el)}
+                      className="absolute top-full left-0 mt-2 bg-white border border-brand-gray-200 rounded-lg shadow-lg p-6 z-[100]"
+                      style={{
+                        width: item.children.length === 3 ? "900px" : item.children.length === 2 ? "600px" : "400px",
+                      }}
+                      onMouseEnter={() => setActiveDropdown(item.name)}
+                      onMouseLeave={() => setActiveDropdown(null)}
+                    >
+                      <div className="grid grid-cols-3 gap-8">
+                        {item.children.map((section, sectionIndex) => (
+                          <div key={sectionIndex}>
+                            <h3 className="font-semibold text-brand-gray-900 mb-3 text-sm uppercase tracking-wide">
+                              {section.title}
+                            </h3>
+                            <ul className="space-y-2">
+                              {section.items.map((subItem) => (
+                                <li key={subItem.name}>
+                                  <Link
+                                    href={subItem.href}
+                                    className="text-brand-gray-700 hover:text-brand-red transition-colors text-sm block py-1"
+                                  >
+                                    {subItem.name}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
 
-            <div className="flex items-center space-x-4">
+            {/* Right Icons */}
+            <div className="flex items-center space-x-3 md:space-x-4">
+              {/* Search */}
+              <button
+                type="button"
+                onClick={() => setSearchOpen(!searchOpen)}
+                className="p-2 text-brand-gray-700 hover:text-brand-red transition-colors"
+                aria-label="Search"
+              >
+                <MagnifyingGlassIcon className="h-5 w-5 md:h-6 md:w-6" />
+              </button>
+
+              {/* Cart */}
               <button
                 type="button"
                 onClick={() => setCartOpen(true)}
-                className="relative p-2 text-brand-red hover:text-brand-red/80 transition-colors"
+                className="relative p-2 text-brand-gray-700 hover:text-brand-red transition-colors"
                 aria-label="Open shopping cart"
               >
-                <ShoppingCartIcon className="h-6 w-6 text-brand-red" />
+                <ShoppingCartIcon className="h-5 w-5 md:h-6 md:w-6" />
                 {mounted && itemCount > 0 && (
-                  <span className="absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-brand-red text-xs font-medium text-white">
+                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-xs font-medium text-white">
                     {itemCount}
                   </span>
                 )}
               </button>
 
+              {/* Mobile Menu Button */}
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(true)}
-                className="md:hidden p-2 text-brand-gray-900"
+                className="lg:hidden p-2 text-brand-gray-900"
                 aria-label="Open menu"
               >
                 <Bars3Icon className="h-6 w-6" />
               </button>
             </div>
           </div>
+
+          {/* Search Bar */}
+          {searchOpen && (
+            <div className="border-t border-brand-gray-200 py-4">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  className="w-full px-4 py-2 pl-10 border border-brand-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent"
+                  autoFocus
+                />
+                <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-brand-gray-400" />
+              </div>
+            </div>
+          )}
         </nav>
 
+        {/* Mobile Menu */}
         <Transition show={mobileMenuOpen}>
-          <Dialog onClose={() => setMobileMenuOpen(false)} className="md:hidden">
+          <Dialog onClose={() => setMobileMenuOpen(false)} className="lg:hidden">
             <Transition.Child
               enter="transition-opacity duration-300 ease-out"
               enterFrom="opacity-0"
@@ -114,56 +302,83 @@ export default function Header() {
               leaveFrom="translate-x-0"
               leaveTo="translate-x-full"
             >
-              <Dialog.Panel className="fixed inset-y-0 right-0 w-full max-w-sm bg-gradient-to-b from-white to-brand-gray-50 shadow-2xl p-6 overflow-y-auto">
+              <Dialog.Panel className="fixed inset-y-0 right-0 w-full max-w-sm bg-white shadow-2xl p-6 overflow-y-auto">
                 <div className="flex items-center justify-between mb-8 pb-6 border-b border-brand-gray-200">
-                  <div className="flex items-center space-x-3">
-                    <Image
-                      src="/images/logo/FloralLogo.jpg"
-                      alt="Logo"
-                      width={48}
-                      height={48}
-                      className="rounded-full ring-2 ring-brand-green/20"
-                    />
-                    <div>
-                      <span className="font-heading font-bold text-lg">
-                        <span className="bg-gradient-to-r from-brand-green via-brand-pink to-brand-green bg-clip-text text-transparent">
-                          Floral Whispers
-                        </span>
-                        <span className="text-brand-gray-900 ml-1 font-semibold italic">
-                          Gifts
-                        </span>
-                      </span>
-                    </div>
+                  <div className="flex items-center">
+                    <Logo className="h-10 w-auto" />
                   </div>
                   <button
                     type="button"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="p-2 rounded-full hover:bg-brand-gray-100 transition-colors group"
+                    className="p-2 rounded-full hover:bg-brand-gray-100 transition-colors"
                     aria-label="Close menu"
                   >
-                    <XMarkIcon className="h-6 w-6 text-brand-gray-600 group-hover:text-brand-gray-900 transition-colors" />
+                    <XMarkIcon className="h-6 w-6 text-brand-gray-600" />
                   </button>
                 </div>
-                <nav className="flex flex-col space-y-2">
-                  {navigation.map((item, index) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="group relative px-4 py-3 rounded-lg text-brand-gray-900 hover:text-brand-green hover:bg-white hover:shadow-md transition-all duration-200 font-medium text-lg"
-                      style={{
-                        animationDelay: `${index * 50}ms`,
-                      }}
-                    >
-                      <span className="relative z-10 flex items-center justify-between">
-                        <span>{item.name}</span>
-                        <span className="opacity-0 group-hover:opacity-100 transition-opacity text-brand-green">
-                          →
-                        </span>
-                      </span>
-                      <span className="absolute inset-0 bg-gradient-to-r from-brand-green/5 to-brand-pink/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </Link>
+                <nav className="flex flex-col space-y-1">
+                  {navigation.map((item) => (
+                    <div key={item.name}>
+                      {item.children ? (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setMobileExpanded({
+                                ...mobileExpanded,
+                                [item.name]: !mobileExpanded[item.name],
+                              })
+                            }
+                            className="w-full px-4 py-3 rounded-lg text-brand-gray-900 hover:text-brand-red hover:bg-brand-gray-50 transition-all font-medium flex items-center justify-between"
+                          >
+                            <span>{item.name}</span>
+                            <ChevronDownIcon
+                              className={`h-4 w-4 transition-transform ${mobileExpanded[item.name] ? "rotate-180" : ""}`}
+                            />
+                          </button>
+                          {mobileExpanded[item.name] && (
+                            <div className="pl-4 mt-2 space-y-1">
+                              {item.children.map((section, sectionIndex) => (
+                                <div key={sectionIndex} className="mb-4">
+                                  <h4 className="font-semibold text-brand-gray-900 mb-2 text-sm uppercase">
+                                    {section.title}
+                                  </h4>
+                                  <ul className="space-y-1">
+                                    {section.items.map((subItem) => (
+                                      <li key={subItem.name}>
+                                        <Link
+                                          href={subItem.href}
+                                          onClick={() => setMobileMenuOpen(false)}
+                                          className="px-4 py-2 rounded-lg text-brand-gray-700 hover:text-brand-red hover:bg-brand-gray-50 transition-all text-sm block"
+                                        >
+                                          {subItem.name}
+                                        </Link>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <Link
+                          href={item.href}
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="px-4 py-3 rounded-lg text-brand-gray-900 hover:text-brand-red hover:bg-brand-gray-50 transition-all font-medium"
+                        >
+                          {item.name}
+                        </Link>
+                      )}
+                    </div>
                   ))}
+                  <Link
+                    href="/contact"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="px-4 py-3 rounded-lg text-brand-gray-900 hover:text-brand-red hover:bg-brand-gray-50 transition-all font-medium"
+                  >
+                    Contact
+                  </Link>
                 </nav>
                 <div className="mt-8 pt-6 border-t border-brand-gray-200">
                   <div className="flex items-center justify-center space-x-4">
@@ -171,7 +386,7 @@ export default function Header() {
                       href="https://www.instagram.com/floral_whispers_gifts?utm_source=qr&igsh=MTdqenRmbWxqMnNxcg=="
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-2 rounded-full bg-brand-gray-100 hover:bg-brand-green hover:text-white transition-all duration-200"
+                      className="p-2 rounded-full bg-brand-gray-100 hover:bg-brand-red hover:text-white transition-all"
                       aria-label="Instagram"
                     >
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -182,7 +397,7 @@ export default function Header() {
                       href="https://www.facebook.com/share/1C6Wc4PVDK/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-2 rounded-full bg-brand-gray-100 hover:bg-brand-green hover:text-white transition-all duration-200"
+                      className="p-2 rounded-full bg-brand-gray-100 hover:bg-brand-red hover:text-white transition-all"
                       aria-label="Facebook"
                     >
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -200,4 +415,3 @@ export default function Header() {
     </>
   );
 }
-

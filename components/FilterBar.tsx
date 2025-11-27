@@ -33,10 +33,10 @@ export default function FilterBar({
               onTagChange([]);
             }
           }}
-          className={`px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-sm md:text-base font-medium transition-colors ${
+          className={`px-4 py-1.5 md:px-6 md:py-2 rounded-full text-sm md:text-base font-medium transition-all duration-300 ${
             isAllSelected
-              ? "bg-brand-green text-white"
-              : "bg-white text-brand-gray-900 border-2 border-brand-gray-200 hover:border-brand-green"
+              ? "bg-brand-green text-white border-2 border-brand-green"
+              : "bg-white text-brand-gray-900 border-2 border-brand-red hover:border-brand-green hover:bg-brand-green hover:text-white"
           }`}
           aria-pressed={isAllSelected}
           aria-label="Show all flowers"
@@ -60,10 +60,10 @@ export default function FilterBar({
                   }
                 }
               }}
-              className={`px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-sm md:text-base font-medium transition-colors ${
+              className={`px-4 py-1.5 md:px-6 md:py-2 rounded-full text-sm md:text-base font-medium transition-all duration-300 ${
                 isSelected
-                  ? "bg-brand-green text-white"
-                  : "bg-white text-brand-gray-900 border-2 border-brand-gray-200 hover:border-brand-green"
+                  ? "bg-brand-green text-white border-2 border-brand-green"
+                  : "bg-white text-brand-gray-900 border-2 border-brand-red hover:border-brand-green hover:bg-brand-green hover:text-white"
               }`}
               aria-pressed={isSelected}
               aria-label={`Filter by ${tag}`}
@@ -99,10 +99,10 @@ export default function FilterBar({
                       }
                     }
                   }}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  className={`px-4 py-2 rounded-full font-medium transition-all duration-300 ${
                     isSelected
-                      ? "bg-brand-green text-white"
-                      : "bg-white text-brand-gray-900 border-2 border-brand-gray-200 hover:border-brand-green"
+                      ? "bg-brand-green text-white border-2 border-brand-green"
+                      : "bg-white text-brand-gray-900 border-2 border-brand-red hover:border-brand-green hover:bg-brand-green hover:text-white"
                   }`}
                   aria-pressed={isSelected}
                   aria-label={`Filter by size ${size}cm`}
