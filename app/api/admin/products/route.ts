@@ -4,6 +4,8 @@ import { getProducts } from "@/lib/db";
 import { supabaseAdmin } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     requireAdmin(request);
