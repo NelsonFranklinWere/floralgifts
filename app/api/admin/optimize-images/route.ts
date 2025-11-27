@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     const optimizeAll = body.optimizeAll || false;
 
     // Fetch products
-    let query = supabaseAdmin.from("products").select("id, title, images, category");
+    let query = (supabaseAdmin.from("products") as any).select("id, title, images, category");
     
     if (productId) {
       query = query.eq("id", productId);
@@ -181,8 +181,8 @@ export async function POST(request: NextRequest) {
       // Update product with optimized images if any were optimized
       if (optimizedCount > 0) {
         try {
-          const { error: updateError } = await supabaseAdmin
-            .from("products")
+          const { error: updateError } = await (supabaseAdmin
+            .from("products") as any)
             .update({ images: optimizedImages })
             .eq("id", product.id);
 

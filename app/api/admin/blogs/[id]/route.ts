@@ -11,8 +11,8 @@ export async function GET(
     requireAdmin(request);
     const { id } = await params;
 
-    const { data, error } = await supabaseAdmin
-      .from("blog_posts")
+    const { data, error } = await (supabaseAdmin
+      .from("blog_posts") as any)
       .select("*")
       .eq("id", id)
       .single();
@@ -42,7 +42,20 @@ export async function PUT(
     const { id } = await params;
     const body = await request.json();
 
-    const updateData: any = {
+    const updateData: {
+      updated_at: string;
+      slug?: string;
+      title?: string;
+      excerpt?: string;
+      content?: string;
+      author?: string;
+      published_at?: string;
+      image?: string;
+      category?: string;
+      tags?: string[];
+      read_time?: number;
+      featured?: boolean;
+    } = {
       updated_at: new Date().toISOString(),
     };
 
@@ -58,8 +71,8 @@ export async function PUT(
     if (body.readTime !== undefined) updateData.read_time = body.readTime;
     if (body.featured !== undefined) updateData.featured = body.featured;
 
-    const { data, error } = await supabaseAdmin
-      .from("blog_posts")
+    const { data, error } = await (supabaseAdmin
+      .from("blog_posts") as any)
       .update(updateData)
       .eq("id", id)
       .select()
@@ -95,8 +108,8 @@ export async function DELETE(
     requireAdmin(request);
     const { id } = await params;
 
-    const { error } = await supabaseAdmin
-      .from("blog_posts")
+    const { error } = await (supabaseAdmin
+      .from("blog_posts") as any)
       .delete()
       .eq("id", id);
 

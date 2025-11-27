@@ -43,8 +43,8 @@ export async function POST(request: NextRequest) {
 
     // Check against admins table in Supabase first
     try {
-      const { data: admin, error } = await supabaseAdmin
-        .from("admins")
+      const { data: admin, error } = await (supabaseAdmin
+        .from("admins") as any)
         .select("*")
         .eq("email", ALLOWED_EMAIL)
         .single();

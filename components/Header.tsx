@@ -191,7 +191,9 @@ export default function Header() {
                   {/* Dropdown Menu */}
                   {item.children && activeDropdown === item.name && (
                     <div
-                      ref={(el) => (dropdownRefs.current[item.name] = el)}
+                      ref={(el) => {
+                        dropdownRefs.current[item.name] = el;
+                      }}
                       className="absolute top-full left-0 mt-2 bg-white border border-brand-gray-200 rounded-lg shadow-lg p-6 z-[100]"
                       style={{
                         width: item.children.length === 3 ? "900px" : item.children.length === 2 ? "600px" : "400px",

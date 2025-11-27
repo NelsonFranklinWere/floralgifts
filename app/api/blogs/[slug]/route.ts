@@ -8,8 +8,8 @@ export async function GET(
   try {
     const { slug } = await params;
 
-    const { data, error } = await supabase
-      .from("blog_posts")
+    const { data, error } = await (supabase
+      .from("blog_posts") as any)
       .select("*")
       .eq("slug", slug)
       .single();

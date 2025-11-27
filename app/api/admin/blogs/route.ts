@@ -12,8 +12,8 @@ export async function GET(request: NextRequest) {
     const tag = searchParams.get("tag");
     const featured = searchParams.get("featured");
 
-    let query = supabaseAdmin
-      .from("blog_posts")
+    let query = (supabaseAdmin
+      .from("blog_posts") as any)
       .select("*")
       .order("published_at", { ascending: false });
 
@@ -52,8 +52,8 @@ export async function POST(request: NextRequest) {
     requireAdmin(request);
     const body = await request.json();
 
-    const { data, error } = await supabaseAdmin
-      .from("blog_posts")
+    const { data, error } = await (supabaseAdmin
+      .from("blog_posts") as any)
       .insert({
         slug: body.slug,
         title: body.title,

@@ -38,8 +38,8 @@ export async function PUT(
     const { id } = await params;
     const body = await request.json();
 
-    const { data, error } = await supabaseAdmin
-      .from("products")
+    const { data, error } = await (supabaseAdmin
+      .from("products") as any)
       .update({
         slug: body.slug,
         title: body.title,
@@ -104,7 +104,7 @@ export async function DELETE(
     // Get product before deletion to revalidate its pages
     const product = await getProductById(id);
     
-    const { error } = await supabaseAdmin.from("products").delete().eq("id", id);
+    const { error } = await (supabaseAdmin.from("products") as any).delete().eq("id", id);
 
     if (error) {
       return NextResponse.json({ message: error.message }, { status: 400 });

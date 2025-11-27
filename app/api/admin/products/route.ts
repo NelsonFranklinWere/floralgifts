@@ -25,8 +25,8 @@ export async function POST(request: NextRequest) {
     requireAdmin(request);
     const body = await request.json();
 
-    const { data, error } = await supabaseAdmin
-      .from("products")
+    const { data, error } = await (supabaseAdmin
+      .from("products") as any)
       .insert({
         slug: body.slug,
         title: body.title,

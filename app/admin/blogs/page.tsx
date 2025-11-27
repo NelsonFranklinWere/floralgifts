@@ -52,6 +52,7 @@ export default function AdminBlogsPage() {
     }
 
     fetchPosts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
   const fetchPosts = async () => {

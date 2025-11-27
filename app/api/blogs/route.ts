@@ -8,8 +8,8 @@ export async function GET(request: NextRequest) {
     const tag = searchParams.get("tag");
     const featured = searchParams.get("featured");
 
-    let query = supabase
-      .from("blog_posts")
+    let query = (supabase
+      .from("blog_posts") as any)
       .select("*")
       .order("published_at", { ascending: false });
 

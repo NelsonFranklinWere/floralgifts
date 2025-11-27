@@ -952,10 +952,10 @@ export default async function HomePage() {
                   About Floral Whispers & Gifts
                 </h2>
                 <p className="text-brand-gray-600 text-lg md:text-xl mb-6 md:mb-8 leading-relaxed text-left">
-                  Born from a passion for bringing beauty and joy into people's lives, Floral Whispers & Gifts is Nairobi's trusted florist specializing in premium flower arrangements, luxury gift hampers, and cuddly teddy bears. We believe every occasion deserves a special touch—whether it's a birthday, anniversary, graduation, or simply a gesture of love.
+                  Born from a passion for bringing beauty and joy into people&apos;s lives, Floral Whispers & Gifts is Nairobi&apos;s trusted florist specializing in premium flower arrangements, luxury gift hampers, and cuddly teddy bears. We believe every occasion deserves a special touch—whether it&apos;s a birthday, anniversary, graduation, or simply a gesture of love.
                 </p>
                 <p className="text-brand-gray-600 text-base md:text-lg mb-8 md:mb-10 leading-relaxed text-left">
-                  With same-day delivery across Nairobi and a commitment to excellence, we've helped thousands of customers create unforgettable moments. Our carefully curated collections ensure your sentiments are perfectly conveyed, every single time.
+                  With same-day delivery across Nairobi and a commitment to excellence, we&apos;ve helped thousands of customers create unforgettable moments. Our carefully curated collections ensure your sentiments are perfectly conveyed, every single time.
                 </p>
                 <Link
                   href="/about"

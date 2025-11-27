@@ -78,7 +78,7 @@ export async function getProducts(filters?: {
       return [];
     }
 
-    return (data || []).map((row) => ({
+    return (data || []).map((row: any) => ({
       ...row,
       tags: row.tags || [],
       images: row.images || [],
@@ -107,11 +107,11 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
     if (!data) return null;
 
     return {
-      ...data,
-      tags: data.tags || [],
-      images: data.images || [],
-      included_items: data.included_items || null,
-      upsells: data.upsells || null,
+      ...(data as any),
+      tags: (data as any).tags || [],
+      images: (data as any).images || [],
+      included_items: (data as any).included_items || null,
+      upsells: (data as any).upsells || null,
     } as Product;
   } catch (error) {
     console.error("Error fetching product:", error);
@@ -131,11 +131,11 @@ export async function getProductById(id: string): Promise<Product | null> {
     if (!data) return null;
 
     return {
-      ...data,
-      tags: data.tags || [],
-      images: data.images || [],
-      included_items: data.included_items || null,
-      upsells: data.upsells || null,
+      ...(data as any),
+      tags: (data as any).tags || [],
+      images: (data as any).images || [],
+      included_items: (data as any).included_items || null,
+      upsells: (data as any).upsells || null,
     } as Product;
   } catch (error) {
     console.error("Error fetching product:", error);
@@ -145,8 +145,8 @@ export async function getProductById(id: string): Promise<Product | null> {
 
 export async function createOrder(order: Omit<Order, "id" | "created_at" | "updated_at">): Promise<Order | null> {
   try {
-    const { data, error } = await supabaseAdmin
-      .from("orders")
+    const { data, error } = await (supabaseAdmin
+      .from("orders") as any)
       .insert({
         items: order.items,
         total_amount: order.total_amount || order.total || 0,
@@ -183,7 +183,7 @@ export async function createOrder(order: Omit<Order, "id" | "created_at" | "upda
 
 export async function getOrderById(id: string): Promise<Order | null> {
   try {
-    const { data, error } = await supabaseAdmin.from("orders").select("*").eq("id", id).single();
+    const { data, error } = await (supabaseAdmin.from("orders") as any).select("*").eq("id", id).single();
 
     if (error) {
       console.error("Error fetching order:", error);
@@ -218,8 +218,8 @@ export async function updateOrder(
 
     updateData.updated_at = new Date().toISOString();
 
-    const { data, error } = await supabaseAdmin
-      .from("orders")
+    const { data, error } = await (supabaseAdmin
+      .from("orders") as any)
       .update(updateData)
       .eq("id", id)
       .select()
@@ -241,7 +241,7 @@ export async function getOrders(filters?: {
   status?: string;
 }): Promise<Order[]> {
   try {
-    let query = supabaseAdmin.from("orders").select("*").order("created_at", { ascending: false });
+    let query = (supabaseAdmin.from("orders") as any).select("*").order("created_at", { ascending: false });
 
     if (filters?.status) {
       query = query.eq("status", filters.status);
