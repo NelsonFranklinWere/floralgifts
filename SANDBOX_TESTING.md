@@ -12,6 +12,54 @@ MPESA_SHORTCODE=174379
 MPESA_PASSKEY=YOUR_PASSKEY_HERE  # Get from Safaricom Developer Portal
 MPESA_CALLBACK_URL=http://localhost:3000/api/mpesa/callback
 ```
+# ============================================
+# FLORAL WHISPERS GIFTS - API KEYS & SECRETS
+# Store all sensitive credentials here
+# IMPORTANT: Never commit this file to git!
+# ============================================
+
+# ============================================
+# SUPABASE CONFIGURATION
+# ============================================
+SUPABASE_PROJECT_ID=sdculxvqvixpiairzukl
+SUPABASE_PROJECT_URL=https://sdculxvqvixpiairzukl.supabase.co
+SUPABASE_PUBLIC_KEY=sb_publishable_y5hnG3xeKqIOUQ7podcQYA_RV2xUHtQ
+SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNkY3VseHZxdml4cGlhaXJ6dWtsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM0MTg4NTUsImV4cCI6MjA3ODk5NDg1NX0.8c2ATXh6692Z3mTG7dsWwivB5uIasrtJeGfj9OLgf98
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNkY3VseHZxdml4cGlhaXJ6dWtsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MzQxODg1NSwiZXhwIjoyMDc4OTk0ODU1fQ.41RcYn4J5jxjlC9TRltgWgX7ZaH23h7ehGCu9knLa2g
+
+# ============================================
+# M-PESA CONFIGURATION
+# ============================================
+MPESA_ENV=sandbox
+MPESA_CONSUMER_KEY=gQE0zykwt3dXyXGemkfSdAGS1G6qGjGxjF5bwCBdGAsSHf0S
+MPESA_CONSUMER_SECRET=Hy6TP0ln3i4HoeH84OzVBvtmnRU9bSu0hpfXKQTITXn4uWOvjkL5fTPPkdyLMyMe
+MPESA_SHORTCODE=174379
+MPESA_PASSKEY=your_passkey_from_safaricom_portal
+MPESA_CALLBACK_URL=http://localhost:3000/api/mpesa/callback
+
+# ============================================
+# ADMIN AUTHENTICATION
+# ============================================
+JWT_SECRET=your-secret-key-change-in-production-use-strong-random-string
+ADMIN_EMAIL=admin@example.com
+ADMIN_PASSWORD=admin123
+
+# ============================================
+# EMAIL CONFIGURATION (Resend)
+# ============================================
+RESEND_API_KEY=re_jE9T351o_6gDh55gy8PHW4LWZJENwXFKR
+RESEND_FROM_EMAIL=onboarding@resend.dev
+
+# ============================================
+# GOOGLE VERIFICATION (Optional)
+# ============================================
+GOOGLE_VERIFICATION=
+
+# ============================================
+# BASE URL
+# ============================================
+BASE_URL=https://whispersfloralgifts.co.ke
+
 
 ## Getting Your Passkey
 
