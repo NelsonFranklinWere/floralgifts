@@ -110,9 +110,9 @@ function ProductSection({
           )}
         </div>
         {products.length > 0 ? (
-          <div className="flex overflow-x-auto gap-4 md:gap-5 lg:gap-6 pb-4 scrollbar-thin scrollbar-thumb-brand-gray-300 scrollbar-track-transparent -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+          <div className="flex overflow-x-auto gap-3 md:gap-5 lg:gap-6 pb-4 scrollbar-thin scrollbar-thumb-brand-gray-300 scrollbar-track-transparent -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
             {products.map((product, index) => (
-              <div key={`${product.id}-${index}`} className="flex-shrink-0 w-[280px] sm:w-[300px] md:w-[320px]">
+              <div key={`${product.id}-${index}`} className="flex-shrink-0 w-[calc((100vw-2rem-27px)/3.5)] min-w-[105px] max-w-[115px] sm:min-w-[280px] sm:max-w-[300px] md:w-[320px]">
                 <ProductCard
                   id={product.id}
                   name={product.title}
@@ -398,12 +398,12 @@ Whether you're celebrating a university graduation, high school completion, or a
             View all
           </Link>
         </div>
-        <div className="flex overflow-x-auto gap-4 md:gap-5 lg:gap-6 pb-4 scrollbar-thin scrollbar-thumb-brand-gray-300 scrollbar-track-transparent -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+        <div className="flex overflow-x-auto gap-3 md:gap-5 lg:gap-6 pb-4 scrollbar-thin scrollbar-thumb-brand-gray-300 scrollbar-track-transparent -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
           {latestPosts.map((post) => (
             <Link
               key={post.slug}
               href={`/blog/${post.slug}`}
-              className="flex-shrink-0 w-[280px] sm:w-[300px] md:w-[320px] card overflow-hidden group hover:shadow-cardHover transition-all duration-300"
+              className="flex-shrink-0 w-[calc((100vw-2rem-27px)/3.5)] min-w-[105px] max-w-[115px] sm:min-w-[280px] sm:max-w-[300px] md:w-[320px] card overflow-hidden group hover:shadow-cardHover transition-all duration-300"
             >
               <div className="relative aspect-[4/3] overflow-hidden bg-brand-gray-100">
                 <Image
@@ -826,24 +826,24 @@ export default async function HomePage() {
                }}
           />
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-8 md:mb-12">
-              <h2 className="font-heading font-bold text-3xl md:text-4xl lg:text-5xl text-brand-gray-900 mb-4">
+            <div className="text-center mb-6 sm:mb-8 md:mb-12">
+              <h2 className="font-heading font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl text-brand-gray-900 mb-2 sm:mb-3 md:mb-4">
                 Make Every Moment Unforgettable
               </h2>
-              <p className="text-brand-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
-                Stop searching—start celebrating! Our premium collections are crafted to make hearts skip a beat.
+              <p className="text-brand-gray-600 text-sm sm:text-base md:text-lg max-w-2xl mx-auto">
+                Stop searching—start celebrating! Express love with bouquets, impress with hampers, or bring smiles with teddy bears.
                 <br />
-                Express love with breathtaking bouquets, impress with luxurious hampers, or bring smiles with cuddly teddy bears—we deliver perfection right to your door.
+                We deliver perfection right to your door.
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6 lg:gap-8">
               {/* Gift Hampers Card */}
               <Link 
                 href="/collections/gift-hampers"
-                className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2"
+                className="group relative bg-white rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2"
               >
-                <div className="relative h-64 md:h-72 overflow-hidden">
+                <div className="relative h-32 sm:h-48 md:h-64 lg:h-72 overflow-hidden">
                   <Image
                     src="/images/products/hampers/giftamper.jpg"
                     alt="Gift Hampers"
@@ -852,18 +852,18 @@ export default async function HomePage() {
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 33vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                    <h3 className="font-heading font-bold text-2xl md:text-3xl mb-2">Gift Hampers</h3>
-                    <p className="text-sm md:text-base text-white/90">Luxurious curated collections</p>
+                  <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-4 md:p-6 text-white">
+                    <h3 className="font-heading font-bold text-xs sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Gift Hampers</h3>
+                    <p className="text-[10px] sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Luxurious curated collections</p>
                   </div>
                 </div>
-                <div className="p-6">
-                  <p className="text-brand-gray-600 mb-4 text-sm md:text-base">
+                <div className="p-2 sm:p-4 md:p-6">
+                  <p className="text-brand-gray-600 mb-2 sm:mb-3 md:mb-4 text-[10px] sm:text-xs md:text-sm lg:text-base line-clamp-2 sm:line-clamp-none">
                     Thoughtfully curated hampers combining premium flowers with chocolates, wine, and more. Perfect for corporate gifting and special celebrations.
                   </p>
-                  <span className="inline-flex items-center text-brand-red font-semibold group-hover:gap-2 gap-1 transition-all duration-300">
+                  <span className="inline-flex items-center text-brand-red font-semibold group-hover:gap-2 gap-1 transition-all duration-300 text-[10px] sm:text-xs md:text-sm">
                     Explore Hampers
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </span>
@@ -873,9 +873,9 @@ export default async function HomePage() {
               {/* Flowers Card */}
               <Link 
                 href="/collections/flowers"
-                className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2"
+                className="group relative bg-white rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2"
               >
-                <div className="relative h-64 md:h-72 overflow-hidden">
+                <div className="relative h-32 sm:h-48 md:h-64 lg:h-72 overflow-hidden">
                   <Image
                     src="/images/products/flowers/BouquetFlowers1.jpg"
                     alt="Flowers"
@@ -884,18 +884,18 @@ export default async function HomePage() {
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 33vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                    <h3 className="font-heading font-bold text-2xl md:text-3xl mb-2">Flowers</h3>
-                    <p className="text-sm md:text-base text-white/90">Fresh blooms for every occasion</p>
+                  <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-4 md:p-6 text-white">
+                    <h3 className="font-heading font-bold text-xs sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Flowers</h3>
+                    <p className="text-[10px] sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Fresh blooms for every occasion</p>
                   </div>
                 </div>
-                <div className="p-6">
-                  <p className="text-brand-gray-600 mb-4 text-sm md:text-base">
+                <div className="p-2 sm:p-4 md:p-6">
+                  <p className="text-brand-gray-600 mb-2 sm:mb-3 md:mb-4 text-[10px] sm:text-xs md:text-sm lg:text-base line-clamp-2 sm:line-clamp-none">
                     Beautiful flower arrangements delivered same-day across Nairobi. From romantic roses to vibrant mixed bouquets, express your feelings with fresh blooms.
                   </p>
-                  <span className="inline-flex items-center text-brand-red font-semibold group-hover:gap-2 gap-1 transition-all duration-300">
+                  <span className="inline-flex items-center text-brand-red font-semibold group-hover:gap-2 gap-1 transition-all duration-300 text-[10px] sm:text-xs md:text-sm">
                     Explore Flowers
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </span>
@@ -905,9 +905,9 @@ export default async function HomePage() {
               {/* Teddy Bears Card */}
               <Link 
                 href="/collections/teddy-bears"
-                className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2"
+                className="group relative bg-white rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2"
               >
-                <div className="relative h-64 md:h-72 overflow-hidden">
+                <div className="relative h-32 sm:h-48 md:h-64 lg:h-72 overflow-hidden">
                   <Image
                     src="/images/products/teddies/Teddybear1.jpg"
                     alt="Teddy Bears"
@@ -916,18 +916,18 @@ export default async function HomePage() {
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 33vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                    <h3 className="font-heading font-bold text-2xl md:text-3xl mb-2">Teddy Bears</h3>
-                    <p className="text-sm md:text-base text-white/90">Cuddly companions in all sizes</p>
+                  <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-4 md:p-6 text-white">
+                    <h3 className="font-heading font-bold text-xs sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Teddy Bears</h3>
+                    <p className="text-[10px] sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Cuddly companions in all sizes</p>
                   </div>
                 </div>
-                <div className="p-6">
-                  <p className="text-brand-gray-600 mb-4 text-sm md:text-base">
+                <div className="p-2 sm:p-4 md:p-6">
+                  <p className="text-brand-gray-600 mb-2 sm:mb-3 md:mb-4 text-[10px] sm:text-xs md:text-sm lg:text-base line-clamp-2 sm:line-clamp-none">
                     Soft and adorable teddy bears perfect for gifting. Available in various sizes and colors, these cuddly companions bring joy to any occasion.
                   </p>
-                  <span className="inline-flex items-center text-brand-red font-semibold group-hover:gap-2 gap-1 transition-all duration-300">
+                  <span className="inline-flex items-center text-brand-red font-semibold group-hover:gap-2 gap-1 transition-all duration-300 text-[10px] sm:text-xs md:text-sm">
                     Explore Teddy Bears
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </span>
@@ -951,11 +951,17 @@ export default async function HomePage() {
                 <h2 className="font-heading font-bold text-3xl md:text-4xl lg:text-5xl text-brand-gray-900 mb-4 md:mb-6 text-left">
                   About Floral Whispers & Gifts
                 </h2>
-                <p className="text-brand-gray-600 text-lg md:text-xl mb-6 md:mb-8 leading-relaxed text-left">
-                  Born from a passion for bringing beauty and joy into people&apos;s lives, Floral Whispers & Gifts is Nairobi&apos;s trusted florist specializing in premium flower arrangements, luxury gift hampers, and cuddly teddy bears. We believe every occasion deserves a special touch—whether it&apos;s a birthday, anniversary, graduation, or simply a gesture of love.
+                <p className="text-brand-gray-600 text-sm md:text-base mb-3 md:mb-4 leading-relaxed text-left">
+                  Born from a passion for bringing beauty and joy into people&apos;s lives, Floral Whispers & Gifts is Nairobi&apos;s trusted florist specializing in premium flower arrangements, luxury gift hampers, and cuddly teddy bears.
                 </p>
-                <p className="text-brand-gray-600 text-base md:text-lg mb-8 md:mb-10 leading-relaxed text-left">
-                  With same-day delivery across Nairobi and a commitment to excellence, we&apos;ve helped thousands of customers create unforgettable moments. Our carefully curated collections ensure your sentiments are perfectly conveyed, every single time.
+                <p className="text-brand-gray-600 text-sm md:text-base mb-3 md:mb-4 leading-relaxed text-left">
+                  We believe every occasion deserves a special touch—whether it&apos;s a birthday, anniversary, graduation, or simply a gesture of love.
+                </p>
+                <p className="text-brand-gray-600 text-sm md:text-base mb-3 md:mb-4 leading-relaxed text-left">
+                  With same-day delivery across Nairobi and a commitment to excellence, we&apos;ve helped thousands of customers create unforgettable moments.
+                </p>
+                <p className="text-brand-gray-600 text-sm md:text-base mb-8 md:mb-10 leading-relaxed text-left">
+                  Our carefully curated collections ensure your sentiments are perfectly conveyed, every single time.
                 </p>
                 <Link
                   href="/about"

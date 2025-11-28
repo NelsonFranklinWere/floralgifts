@@ -74,8 +74,8 @@ export default function ProductCard({
 
   return (
     <>
-      <div className="card p-3 md:p-4 group">
-        <div className="mb-2 md:mb-3">
+      <div className="card p-2 sm:p-3 md:p-4 group">
+        <div className="mb-1.5 sm:mb-2 md:mb-3">
           <div 
             className="relative aspect-square overflow-hidden rounded-lg bg-brand-gray-100 cursor-pointer group/image"
             onClick={handleImageClick}
@@ -102,10 +102,10 @@ export default function ProductCard({
                 <button
                   type="button"
                   onClick={handleBasketClick}
-                  className="absolute top-2 right-2 z-10 bg-white rounded-full p-2 shadow-lg hover:bg-brand-red hover:text-white transition-all duration-300 group-hover:scale-110"
+                  className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-10 bg-white rounded-full p-1.5 sm:p-2 shadow-lg hover:bg-brand-red hover:text-white transition-all duration-300 group-hover:scale-110"
                   aria-label={`Add ${name} to cart`}
                 >
-                  <ShoppingCartIconSolid className="w-4 h-4 md:w-5 md:h-5 text-brand-red group-hover:text-white transition-colors" />
+                  <ShoppingCartIconSolid className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-brand-red group-hover:text-white transition-colors" />
                 </button>
                 {/* Click indicator overlay */}
                 {!homePage && (
@@ -125,25 +125,25 @@ export default function ProductCard({
         </div>
 
       <Link href={`/product/${slug}`} className="block">
-        <h3 className="font-heading font-semibold text-sm md:text-base text-brand-gray-900 mb-1 group-hover:text-brand-green transition-colors line-clamp-2">
+        <h3 className="font-heading font-semibold text-xs sm:text-sm md:text-base text-brand-gray-900 mb-0.5 sm:mb-1 group-hover:text-brand-green transition-colors line-clamp-2">
           {name}
         </h3>
         {shortDescription && (
-          <p className="text-brand-gray-600 text-xs md:text-sm mb-1 md:mb-2 line-clamp-2">{shortDescription}</p>
+          <p className="text-brand-gray-600 text-[10px] sm:text-xs md:text-sm mb-0.5 sm:mb-1 md:mb-2 line-clamp-2">{shortDescription}</p>
         )}
-        <p className="font-mono font-semibold text-brand-green text-sm md:text-base mb-2 md:mb-3">
+        <p className="font-mono font-semibold text-brand-green text-xs sm:text-sm md:text-base mb-1 sm:mb-2 md:mb-3">
           {formatCurrency(price)}
         </p>
       </Link>
 
-      {/* View Details button - only for gift hampers */}
+      {/* Details button - only for gift hampers */}
       {category === "hampers" && !hideDetailsButton && (
         <Link
           href={`/product/${slug}`}
-          className="btn-outline w-full text-center text-xs md:text-sm py-1.5 md:py-2 mt-2"
+          className="btn-outline w-full text-center text-[10px] sm:text-xs md:text-sm py-1 sm:py-1.5 md:py-2 mt-1 sm:mt-2"
           aria-label={`View details for ${name}`}
         >
-          View Details
+          Details
         </Link>
       )}
       </div>
