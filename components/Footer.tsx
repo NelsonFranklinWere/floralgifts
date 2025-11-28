@@ -10,9 +10,9 @@ export default function Footer() {
       </div>
       
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 lg:py-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {/* Brand Section */}
-          <div className="lg:col-span-1">
+          <div className="col-span-2 lg:col-span-1">
             <Link href="/" className="inline-block mb-4">
               <h3 className="font-heading font-bold text-xl mb-2">
                 <span className="text-brand-red">floral whispers</span>
@@ -217,7 +217,7 @@ export default function Footer() {
           </div>
 
           {/* Contact & Payment */}
-          <div>
+          <div className="col-span-2 lg:col-span-1">
             <h3 className="font-heading font-bold text-base mb-4 text-white">Contact Us</h3>
             <ul className="space-y-2 text-brand-gray-300 mb-4">
               <li>
