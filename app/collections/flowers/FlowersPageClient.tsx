@@ -2,10 +2,10 @@
 
 import { useState, useMemo, useEffect } from "react";
 import ProductCard from "@/components/ProductCard";
-import FilterBar from "@/components/FilterBar";
 import type { Product } from "@/lib/db";
 import { getCategoryFallbackImage } from "@/lib/utils";
 import { Analytics } from "@/lib/analytics";
+import { SUBCATEGORIES } from "@/lib/subcategories";
 
 interface FlowerProduct {
   image: string;
@@ -22,8 +22,8 @@ interface FlowersPageClientProps {
 }
 
 export default function FlowersPageClient({ products, allFlowerImages = [], flowerProducts = [] }: FlowersPageClientProps) {
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
+  
   // Ensure products is always an array
   const safeProducts = Array.isArray(products) ? products : [];
 
@@ -47,62 +47,63 @@ export default function FlowersPageClient({ products, allFlowerImages = [], flow
         description: fp.description,
         category: "flowers" as const,
         tags: [] as string[],
+        subcategory: null,
       }));
 
     // Combine database products with predefined flower products
     return [...safeProducts, ...flowerProductItems];
   }, [safeProducts, flowerProducts]);
 
+  // Group products by subcategory
+  const productsBySubcategory = useMemo(() => {
+    const grouped: Record<string, Product[]> = {};
+    const uncategorized: Product[] = [];
+
+    allDisplayItems.forEach((product) => {
+      const subcat = product.subcategory || "Uncategorized";
+      if (subcat === "Uncategorized") {
+        uncategorized.push(product);
+      } else {
+        if (!grouped[subcat]) {
+          grouped[subcat] = [];
+        }
+        grouped[subcat].push(product);
+      }
+    });
+
+    // Sort subcategories by the order in SUBCATEGORIES.flowers
+    const orderedSubcategories = SUBCATEGORIES.flowers.filter(subcat => grouped[subcat]);
+    const result: Array<{ subcategory: string; products: Product[] }> = [];
+    
+    orderedSubcategories.forEach(subcat => {
+      result.push({ subcategory: subcat, products: grouped[subcat] });
+    });
+
+    // Add uncategorized at the end if any
+    if (uncategorized.length > 0) {
+      result.push({ subcategory: "Uncategorized", products: uncategorized });
+    }
+
+    return result;
+  }, [allDisplayItems]);
+
+  // Filter products by selected subcategory
+  const filteredProductsBySubcategory = useMemo(() => {
+    if (!selectedSubcategory) {
+      return productsBySubcategory;
+    }
+    const filtered = productsBySubcategory.filter(({ subcategory }) => subcategory === selectedSubcategory);
+    // If no products found for this subcategory, return empty array with the subcategory info
+    if (filtered.length === 0) {
+      return [{ subcategory: selectedSubcategory, products: [] }];
+    }
+    return filtered;
+  }, [productsBySubcategory, selectedSubcategory]);
+
   // Track collection view
   useEffect(() => {
     Analytics.trackCollectionView("flowers", allDisplayItems.length);
   }, [allDisplayItems.length]);
-
-  // Helper function to categorize product by name
-  const getProductCategory = (productName: string): string[] => {
-    const name = productName.toLowerCase();
-    const categories: string[] = [];
-    
-    if (name.includes("birthday") || name.includes("bday")) {
-      categories.push("birthday");
-    }
-    if (name.includes("anniversary") || name.includes("anniv")) {
-      categories.push("anniversary");
-    }
-    if (name.includes("get well") || name.includes("well soon") || name.includes("recovery")) {
-      categories.push("get well soon");
-    }
-    if (name.includes("funeral") || name.includes("condolence") || name.includes("sympathy") || name.includes("rip")) {
-      categories.push("funeral");
-    }
-    if (name.includes("congrat") || name.includes("graduation") || name.includes("success")) {
-      categories.push("congrats");
-    }
-    if (name.includes("wedding") || name.includes("bridal") || name.includes("bride")) {
-      categories.push("wedding");
-    }
-    if (name.includes("valentine") || name.includes("romantic") || name.includes("love") || name.includes("rose")) {
-      categories.push("valentine");
-    }
-    
-    return categories;
-  };
-
-  const filteredProducts = useMemo(() => {
-    if (selectedTags.length === 0) {
-      return allDisplayItems;
-    }
-    return allDisplayItems.filter((product) => {
-      // Check both tags and product name for categorization
-      const productTags = product.tags || [];
-      const nameCategories = getProductCategory(product.title || "");
-      const allCategories = [...productTags, ...nameCategories];
-      
-      return selectedTags.some((tag) => 
-        allCategories.some(cat => cat.toLowerCase() === tag.toLowerCase())
-      );
-    });
-  }, [selectedTags, allDisplayItems]);
 
   return (
     <div className="py-6 md:py-8 lg:py-12 bg-white">
@@ -115,66 +116,93 @@ export default function FlowersPageClient({ products, allFlowerImages = [], flow
             Beautiful bouquets for every occasion
           </p>
           <div className="text-brand-gray-500 text-xs md:text-sm mt-1">
-            {selectedTags.length > 0 ? (
-              <div>
-                <span>Showing {filteredProducts.length} of {allDisplayItems.length} {allDisplayItems.length === 1 ? 'product' : 'products'}</span>
-                {filteredProducts.length < allDisplayItems.length && (
-                  <button
-                    type="button"
-                    onClick={() => setSelectedTags([])}
-                    className="ml-2 text-brand-green hover:underline focus:outline-none focus:underline"
-                    aria-label="Clear filter"
-                  >
-                    (Clear filter)
-                  </button>
-                )}
-              </div>
-            ) : (
-              <span>Showing {allDisplayItems.length} {allDisplayItems.length === 1 ? 'product' : 'products'}</span>
-            )}
+            <span>
+              {selectedSubcategory 
+                ? `Showing ${filteredProductsBySubcategory.reduce((sum, { products }) => sum + products.length, 0)} of ${allDisplayItems.length} ${allDisplayItems.length === 1 ? 'product' : 'products'}`
+                : `Showing ${allDisplayItems.length} ${allDisplayItems.length === 1 ? 'product' : 'products'}`
+              }
+            </span>
           </div>
         </div>
 
-        <FilterBar type="flowers" selectedTags={selectedTags} onTagChange={setSelectedTags} />
+        {/* Subcategory Filter Bar */}
+        {allDisplayItems.length > 0 && (
+          <div className="mb-6 overflow-x-auto scrollbar-hide">
+            <div className="flex gap-2 pb-2 flex-nowrap">
+              <button
+                type="button"
+                onClick={() => setSelectedSubcategory(null)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 whitespace-nowrap flex-shrink-0 ${
+                  selectedSubcategory === null
+                    ? "bg-brand-green text-white border-2 border-brand-green"
+                    : "bg-white text-brand-gray-900 border-2 border-brand-red hover:border-brand-green hover:bg-brand-green hover:text-white"
+                }`}
+              >
+                All
+              </button>
+              {SUBCATEGORIES.flowers.map((subcat) => {
+                const hasProducts = productsBySubcategory.some(({ subcategory }) => subcategory === subcat);
+                return (
+                  <button
+                    key={subcat}
+                    type="button"
+                    onClick={() => setSelectedSubcategory(subcat)}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 whitespace-nowrap flex-shrink-0 ${
+                      selectedSubcategory === subcat
+                        ? "bg-brand-green text-white border-2 border-brand-green"
+                        : "bg-white text-brand-gray-900 border-2 border-brand-red hover:border-brand-green hover:bg-brand-green hover:text-white"
+                    }`}
+                  >
+                    {subcat}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {allDisplayItems.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-brand-gray-600 text-base mb-2">No flowers available at the moment.</p>
             <p className="text-brand-gray-500 text-sm">Please check back later or contact us for more information.</p>
           </div>
-        ) : filteredProducts.length === 0 ? (
-          <div className="text-center py-8">
-            <p className="text-brand-gray-600 text-base mb-2">No flowers found with selected filters.</p>
-            <button
-              type="button"
-              onClick={() => setSelectedTags([])}
-              className="btn-outline"
-              aria-label="Clear all filters"
-            >
-              Clear Filters
-            </button>
-          </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-            {filteredProducts.map((product, index) => {
-              const imageUrl = product.images && product.images.length > 0 && product.images[0] 
-                ? product.images[0] 
-                : getCategoryFallbackImage(product.category);
-              
-              return (
-                <ProductCard
-                  key={product.id}
-                  id={product.id}
-                  name={product.title}
-                  price={product.price}
-                  image={imageUrl}
-                  slug={product.slug}
-                  shortDescription={product.short_description}
-                  category={product.category}
-                  hideDetailsButton={true}
-                />
-              );
-            })}
+          <div className="space-y-12">
+            {filteredProductsBySubcategory.map(({ subcategory, products }) => (
+              <div key={subcategory} className="space-y-4">
+                <h2 className="font-heading font-bold text-xl md:text-2xl lg:text-3xl text-brand-gray-900 border-b border-brand-gray-200 pb-2">
+                  {subcategory}
+                </h2>
+                {products.length === 0 ? (
+                  <div className="text-center py-12">
+                    <p className="text-brand-gray-600 text-base mb-2">No {subcategory.toLowerCase()} flowers available at the moment.</p>
+                    <p className="text-brand-gray-500 text-sm">Please check back later or contact us for more information.</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                    {products.map((product) => {
+                      const imageUrl = product.images && product.images.length > 0 && product.images[0] 
+                        ? product.images[0] 
+                        : getCategoryFallbackImage(product.category);
+                      
+                      return (
+                        <ProductCard
+                          key={product.id}
+                          id={product.id}
+                          name={product.title}
+                          price={product.price}
+                          image={imageUrl}
+                          slug={product.slug}
+                          shortDescription={product.short_description}
+                          category={product.category}
+                          hideDetailsButton={true}
+                        />
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         )}
       </div>

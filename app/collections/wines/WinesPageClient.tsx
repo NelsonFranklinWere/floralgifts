@@ -40,10 +40,13 @@ export default function WinesPageClient({ products, allWineImages = [], wineProd
         description: wp.description,
         category: "wines" as const,
         tags: [] as string[],
+        subcategory: null,
       }));
 
     return [...safeProducts, ...wineProductItems];
   }, [safeProducts, wineProducts]);
+
+  // Wines have no subcategories - just show all products
 
   // Track collection view
   useEffect(() => {

@@ -97,7 +97,7 @@ function ProductSection({
       />
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-6 md:mb-8 flex items-center justify-between">
-          <h2 className="font-heading font-bold text-2xl md:text-3xl lg:text-4xl text-brand-gray-900">
+          <h2 className="font-heading font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl text-brand-gray-900">
             {title}
           </h2>
           {linkHref && (
@@ -949,10 +949,10 @@ export default async function HomePage() {
               {/* Text Content - Left Side */}
               <div>
                 <h2 className="font-heading font-bold text-3xl md:text-4xl lg:text-5xl text-brand-gray-900 mb-4 md:mb-6 text-left">
-                  About Floral Whispers & Gifts
+                  About Floral Whispers Gifts
                 </h2>
                 <p className="text-brand-gray-600 text-sm md:text-base mb-3 md:mb-4 leading-relaxed text-left">
-                  Born from a passion for bringing beauty and joy into people&apos;s lives, Floral Whispers & Gifts is Nairobi&apos;s trusted florist specializing in premium flower arrangements, luxury gift hampers, and cuddly teddy bears.
+                  Born from a passion for bringing beauty and joy into people&apos;s lives, Floral Whispers Gifts is Nairobi&apos;s trusted florist specializing in premium flower arrangements, luxury gift hampers, and cuddly teddy bears.
                 </p>
                 <p className="text-brand-gray-600 text-sm md:text-base mb-3 md:mb-4 leading-relaxed text-left">
                   We believe every occasion deserves a special touch—whether it&apos;s a birthday, anniversary, graduation, or simply a gesture of love.
@@ -979,7 +979,7 @@ export default async function HomePage() {
                 <div className="relative w-full max-w-md md:max-w-lg">
                   <Image
                     src="/images/logo/FloralLogo.jpg"
-                    alt="Floral Whispers & Gifts Logo"
+                    alt="Floral Whispers Gifts Logo"
                     width={600}
                     height={600}
                     className="rounded-lg shadow-lg object-cover w-full h-auto"

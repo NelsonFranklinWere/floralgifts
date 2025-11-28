@@ -64,18 +64,19 @@ const navigation: NavItem[] = [
     ],
   },
   {
-    name: "Flower Hampers",
-    href: "/collections/gift-hampers",
+    name: "Teddy Bears",
+    href: "/collections/teddy-bears",
     children: [
       {
-        title: "Flower Hampers",
+        title: "By Size",
         items: [
-          { name: "View all", href: "/collections/gift-hampers" },
-          { name: "Chocolate Flower Hampers", href: "/collections/gift-hampers" },
-          { name: "Wine Flower Hampers", href: "/collections/gift-hampers" },
-          { name: "Cake Flower Hampers", href: "/collections/gift-hampers" },
-          { name: "Fruits Baskets", href: "/collections/gift-hampers" },
-          { name: "Flower Hampers & Teddy Bears", href: "/collections/gift-hampers" },
+          { name: "View all", href: "/collections/teddy-bears" },
+          { name: "25cm Teddy Bears", href: "/collections/teddy-bears" },
+          { name: "50cm Teddy Bears", href: "/collections/teddy-bears" },
+          { name: "100cm Teddy Bears", href: "/collections/teddy-bears" },
+          { name: "120cm Teddy Bears", href: "/collections/teddy-bears" },
+          { name: "160cm Teddy Bears", href: "/collections/teddy-bears" },
+          { name: "200cm Teddy Bears", href: "/collections/teddy-bears" },
         ],
       },
     ],

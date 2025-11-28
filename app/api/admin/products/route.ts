@@ -36,13 +36,13 @@ export async function POST(request: NextRequest) {
         short_description: body.short_description,
         price: body.price,
         category: body.category,
-        tags: body.tags || [],
+        subcategory: body.subcategory || null,
+        tags: [],
         teddy_size: body.teddy_size || null,
         teddy_color: body.teddy_color || null,
         images: body.images || [],
         included_items: body.included_items || null,
-        upsells: body.upsells || null,
-        stock: body.stock ?? null,
+        upsells: null,
       })
       .select()
       .single();

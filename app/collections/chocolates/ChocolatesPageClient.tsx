@@ -40,10 +40,13 @@ export default function ChocolatesPageClient({ products, allChocolateImages = []
         description: cp.description,
         category: "chocolates" as const,
         tags: [] as string[],
+        subcategory: null,
       }));
 
     return [...safeProducts, ...chocolateProductItems];
   }, [safeProducts, chocolateProducts]);
+
+  // Chocolates have no subcategories - just show all products
 
   // Track collection view
   useEffect(() => {

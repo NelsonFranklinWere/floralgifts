@@ -7,6 +7,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Link from "next/link";
 import axios from "axios";
+import { getSubcategoriesForCategory } from "@/lib/subcategories";
 
 const schema = yup.object({
   slug: yup.string().required("Slug is required").matches(/^[a-z0-9-]+$/, "Slug can only contain lowercase letters, numbers, and hyphens"),
@@ -15,39 +16,24 @@ const schema = yup.object({
   description: yup.string().required("Description is required"),
   price: yup.number().required("Price is required").min(1, "Price must be greater than 0"),
   category: yup.string().oneOf(["flowers", "hampers", "teddy", "wines", "chocolates"]).required("Category is required"),
-  tags: yup.array().of(yup.string()).optional(),
+  subcategory: yup.string().nullable().when("category", {
+    is: "teddy",
+    then: (schema) => schema.required("Size is required for teddy bears"),
+    otherwise: (schema) => schema.nullable().optional(),
+  }),
   teddy_size: yup.number().nullable().optional(),
-  teddy_color: yup.string().nullable().optional(),
-  stock: yup.number().nullable().optional(),
+  teddy_color: yup.string().nullable().when("category", {
+    is: "teddy",
+    then: (schema) => schema.required("Color is required for teddy bears"),
+    otherwise: (schema) => schema.nullable().optional(),
+  }),
 });
 
 type ProductFormData = yup.InferType<typeof schema>;
 
-// Common tags by category
-const COMMON_TAGS = {
-  flowers: [
-    "birthday", "anniversary", "romantic", "valentine", "wedding", "funeral", "condolence",
-    "get well soon", "sorry", "congrats", "graduation", "roses", "carnations", "gerberas",
-    "sunflowers", "lilies", "chrysanthemums", "heart box", "vase", "basket", "hat box",
-    "hand-tied", "envelope", "square box"
-  ],
-  hampers: [
-    "birthday", "anniversary", "corporate", "graduation", "wedding", "holiday", "end of year",
-    "chocolate", "wine", "fruit", "gourmet"
-  ],
-  teddy: [
-    "birthday", "anniversary", "valentine", "graduation", "baby", "kids", "gift"
-  ],
-  wines: [
-    "red", "white", "sparkling", "sweet", "dry", "premium", "gift"
-  ],
-  chocolates: [
-    "ferrero rocher", "birthday", "anniversary", "valentine", "gift", "premium"
-  ]
-};
 
-const COLORS = [
-  "brown", "red", "white", "pink", "blue", "black", "yellow", "green", "purple", "orange", "beige", "gray"
+const TEDDY_COLORS = [
+  "pink", "red", "blue", "brown", "white"
 ];
 
 export default function NewProductPage() {
@@ -55,10 +41,7 @@ export default function NewProductPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [images, setImages] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
-  const [tags, setTags] = useState<string[]>([]);
-  const [tagInput, setTagInput] = useState("");
   const [includedItems, setIncludedItems] = useState<Array<{ name: string; qty: number; note?: string }>>([]);
-  const [upsells, setUpsells] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
@@ -69,28 +52,21 @@ export default function NewProductPage() {
     setValue,
   } = useForm<ProductFormData>({
     resolver: yupResolver(schema),
-    defaultValues: {
-      tags: [],
-      stock: null,
-    },
+    defaultValues: {},
   });
 
   const category = watch("category");
+  const subcategory = watch("subcategory");
 
-  const addTag = (tag: string) => {
-    const trimmedTag = tag.trim().toLowerCase();
-    if (trimmedTag && !tags.includes(trimmedTag)) {
-      const newTags = [...tags, trimmedTag];
-      setTags(newTags);
-      setValue("tags", newTags);
-      setTagInput("");
+  // Reset subcategory when category changes (only show for flowers and teddy)
+  const handleCategoryChange = (newCategory: string) => {
+    setValue("category", newCategory as any);
+    // Clear subcategory when switching categories
+    setValue("subcategory", null);
+    // Clear color when switching away from teddy
+    if (newCategory !== "teddy") {
+      setValue("teddy_color", null);
     }
-  };
-
-  const removeTag = (tagToRemove: string) => {
-    const newTags = tags.filter(t => t !== tagToRemove);
-    setTags(newTags);
-    setValue("tags", newTags);
   };
 
   const addIncludedItem = () => {
@@ -105,17 +81,6 @@ export default function NewProductPage() {
 
   const removeIncludedItem = (index: number) => {
     setIncludedItems(includedItems.filter((_, i) => i !== index));
-  };
-
-  const addUpsell = (productSlug: string) => {
-    const trimmed = productSlug.trim();
-    if (trimmed && !upsells.includes(trimmed)) {
-      setUpsells([...upsells, trimmed]);
-    }
-  };
-
-  const removeUpsell = (slug: string) => {
-    setUpsells(upsells.filter(s => s !== slug));
   };
 
   const onSubmit = handleSubmit(async (data) => {
@@ -135,12 +100,13 @@ export default function NewProductPage() {
           ...data,
           price: Math.round(data.price * 100), // Convert to cents
           images,
-          tags,
+          tags: [],
           category: data.category as "flowers" | "hampers" | "teddy" | "wines" | "chocolates",
+          subcategory: data.subcategory || null,
           teddy_size: category === "teddy" ? data.teddy_size : null,
           teddy_color: category === "teddy" ? data.teddy_color : null,
-          included_items: includedItems.length > 0 ? includedItems : null,
-          upsells: upsells.length > 0 ? upsells : null,
+          included_items: category === "hampers" && includedItems.length > 0 ? includedItems : null,
+          upsells: null,
         },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -313,7 +279,15 @@ export default function NewProductPage() {
               <label htmlFor="category" className="block text-sm font-medium text-brand-gray-900 mb-2">
                 Category <span className="text-brand-red">*</span>
               </label>
-              <select id="category" {...register("category")} className="input-field">
+              <select 
+                id="category" 
+                {...register("category")} 
+                className="input-field"
+                onChange={(e) => {
+                  handleCategoryChange(e.target.value);
+                  register("category").onChange(e);
+                }}
+              >
                 <option value="">Select category</option>
                 <option value="flowers">Flowers</option>
                 <option value="hampers">Gift Hampers</option>
@@ -327,122 +301,59 @@ export default function NewProductPage() {
             </div>
           </div>
 
-          {/* Tags Section */}
-          <div>
-            <label className="block text-sm font-medium text-brand-gray-900 mb-2">
-              Tags (for filtering)
-            </label>
-            <div className="space-y-2">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={tagInput}
-                  onChange={(e) => setTagInput(e.target.value)}
-                  onKeyPress={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      addTag(tagInput);
-                    }
-                  }}
-                  className="input-field flex-1"
-                  placeholder="Type a tag and press Enter"
-                />
-                <button
-                  type="button"
-                  onClick={() => addTag(tagInput)}
-                  className="btn-outline"
-                >
-                  Add
-                </button>
-              </div>
-              {category && COMMON_TAGS[category as keyof typeof COMMON_TAGS] && (
-                <div className="flex flex-wrap gap-2">
-                  <span className="text-xs text-brand-gray-500 mr-2">Suggestions:</span>
-                  {COMMON_TAGS[category as keyof typeof COMMON_TAGS].map((tag) => (
-                    <button
-                      key={tag}
-                      type="button"
-                      onClick={() => addTag(tag)}
-                      disabled={tags.includes(tag)}
-                      className="text-xs px-2 py-1 rounded bg-brand-gray-100 hover:bg-brand-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      + {tag}
-                    </button>
-                  ))}
-                </div>
+          {/* Subcategory Field - appears after category is selected (only for flowers and teddy bears) */}
+          {category && (category === "flowers" || category === "teddy") && (
+            <div>
+              <label htmlFor="subcategory" className="block text-sm font-medium text-brand-gray-900 mb-2">
+                {category === "teddy" ? "Size" : "Subcategory"}
+                {category === "teddy" && <span className="text-brand-red"> *</span>}
+              </label>
+              <select 
+                id="subcategory" 
+                {...register("subcategory")} 
+                className="input-field"
+              >
+                <option value="">
+                  {category === "teddy" ? "Select size (required)" : "Select subcategory (optional)"}
+                </option>
+                {getSubcategoriesForCategory(category as "flowers" | "teddy").map((subcat) => (
+                  <option key={subcat} value={subcat}>
+                    {subcat}
+                  </option>
+                ))}
+              </select>
+              {errors.subcategory && (
+                <p className="mt-1 text-sm text-brand-red">{errors.subcategory.message}</p>
               )}
-              {tags.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="inline-flex items-center gap-1 px-2 py-1 rounded bg-brand-green/10 text-sm text-brand-green"
-                    >
-                      {tag}
-                      <button
-                        type="button"
-                        onClick={() => removeTag(tag)}
-                        className="text-brand-green hover:text-brand-red"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Size and Color - Show for teddy bears, but also allow color for other categories */}
-          {(category === "teddy" || category === "flowers" || category === "hampers") && (
-            <div className="grid md:grid-cols-2 gap-4">
-              {category === "teddy" && (
-                <div>
-                  <label htmlFor="teddy_size" className="block text-sm font-medium text-brand-gray-900 mb-2">
-                    Size (cm)
-                  </label>
-                  <input
-                    id="teddy_size"
-                    type="number"
-                    {...register("teddy_size", { valueAsNumber: true })}
-                    className="input-field"
-                    placeholder="50"
-                  />
-                </div>
-              )}
-
-              <div>
-                <label htmlFor="teddy_color" className="block text-sm font-medium text-brand-gray-900 mb-2">
-                  Color {category === "teddy" ? "" : "(Optional)"}
-                </label>
-                <select id="teddy_color" {...register("teddy_color")} className="input-field">
-                  <option value="">Select color (optional)</option>
-                  {COLORS.map(color => (
-                    <option key={color} value={color}>{color.charAt(0).toUpperCase() + color.slice(1)}</option>
-                  ))}
-                </select>
-              </div>
             </div>
           )}
 
-          <div>
-            <label htmlFor="stock" className="block text-sm font-medium text-brand-gray-900 mb-2">
-              Stock (Optional - Leave empty for always available)
-            </label>
-            <input
-              id="stock"
-              type="number"
-              {...register("stock", { valueAsNumber: true, setValueAs: (v) => v === '' ? null : v })}
-              className="input-field"
-              placeholder="Leave empty for always available"
-            />
-          </div>
 
-          {/* Included Items Section */}
-          <div>
-            <label className="block text-sm font-medium text-brand-gray-900 mb-2">
-              Included Items (Optional - for gift hampers)
-            </label>
+          {/* Color - Show for teddy bears (required), and optional for other categories */}
+          {category === "teddy" && (
+            <div>
+              <label htmlFor="teddy_color" className="block text-sm font-medium text-brand-gray-900 mb-2">
+                Color <span className="text-brand-red">*</span>
+              </label>
+              <select id="teddy_color" {...register("teddy_color", { required: category === "teddy" })} className="input-field">
+                <option value="">Select color (required)</option>
+                {TEDDY_COLORS.map(color => (
+                  <option key={color} value={color}>{color.charAt(0).toUpperCase() + color.slice(1)}</option>
+                ))}
+              </select>
+              {errors.teddy_color && (
+                <p className="mt-1 text-sm text-brand-red">{errors.teddy_color.message}</p>
+              )}
+            </div>
+          )}
+
+
+          {/* Included Items Section - Only for gift hampers */}
+          {category === "hampers" && (
+            <div>
+              <label className="block text-sm font-medium text-brand-gray-900 mb-2">
+                Included Items (Optional)
+              </label>
             <div className="space-y-2">
               {includedItems.map((item, index) => (
                 <div key={index} className="flex gap-2 items-start">
@@ -486,49 +397,8 @@ export default function NewProductPage() {
               </button>
             </div>
           </div>
+          )}
 
-          {/* Upsells Section */}
-          <div>
-            <label className="block text-sm font-medium text-brand-gray-900 mb-2">
-              Upsells (Optional - Product slugs to suggest)
-            </label>
-            <div className="space-y-2">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  onKeyPress={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      const target = e.target as HTMLInputElement;
-                      addUpsell(target.value);
-                      target.value = "";
-                    }
-                  }}
-                  className="input-field flex-1"
-                  placeholder="Enter product slug and press Enter"
-                />
-              </div>
-              {upsells.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {upsells.map((slug) => (
-                    <span
-                      key={slug}
-                      className="inline-flex items-center gap-1 px-2 py-1 rounded bg-brand-gray-100 text-sm"
-                    >
-                      {slug}
-                      <button
-                        type="button"
-                        onClick={() => removeUpsell(slug)}
-                        className="text-brand-gray-600 hover:text-brand-red"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
 
           <div>
             <label className="block text-sm font-medium text-brand-gray-900 mb-2">Images</label>

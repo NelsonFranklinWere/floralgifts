@@ -37,12 +37,15 @@ export default function GiftHampersPageClient({ products, allHamperImages = [], 
       short_description: hp.description,
       category: "hampers" as const,
       tags: [] as string[],
+      subcategory: null,
     }));
 
     // Combine database products with predefined products only
     // Removed auto-generation of products from unmapped images
     return [...products, ...hamperProductItems];
   }, [products, allHamperImages, hamperProducts]);
+
+  // Gift hampers have no subcategories - just show all products
 
   // Track collection view
   useEffect(() => {

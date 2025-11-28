@@ -8,6 +8,7 @@ export interface Product {
   short_description: string;
   price: number;
   category: "flowers" | "hampers" | "teddy" | "wines" | "chocolates";
+  subcategory?: string | null;
   tags: string[];
   teddy_size?: number | null;
   teddy_color?: string | null;
@@ -48,6 +49,7 @@ export interface Order {
 
 export async function getProducts(filters?: {
   category?: string;
+  subcategory?: string;
   tags?: string[];
   teddy_size?: number[];
   teddy_color?: string[];
@@ -57,6 +59,10 @@ export async function getProducts(filters?: {
 
     if (filters?.category) {
       query = query.eq("category", filters.category);
+    }
+
+    if (filters?.subcategory) {
+      query = query.eq("subcategory", filters.subcategory);
     }
 
     if (filters?.tags && filters.tags.length > 0) {
@@ -84,6 +90,7 @@ export async function getProducts(filters?: {
       images: row.images || [],
       included_items: row.included_items || null,
       upsells: row.upsells || null,
+      subcategory: row.subcategory || null,
     })) as Product[];
   } catch (error) {
     console.error("Error fetching products:", error);
@@ -112,6 +119,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
       images: (data as any).images || [],
       included_items: (data as any).included_items || null,
       upsells: (data as any).upsells || null,
+      subcategory: (data as any).subcategory || null,
     } as Product;
   } catch (error) {
     console.error("Error fetching product:", error);
@@ -136,6 +144,7 @@ export async function getProductById(id: string): Promise<Product | null> {
       images: (data as any).images || [],
       included_items: (data as any).included_items || null,
       upsells: (data as any).upsells || null,
+      subcategory: (data as any).subcategory || null,
     } as Product;
   } catch (error) {
     console.error("Error fetching product:", error);
