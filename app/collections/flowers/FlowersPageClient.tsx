@@ -48,6 +48,8 @@ export default function FlowersPageClient({ products, allFlowerImages = [], flow
         category: "flowers" as const,
         tags: [] as string[],
         subcategory: null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       }));
 
     // Combine database products with predefined flower products
