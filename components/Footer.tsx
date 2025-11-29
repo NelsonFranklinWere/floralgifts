@@ -299,7 +299,16 @@ export default function Footer() {
         <div className="border-t border-white/10 mt-6 pt-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
             <p className="text-brand-gray-400 text-sm">
-              &copy; {new Date().getFullYear()} Floral Whispers Gifts. All rights reserved.
+              &copy; {new Date().getFullYear()} Floral Whispers Gifts. All rights reserved. Designed by{" "}
+              <a
+                href="https://nelson.strivego.online"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-red hover:text-brand-green transition-colors"
+              >
+                NelsonW
+              </a>
+              .
             </p>
             <div className="flex items-center gap-6 text-sm">
               <Link href="/privacy" className="text-brand-gray-400 hover:text-brand-red transition-colors">
