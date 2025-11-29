@@ -224,7 +224,7 @@ export default function TeddyBearsPageClient({ products, allTeddyImages = [], te
                     <p className="text-brand-gray-500 text-sm">Please check back later or contact us for more information.</p>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6">
                     {products.map((product) => {
                       const imageUrl = product.images && product.images.length > 0 && product.images[0] 
                         ? product.images[0] 

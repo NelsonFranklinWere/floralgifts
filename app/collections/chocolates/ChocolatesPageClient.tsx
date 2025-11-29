@@ -73,7 +73,7 @@ export default function ChocolatesPageClient({ products, allChocolateImages = []
             <p className="text-brand-gray-600 text-lg mb-4">No chocolates available at the moment.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6">
             {allDisplayItems.map((item) => {
               const imageUrl = item.images && item.images.length > 0 && item.images[0] 
                 ? item.images[0] 
