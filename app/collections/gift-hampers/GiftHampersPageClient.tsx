@@ -43,7 +43,7 @@ export default function GiftHampersPageClient({ products, allHamperImages = [], 
     // Combine database products with predefined products only
     // Removed auto-generation of products from unmapped images
     return [...products, ...hamperProductItems];
-  }, [products, allHamperImages, hamperProducts]);
+  }, [products, hamperProducts]);
 
   // Gift hampers have no subcategories - just show all products
 

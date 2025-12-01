@@ -42,107 +42,43 @@ export async function POST(request: NextRequest) {
     try {
       const image = sharp(inputBuffer);
       const metadata = await image.metadata();
-      
-      // Determine output format (prefer WebP for better compression)
-      const shouldUseWebP = file.type !== "image/gif" && file.type !== "image/svg+xml";
-      
-      if (shouldUseWebP) {
-        // MANDATORY: Compress to WebP format with quality 80
-        // Resize if image is too large (max 2000px on longest side)
-        const maxDimension = 2000;
-        let needsResize = false;
-        let resizeWidth: number | undefined;
-        let resizeHeight: number | undefined;
-        
-        if (metadata.width && metadata.height) {
-          if (metadata.width > maxDimension || metadata.height > maxDimension) {
-            needsResize = true;
-            if (metadata.width > metadata.height) {
-              resizeWidth = maxDimension;
-            } else {
-              resizeHeight = maxDimension;
-            }
+
+      const maxDimension = 2000;
+      let needsResize = false;
+      let resizeWidth: number | undefined;
+      let resizeHeight: number | undefined;
+
+      if (metadata.width && metadata.height) {
+        if (metadata.width > maxDimension || metadata.height > maxDimension) {
+          needsResize = true;
+          if (metadata.width > metadata.height) {
+            resizeWidth = maxDimension;
+          } else {
+            resizeHeight = maxDimension;
           }
         }
+      }
 
-        let imageProcessor = image;
-        if (needsResize) {
-          imageProcessor = imageProcessor.resize(resizeWidth, resizeHeight, {
-            fit: 'inside',
-            withoutEnlargement: true,
-          });
-        }
+      let imageProcessor = image;
+      if (needsResize) {
+        imageProcessor = imageProcessor.resize(resizeWidth, resizeHeight, {
+          fit: 'inside',
+          withoutEnlargement: true,
+        });
+      }
 
-        compressedBuffer = await imageProcessor
-          .webp({ quality: 80, effort: 6 })
-          .toBuffer();
-        
-        contentType = "image/webp";
-        fileExtension = "webp";
+      if (file.type === "image/gif") {
+        // Keep GIF format (for animations) but resize/optimize
+        compressedBuffer = await imageProcessor.gif().toBuffer();
+        contentType = "image/gif";
+        fileExtension = "gif";
       } else {
-        // For GIF, optimize but keep format
-        if (file.type === "image/gif") {
-          const maxDimension = 2000;
-          let needsResize = false;
-          let resizeWidth: number | undefined;
-          let resizeHeight: number | undefined;
-          
-          if (metadata.width && metadata.height) {
-            if (metadata.width > maxDimension || metadata.height > maxDimension) {
-              needsResize = true;
-              if (metadata.width > metadata.height) {
-                resizeWidth = maxDimension;
-              } else {
-                resizeHeight = maxDimension;
-              }
-            }
-          }
-
-          let imageProcessor = image;
-          if (needsResize) {
-            imageProcessor = imageProcessor.resize(resizeWidth, resizeHeight, {
-              fit: 'inside',
-              withoutEnlargement: true,
-            });
-          }
-
-          compressedBuffer = await imageProcessor
-            .gif()
-            .toBuffer();
-          contentType = "image/gif";
-          fileExtension = "gif";
-        } else {
-          // For SVG or other formats, convert to optimized JPEG
-          const maxDimension = 2000;
-          let needsResize = false;
-          let resizeWidth: number | undefined;
-          let resizeHeight: number | undefined;
-          
-          if (metadata.width && metadata.height) {
-            if (metadata.width > maxDimension || metadata.height > maxDimension) {
-              needsResize = true;
-              if (metadata.width > metadata.height) {
-                resizeWidth = maxDimension;
-              } else {
-                resizeHeight = maxDimension;
-              }
-            }
-          }
-
-          let imageProcessor = image;
-          if (needsResize) {
-            imageProcessor = imageProcessor.resize(resizeWidth, resizeHeight, {
-              fit: 'inside',
-              withoutEnlargement: true,
-            });
-          }
-
-          compressedBuffer = await imageProcessor
-            .jpeg({ quality: 80, mozjpeg: true })
-            .toBuffer();
-          contentType = "image/jpeg";
-          fileExtension = "jpg";
-        }
+        // For all other formats (including HEIC, PNG, JPG, SVG, etc.), convert to JPEG for maximum compatibility
+        compressedBuffer = await imageProcessor
+          .jpeg({ quality: 80, mozjpeg: true })
+          .toBuffer();
+        contentType = "image/jpeg";
+        fileExtension = "jpg";
       }
 
       const originalSize = inputBuffer.length;

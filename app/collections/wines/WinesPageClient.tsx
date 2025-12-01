@@ -21,9 +21,9 @@ interface WinesPageClientProps {
 }
 
 export default function WinesPageClient({ products, allWineImages = [], wineProducts = [] }: WinesPageClientProps) {
-  const safeProducts = Array.isArray(products) ? products : [];
-
   const allDisplayItems = useMemo(() => {
+    const safeProducts = Array.isArray(products) ? products : [];
+    
     const productImageUrls = new Set(
       safeProducts.flatMap(p => p.images || []).filter(Boolean)
     );
@@ -44,7 +44,7 @@ export default function WinesPageClient({ products, allWineImages = [], wineProd
       }));
 
     return [...safeProducts, ...wineProductItems];
-  }, [safeProducts, wineProducts]);
+  }, [products, wineProducts]);
 
   // Wines have no subcategories - just show all products
 

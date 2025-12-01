@@ -23,13 +23,13 @@ interface FlowersPageClientProps {
 
 export default function FlowersPageClient({ products, allFlowerImages = [], flowerProducts = [] }: FlowersPageClientProps) {
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
-  
-  // Ensure products is always an array
-  const safeProducts = Array.isArray(products) ? products : [];
 
   // Create display items from all flower images
   // Combine database products with predefined flower products
   const allDisplayItems = useMemo(() => {
+    // Ensure products is always an array
+    const safeProducts = Array.isArray(products) ? products : [];
+    
     const productImageUrls = new Set(
       safeProducts.flatMap(p => p.images || []).filter(Boolean)
     );
@@ -54,7 +54,7 @@ export default function FlowersPageClient({ products, allFlowerImages = [], flow
 
     // Combine database products with predefined flower products
     return [...safeProducts, ...flowerProductItems];
-  }, [safeProducts, flowerProducts]);
+  }, [products, flowerProducts]);
 
   // Group products by subcategory
   const productsBySubcategory = useMemo(() => {
