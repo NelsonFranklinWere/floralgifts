@@ -83,6 +83,62 @@ export default function NewProductPage() {
     setIncludedItems(includedItems.filter((_, i) => i !== index));
   };
 
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    setIsUploading(true);
+    const token = localStorage.getItem("admin_token");
+
+    try {
+      const uploadPromises = Array.from(files).map(async (file) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("category", category || "flowers");
+
+        const response = await fetch("/api/admin/upload", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.message || "Failed to upload image");
+        }
+
+        const data = await response.json();
+        if (!data.url) {
+          throw new Error("No URL returned from upload");
+        }
+        return data.url as string;
+      });
+
+      const uploadedUrls = await Promise.all(uploadPromises);
+      setImages((prev) => [...prev, ...uploadedUrls]);
+    } catch (error: any) {
+      console.error("Upload error:", error);
+      alert(error.message || "Failed to upload image");
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
+  const handleAddImageClick = () => {
+    if (!category) {
+      alert("Please select a category first.");
+      return;
+    }
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
   const onSubmit = handleSubmit(async (data) => {
     setIsSubmitting(true);
     const token = localStorage.getItem("admin_token");
@@ -131,67 +187,6 @@ export default function NewProductPage() {
       setIsSubmitting(false);
     }
   });
-
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (!files || files.length === 0) return;
-
-    setIsUploading(true);
-    const token = localStorage.getItem("admin_token");
-
-    try {
-      // Upload all selected files
-      const uploadPromises = Array.from(files).map(async (file) => {
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("category", category || "flowers");
-
-        const response = await fetch("/api/admin/upload", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
-        });
-
-        if (!response.ok) {
-          const error = await response.json();
-          throw new Error(error.message || "Failed to upload image");
-        }
-
-        const data = await response.json();
-        console.log("Upload successful, URL:", data.url);
-        if (!data.url) {
-          throw new Error("No URL returned from upload");
-        }
-        return data.url;
-      });
-
-      const uploadedUrls = await Promise.all(uploadPromises);
-      console.log("All uploads complete, URLs:", uploadedUrls);
-      setImages([...images, ...uploadedUrls]);
-    } catch (error: any) {
-      console.error("Upload error:", error);
-      alert(error.message || "Failed to upload image");
-    } finally {
-      setIsUploading(false);
-      // Reset input
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-    }
-  };
-
-  const addImage = () => {
-    // Trigger file input click
-    console.log("addImage called, category:", category);
-    console.log("fileInputRef.current:", fileInputRef.current);
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    } else {
-      console.error("File input ref is null!");
-    }
-  };
 
   const removeImage = (index: number) => {
     setImages(images.filter((_, i) => i !== index));
@@ -452,26 +447,24 @@ export default function NewProductPage() {
                 accept="image/*"
                 onChange={handleImageUpload}
                 className="hidden"
-                disabled={isUploading}
                 multiple
+                disabled={isUploading}
               />
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  console.log("Button clicked, category:", category, "isUploading:", isUploading);
-                  addImage();
+                  handleAddImageClick();
                 }}
-                disabled={isUploading || !category}
+                disabled={isUploading}
                 className="btn-outline text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{ pointerEvents: isUploading || !category ? 'none' : 'auto' }}
               >
-                {isUploading ? "Uploading..." : "+ Upload Image"}
+                {isUploading ? "Uploading..." : "+ Upload Image from Phone"}
               </button>
               {!category && (
                 <p className="text-xs text-brand-gray-500 mt-2">
-                  Please select a category first to upload images
+                  Please select a category first to upload images from your phone.
                 </p>
               )}
             </div>

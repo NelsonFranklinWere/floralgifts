@@ -235,7 +235,6 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
     const token = localStorage.getItem("admin_token");
 
     try {
-      // Upload all selected files
       const uploadPromises = Array.from(files).map(async (file) => {
         const formData = new FormData();
         formData.append("file", file);
@@ -255,30 +254,28 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         }
 
         const data = await response.json();
-        return data.url;
+        if (!data.url) {
+          throw new Error("No URL returned from upload");
+        }
+        return data.url as string;
       });
 
       const uploadedUrls = await Promise.all(uploadPromises);
-      setImages([...images, ...uploadedUrls]);
+      setImages((prev) => [...prev, ...uploadedUrls]);
     } catch (error: any) {
+      console.error("Upload error:", error);
       alert(error.message || "Failed to upload image");
     } finally {
       setIsUploading(false);
-      // Reset input
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
     }
   };
 
-  const addImage = () => {
-    // Trigger file input click
-    console.log("addImage called");
-    console.log("fileInputRef.current:", fileInputRef.current);
+  const handleAddImageClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
-    } else {
-      console.error("File input ref is null!");
     }
   };
 
@@ -569,22 +566,20 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
                 accept="image/*"
                 onChange={handleImageUpload}
                 className="hidden"
-                disabled={isUploading}
                 multiple
+                disabled={isUploading}
               />
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  console.log("Button clicked, isUploading:", isUploading);
-                  addImage();
+                  handleAddImageClick();
                 }}
                 disabled={isUploading}
                 className="btn-outline text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{ pointerEvents: isUploading ? 'none' : 'auto' }}
               >
-                {isUploading ? "Uploading..." : "+ Upload Image"}
+                {isUploading ? "Uploading..." : "+ Upload Image from Phone"}
               </button>
             </div>
           </div>
