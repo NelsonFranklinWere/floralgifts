@@ -528,11 +528,31 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
             <div className="space-y-2">
               {images.map((url, index) => (
                 <div key={index} className="flex items-center gap-2">
-                  <img 
-                    src={url} 
-                    alt={`Preview ${index + 1}`}
-                    className="w-16 h-16 object-cover rounded border border-brand-gray-200"
-                  />
+                  <div className="relative w-16 h-16 rounded border border-brand-gray-200 overflow-hidden bg-brand-gray-100 flex items-center justify-center">
+                    <img 
+                      src={url} 
+                      alt={`Preview ${index + 1}`}
+                      className="w-full h-full object-cover"
+                      onLoad={() => console.log("Image loaded successfully:", url)}
+                      onError={(e) => {
+                        console.error("Image failed to load:", url);
+                        const target = e.target as HTMLImageElement;
+                        const parent = target.parentElement;
+                        if (parent) {
+                          target.style.display = 'none';
+                          const existingError = parent.querySelector('.image-error');
+                          if (!existingError) {
+                            const errorDiv = document.createElement('div');
+                            errorDiv.className = 'image-error text-xs text-brand-red text-center p-1 break-all';
+                            errorDiv.textContent = 'Load Error';
+                            errorDiv.title = url;
+                            parent.appendChild(errorDiv);
+                          }
+                        }
+                      }}
+                      loading="lazy"
+                    />
+                  </div>
                   <input type="text" value={url} readOnly className="input-field flex-1 text-xs" />
                   <button
                     type="button"

@@ -7,7 +7,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts
 export const metadata: Metadata = {
   title: "Gift Hampers Kenya | Chocolate Gift Hampers, Wine Gift Hampers, Corporate Gift Hampers Nairobi | Whispers Floral Gifts",
   description:
-    "Luxury gift hampers Kenya: chocolate gift hampers, wine gift hampers Nairobi, corporate gift hampers Kenya, romantic gift hampers Nairobi. Premium curated items for celebrations and corporate gifts. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
+    "Luxury gift hampers Kenya: chocolate gift hampers, wine gift hampers Nairobi, corporate gift hampers Kenya, romantic gift hampers Nairobi. Christmas gift hampers, holiday hampers, December specials, New Year hampers. Premium curated items for celebrations and corporate gifts. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
   keywords: [
     "gift hampers Kenya",
     "chocolate gift hampers Kenya",
@@ -20,6 +20,16 @@ export const metadata: Metadata = {
     "gift hampers Karen",
     "gift hampers Lavington",
     "gift hampers Kilimani",
+    "Christmas gift hampers Nairobi",
+    "holiday gift hampers Kenya",
+    "December gift hampers",
+    "New Year gift hampers",
+    "Christmas hampers Kenya",
+    "holiday hampers Nairobi",
+    "December hampers delivery",
+    "Christmas hampers delivery",
+    "holiday season hampers",
+    "New Year hampers Nairobi",
   ],
   alternates: {
     canonical: `${baseUrl}/collections/gift-hampers`,

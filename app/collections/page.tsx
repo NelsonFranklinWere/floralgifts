@@ -7,7 +7,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts
 
 export const metadata: Metadata = {
   title: "Collections | Whispers Floral Gifts - Flowers, Teddy Bears, Gift Hampers Nairobi",
-  description: "Browse our collections: premium flowers Nairobi, teddy bears Kenya, gift hampers Kenya, wines Nairobi, chocolates Kenya. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Fast delivery across Nairobi.",
+  description: "Browse our collections: premium flowers Nairobi, teddy bears Kenya, gift hampers Kenya, wines Nairobi, chocolates Kenya. Christmas gifts, holiday collections, December specials. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Fast delivery across Nairobi.",
   keywords: [
     "flower collections Nairobi",
     "teddy bear collections Kenya",
@@ -19,6 +19,11 @@ export const metadata: Metadata = {
     "teddy bears Karen",
     "wines Lavington",
     "chocolates Kilimani",
+    "Christmas collections Nairobi",
+    "holiday gift collections",
+    "December gift collections",
+    "Christmas gift collections Kenya",
+    "holiday season collections",
   ],
   alternates: {
     canonical: `${baseUrl}/collections`,

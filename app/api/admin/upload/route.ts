@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase";
+import sharp from "sharp";
 
 export const dynamic = 'force-dynamic';
 
@@ -20,22 +21,90 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Invalid category" }, { status: 400 });
     }
 
-    // No restrictions - upload file as-is
     const bytes = await file.arrayBuffer();
-    const fileBuffer = Buffer.from(bytes);
+    const inputBuffer = Buffer.from(bytes);
 
-    // Generate unique filename preserving original extension
+    // Convert to mobile-compatible JPEG for all images (except GIFs)
+    let processedBuffer: Buffer;
+    let contentType: string;
+    let fileExtension: string;
+
+    try {
+      const image = sharp(inputBuffer);
+      const metadata = await image.metadata();
+
+      // Resize if too large (max 2000px on longest side for mobile compatibility)
+      const maxDimension = 2000;
+      let needsResize = false;
+      let resizeWidth: number | undefined;
+      let resizeHeight: number | undefined;
+
+      if (metadata.width && metadata.height) {
+        if (metadata.width > maxDimension || metadata.height > maxDimension) {
+          needsResize = true;
+          if (metadata.width > metadata.height) {
+            resizeWidth = maxDimension;
+          } else {
+            resizeHeight = maxDimension;
+          }
+        }
+      }
+
+      let imageProcessor = image;
+      if (needsResize) {
+        imageProcessor = imageProcessor.resize(resizeWidth, resizeHeight, {
+          fit: 'inside',
+          withoutEnlargement: true,
+        });
+      }
+
+      if (file.type === "image/gif") {
+        // Keep GIF format (for animations) but resize if needed
+        processedBuffer = await imageProcessor.gif().toBuffer();
+        contentType = "image/gif";
+        fileExtension = "gif";
+      } else {
+        // Convert ALL other formats to JPEG for universal mobile compatibility
+        // This ensures HEIC, PNG, WebP, etc. all work on phones
+        processedBuffer = await imageProcessor
+          .jpeg({ 
+            quality: 85, 
+            mozjpeg: true, 
+            progressive: true,
+            chromaSubsampling: '4:2:0' // Better mobile compatibility
+          })
+          .toBuffer();
+        contentType = "image/jpeg";
+        fileExtension = "jpg";
+      }
+
+      const originalSize = inputBuffer.length;
+      const processedSize = processedBuffer.length;
+      const reduction = ((1 - processedSize / originalSize) * 100).toFixed(1);
+      
+      console.log(`[Upload] File: ${file.name}, Type: ${file.type}, Size: ${(originalSize / 1024).toFixed(2)}KB`);
+      console.log(`[Upload] Converted to: ${contentType}, Size: ${(processedSize / 1024).toFixed(2)}KB, Reduction: ${reduction}%`);
+    } catch (processingError) {
+      console.error("Image processing failed:", processingError);
+      return NextResponse.json(
+        { message: `Image processing failed: ${processingError instanceof Error ? processingError.message : 'Unknown error'}. Please try a different image.` },
+        { status: 500 }
+      );
+    }
+
+    // Generate unique filename with correct extension
     const timestamp = Date.now();
-    const originalName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
-    const fileExtension = originalName.split('.').pop() || 'bin';
-    const filename = `${timestamp}-${originalName}`;
+    const originalName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_").split('.')[0];
+    const filename = `${timestamp}-${originalName}.${fileExtension}`;
     const filePath = `products/${category}/${filename}`;
+    
+    console.log(`[Upload] Generated path: ${filePath}`);
 
-    // Upload original file to Supabase Storage (no compression, no conversion)
+    // Upload processed image to Supabase Storage
     const { data, error } = await supabaseAdmin.storage
       .from("product-images")
-      .upload(filePath, fileBuffer, {
-        contentType: file.type || `application/octet-stream`,
+      .upload(filePath, processedBuffer, {
+        contentType: contentType,
         upsert: false, // Don't overwrite existing files
       });
 
@@ -63,12 +132,14 @@ export async function POST(request: NextRequest) {
       .getPublicUrl(filePath);
 
     if (!urlData?.publicUrl) {
+      console.error("[Upload] Failed to get public URL");
       return NextResponse.json(
         { message: "Failed to get public URL for uploaded image" },
         { status: 500 }
       );
     }
 
+    console.log(`[Upload] Success! Public URL: ${urlData.publicUrl}`);
     return NextResponse.json({ url: urlData.publicUrl });
   } catch (error: any) {
     if (error.message === "Unauthorized") {

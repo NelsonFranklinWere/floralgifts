@@ -14,6 +14,10 @@ export const metadata: Metadata = {
     "contact florist Nairobi CBD",
     "contact florist Westlands",
     "contact florist Karen",
+    "Christmas gift orders",
+    "holiday delivery contact",
+    "December gift inquiries",
+    "Christmas delivery contact",
   ],
   alternates: {
     canonical: `${baseUrl}/contact`,

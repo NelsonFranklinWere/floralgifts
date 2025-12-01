@@ -14,7 +14,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts
 export const metadata: Metadata = {
   title: "Premium Flower Delivery Nairobi | Same-Day Delivery | Whispers Floral Gifts",
   description:
-    "Premium flower delivery Nairobi, gift hampers Kenya, teddy bears Kenya. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Birthday flowers, anniversary flowers, funeral wreaths, roses Nairobi. Order online with M-Pesa payment. Fast delivery across Nairobi.",
+    "Premium flower delivery Nairobi, gift hampers Kenya, teddy bears Kenya. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Birthday flowers, anniversary flowers, funeral wreaths, roses Nairobi. Christmas flowers, holiday gifts, December specials, New Year hampers. Order online with M-Pesa payment. Fast delivery across Nairobi.",
   keywords: [
     "flower delivery Nairobi",
     "roses Nairobi",
@@ -34,6 +34,20 @@ export const metadata: Metadata = {
     "online flower shop Nairobi",
     "M-Pesa flower delivery Nairobi",
     "fast flower delivery Nairobi",
+    "Christmas flowers Nairobi",
+    "holiday gifts Kenya",
+    "December gift hampers",
+    "New Year flowers",
+    "Christmas gift delivery",
+    "holiday flower delivery",
+    "December special offers",
+    "Christmas hampers Nairobi",
+    "holiday teddy bears",
+    "Christmas roses Nairobi",
+    "New Year gift hampers",
+    "December flower delivery",
+    "Christmas delivery Nairobi",
+    "holiday season gifts",
   ],
   alternates: {
     canonical: baseUrl,

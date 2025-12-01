@@ -7,7 +7,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts
 export const metadata: Metadata = {
   title: "Flower Delivery Nairobi | Birthday Flowers, Anniversary Flowers, Roses Nairobi | Whispers Floral Gifts",
   description:
-    "Premium flower delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Birthday flowers Nairobi, anniversary flowers Kenya, get well soon flowers, funeral wreaths Nairobi, congratulatory flowers Kenya, roses Nairobi. Same-day delivery available. Fast flower delivery across Nairobi.",
+    "Premium flower delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Birthday flowers Nairobi, anniversary flowers Kenya, get well soon flowers, funeral wreaths Nairobi, congratulatory flowers Kenya, roses Nairobi. Christmas flowers, holiday bouquets, December specials, New Year flowers. Same-day delivery available. Fast flower delivery across Nairobi.",
   keywords: [
     "flower delivery Nairobi",
     "roses Nairobi",
@@ -28,6 +28,17 @@ export const metadata: Metadata = {
     "online flower shop Nairobi",
     "M-Pesa flower delivery Nairobi",
     "fast flower delivery Nairobi",
+    "Christmas flowers Nairobi",
+    "holiday flowers Kenya",
+    "December flowers Nairobi",
+    "New Year flowers",
+    "Christmas roses Nairobi",
+    "holiday flower delivery",
+    "December flower delivery",
+    "Christmas flower delivery Nairobi",
+    "holiday season flowers",
+    "Christmas bouquets Nairobi",
+    "New Year flower delivery",
   ],
   alternates: {
     canonical: `${baseUrl}/collections/flowers`,

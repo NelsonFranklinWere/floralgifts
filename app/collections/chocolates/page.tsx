@@ -20,6 +20,13 @@ export const metadata: Metadata = {
     "chocolates Karen",
     "chocolates Lavington",
     "chocolates Kilimani",
+    "Christmas chocolates Nairobi",
+    "holiday chocolates Kenya",
+    "December chocolates",
+    "New Year chocolates",
+    "Christmas chocolate hampers",
+    "holiday chocolate gifts",
+    "December chocolate delivery",
   ],
   alternates: {
     canonical: `${baseUrl}/collections/chocolates`,

@@ -21,6 +21,10 @@ export const metadata: Metadata = {
     "florist Karen",
     "florist Lavington",
     "florist Kilimani",
+    "Christmas florist Nairobi",
+    "holiday florist Kenya",
+    "December flower shop",
+    "Christmas gift shop Nairobi",
   ],
   alternates: {
     canonical: `${baseUrl}/about`,

@@ -21,6 +21,12 @@ export const metadata: Metadata = {
     "corporate gifts Westlands",
     "event flowers Karen",
     "graduation flowers Lavington",
+    "Christmas event flowers",
+    "holiday corporate gifts",
+    "December event styling",
+    "Christmas wedding flowers",
+    "holiday party flowers",
+    "New Year event flowers",
   ],
   alternates: {
     canonical: `${baseUrl}/services`,

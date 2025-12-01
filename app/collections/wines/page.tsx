@@ -22,6 +22,13 @@ export const metadata: Metadata = {
     "wines Karen",
     "wines Lavington",
     "wines Kilimani",
+    "Christmas wines Nairobi",
+    "holiday wines Kenya",
+    "December wines",
+    "New Year wines",
+    "Christmas wine hampers",
+    "holiday wine gifts",
+    "celebration wines December",
   ],
   alternates: {
     canonical: `${baseUrl}/collections/wines`,
