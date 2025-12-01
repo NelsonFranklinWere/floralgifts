@@ -134,8 +134,9 @@ export async function POST(request: NextRequest) {
             });
           }
 
+          // Convert to JPEG for maximum mobile compatibility (not WebP)
           const compressedBuffer = await imageProcessor
-            .webp({ quality: 80, effort: 6 })
+            .jpeg({ quality: 85, mozjpeg: true, progressive: true })
             .toBuffer();
 
           const originalSize = imageBuffer.length;
@@ -147,13 +148,13 @@ export async function POST(request: NextRequest) {
           // Upload compressed image to Supabase Storage
           const category = product.category || "flowers";
           const timestamp = Date.now();
-          const filename = `${timestamp}-optimized-${product.id}-${optimizedCount}.webp`;
+          const filename = `${timestamp}-optimized-${product.id}-${optimizedCount}.jpg`;
           const filePath = `products/${category}/${filename}`;
 
           const { error: uploadError } = await supabaseAdmin.storage
             .from("product-images")
             .upload(filePath, compressedBuffer, {
-              contentType: "image/webp",
+              contentType: "image/jpeg",
               upsert: true, // Overwrite if exists
             });
 

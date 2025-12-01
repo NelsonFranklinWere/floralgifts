@@ -12,8 +12,9 @@ const nextConfig = {
         hostname: '**.cloudinary.com',
       },
     ],
-    // Image optimization settings for fast loading
-    formats: ['image/avif', 'image/webp'],
+    // Image optimization settings - use JPEG only for maximum mobile compatibility
+    // Removed WebP/AVIF as they're not supported on all mobile browsers
+    // formats: ['image/avif', 'image/webp'], // Disabled for mobile compatibility
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days

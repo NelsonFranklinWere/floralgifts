@@ -73,9 +73,10 @@ export async function POST(request: NextRequest) {
         contentType = "image/gif";
         fileExtension = "gif";
       } else {
-        // For all other formats (including HEIC, PNG, JPG, SVG, etc.), convert to JPEG for maximum compatibility
+        // FORCE JPEG conversion for ALL other formats (HEIC, PNG, JPG, SVG, WebP, etc.)
+        // JPEG has universal mobile browser support - WebP does not
         compressedBuffer = await imageProcessor
-          .jpeg({ quality: 80, mozjpeg: true })
+          .jpeg({ quality: 85, mozjpeg: true, progressive: true })
           .toBuffer();
         contentType = "image/jpeg";
         fileExtension = "jpg";
