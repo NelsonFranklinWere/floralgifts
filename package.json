@@ -29,7 +29,6 @@
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.50.1",
     "resend": "^6.5.2",
-    "sharp": "^0.34.5",
     "yup": "^1.4.0",
     "zustand": "^4.5.0"
   },
