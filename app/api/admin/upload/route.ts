@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase";
-import sharp from "sharp";
 
 export const dynamic = 'force-dynamic';
 
@@ -21,92 +20,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Invalid category" }, { status: 400 });
     }
 
-    // Validate file type
-    if (!file.type.startsWith("image/")) {
-      return NextResponse.json({ message: "File must be an image" }, { status: 400 });
-    }
-
-    // Validate file size (max 10MB before compression)
-    if (file.size > 10 * 1024 * 1024) {
-      return NextResponse.json({ message: "File size must be less than 10MB" }, { status: 400 });
-    }
-
+    // No restrictions - upload file as-is
     const bytes = await file.arrayBuffer();
-    const inputBuffer = Buffer.from(bytes);
+    const fileBuffer = Buffer.from(bytes);
 
-    // MANDATORY: Compress and optimize image using sharp - ALL images must be compressed
-    let compressedBuffer: Buffer;
-    let contentType: string;
-    let fileExtension: string;
-
-    try {
-      const image = sharp(inputBuffer);
-      const metadata = await image.metadata();
-
-      const maxDimension = 2000;
-      let needsResize = false;
-      let resizeWidth: number | undefined;
-      let resizeHeight: number | undefined;
-
-      if (metadata.width && metadata.height) {
-        if (metadata.width > maxDimension || metadata.height > maxDimension) {
-          needsResize = true;
-          if (metadata.width > metadata.height) {
-            resizeWidth = maxDimension;
-          } else {
-            resizeHeight = maxDimension;
-          }
-        }
-      }
-
-      let imageProcessor = image;
-      if (needsResize) {
-        imageProcessor = imageProcessor.resize(resizeWidth, resizeHeight, {
-          fit: 'inside',
-          withoutEnlargement: true,
-        });
-      }
-
-      if (file.type === "image/gif") {
-        // Keep GIF format (for animations) but resize/optimize
-        compressedBuffer = await imageProcessor.gif().toBuffer();
-        contentType = "image/gif";
-        fileExtension = "gif";
-      } else {
-        // FORCE JPEG conversion for ALL other formats (HEIC, PNG, JPG, SVG, WebP, etc.)
-        // JPEG has universal mobile browser support - WebP does not
-        compressedBuffer = await imageProcessor
-          .jpeg({ quality: 85, mozjpeg: true, progressive: true })
-          .toBuffer();
-        contentType = "image/jpeg";
-        fileExtension = "jpg";
-      }
-
-      const originalSize = inputBuffer.length;
-      const compressedSize = compressedBuffer.length;
-      const reduction = ((1 - compressedSize / originalSize) * 100).toFixed(1);
-      
-      console.log(`[Image Upload] MANDATORY COMPRESSION: Original: ${(originalSize / 1024).toFixed(2)}KB, Compressed: ${(compressedSize / 1024).toFixed(2)}KB, Reduction: ${reduction}%`);
-    } catch (compressionError) {
-      console.error("MANDATORY Image compression failed:", compressionError);
-      // Compression is mandatory - if it fails, return error instead of fallback
-      return NextResponse.json(
-        { message: `Image compression failed: ${compressionError instanceof Error ? compressionError.message : 'Unknown error'}. Please try a different image.` },
-        { status: 500 }
-      );
-    }
-
-    // Generate unique filename with compressed extension
+    // Generate unique filename preserving original extension
     const timestamp = Date.now();
-    const originalName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_").split('.')[0];
-    const filename = `${timestamp}-${originalName}.${fileExtension}`;
+    const originalName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
+    const fileExtension = originalName.split('.').pop() || 'bin';
+    const filename = `${timestamp}-${originalName}`;
     const filePath = `products/${category}/${filename}`;
 
-    // Upload compressed image to Supabase Storage
+    // Upload original file to Supabase Storage (no compression, no conversion)
     const { data, error } = await supabaseAdmin.storage
       .from("product-images")
-      .upload(filePath, compressedBuffer, {
-        contentType: contentType,
+      .upload(filePath, fileBuffer, {
+        contentType: file.type || `application/octet-stream`,
         upsert: false, // Don't overwrite existing files
       });
 

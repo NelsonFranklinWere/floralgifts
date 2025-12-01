@@ -115,7 +115,7 @@ export default function AdminProductsPage() {
                   Price
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-brand-gray-500 uppercase tracking-wider">
-                  Stock
+                  Availability
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-brand-gray-500 uppercase tracking-wider">
                   Actions
@@ -155,7 +155,7 @@ export default function AdminProductsPage() {
                       {formatCurrency(product.price)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-brand-gray-600">
-                      {product.stock !== null && product.stock !== undefined ? product.stock : "Always Available"}
+                      Always Available
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                       <Link
