@@ -212,6 +212,7 @@ export default function ImageModal({ isOpen, onClose, imageUrl, alt }: ImageModa
               className="max-w-full max-h-[90vh] object-contain"
               priority
               quality={90}
+              unoptimized={imageUrl?.includes('supabase.co')}
             />
           </div>
         </div>

@@ -90,7 +90,8 @@ export default function ProductCard({
                   sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   loading={priority ? undefined : "lazy"}
                   priority={priority}
-                  quality={70}
+                  quality={90}
+                  unoptimized={image?.includes('supabase.co')}
                   onError={(e) => {
                     console.error("[ProductCard] Image failed to load:", image);
                     console.error("[ProductCard] Error:", e);

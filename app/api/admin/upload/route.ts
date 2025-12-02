@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase";
+import sharp from "sharp";
 
 export const dynamic = "force-dynamic";
 
@@ -29,17 +30,39 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Unique filename, keep original extension
+    // Convert ALL images to JPEG for universal browser compatibility
+    // This ensures images work on Windows, Android, Chrome, Brave, Safari, etc.
+    let processedBuffer: Buffer;
+    try {
+      processedBuffer = await sharp(buffer)
+        .jpeg({ 
+          quality: 90, 
+          mozjpeg: true, 
+          progressive: true 
+        })
+        .resize(2000, 2000, { 
+          fit: 'inside', 
+          withoutEnlargement: true 
+        })
+        .toBuffer();
+    } catch (sharpError) {
+      console.error("Sharp conversion error:", sharpError);
+      // If sharp fails, use original buffer (fallback)
+      processedBuffer = buffer;
+    }
+
+    // Unique filename - always use .jpg extension for JPEG
     const timestamp = Date.now();
-    const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
-    const filename = `${timestamp}-${safeName}`;
+    const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_").replace(/\.[^.]+$/, "");
+    const filename = `${timestamp}-${safeName}.jpg`;
     const filePath = `products/${category}/${filename}`;
 
     const { error } = await supabaseAdmin.storage
       .from("product-images")
-      .upload(filePath, buffer, {
-        contentType: file.type || "application/octet-stream",
+      .upload(filePath, processedBuffer, {
+        contentType: "image/jpeg", // Always JPEG
         upsert: false,
+        cacheControl: "public, max-age=31536000, immutable", // Cache for 1 year
       });
 
     if (error) {
