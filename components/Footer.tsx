@@ -85,33 +85,33 @@ export default function Footer() {
           </div>
 
           {/* Quick Links */}
-          <div>
+            <div>
             <h3 className="font-heading font-bold text-base mb-4 text-white">Quick Links</h3>
-            <ul className="space-y-2">
-              <li>
+              <ul className="space-y-2">
+                <li>
                 <Link href="/collections/flowers" className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group">
                   <span className="flex items-center gap-2">
                     <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
                     Flowers
                   </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/collections/teddy-bears"
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/collections/teddy-bears"
                   className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
-                >
+                  >
                   <span className="flex items-center gap-2">
                     <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
                     Teddy Bears
                   </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/collections/gift-hampers"
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/collections/gift-hampers"
                   className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
-                >
+                  >
                   <span className="flex items-center gap-2">
                     <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
                     Gift Hampers
@@ -127,93 +127,93 @@ export default function Footer() {
                     <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
                     Blog
                   </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about"
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/about"
                   className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
-                >
+                  >
                   <span className="flex items-center gap-2">
                     <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
                     About Us
                   </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contact"
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/contact"
                   className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
-                >
+                  >
                   <span className="flex items-center gap-2">
                     <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
                     Contact
                   </span>
-                </Link>
-              </li>
-            </ul>
-          </div>
+                  </Link>
+                </li>
+              </ul>
+            </div>
 
           {/* Services */}
-          <div>
+            <div>
             <h3 className="font-heading font-bold text-base mb-4 text-white">Services</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/services"
+              <ul className="space-y-2">
+                <li>
+                  <Link
+                    href="/services"
                   className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
-                >
+                  >
                   <span className="flex items-center gap-2">
                     <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
                     Our Services
                   </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services#wedding"
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/services#wedding"
                   className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
-                >
+                  >
                   <span className="flex items-center gap-2">
                     <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
                     Wedding Flowers
                   </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services#graduation"
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/services#graduation"
                   className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
-                >
+                  >
                   <span className="flex items-center gap-2">
                     <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
                     Graduation Celebrations
                   </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services#corporate"
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/services#corporate"
                   className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
-                >
+                  >
                   <span className="flex items-center gap-2">
                     <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
                     Corporate Gifts
                   </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services#styling"
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/services#styling"
                   className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
-                >
+                  >
                   <span className="flex items-center gap-2">
                     <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
                     Flower Styling
                   </span>
-                </Link>
-              </li>
-            </ul>
+                  </Link>
+                </li>
+              </ul>
           </div>
 
           {/* Contact & Payment */}
@@ -279,9 +279,9 @@ export default function Footer() {
             <div className="flex items-center gap-2">
               <div className="w-12 h-8 bg-white border border-gray-300 rounded flex items-center justify-center px-2">
                 <span className="text-[#1434CB] font-bold text-xs">VISA</span>
-              </div>
+                </div>
               <span className="text-sm text-white">Visa</span>
-            </div>
+                </div>
             <div className="flex items-center gap-2">
               <div className="w-12 h-8 bg-white border border-gray-300 rounded flex items-center justify-center px-1">
                 <div className="flex items-center">

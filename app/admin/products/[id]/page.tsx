@@ -73,6 +73,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   const [isUploading, setIsUploading] = useState(false);
   const [includedItems, setIncludedItems] = useState<Array<{ name: string; qty: number; note?: string }>>([]);
   const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([]);
+  const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
@@ -98,6 +99,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
     // Clear color when switching away from teddy
     if (newCategory !== "teddy") {
       setValue("teddy_color", null);
+      setSelectedColors([]);
     }
   };
 
@@ -106,6 +108,14 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
       prev.includes(subcat) 
         ? prev.filter(s => s !== subcat)
         : [...prev, subcat]
+    );
+  };
+
+  const handleColorToggle = (color: string) => {
+    setSelectedColors(prev => 
+      prev.includes(color) 
+        ? prev.filter(c => c !== color)
+        : [...prev, color]
     );
   };
 
@@ -143,8 +153,14 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
             ? [subcatsFromTags[0]] 
             : [];
           setSelectedSubcategories(singleSubcat);
+          
+          // Load colors from tags (color:*) or from teddy_color field
+          const colorTags = (prod.tags || []).filter((tag: string) => tag.startsWith("color:"));
+          const colorsFromTags = colorTags.map((tag: string) => tag.replace("color:", ""));
+          const colorFromField = prod.teddy_color ? [prod.teddy_color] : [];
+          setSelectedColors([...new Set([...colorsFromTags, ...colorFromField])]);
         } else {
-          // Flowers: use all valid subcategories from tags
+          // Flowers: use all valid subcategories from tags (multiple selection)
           const singleSubcat = prod.subcategory && validSubcats.includes(prod.subcategory) ? [prod.subcategory] : [];
           setSelectedSubcategories([...new Set([...subcatsFromTags, ...singleSubcat])]);
         }
@@ -208,6 +224,12 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   }
 
   const onSubmit = handleSubmit(async (data) => {
+    // Validate colors for teddy bears
+    if (category === "teddy" && selectedColors.length === 0) {
+      alert("Please select at least one color for teddy bears.");
+      return;
+    }
+
     setIsSubmitting(true);
     const token = localStorage.getItem("admin_token");
 
@@ -232,6 +254,15 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         subcategoryValue = tagsArray.length > 0 ? tagsArray[0] : null; // Keep first for backward compatibility
       }
 
+      // Handle colors: store first color for backward compatibility, all colors in tags
+      let teddyColorValue: string | null = null;
+      if (category === "teddy") {
+        teddyColorValue = selectedColors.length > 0 ? selectedColors[0] : null;
+        // Add color tags to tags array
+        const colorTags = selectedColors.map(c => `color:${c}`);
+        tagsArray = [...tagsArray, ...colorTags];
+      }
+
       const response = await axios.put(
         `/api/admin/products/${productId}`,
         {
@@ -242,7 +273,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
           category: data.category as "flowers" | "hampers" | "teddy" | "wines" | "chocolates",
           subcategory: subcategoryValue,
           teddy_size: category === "teddy" ? data.teddy_size : null,
-          teddy_color: category === "teddy" ? data.teddy_color : null,
+          teddy_color: teddyColorValue,
           included_items: category === "hampers" && includedItems.length > 0 ? includedItems : null,
           upsells: null,
         },
@@ -583,20 +614,33 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
           )}
 
 
-          {/* Color - Show for teddy bears (required), and optional for other categories */}
+          {/* Color - Show for teddy bears (required), checkboxes for multiple selection */}
           {category === "teddy" && (
             <div>
-              <label htmlFor="teddy_color" className="block text-sm font-medium text-brand-gray-900 mb-2">
-                Color <span className="text-brand-red">*</span>
+              <label className="block text-sm font-medium text-brand-gray-900 mb-2">
+                Colors <span className="text-brand-red">*</span>
+                <span className="text-brand-gray-500 text-xs ml-2">(Select all available colors)</span>
               </label>
-              <select id="teddy_color" {...register("teddy_color", { required: category === "teddy" })} className="input-field">
-                <option value="">Select color (required)</option>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 p-3 border border-brand-gray-300 rounded-lg bg-white">
                 {TEDDY_COLORS.map(color => (
-                  <option key={color} value={color}>{color.charAt(0).toUpperCase() + color.slice(1)}</option>
+                  <label key={color} className="flex items-center space-x-2 cursor-pointer hover:bg-brand-gray-50 p-2 rounded">
+                    <input
+                      type="checkbox"
+                      checked={selectedColors.includes(color)}
+                      onChange={() => handleColorToggle(color)}
+                      className="w-4 h-4 text-brand-green border-brand-gray-300 rounded focus:ring-brand-green"
+                    />
+                    <span className="text-sm text-brand-gray-900 capitalize">{color}</span>
+                  </label>
                 ))}
-              </select>
-              {errors.teddy_color && (
-                <p className="mt-1 text-sm text-brand-red">{errors.teddy_color.message}</p>
+              </div>
+              {selectedColors.length > 0 && (
+                <p className="mt-2 text-xs text-brand-gray-600">
+                  Selected: {selectedColors.map(c => c.charAt(0).toUpperCase() + c.slice(1)).join(", ")}
+                </p>
+              )}
+              {category === "teddy" && selectedColors.length === 0 && (
+                <p className="mt-1 text-sm text-brand-red">At least one color is required for teddy bears</p>
               )}
             </div>
           )}
