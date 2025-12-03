@@ -72,6 +72,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   const [images, setImages] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [includedItems, setIncludedItems] = useState<Array<{ name: string; qty: number; note?: string }>>([]);
+  const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
@@ -93,10 +94,19 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
     setValue("category", newCategory as any);
     // Clear subcategory when switching categories
     setValue("subcategory", null);
+    setSelectedSubcategories([]);
     // Clear color when switching away from teddy
     if (newCategory !== "teddy") {
       setValue("teddy_color", null);
     }
+  };
+
+  const handleSubcategoryToggle = (subcat: string) => {
+    setSelectedSubcategories(prev => 
+      prev.includes(subcat) 
+        ? prev.filter(s => s !== subcat)
+        : [...prev, subcat]
+    );
   };
 
   useEffect(() => {
@@ -120,6 +130,25 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         setProduct(prod);
         setImages(prod.images || []);
         setIncludedItems(prod.included_items || []);
+        
+        // Load subcategories: single for teddy bears, multiple for flowers
+        const validSubcats = getSubcategoriesForCategory(prod.category as "flowers" | "teddy");
+        const subcatsFromTags = (prod.tags || []).filter((tag: string) => validSubcats.includes(tag));
+        
+        if (prod.category === "teddy") {
+          // Teddy bears: use first valid subcategory from tags or subcategory field
+          const singleSubcat = prod.subcategory && validSubcats.includes(prod.subcategory) 
+            ? [prod.subcategory] 
+            : subcatsFromTags.length > 0 
+            ? [subcatsFromTags[0]] 
+            : [];
+          setSelectedSubcategories(singleSubcat);
+        } else {
+          // Flowers: use all valid subcategories from tags
+          const singleSubcat = prod.subcategory && validSubcats.includes(prod.subcategory) ? [prod.subcategory] : [];
+          setSelectedSubcategories([...new Set([...subcatsFromTags, ...singleSubcat])]);
+        }
+        
         reset({
           slug: prod.slug,
           title: prod.title,
@@ -189,15 +218,29 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
     }
 
     try {
+      // Handle subcategories: single for teddy bears, multiple for flowers
+      let subcategoryValue: string | null = null;
+      let tagsArray: string[] = [];
+      
+      if (category === "teddy") {
+        // Teddy bears: single selection only
+        subcategoryValue = selectedSubcategories.length > 0 ? selectedSubcategories[0] : null;
+        tagsArray = subcategoryValue ? [subcategoryValue] : [];
+      } else if (category === "flowers") {
+        // Flowers: multiple selection allowed
+        tagsArray = selectedSubcategories.length > 0 ? selectedSubcategories : [];
+        subcategoryValue = tagsArray.length > 0 ? tagsArray[0] : null; // Keep first for backward compatibility
+      }
+
       const response = await axios.put(
         `/api/admin/products/${productId}`,
         {
           ...data,
           price: Math.round(data.price * 100), // Convert to cents
           images,
-          tags: [],
+          tags: tagsArray,
           category: data.category as "flowers" | "hampers" | "teddy" | "wines" | "chocolates",
-          subcategory: data.subcategory || null,
+          subcategory: subcategoryValue,
           teddy_size: category === "teddy" ? data.teddy_size : null,
           teddy_color: category === "teddy" ? data.teddy_color : null,
           included_items: category === "hampers" && includedItems.length > 0 ? includedItems : null,
@@ -231,40 +274,98 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
     const files = event.target.files;
     if (!files || files.length === 0) return;
 
+    const currentCategory = category || product?.category;
+    if (!currentCategory) {
+      alert("Please select a category first.");
+      return;
+    }
+
     setIsUploading(true);
     const token = localStorage.getItem("admin_token");
 
+    if (!token) {
+      alert("Please log in to upload images.");
+      setIsUploading(false);
+      return;
+    }
+
     try {
       const uploadPromises = Array.from(files).map(async (file) => {
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("category", category || product?.category || "flowers");
+        try {
+          const formData = new FormData();
+          formData.append("file", file);
+          formData.append("category", currentCategory);
 
-        const response = await fetch("/api/admin/upload", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
-        });
+          let response;
+          try {
+            response = await fetch("/api/admin/upload", {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+              body: formData,
+            });
+          } catch (fetchError: any) {
+            console.error("Network error details:", {
+              error: fetchError,
+              message: fetchError?.message,
+              name: fetchError?.name,
+              stack: fetchError?.stack
+            });
+            
+            // More specific error messages
+            if (fetchError?.message?.includes("Failed to fetch") || fetchError?.name === "TypeError") {
+              throw new Error("Cannot connect to server. Please make sure the app is running and try again.");
+            }
+            if (fetchError?.message?.includes("network")) {
+              throw new Error("Network connection failed. Please check your internet connection.");
+            }
+            throw new Error(fetchError?.message || "Upload failed. Please try again.");
+          }
 
-        if (!response.ok) {
-          const error = await response.json();
-          throw new Error(error.message || "Failed to upload image");
+          // Always try to parse as JSON first
+          let data;
+          try {
+            const contentType = response.headers.get("content-type") || "";
+            if (contentType.includes("application/json")) {
+              const text = await response.text();
+              try {
+                data = JSON.parse(text);
+              } catch (parseError) {
+                console.error("JSON parse error:", parseError, "Response:", text);
+                throw new Error("Server response error. Please try again.");
+              }
+            } else {
+              const text = await response.text();
+              console.error("Non-JSON response:", text);
+              throw new Error("Server error. Please try again.");
+            }
+          } catch (parseError: any) {
+            throw new Error(parseError.message || "Error processing server response.");
+          }
+
+          if (!response.ok) {
+            const errorMessage = data?.message || `Upload failed (${response.status})`;
+            throw new Error(errorMessage);
+          }
+
+          if (!data || !data.url) {
+            throw new Error("Image uploaded but URL is missing. Please try again.");
+          }
+
+          return data.url as string;
+        } catch (fileError: any) {
+          console.error("File upload error:", fileError);
+          throw fileError;
         }
-
-        const data = await response.json();
-        if (!data.url) {
-          throw new Error("No URL returned from upload");
-        }
-        return data.url as string;
       });
 
       const uploadedUrls = await Promise.all(uploadPromises);
       setImages((prev) => [...prev, ...uploadedUrls]);
     } catch (error: any) {
       console.error("Upload error:", error);
-      alert(error.message || "Failed to upload image");
+      const errorMessage = error.message || "Failed to upload image. Please try again.";
+      alert(errorMessage);
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) {
@@ -424,26 +525,59 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
           {/* Subcategory Field - appears after category is selected (only for flowers and teddy bears) */}
           {category && (category === "flowers" || category === "teddy") && (
             <div>
-              <label htmlFor="subcategory" className="block text-sm font-medium text-brand-gray-900 mb-2">
-                {category === "teddy" ? "Size" : "Subcategory"}
-                {category === "teddy" && <span className="text-brand-red"> *</span>}
-              </label>
-              <select 
-                id="subcategory" 
-                {...register("subcategory")} 
-                className="input-field"
-              >
-                <option value="">
-                  {category === "teddy" ? "Select size (required)" : "Select subcategory (optional)"}
-                </option>
-                {getSubcategoriesForCategory(category as "flowers" | "teddy").map((subcat) => (
-                  <option key={subcat} value={subcat}>
-                    {subcat}
-                  </option>
-                ))}
-              </select>
-              {errors.subcategory && (
-                <p className="mt-1 text-sm text-brand-red">{errors.subcategory.message}</p>
+              {category === "teddy" ? (
+                // Dropdown for teddy bears (single selection)
+                <div>
+                  <label htmlFor="teddy_size_select" className="block text-sm font-medium text-brand-gray-900 mb-2">
+                    Size <span className="text-brand-red"> *</span>
+                  </label>
+                  <select
+                    id="teddy_size_select"
+                    value={selectedSubcategories[0] || ""}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setSelectedSubcategories(value ? [value] : []);
+                      setValue("subcategory", value || null);
+                    }}
+                    className="input-field"
+                  >
+                    <option value="">Select size</option>
+                    {getSubcategoriesForCategory("teddy").map((subcat) => (
+                      <option key={subcat} value={subcat}>
+                        {subcat}
+                      </option>
+                    ))}
+                  </select>
+                  {category === "teddy" && selectedSubcategories.length === 0 && (
+                    <p className="mt-1 text-sm text-brand-red">Size is required for teddy bears</p>
+                  )}
+                </div>
+              ) : (
+                // Checkboxes for flowers (multiple selection)
+                <div>
+                  <label className="block text-sm font-medium text-brand-gray-900 mb-2">
+                    Subcategory
+                    <span className="text-brand-gray-500 text-xs ml-2">(Select multiple if product fits multiple categories)</span>
+                  </label>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 p-3 border border-brand-gray-300 rounded-lg bg-white max-h-48 overflow-y-auto">
+                    {getSubcategoriesForCategory("flowers").map((subcat) => (
+                      <label key={subcat} className="flex items-center space-x-2 cursor-pointer hover:bg-brand-gray-50 p-2 rounded">
+                        <input
+                          type="checkbox"
+                          checked={selectedSubcategories.includes(subcat)}
+                          onChange={() => handleSubcategoryToggle(subcat)}
+                          className="w-4 h-4 text-brand-green border-brand-gray-300 rounded focus:ring-brand-green"
+                        />
+                        <span className="text-sm text-brand-gray-900">{subcat}</span>
+                      </label>
+                    ))}
+                  </div>
+                  {selectedSubcategories.length > 0 && (
+                    <p className="mt-2 text-xs text-brand-gray-600">
+                      Selected: {selectedSubcategories.join(", ")}
+                    </p>
+                  )}
+                </div>
               )}
             </div>
           )}

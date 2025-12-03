@@ -32,15 +32,19 @@ export default function TeddyBearsPageClient({ products, allTeddyImages = [], te
     const usedImages = new Set<string>();
     const displayItems: Product[] = [];
     
-    // First, add database products and track their images
+    // First, add ALL database products with images (track images to prevent duplicates)
     products.forEach(product => {
       const productImages = product.images || [];
-      const hasNewImage = productImages.some(img => img && !usedImages.has(img));
-      if (hasNewImage) {
-        displayItems.push(product);
-        productImages.forEach(img => {
-          if (img) usedImages.add(img);
-        });
+      const hasImage = productImages.some(img => img && img.trim() !== '');
+      if (hasImage) {
+        // Only add if at least one image hasn't been used yet (prevent duplicates)
+        const hasNewImage = productImages.some(img => img && !usedImages.has(img));
+        if (hasNewImage) {
+          displayItems.push(product);
+          productImages.forEach(img => {
+            if (img && img.trim() !== '') usedImages.add(img);
+          });
+        }
       }
     });
     
@@ -99,51 +103,72 @@ export default function TeddyBearsPageClient({ products, allTeddyImages = [], te
     return displayItems;
   }, [products, allTeddyImages, teddyProducts]);
 
-  // Group products by subcategory (size)
+  // Always show all teddy bear sizes from admin subcategories (all 7 sizes)
+  const validSubcategories = useMemo(() => {
+    return SUBCATEGORIES.teddy; // Always show all sizes: 25cm, 50cm, 100cm, 120cm, 160cm, 180cm, 200cm
+  }, []);
+
+  // Group products by subcategory (size) - support multiple subcategories via tags, subcategory field, and teddy_size field
   const productsBySubcategory = useMemo(() => {
     const grouped: Record<string, Product[]> = {};
-    const uncategorized: Product[] = [];
 
     allDisplayItems.forEach((product) => {
-      const subcat = product.subcategory || "Uncategorized";
-      if (subcat === "Uncategorized") {
-        uncategorized.push(product);
-      } else {
+      // Get subcategories from multiple sources:
+      // 1. Tags array (for multiple subcategories)
+      const subcatsFromTags = (product.tags || []).filter(tag => 
+        SUBCATEGORIES.teddy.includes(tag as any)
+      ) as string[];
+      
+      // 2. Single subcategory field (string like "100cm")
+      const singleSubcat = product.subcategory && SUBCATEGORIES.teddy.includes(product.subcategory as any) 
+        ? [product.subcategory] 
+        : [];
+      
+      // 3. teddy_size field (number like 100, 120) - convert to "100cm", "120cm" format
+      const subcatFromSize = product.teddy_size 
+        ? [`${product.teddy_size}cm`].filter(size => SUBCATEGORIES.teddy.includes(size as any))
+        : [];
+      
+      // Combine all subcategories
+      const allSubcats = [...new Set([...subcatsFromTags, ...singleSubcat, ...subcatFromSize])];
+
+      // Add product to each of its subcategories
+      allSubcats.forEach(subcat => {
         if (!grouped[subcat]) {
           grouped[subcat] = [];
         }
-        grouped[subcat].push(product);
-      }
+        // Avoid duplicates
+        if (!grouped[subcat].some(p => p.id === product.id)) {
+          grouped[subcat].push(product);
+        }
+      });
     });
 
-    // Sort subcategories by the order in SUBCATEGORIES.teddy
-    const orderedSubcategories = SUBCATEGORIES.teddy.filter(subcat => grouped[subcat]);
-    const result: Array<{ subcategory: string; products: Product[] }> = [];
-    
-    orderedSubcategories.forEach(subcat => {
-      result.push({ subcategory: subcat, products: grouped[subcat] });
-    });
-
-    // Add uncategorized at the end if any
-    if (uncategorized.length > 0) {
-      result.push({ subcategory: "Uncategorized", products: uncategorized });
-    }
-
-    return result;
+    return grouped;
   }, [allDisplayItems]);
 
-  // Filter products by selected size
-  const filteredProductsBySubcategory = useMemo(() => {
+  // Get filtered products based on selected size
+  const filteredProducts = useMemo(() => {
     if (!selectedSize) {
-      return productsBySubcategory;
+      // Show ALL products with images (from all sizes AND products without subcategories)
+      const productsWithSubcats = Object.values(productsBySubcategory).flat();
+      const productsWithoutSubcats = allDisplayItems.filter(product => {
+        const hasImage = product.images && product.images.length > 0 && product.images[0];
+        // Check if product has any size assigned (via tags, subcategory, or teddy_size)
+        const hasSubcatFromTags = product.tags && product.tags.some(tag => SUBCATEGORIES.teddy.includes(tag as any));
+        const hasSubcatFromField = product.subcategory && SUBCATEGORIES.teddy.includes(product.subcategory as any);
+        const hasSubcatFromSize = product.teddy_size && SUBCATEGORIES.teddy.includes(`${product.teddy_size}cm` as any);
+        const hasSubcat = hasSubcatFromTags || hasSubcatFromField || hasSubcatFromSize;
+        return hasImage && !hasSubcat;
+      });
+      // Remove duplicates and ensure all products with images are shown
+      const allProducts = [...productsWithSubcats, ...productsWithoutSubcats];
+      const uniqueProducts = Array.from(new Map(allProducts.map(p => [p.id, p])).values());
+      return uniqueProducts;
     }
-    const filtered = productsBySubcategory.filter(({ subcategory }) => subcategory === selectedSize);
-    // If no products found for this size, return empty array with the size info
-    if (filtered.length === 0) {
-      return [{ subcategory: selectedSize, products: [] }];
-    }
-    return filtered;
-  }, [productsBySubcategory, selectedSize]);
+    // Show only products from selected size
+    return productsBySubcategory[selectedSize] || [];
+  }, [productsBySubcategory, selectedSize, allDisplayItems]);
 
   // Track collection view
   useEffect(() => {
@@ -164,8 +189,8 @@ export default function TeddyBearsPageClient({ products, allTeddyImages = [], te
           <p className="text-brand-gray-500 text-xs md:text-sm mt-1">
             <span>
               {selectedSize 
-                ? `Showing ${filteredProductsBySubcategory.reduce((sum, { products }) => sum + products.length, 0)} of ${allDisplayItems.length} ${allDisplayItems.length === 1 ? 'product' : 'products'}`
-                : `Showing ${allDisplayItems.length} ${allDisplayItems.length === 1 ? 'product' : 'products'}`
+                ? `Showing ${filteredProducts.length} ${filteredProducts.length === 1 ? 'product' : 'products'} in ${selectedSize}`
+                : `Showing ${filteredProducts.length} ${filteredProducts.length === 1 ? 'product' : 'products'}`
               }
             </span>
           </p>
@@ -186,16 +211,20 @@ export default function TeddyBearsPageClient({ products, allTeddyImages = [], te
               >
                 All
               </button>
-              {SUBCATEGORIES.teddy.map((size) => {
+              {validSubcategories.map((size) => {
+                const hasProducts = productsBySubcategory[size] && productsBySubcategory[size].length > 0;
                 return (
                   <button
                     key={size}
                     type="button"
                     onClick={() => setSelectedSize(size)}
+                    disabled={!hasProducts}
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 whitespace-nowrap flex-shrink-0 ${
                       selectedSize === size
                         ? "bg-brand-green text-white border-2 border-brand-green"
-                        : "bg-white text-brand-gray-900 border-2 border-brand-red hover:border-brand-green hover:bg-brand-green hover:text-white"
+                        : hasProducts
+                        ? "bg-white text-brand-gray-900 border-2 border-brand-red hover:border-brand-green hover:bg-brand-green hover:text-white"
+                        : "bg-gray-100 text-gray-400 border-2 border-gray-200 cursor-not-allowed opacity-50"
                     }`}
                   >
                     {size}
@@ -206,57 +235,46 @@ export default function TeddyBearsPageClient({ products, allTeddyImages = [], te
           </div>
         )}
 
-        {allDisplayItems.length === 0 ? (
+        {filteredProducts.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-brand-gray-600 text-base mb-2">No teddy bears available at the moment.</p>
+            <p className="text-brand-gray-600 text-base mb-2">
+              {selectedSize 
+                ? `No ${selectedSize} teddy bears available at the moment.`
+                : "No teddy bears available at the moment."
+              }
+            </p>
             <p className="text-brand-gray-500 text-sm">Please check back later or contact us for more information.</p>
           </div>
         ) : (
-          <div className="space-y-12">
-            {filteredProductsBySubcategory.map(({ subcategory, products }) => (
-              <div key={subcategory} className="space-y-4">
-                <h2 className="font-heading font-bold text-xl md:text-2xl lg:text-3xl text-brand-gray-900 border-b border-brand-gray-200 pb-2">
-                  {subcategory} Teddy Bears
-                </h2>
-                {products.length === 0 ? (
-                  <div className="text-center py-12">
-                    <p className="text-brand-gray-600 text-base mb-2">No {subcategory} teddy bears available at the moment.</p>
-                    <p className="text-brand-gray-500 text-sm">Please check back later or contact us for more information.</p>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6">
-                    {products.map((product) => {
-                      const imageUrl = product.images && product.images.length > 0 && product.images[0] 
-                        ? product.images[0] 
-                        : getCategoryFallbackImage(product.category);
-                      
-                      // Build description with color info for teddy bears
-                      let description = product.short_description || "";
-                      if (product.teddy_color) {
-                        const colorText = product.teddy_color.charAt(0).toUpperCase() + product.teddy_color.slice(1);
-                        if (!description.toLowerCase().includes(colorText.toLowerCase())) {
-                          description = description ? `${description} - ${colorText}` : colorText;
-                        }
-                      }
-                      
-                      return (
-                        <ProductCard
-                          key={product.id}
-                          id={product.id}
-                          name={product.title}
-                          price={product.price}
-                          image={imageUrl}
-                          slug={product.slug}
-                          shortDescription={description}
-                          category={product.category}
-                          hideDetailsButton={true}
-                        />
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            ))}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6">
+            {filteredProducts.map((product) => {
+              const imageUrl = product.images && product.images.length > 0 && product.images[0] 
+                ? product.images[0] 
+                : getCategoryFallbackImage(product.category);
+              
+              // Build description with color info for teddy bears
+              let description = product.short_description || "";
+              if (product.teddy_color) {
+                const colorText = product.teddy_color.charAt(0).toUpperCase() + product.teddy_color.slice(1);
+                if (!description.toLowerCase().includes(colorText.toLowerCase())) {
+                  description = description ? `${description} - ${colorText}` : colorText;
+                }
+              }
+              
+              return (
+                <ProductCard
+                  key={product.id}
+                  id={product.id}
+                  name={product.title}
+                  price={product.price}
+                  image={imageUrl}
+                  slug={product.slug}
+                  shortDescription={description}
+                  category={product.category}
+                  hideDetailsButton={true}
+                />
+              );
+            })}
           </div>
         )}
       </div>

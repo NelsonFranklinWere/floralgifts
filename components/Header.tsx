@@ -76,6 +76,7 @@ const navigation: NavItem[] = [
           { name: "100cm Teddy Bears", href: "/collections/teddy-bears" },
           { name: "120cm Teddy Bears", href: "/collections/teddy-bears" },
           { name: "160cm Teddy Bears", href: "/collections/teddy-bears" },
+          { name: "180cm Teddy Bears", href: "/collections/teddy-bears" },
           { name: "200cm Teddy Bears", href: "/collections/teddy-bears" },
         ],
       },

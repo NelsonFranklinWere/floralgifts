@@ -211,8 +211,8 @@ export default function ImageModal({ isOpen, onClose, imageUrl, alt }: ImageModa
               height={1200}
               className="max-w-full max-h-[90vh] object-contain"
               priority
+              fetchPriority="high"
               quality={90}
-              unoptimized={imageUrl?.includes('supabase.co')}
             />
           </div>
         </div>

@@ -7,45 +7,103 @@ export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   try {
-    // Admin auth
-    requireAdmin(request);
+    // Admin auth - catch auth errors gracefully
+    try {
+      requireAdmin(request);
+    } catch (authError: any) {
+      if (authError?.message === "Unauthorized") {
+        return NextResponse.json(
+          { message: "Please log in to upload images" },
+          { 
+            status: 401,
+            headers: { "Content-Type": "application/json" }
+          }
+        );
+      }
+      throw authError;
+    }
 
-    const formData = await request.formData();
+    let formData;
+    try {
+      formData = await request.formData();
+    } catch (formError: any) {
+      console.error("FormData parse error:", formError);
+      return NextResponse.json(
+        { message: "Invalid file upload. Please try again." },
+        { 
+          status: 400,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+    }
+
     const file = formData.get("file") as File | null;
     const category = formData.get("category") as string | null;
 
     if (!file) {
-      return NextResponse.json({ message: "No file provided" }, { status: 400 });
+      return NextResponse.json(
+        { message: "Please select an image to upload" },
+        { 
+          status: 400,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
     }
 
     if (!category || !["flowers", "hampers", "teddy", "wines", "chocolates"].includes(category)) {
-      return NextResponse.json({ message: "Invalid category" }, { status: 400 });
+      return NextResponse.json(
+        { message: "Please select a valid category" },
+        { 
+          status: 400,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
     }
 
     // Basic type guard – still allow all image types from phone storage
     if (!file.type.startsWith("image/")) {
-      return NextResponse.json({ message: "File must be an image" }, { status: 400 });
+      return NextResponse.json(
+        { message: "Please upload an image file" },
+        { 
+          status: 400,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
     }
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    let bytes;
+    let buffer;
+    try {
+      bytes = await file.arrayBuffer();
+      buffer = Buffer.from(bytes);
+    } catch (bufferError: any) {
+      console.error("Buffer conversion error:", bufferError);
+      return NextResponse.json(
+        { message: "Error processing image. Please try a different file." },
+        { 
+          status: 400,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+    }
 
-    // Convert ALL images to JPEG for universal browser compatibility
-    // This ensures images work on Windows, Android, Chrome, Brave, Safari, etc.
+    // Convert ALL images to optimized JPEG for fast loading
+    // Reduced quality to 80 for faster loading, progressive JPEG
     let processedBuffer: Buffer;
     try {
       processedBuffer = await sharp(buffer)
         .jpeg({ 
-          quality: 90, 
+          quality: 80, // Reduced from 85 for faster loading
           mozjpeg: true, 
-          progressive: true 
+          progressive: true,
+          optimizeScans: true,
         })
-        .resize(2000, 2000, { 
+        .resize(1800, 1800, { // Reduced from 2000 for faster loading
           fit: 'inside', 
           withoutEnlargement: true 
         })
         .toBuffer();
-    } catch (sharpError) {
+    } catch (sharpError: any) {
       console.error("Sharp conversion error:", sharpError);
       // If sharp fails, use original buffer (fallback)
       processedBuffer = buffer;
@@ -53,61 +111,97 @@ export async function POST(request: NextRequest) {
 
     // Unique filename - always use .jpg extension for JPEG
     const timestamp = Date.now();
-    const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_").replace(/\.[^.]+$/, "");
-    const filename = `${timestamp}-${safeName}.jpg`;
+    const randomStr = Math.random().toString(36).substring(2, 8);
+    const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_").replace(/\.[^.]+$/, "") || "image";
+    const filename = `${timestamp}-${randomStr}-${safeName}.jpg`;
     const filePath = `products/${category}/${filename}`;
 
-    const { error } = await supabaseAdmin.storage
-      .from("product-images")
-      .upload(filePath, processedBuffer, {
-        contentType: "image/jpeg", // Always JPEG
-        upsert: false,
-        cacheControl: "public, max-age=31536000, immutable", // Cache for 1 year
-      });
+    let uploadResult;
+    try {
+      uploadResult = await supabaseAdmin.storage
+        .from("product-images")
+        .upload(filePath, processedBuffer, {
+          contentType: "image/jpeg", // Always JPEG
+          upsert: false,
+          cacheControl: "public, max-age=31536000, immutable", // Cache for 1 year
+        });
+    } catch (uploadError: any) {
+      console.error("Supabase upload error:", uploadError);
+      return NextResponse.json(
+        { message: "Failed to upload image. Please try again." },
+        { 
+          status: 500,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+    }
 
-    if (error) {
-      console.error("Supabase storage error:", error);
+    if (uploadResult.error) {
+      console.error("Supabase storage error:", uploadResult.error);
       if (
-        error.message?.includes("Bucket not found") ||
-        error.message?.includes("The resource was not found")
+        uploadResult.error.message?.includes("Bucket not found") ||
+        uploadResult.error.message?.includes("The resource was not found")
       ) {
         return NextResponse.json(
           {
-            message:
-              "Storage bucket not configured. Please create a 'product-images' bucket in Supabase Storage with public access.",
-            error: "BUCKET_NOT_FOUND",
+            message: "Storage configuration error. Please contact support.",
           },
-          { status: 500 }
+          { 
+            status: 500,
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
 
       return NextResponse.json(
-        { message: error.message || "Failed to upload image to storage" },
-        { status: 500 }
+        { message: "Failed to save image. Please try again." },
+        { 
+          status: 500,
+          headers: { "Content-Type": "application/json" }
+        }
       );
     }
 
-    const { data: urlData } = supabaseAdmin.storage
-      .from("product-images")
-      .getPublicUrl(filePath);
+    let urlData;
+    try {
+      const urlResult = supabaseAdmin.storage
+        .from("product-images")
+        .getPublicUrl(filePath);
+      urlData = urlResult.data;
+    } catch (urlError: any) {
+      console.error("URL generation error:", urlError);
+      return NextResponse.json(
+        { message: "Image uploaded but failed to get URL. Please try again." },
+        { 
+          status: 500,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+    }
 
     if (!urlData?.publicUrl) {
       return NextResponse.json(
-        { message: "Failed to get public URL for uploaded image" },
-        { status: 500 }
+        { message: "Image uploaded but URL is missing. Please try again." },
+        { 
+          status: 500,
+          headers: { "Content-Type": "application/json" }
+        }
       );
     }
 
-    return NextResponse.json({ url: urlData.publicUrl });
+    return NextResponse.json({ 
+      url: urlData.publicUrl,
+    }, {
+      headers: { "Content-Type": "application/json" }
+    });
   } catch (error: any) {
-    if (error?.message === "Unauthorized") {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
-
-    console.error("Upload error:", error);
+    console.error("Unexpected upload error:", error);
     return NextResponse.json(
-      { message: error?.message || "Failed to upload image" },
-      { status: 500 }
+      { message: "An error occurred while uploading. Please try again." },
+      { 
+        status: 500,
+        headers: { "Content-Type": "application/json" }
+      }
     );
   }
 }

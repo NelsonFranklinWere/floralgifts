@@ -56,51 +56,64 @@ export default function FlowersPageClient({ products, allFlowerImages = [], flow
     return [...safeProducts, ...flowerProductItems];
   }, [products, flowerProducts]);
 
-  // Group products by subcategory
+  // Get valid subcategories from admin (sync with frontend)
+  const validSubcategories = useMemo(() => {
+    return SUBCATEGORIES.flowers.filter(subcat => 
+      allDisplayItems.some(product => {
+        const subcats = product.tags?.filter(tag => SUBCATEGORIES.flowers.includes(tag as any)) || [];
+        const singleSubcat = product.subcategory && SUBCATEGORIES.flowers.includes(product.subcategory as any) ? [product.subcategory] : [];
+        return [...subcats, ...singleSubcat].includes(subcat);
+      })
+    );
+  }, [allDisplayItems]);
+
+  // Group products by subcategory - support multiple subcategories via tags
   const productsBySubcategory = useMemo(() => {
     const grouped: Record<string, Product[]> = {};
-    const uncategorized: Product[] = [];
 
     allDisplayItems.forEach((product) => {
-      const subcat = product.subcategory || "Uncategorized";
-      if (subcat === "Uncategorized") {
-        uncategorized.push(product);
-      } else {
+      // Get subcategories from tags (for multiple subcategories) or single subcategory field
+      const subcatsFromTags = (product.tags || []).filter(tag => 
+        SUBCATEGORIES.flowers.includes(tag as any)
+      ) as string[];
+      const singleSubcat = product.subcategory && SUBCATEGORIES.flowers.includes(product.subcategory as any) 
+        ? [product.subcategory] 
+        : [];
+      const allSubcats = [...new Set([...subcatsFromTags, ...singleSubcat])];
+
+      // Add product to each of its subcategories
+      allSubcats.forEach(subcat => {
         if (!grouped[subcat]) {
           grouped[subcat] = [];
         }
-        grouped[subcat].push(product);
-      }
+        // Avoid duplicates
+        if (!grouped[subcat].some(p => p.id === product.id)) {
+          grouped[subcat].push(product);
+        }
+      });
     });
 
-    // Sort subcategories by the order in SUBCATEGORIES.flowers
-    const orderedSubcategories = SUBCATEGORIES.flowers.filter(subcat => grouped[subcat]);
-    const result: Array<{ subcategory: string; products: Product[] }> = [];
-    
-    orderedSubcategories.forEach(subcat => {
-      result.push({ subcategory: subcat, products: grouped[subcat] });
-    });
-
-    // Add uncategorized at the end if any
-    if (uncategorized.length > 0) {
-      result.push({ subcategory: "Uncategorized", products: uncategorized });
-    }
-
-    return result;
+    return grouped;
   }, [allDisplayItems]);
 
-  // Filter products by selected subcategory
-  const filteredProductsBySubcategory = useMemo(() => {
+  // Get filtered products based on selected subcategory
+  const filteredProducts = useMemo(() => {
     if (!selectedSubcategory) {
-      return productsBySubcategory;
+      // Show all products from all subcategories AND products without subcategories (that have images)
+      const productsWithSubcats = Object.values(productsBySubcategory).flat();
+      const productsWithoutSubcats = allDisplayItems.filter(product => {
+        const hasImage = product.images && product.images.length > 0 && product.images[0];
+        const hasSubcat = product.subcategory || (product.tags && product.tags.some(tag => SUBCATEGORIES.flowers.includes(tag as any)));
+        return hasImage && !hasSubcat;
+      });
+      // Remove duplicates
+      const allProducts = [...productsWithSubcats, ...productsWithoutSubcats];
+      const uniqueProducts = Array.from(new Map(allProducts.map(p => [p.id, p])).values());
+      return uniqueProducts;
     }
-    const filtered = productsBySubcategory.filter(({ subcategory }) => subcategory === selectedSubcategory);
-    // If no products found for this subcategory, return empty array with the subcategory info
-    if (filtered.length === 0) {
-      return [{ subcategory: selectedSubcategory, products: [] }];
-    }
-    return filtered;
-  }, [productsBySubcategory, selectedSubcategory]);
+    // Show only products from selected subcategory
+    return productsBySubcategory[selectedSubcategory] || [];
+  }, [productsBySubcategory, selectedSubcategory, allDisplayItems]);
 
   // Track collection view
   useEffect(() => {
@@ -120,8 +133,8 @@ export default function FlowersPageClient({ products, allFlowerImages = [], flow
           <div className="text-brand-gray-500 text-xs md:text-sm mt-1">
             <span>
               {selectedSubcategory 
-                ? `Showing ${filteredProductsBySubcategory.reduce((sum, { products }) => sum + products.length, 0)} of ${allDisplayItems.length} ${allDisplayItems.length === 1 ? 'product' : 'products'}`
-                : `Showing ${allDisplayItems.length} ${allDisplayItems.length === 1 ? 'product' : 'products'}`
+                ? `Showing ${filteredProducts.length} ${filteredProducts.length === 1 ? 'product' : 'products'} in ${selectedSubcategory}`
+                : `Showing ${filteredProducts.length} ${filteredProducts.length === 1 ? 'product' : 'products'}`
               }
             </span>
           </div>
@@ -142,17 +155,20 @@ export default function FlowersPageClient({ products, allFlowerImages = [], flow
               >
                 All
               </button>
-              {SUBCATEGORIES.flowers.map((subcat) => {
-                const hasProducts = productsBySubcategory.some(({ subcategory }) => subcategory === subcat);
+              {validSubcategories.map((subcat) => {
+                const hasProducts = productsBySubcategory[subcat] && productsBySubcategory[subcat].length > 0;
                 return (
                   <button
                     key={subcat}
                     type="button"
                     onClick={() => setSelectedSubcategory(subcat)}
+                    disabled={!hasProducts}
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 whitespace-nowrap flex-shrink-0 ${
                       selectedSubcategory === subcat
                         ? "bg-brand-green text-white border-2 border-brand-green"
-                        : "bg-white text-brand-gray-900 border-2 border-brand-red hover:border-brand-green hover:bg-brand-green hover:text-white"
+                        : hasProducts
+                        ? "bg-white text-brand-gray-900 border-2 border-brand-red hover:border-brand-green hover:bg-brand-green hover:text-white"
+                        : "bg-gray-100 text-gray-400 border-2 border-gray-200 cursor-not-allowed opacity-50"
                     }`}
                   >
                     {subcat}
@@ -163,48 +179,37 @@ export default function FlowersPageClient({ products, allFlowerImages = [], flow
           </div>
         )}
 
-        {allDisplayItems.length === 0 ? (
+        {filteredProducts.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-brand-gray-600 text-base mb-2">No flowers available at the moment.</p>
+            <p className="text-brand-gray-600 text-base mb-2">
+              {selectedSubcategory 
+                ? `No ${selectedSubcategory} flowers available at the moment.`
+                : "No flowers available at the moment."
+              }
+            </p>
             <p className="text-brand-gray-500 text-sm">Please check back later or contact us for more information.</p>
           </div>
         ) : (
-          <div className="space-y-12">
-            {filteredProductsBySubcategory.map(({ subcategory, products }) => (
-              <div key={subcategory} className="space-y-4">
-                <h2 className="font-heading font-bold text-xl md:text-2xl lg:text-3xl text-brand-gray-900 border-b border-brand-gray-200 pb-2">
-                  {subcategory}
-                </h2>
-                {products.length === 0 ? (
-                  <div className="text-center py-12">
-                    <p className="text-brand-gray-600 text-base mb-2">No {subcategory.toLowerCase()} flowers available at the moment.</p>
-                    <p className="text-brand-gray-500 text-sm">Please check back later or contact us for more information.</p>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6">
-                    {products.map((product) => {
-                      const imageUrl = product.images && product.images.length > 0 && product.images[0] 
-                        ? product.images[0] 
-                        : getCategoryFallbackImage(product.category);
-                      
-                      return (
-                        <ProductCard
-                          key={product.id}
-                          id={product.id}
-                          name={product.title}
-                          price={product.price}
-                          image={imageUrl}
-                          slug={product.slug}
-                          shortDescription={product.short_description}
-                          category={product.category}
-                          hideDetailsButton={true}
-                        />
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            ))}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6">
+            {filteredProducts.map((product) => {
+              const imageUrl = product.images && product.images.length > 0 && product.images[0] 
+                ? product.images[0] 
+                : getCategoryFallbackImage(product.category);
+              
+              return (
+                <ProductCard
+                  key={product.id}
+                  id={product.id}
+                  name={product.title}
+                  price={product.price}
+                  image={imageUrl}
+                  slug={product.slug}
+                  shortDescription={product.short_description}
+                  category={product.category}
+                  hideDetailsButton={true}
+                />
+              );
+            })}
           </div>
         )}
       </div>

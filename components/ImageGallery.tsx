@@ -40,8 +40,9 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-300"
           priority={selectedIndex === 0}
+          fetchPriority={selectedIndex === 0 ? "high" : "auto"}
+          quality={80}
           sizes="(max-width: 768px) 100vw, 50vw"
-          unoptimized={images[selectedIndex]?.includes('supabase.co')}
         />
         {/* Click indicator overlay */}
         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-opacity duration-300 flex items-center justify-center">
@@ -71,7 +72,8 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 25vw, 12vw"
-                unoptimized={image?.includes('supabase.co')}
+                quality={75}
+                loading="lazy"
               />
             </button>
           ))}

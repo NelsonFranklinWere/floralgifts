@@ -25,6 +25,7 @@ export const SUBCATEGORIES = {
     "100cm",
     "120cm",
     "160cm",
+    "180cm",
     "200cm",
   ],
   wines: [], // Wines have no subcategories
