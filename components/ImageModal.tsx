@@ -212,7 +212,8 @@ export default function ImageModal({ isOpen, onClose, imageUrl, alt }: ImageModa
               className="max-w-full max-h-[90vh] object-contain"
               priority
               fetchPriority="high"
-              quality={90}
+              quality={80}
+              loading="eager"
             />
           </div>
         </div>

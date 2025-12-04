@@ -87,10 +87,10 @@ export default function ProductCard({
                   alt={`${name} - ${category === "flowers" ? "Premium flower delivery Nairobi CBD, Westlands, Karen" : category === "teddy" ? "Teddy bears Kenya, Nairobi" : category === "hampers" ? "Gift hampers Kenya, Nairobi CBD" : category === "wines" ? "Wines Nairobi, Westlands" : "Chocolates Kenya, Nairobi"} | Whispers Floral Gifts`}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                  loading={priority ? undefined : "lazy"}
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                  loading={priority ? "eager" : "lazy"}
                   priority={priority}
-                  quality={80}
+                  quality={70}
                   fetchPriority={priority ? "high" : "auto"}
                   onError={(e) => {
                     console.error("[ProductCard] Image failed to load:", image);

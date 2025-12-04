@@ -41,8 +41,9 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
           className="object-cover group-hover:scale-105 transition-transform duration-300"
           priority={selectedIndex === 0}
           fetchPriority={selectedIndex === 0 ? "high" : "auto"}
-          quality={80}
+          quality={75}
           sizes="(max-width: 768px) 100vw, 50vw"
+          loading={selectedIndex === 0 ? "eager" : "lazy"}
         />
         {/* Click indicator overlay */}
         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-opacity duration-300 flex items-center justify-center">
@@ -72,7 +73,7 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 25vw, 12vw"
-                quality={75}
+                quality={60}
                 loading="lazy"
               />
             </button>

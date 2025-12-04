@@ -270,6 +270,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${montserrat.variable} ${lato.variable} ${robotoMono.variable} ${dancingScript.variable} ${playfairDisplay.variable}`}>
       <head>
+        {/* Preconnect to Supabase CDN for faster image loading */}
+        <link rel="preconnect" href="https://supabase.co" />
+        <link rel="dns-prefetch" href="https://supabase.co" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}

@@ -12,13 +12,13 @@ const nextConfig = {
         hostname: '**.cloudinary.com',
       },
     ],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days
+    deviceSizes: [640, 750, 828, 1080, 1200], // Reduced max size for faster loading
+    imageSizes: [16, 32, 48, 64, 96, 128, 256], // Reduced sizes
+    minimumCacheTTL: 60 * 60 * 24 * 365, // 1 year cache
     dangerouslyAllowSVG: false,
-    // Removed restrictive CSP - handled in middleware for better Chrome compatibility
     unoptimized: false,
     loader: 'default',
+    formats: ['image/webp', 'image/avif'], // Prefer modern formats for better compression
   },
   // Performance optimizations
   compress: true,

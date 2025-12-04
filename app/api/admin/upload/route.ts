@@ -88,17 +88,20 @@ export async function POST(request: NextRequest) {
     }
 
     // Convert ALL images to optimized JPEG for fast loading
-    // Reduced quality to 80 for faster loading, progressive JPEG
+    // Aggressive optimization for super fast loading
     let processedBuffer: Buffer;
     try {
       processedBuffer = await sharp(buffer)
         .jpeg({ 
-          quality: 80, // Reduced from 85 for faster loading
+          quality: 70, // Reduced for faster loading
           mozjpeg: true, 
           progressive: true,
           optimizeScans: true,
+          trellisQuantisation: true,
+          overshootDeringing: true,
+          optimizeCoding: true,
         })
-        .resize(1800, 1800, { // Reduced from 2000 for faster loading
+        .resize(1200, 1200, { // Reduced for faster loading - product cards don't need larger
           fit: 'inside', 
           withoutEnlargement: true 
         })
@@ -123,7 +126,7 @@ export async function POST(request: NextRequest) {
         .upload(filePath, processedBuffer, {
           contentType: "image/jpeg", // Always JPEG
           upsert: false,
-          cacheControl: "public, max-age=31536000, immutable", // Cache for 1 year
+          cacheControl: "public, max-age=31536000, immutable, stale-while-revalidate=86400", // Cache for 1 year with stale-while-revalidate
         });
     } catch (uploadError: any) {
       console.error("Supabase upload error:", uploadError);
