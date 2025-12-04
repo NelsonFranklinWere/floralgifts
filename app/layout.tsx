@@ -44,18 +44,54 @@ const playfairDisplay = Playfair_Display({
 
 export const metadata: Metadata = {
   title: {
-    default: "Floral Whispers Gifts | Premium Flower Delivery Nairobi | Same-Day Delivery",
-    template: "%s | Floral Whispers Gifts",
+    default:
+      "December Gifts Nairobi | Christmas Flowers, Hampers & Teddy Bears | Floral Whispers Gifts",
+    template: "%s | Floral Whispers Gifts Nairobi",
   },
   description:
-    "Premium flower delivery Nairobi, gift hampers Kenya, teddy bears Kenya. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Birthday flowers, anniversary flowers, funeral wreaths, roses Nairobi. Christmas flowers, holiday gifts, December specials. Order online with M-Pesa. Fast delivery across Nairobi.",
+    "December and Christmas gifts Nairobi: same-day flower delivery, gift hampers, and teddy bears across Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Order Christmas flowers, birthday bouquets, anniversary flowers, graduation roses, and corporate gift hampers with M-Pesa. Fast December delivery across Nairobi County.",
   keywords: [
+    // Core location + brand
+    "Floral Whispers Gifts",
+    "December gifts Nairobi",
+    "Christmas gifts Nairobi",
+    "Christmas gifts Westlands",
+    "Christmas gifts Karen",
+    "Christmas gifts Lavington",
+    "Christmas gifts Kilimani",
+    "holiday gifts Nairobi",
+    "festive gifts Nairobi",
+
+    // Flowers
     "flower delivery Nairobi",
+    "flower delivery Westlands",
+    "flower delivery Karen",
+    "flower delivery Lavington",
+    "flower delivery Kilimani",
     "roses Nairobi",
+    "Christmas flowers Nairobi",
+    "Christmas roses Nairobi",
+    "December flower delivery Nairobi",
+    "New Year flowers Nairobi",
+
+    // Hampers & gifts
     "gift hampers Kenya",
+    "gift hampers Nairobi",
+    "Christmas hampers Nairobi",
+    "corporate gift hampers Nairobi",
+    "chocolate gift hampers Kenya",
+    "wine gift hampers Nairobi",
+    "romantic gift hampers Nairobi",
+
+    // Occasions
     "birthday flowers Nairobi",
     "anniversary flowers Kenya",
+    "graduation flowers Nairobi",
     "funeral wreaths Nairobi",
+    "sympathy flowers Nairobi",
+
+    // Teddies & surprises
+    "teddy bears Nairobi",
     "teddy bears Kenya",
     "surprise deliveries Nairobi",
     "same-day delivery Nairobi",
@@ -68,51 +104,37 @@ export const metadata: Metadata = {
     "wine gift hampers Nairobi",
     "corporate gift hampers Kenya",
     "romantic gift hampers Nairobi",
-    "flower delivery Nairobi CBD",
-    "flower delivery Westlands",
-    "flower delivery Karen",
-    "flower delivery Lavington",
-    "flower delivery Kilimani",
     "florist Nairobi",
     "online flower shop Nairobi",
     "M-Pesa flower delivery Nairobi",
     "fast flower delivery Nairobi",
-    "Christmas flowers Nairobi",
-    "holiday gifts Kenya",
-    "December gift hampers",
-    "New Year flowers",
-    "Christmas gift delivery",
-    "holiday flower delivery",
-    "December special offers",
-    "Christmas hampers Nairobi",
-    "holiday teddy bears",
-    "Christmas roses Nairobi",
-    "New Year gift hampers",
-    "December flower delivery",
-    "Christmas delivery Nairobi",
-    "holiday season gifts",
-    "Christmas gift hampers",
-    "December flowers Kenya",
-    "holiday season delivery",
-    "Christmas roses delivery",
-    "New Year hampers",
-    "December special gifts",
+    // Delivery & payment
+    "same-day delivery Nairobi",
+    "Nairobi CBD flower delivery",
+    "M-Pesa flower delivery Nairobi",
+    "online flower shop Nairobi",
+    "Nairobi gift delivery",
+    "Westlands gift delivery",
+    "Karen gift delivery",
+    "Lavington gift delivery",
+    "Kilimani gift delivery",
   ],
   authors: [{ name: "Floral Whispers Gifts" }],
   creator: "Floral Whispers Gifts",
   publisher: "Floral Whispers Gifts",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts.co.ke"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke"),
   alternates: {
-    canonical: process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts.co.ke",
+    canonical: process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke",
   },
   openGraph: {
     type: "website",
     locale: "en_KE",
-    url: process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts.co.ke",
-    siteName: "Floral Whispers Gifts",
-    title: "Floral Whispers Gifts | Premium Flower Delivery Nairobi | Same-Day Delivery",
+    url: process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke",
+    siteName: "Floral Whispers Gifts Nairobi",
+    title:
+      "December Gifts Nairobi | Christmas Flowers, Hampers & Teddy Bears | Floral Whispers Gifts",
     description:
-      "Premium flower delivery Nairobi, gift hampers Kenya, teddy bears Kenya. Same-day delivery Nairobi CBD. Birthday flowers, anniversary flowers, funeral wreaths, roses Nairobi.",
+      "Shop December and Christmas gifts in Nairobi: flowers, gift hampers and teddy bears with same-day delivery to Nairobi CBD, Westlands, Karen, Lavington and Kilimani.",
     images: [
       {
         url: "/images/logo/FloralLogo.jpg",
@@ -124,8 +146,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Floral Whispers Gifts | Premium Flower Delivery Nairobi",
-    description: "Premium flower delivery Nairobi, gift hampers Kenya, teddy bears Kenya. Same-day delivery available.",
+    title:
+      "December & Christmas Gifts Nairobi | Flowers, Hampers & Teddies | Floral Whispers Gifts",
+    description:
+      "Order December and Christmas gifts in Nairobi: flowers, gift hampers and teddy bears with fast same-day delivery across Nairobi County.",
     images: ["/images/logo/FloralLogo.jpg"],
   },
   robots: {
@@ -144,7 +168,7 @@ export const metadata: Metadata = {
   },
 };
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 const organizationJsonLd = {
   "@context": "https://schema.org",
@@ -270,6 +294,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${montserrat.variable} ${lato.variable} ${robotoMono.variable} ${dancingScript.variable} ${playfairDisplay.variable}`}>
       <head>
+        <link rel="icon" href="/images/logo/FloralLogo.jpg" type="image/jpeg" />
         {/* Preconnect to Supabase CDN for faster image loading */}
         <link rel="preconnect" href="https://supabase.co" />
         <link rel="dns-prefetch" href="https://supabase.co" />
