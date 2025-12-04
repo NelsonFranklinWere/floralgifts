@@ -144,7 +144,7 @@ export default function CartSidebar() {
                     onClick={() => setCartOpen(false)}
                     className="btn-primary w-full text-center block"
                   >
-                    Proceed to Pay
+                    Place Order
                   </Link>
                 </div>
               )}

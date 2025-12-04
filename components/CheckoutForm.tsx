@@ -107,56 +107,8 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
   const total = subtotal + deliveryFeeInCents + tipAmount;
 
   const handleMpesaCheckout = async (data: CheckoutFormData) => {
-    setIsSubmitting(true);
-    setPaymentMethod("till");
-
-    try {
-      const customerName = data.name;
-      const recipientName = isRecipient ? data.name : (data.recipientName || "");
-      const recipientPhone = isRecipient ? data.phone : (data.recipientPhone || "");
-      const deliveryLocation = data.deliveryLocation || "";
-      const deliveryAddress = data.deliveryAddress || "";
-
-      const orderData = {
-        customer: {
-          name: customerName,
-          phone: formatPhone(data.phone),
-          whatsapp: data.whatsapp ? formatPhone(data.whatsapp) : null,
-        },
-        recipient: {
-          name: recipientName,
-          phone: formatPhone(recipientPhone),
-          whatsapp: data.recipientWhatsapp ? formatPhone(data.recipientWhatsapp) : null,
-        },
-        delivery: {
-          location: deliveryLocation,
-          address: deliveryAddress,
-          instructions: data.deliveryInstructions || null,
-        },
-        giftMessage: data.giftMessage || null,
-        items: items.map((item) => ({
-          id: item.id,
-          name: item.name,
-          quantity: item.quantity,
-          price: item.price,
-          image: item.image,
-          slug: item.slug,
-          options: item.options,
-        })),
-        subtotal,
-        deliveryFee: deliveryFeeInCents,
-        tip: tipAmount > 0 ? { percentage: tipPercentage, amount: tipAmount } : null,
-        total,
-      };
-
-      sessionStorage.setItem("pendingOrder", JSON.stringify(orderData));
-      router.push("/checkout");
-    } catch (error: any) {
-      console.error("Error saving order data:", error);
-      alert("Error preparing order. Please try again.");
-      setIsSubmitting(false);
-      setPaymentMethod(null);
-    }
+    // This now submits directly to WhatsApp instead of redirecting to checkout
+    await handleWhatsAppOrder(data);
   };
 
   const handleWhatsAppOrder = async (data: CheckoutFormData) => {
@@ -310,14 +262,19 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
           message: message,
         });
         
+        // Clear cart after successful submission
+        clearCart();
         window.open(whatsappLink, "_blank");
       } catch (emailError) {
         console.error("Email sending error:", emailError);
+        // Clear cart even if email fails
+        clearCart();
         window.open(whatsappLink, "_blank");
       }
     } catch (error) {
       console.error("Error processing WhatsApp order:", error);
       if (whatsappLink) {
+        clearCart();
         window.open(whatsappLink, "_blank");
       }
     } finally {
@@ -342,11 +299,8 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
       deliveryInstructions: sanitizeInput(data.deliveryInstructions),
     };
 
-    if (paymentMethod === "till" || paymentMethod === "paybill" || paymentMethod === "stk") {
-      await handleMpesaCheckout(sanitizedData);
-    } else {
-      await handleWhatsAppOrder(sanitizedData);
-    }
+    // Always submit to WhatsApp business number
+    await handleWhatsAppOrder(sanitizedData);
   });
 
   return (
@@ -672,49 +626,10 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
               </label>
             </div>
             {paymentMethod === "stk" && (
-              <div className="mt-3 ml-7 p-3 bg-brand-gray-50 rounded-lg border border-brand-gray-200">
-                <div className="space-y-3">
-                  <div>
-                    <label htmlFor="checkout-stk-phone" className="block text-xs font-medium text-brand-gray-900 mb-1">
-                      Phone Number <span className="text-brand-red">*</span>
-                    </label>
-                    <input
-                      id="checkout-stk-phone"
-                      type="tel"
-                      placeholder="2547XXXXXXXX"
-                      value={stkPhone}
-                      onChange={(e) => setStkPhone(e.target.value)}
-                      className="w-full px-3 py-2 text-sm border border-brand-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-green"
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      if (!stkPhone) {
-                        alert("Please enter your phone number");
-                        return;
-                      }
-                      setIsProcessingStk(true);
-                      try {
-                        const response = await axios.post("/api/mpesa/stk-push", {
-                          phone: stkPhone,
-                          amount: total,
-                        });
-                        alert("Payment request sent! Please check your phone to complete the payment.");
-                        setStkPhone("");
-                      } catch (error) {
-                        console.error("STK Push error:", error);
-                        alert("Failed to initiate payment. Please try again.");
-                      } finally {
-                        setIsProcessingStk(false);
-                      }
-                    }}
-                    disabled={isProcessingStk || !stkPhone}
-                    className="w-full btn-primary text-sm py-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isProcessingStk ? "Processing..." : `Pay ${formatCurrency(total)}`}
-                  </button>
-                </div>
+              <div className="mt-3 ml-7 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <p className="text-xs text-yellow-800">
+                  <strong>Note:</strong> STK push coming soon. Please use Till Number or Paybill payment options for now.
+                </p>
               </div>
             )}
           </div>
@@ -744,29 +659,107 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
             {paymentMethod === "card" && (
               <div className="mt-3 ml-7 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                 <p className="text-xs text-yellow-800">
-                  <strong>Note:</strong> Card payments are coming soon. Please use M-Pesa payment methods for now.
+                  <strong>Note:</strong> Card payments coming soon. Please use Till Number or Paybill payment options for now.
                 </p>
+              </div>
+            )}
+          </div>
+
+          <div>
+            <div className="flex items-start gap-3">
+              <input
+                type="radio"
+                id="checkout-till"
+                name="checkout-payment"
+                value="till"
+                checked={paymentMethod === "till"}
+                onChange={(e) => setPaymentMethod(paymentMethod === "till" ? null : "till")}
+                className="mt-1 w-4 h-4 text-brand-green focus:ring-brand-green"
+              />
+              <label htmlFor="checkout-till" className="flex-1 cursor-pointer">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-5 bg-[#007C42] rounded flex items-center justify-center">
+                    <span className="text-white font-bold text-[10px]">M-PESA</span>
+                  </div>
+                  <span className="font-medium text-sm text-brand-gray-900">M-Pesa Till Number</span>
+                </div>
+              </label>
+            </div>
+            {paymentMethod === "till" && (
+              <div className="mt-3 ml-7 p-3 bg-brand-gray-50 rounded-lg border border-brand-gray-200">
+                <h4 className="font-semibold text-sm text-brand-gray-900 mb-3 flex items-center gap-2">
+                  <div className="w-5 h-4 bg-[#007C42] rounded flex items-center justify-center">
+                    <span className="text-white font-bold text-[8px]">M-PESA</span>
+                  </div>
+                  How to Pay via Till Number
+                </h4>
+                <ol className="list-decimal list-inside space-y-2 text-brand-gray-700 text-xs">
+                  <li>Go to M-Pesa on your phone</li>
+                  <li>Select <strong>Lipa na M-Pesa</strong></li>
+                  <li>Select <strong>Buy Goods</strong></li>
+                  <li>Enter Till Number: <strong className="text-brand-green">{SHOP_INFO.mpesa.till}</strong></li>
+                  <li>Enter the amount: <strong className="text-brand-green">{formatCurrency(total)}</strong></li>
+                  <li>Enter your M-Pesa PIN</li>
+                  <li>Confirm payment</li>
+                  <li>Name: <strong>Floral Whispers</strong></li>
+                </ol>
+              </div>
+            )}
+          </div>
+
+          <div>
+            <div className="flex items-start gap-3">
+              <input
+                type="radio"
+                id="checkout-paybill"
+                name="checkout-payment"
+                value="paybill"
+                checked={paymentMethod === "paybill"}
+                onChange={(e) => setPaymentMethod(paymentMethod === "paybill" ? null : "paybill")}
+                className="mt-1 w-4 h-4 text-brand-green focus:ring-brand-green"
+              />
+              <label htmlFor="checkout-paybill" className="flex-1 cursor-pointer">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-5 bg-[#007C42] rounded flex items-center justify-center">
+                    <span className="text-white font-bold text-[10px]">M-PESA</span>
+                  </div>
+                  <span className="font-medium text-sm text-brand-gray-900">M-Pesa Paybill</span>
+                </div>
+              </label>
+            </div>
+            {paymentMethod === "paybill" && (
+              <div className="mt-3 ml-7 p-3 bg-brand-gray-50 rounded-lg border border-brand-gray-200">
+                <h4 className="font-semibold text-sm text-brand-gray-900 mb-3 flex items-center gap-2">
+                  <div className="w-5 h-4 bg-[#007C42] rounded flex items-center justify-center">
+                    <span className="text-white font-bold text-[8px]">M-PESA</span>
+                  </div>
+                  How to Pay via Paybill
+                </h4>
+                <ol className="list-decimal list-inside space-y-2 text-brand-gray-700 text-xs">
+                  <li>Go to M-Pesa on your phone</li>
+                  <li>Select <strong>Lipa na M-Pesa</strong></li>
+                  <li>Select <strong>Paybill</strong></li>
+                  <li>Enter Business Number: <strong className="text-brand-green">{SHOP_INFO.mpesa.paybill}</strong></li>
+                  <li>Enter Account Number: <strong className="text-brand-green">{SHOP_INFO.mpesa.account}</strong></li>
+                  <li>Enter the amount: <strong className="text-brand-green">{formatCurrency(total)}</strong></li>
+                  <li>Enter your M-Pesa PIN</li>
+                  <li>Confirm payment</li>
+                  <li>Goes to: <strong>Coop Bank</strong></li>
+                  <li>Name: <strong>Floral Whispers</strong></li>
+                </ol>
               </div>
             )}
           </div>
         </div>
 
         {/* Checkout Button */}
-        {(paymentMethod === "till" || paymentMethod === "paybill") && (
-          <button
-            type="button"
-            onClick={() => {
-              handleSubmit(async (data) => {
-                setIsSubmitting(true);
-                await handleMpesaCheckout(data);
-              })();
-            }}
-            disabled={isSubmitting}
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3.5 px-6 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base mb-3"
-          >
-            {isSubmitting ? "Processing..." : `Check out - ${formatCurrency(total)}`}
-          </button>
-        )}
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full bg-brand-green hover:bg-brand-green/90 text-white font-semibold py-3.5 px-6 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base mb-3"
+        >
+          {isSubmitting ? "Processing..." : `Place Order - ${formatCurrency(total)}`}
+        </button>
 
         <Link
           href="/collections"
