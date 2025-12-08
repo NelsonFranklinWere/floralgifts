@@ -376,7 +376,7 @@ INSERT INTO site_settings (key, value, description) VALUES
 ('site_name', 'Floral Whispers Gifts', 'Name of the website'),
 ('site_email', 'whispersfloral@gmail.com', 'Contact email for the site'),
 ('site_phone', '254721554393', 'Contact phone number'),
-('site_url', 'https://whispersfloralgifts.co.ke', 'Main website URL')
+('site_url', 'https://floralwhispersgifts.co.ke', 'Main website URL')
 ON CONFLICT (key) DO UPDATE
 SET value = EXCLUDED.value,
     description = EXCLUDED.description,

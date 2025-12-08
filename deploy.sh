@@ -49,6 +49,6 @@ else
 fi
 
 echo -e "${GREEN}✅ Deployment completed successfully!${NC}"
-echo -e "${GREEN}🌐 Your site should be live at: https://whispersfloralgifts.co.ke${NC}"
+echo -e "${GREEN}🌐 Your site should be live at: https://floralwhispersgifts.co.ke${NC}"
 
 

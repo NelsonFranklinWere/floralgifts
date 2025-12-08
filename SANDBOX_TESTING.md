@@ -58,7 +58,7 @@ GOOGLE_VERIFICATION=
 # ============================================
 # BASE URL
 # ============================================
-BASE_URL=https://whispersfloralgifts.co.ke
+BASE_URL=https://floralwhispersgifts.co.ke
 
 
 ## Getting Your Passkey

@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { SHOP_INFO } from "@/lib/constants";
 
 const montserrat = Montserrat({
@@ -312,6 +313,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${lato.className} flex flex-col min-h-screen`}>
+        <GoogleAnalytics />
         <ErrorBoundary>
           <AnalyticsProvider>
             <a href="#main-content" className="skip-link">

@@ -33,12 +33,12 @@ https://157.245.34.218/api/mpesa/callback
 
 **Production Domain:**
 ```
-whispersfloralgifts.co.ke
+floralwhispersgifts.co.ke
 ```
 
 **Production Callback URL:**
 ```
-https://whispersfloralgifts.co.ke/api/mpesa/callback
+https://floralwhispersgifts.co.ke/api/mpesa/callback
 ```
 
 **Port:**
@@ -50,7 +50,7 @@ https://whispersfloralgifts.co.ke/api/mpesa/callback
 - **Method:** POST
 - **Path:** `/api/mpesa/callback`
 - **Content-Type:** application/json
-- **Full URL:** `https://whispersfloralgifts.co.ke/api/mpesa/callback`
+- **Full URL:** `https://floralwhispersgifts.co.ke/api/mpesa/callback`
 
 ---
 
@@ -77,13 +77,13 @@ Floral Whispers Gifts
 
 ### 1. STK Push Initiation
 - **URL:** `http://157.245.34.218/api/mpesa/stkpush` (Test)
-- **URL:** `https://whispersfloralgifts.co.ke/api/mpesa/stkpush` (Production)
+- **URL:** `https://floralwhispersgifts.co.ke/api/mpesa/stkpush` (Production)
 - **Method:** POST
 - **Purpose:** Initiates M-Pesa STK Push payment request
 
 ### 2. Callback Endpoint (Receives Payment Confirmation)
 - **URL:** `http://157.245.34.218/api/mpesa/callback` (Test)
-- **URL:** `https://whispersfloralgifts.co.ke/api/mpesa/callback` (Production)
+- **URL:** `https://floralwhispersgifts.co.ke/api/mpesa/callback` (Production)
 - **Method:** POST
 - **Purpose:** Receives payment confirmation from M-Pesa/Co-op Bank
 
@@ -183,8 +183,8 @@ Please configure the following:
    - Port: `80`
 
 2. **Production Environment:**
-   - Domain: `whispersfloralgifts.co.ke`
-   - Callback URL: `https://whispersfloralgifts.co.ke/api/mpesa/callback`
+   - Domain: `floralwhispersgifts.co.ke`
+   - Callback URL: `https://floralwhispersgifts.co.ke/api/mpesa/callback`
    - Port: `443`
 
 3. **Business Details:**

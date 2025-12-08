@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import GiftHampersPageClient from "./GiftHampersPageClient";
 import { getProducts } from "@/lib/db";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
   title: "Gift Hampers Kenya | Chocolate Gift Hampers, Wine Gift Hampers, Corporate Gift Hampers Nairobi | Whispers Floral Gifts",

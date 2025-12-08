@@ -9,7 +9,7 @@ import { getPredefinedProducts } from "@/lib/predefinedProducts";
 import { getBlogPosts } from "@/lib/blogData";
 import { format } from "date-fns";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
   title: "Premium Flower Delivery Nairobi | Same-Day Delivery | Whispers Floral Gifts",

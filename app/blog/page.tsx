@@ -5,7 +5,7 @@ import { getBlogPosts, getBlogTags } from "@/lib/blogData";
 import JsonLd from "@/components/JsonLd";
 import { format } from "date-fns";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
   title: "Blog | Floral Whispers Gifts - Flower & Gift Tips for Nairobi & Kenya",

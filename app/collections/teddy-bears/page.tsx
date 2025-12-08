@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import TeddyBearsPageClient from "./TeddyBearsPageClient";
 import { getProducts } from "@/lib/db";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
   title: "Teddy Bears Kenya | Red, White, Brown, Pink, Blue Teddy Bears | Various Sizes 25cm-200cm | Whispers Floral Gifts",

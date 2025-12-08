@@ -34,7 +34,7 @@ This document lists all APIs and services you need to configure for the Floral W
 - **MPESA_CONSUMER_SECRET**: ✅ Configured
 - **MPESA_SHORTCODE**: `174379` (sandbox) or your PayBill number (production)
 - **MPESA_PASSKEY**: ❌ **NEED TO GET FROM SAFARICOM** (Required for STK Push)
-- **MPESA_CALLBACK_URL**: `https://whispersfloralgifts.co.ke/api/mpesa/callback` (production)
+- **MPESA_CALLBACK_URL**: `https://floralwhispersgifts.co.ke/api/mpesa/callback` (production)
 
 **What it's used for:**
 - M-Pesa STK Push payments
@@ -67,7 +67,7 @@ This document lists all APIs and services you need to configure for the Floral W
 **Setup Steps:**
 1. ✅ Sign up at [resend.com](https://resend.com)
 2. ✅ Get API key from dashboard
-3. ⚠️ **Optional for production:** Verify your domain and use custom email (e.g., `noreply@whispersfloralgifts.co.ke`)
+3. ⚠️ **Optional for production:** Verify your domain and use custom email (e.g., `noreply@floralwhispersgifts.co.ke`)
 
 **Note:** Free tier includes 3,000 emails/month - perfect for small to medium businesses.
 
@@ -166,7 +166,7 @@ MPESA_CONSUMER_KEY=your_consumer_key_here
 MPESA_CONSUMER_SECRET=your_consumer_secret_here
 MPESA_SHORTCODE=174379
 MPESA_PASSKEY=your_passkey_here  # ⚠️ REQUIRED - Get from Safaricom
-MPESA_CALLBACK_URL=https://whispersfloralgifts.co.ke/api/mpesa/callback
+MPESA_CALLBACK_URL=https://floralwhispersgifts.co.ke/api/mpesa/callback
 
 # ============================================
 # ADMIN AUTH (Required)
@@ -184,7 +184,7 @@ RESEND_FROM_EMAIL=onboarding@resend.dev
 # ============================================
 # BASE URL
 # ============================================
-NEXT_PUBLIC_BASE_URL=https://whispersfloralgifts.co.ke
+NEXT_PUBLIC_BASE_URL=https://floralwhispersgifts.co.ke
 
 # ============================================
 # GOOGLE VERIFICATION (Optional)

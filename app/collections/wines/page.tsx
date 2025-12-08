@@ -3,7 +3,7 @@ import WinesPageClient from "./WinesPageClient";
 import { getProducts } from "@/lib/db";
 import { WINE_PRODUCTS, getPredefinedProducts } from "@/lib/predefinedProducts";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
   title: "Premium Wines Nairobi | Wine Gift Hampers Kenya | Celebration Wines | Whispers Floral Gifts",

@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     };
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts.co.ke";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
   const productUrl = `${baseUrl}/product/${slug}`;
   const categoryKeywords: Record<string, string[]> = {
     flowers: ["flower delivery Nairobi", "roses Nairobi", "bouquet Nairobi", "flower delivery Nairobi CBD", "flower delivery Westlands", "flower delivery Karen", "flower delivery Lavington", "flower delivery Kilimani"],

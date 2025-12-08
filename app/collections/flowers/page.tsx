@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import FlowersPageClient from "./FlowersPageClient";
 import { getProducts } from "@/lib/db";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://whispersfloralgifts.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
   title: "Flower Delivery Nairobi | Birthday Flowers, Anniversary Flowers, Roses Nairobi | Whispers Floral Gifts",

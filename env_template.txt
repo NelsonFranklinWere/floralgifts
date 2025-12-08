@@ -13,7 +13,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key_here
 # ============================================
 # BASE URL
 # ============================================
-NEXT_PUBLIC_BASE_URL=https://whispersfloralgifts.co.ke
+NEXT_PUBLIC_BASE_URL=https://floralwhispersgifts.co.ke
 
 # ============================================
 # M-PESA CONFIGURATION
