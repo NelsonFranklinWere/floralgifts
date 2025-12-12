@@ -884,12 +884,16 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
         {/* Checkout Button */}
         <button
           type="submit"
-          disabled={isSubmitting || isProcessingStk}
+          disabled={isSubmitting || isProcessingStk || !paymentMethod}
           className="w-full bg-brand-green hover:bg-brand-green/90 text-white font-semibold py-3.5 px-6 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base mb-3"
         >
           {isSubmitting || isProcessingStk 
             ? (paymentMethod === "stk" ? "Initiating payment..." : "Processing...") 
-            : `Place Order - ${formatCurrency(total)}`}
+            : paymentMethod === "stk" 
+              ? `Proceed to Payment - ${formatCurrency(total)}`
+              : paymentMethod
+              ? `Place Order - ${formatCurrency(total)}`
+              : "Select Payment Method"}
         </button>
 
         <Link
