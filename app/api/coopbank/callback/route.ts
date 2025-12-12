@@ -96,11 +96,11 @@ export async function POST(request: NextRequest) {
           
           <h3>Order Items</h3>
           <ul>
-            ${order.items.map((item: any) => {
-              const imageUrl = getImageUrl(item.image || '');
+            ${(order.items || []).map((item: any) => {
+              const imageUrl = item.image ? getImageUrl(item.image) : '';
               return `
                 <li>
-                  <strong>${item.name}</strong> x${item.quantity} - ${formatCurrency(item.price * item.quantity)}
+                  <strong>${item.name || 'Item'}</strong> x${item.quantity || 1} - ${formatCurrency((item.price || 0) * (item.quantity || 1))}
                   ${item.options ? `<br/>Options: ${Object.entries(item.options).map(([k, v]) => `${k}: ${v}`).join(", ")}` : ''}
                   ${imageUrl ? `<br/><a href="${imageUrl}">📷 View Product Image</a>` : ''}
                 </li>
@@ -118,15 +118,29 @@ export async function POST(request: NextRequest) {
         `;
 
         // Send email notification
-        await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'https://floralwhispersgifts.co.ke'}/api/email`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            type: 'order',
-            subject: emailSubject,
-            html: emailHtml,
-          }),
-        }).catch(err => console.error('Email sending error:', err));
+        try {
+          const emailResponse = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL || 'https://floralwhispersgifts.co.ke'}/api/email`,
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                type: 'order',
+                subject: emailSubject,
+                html: emailHtml,
+              }),
+            }
+          );
+          
+          if (!emailResponse.ok) {
+            console.error('Email API returned error:', await emailResponse.text());
+          } else {
+            console.log('Email notification sent successfully');
+          }
+        } catch (emailErr) {
+          console.error('Failed to send email notification:', emailErr);
+          // Don't fail the callback if email fails
+        }
 
         console.log(`Email notification sent for order ${order.id}`);
       } catch (emailError) {

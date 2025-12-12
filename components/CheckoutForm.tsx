@@ -750,13 +750,13 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
                       <p className="mt-1 text-xs text-brand-red">{stkError}</p>
                     )}
                     <p className="mt-1 text-xs text-brand-gray-500">
-                      If left empty, we'll use your contact phone number: {formData.phone || "Not provided"}
+                      If left empty, we&apos;ll use your contact phone number: {formData.phone || "Not provided"}
                     </p>
                   </div>
                 </div>
                 <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
                   <p className="text-xs text-green-800">
-                    <strong>How it works:</strong> After you place the order, you'll receive an M-Pesa prompt on your phone. Enter your PIN to complete the payment.
+                    <strong>How it works:</strong> After you place the order, you&apos;ll receive an M-Pesa prompt on your phone. Enter your PIN to complete the payment.
                   </p>
                 </div>
               </div>
