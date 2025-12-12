@@ -162,7 +162,7 @@ export async function createOrder(order: Omit<Order, "id" | "created_at" | "upda
         customer_name: order.customer_name,
         phone: order.phone,
         email: order.email || null,
-        delivery_address: order.delivery_address,
+        address: order.delivery_address, // Schema uses 'address' not 'delivery_address'
         delivery_city: order.delivery_city || null,
         delivery_date: order.delivery_date,
         payment_method: order.payment_method,
@@ -202,6 +202,10 @@ export async function getOrderById(id: string): Promise<Order | null> {
     if (data) {
       // Add total alias for backward compatibility
       (data as any).total = data.total_amount;
+      // Map 'address' from DB to 'delivery_address' for Order interface
+      if (data.address && !data.delivery_address) {
+        data.delivery_address = data.address;
+      }
     }
 
     return data as Order;
@@ -263,10 +267,11 @@ export async function getOrders(filters?: {
       return [];
     }
 
-    // Add total alias for backward compatibility
+    // Add total alias and map address to delivery_address for backward compatibility
     return (data || []).map((order: any) => ({
       ...order,
       total: order.total_amount,
+      delivery_address: order.address || order.delivery_address, // Map 'address' from DB to 'delivery_address'
     })) as Order[];
   } catch (error) {
     console.error("Error fetching orders:", error);

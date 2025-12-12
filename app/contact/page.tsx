@@ -297,9 +297,9 @@ export default function ContactPage() {
                     </label>
                   </div>
                   {paymentMethod === "stk" && (
-                    <div className="mt-3 ml-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                      <p className="text-xs text-yellow-800">
-                        <strong>Note:</strong> STK push coming soon. Please use Till Number or Paybill payment options for now.
+                    <div className="mt-3 ml-8 p-4 bg-green-50 border border-green-200 rounded-lg">
+                      <p className="text-xs text-green-800">
+                        <strong>How it works:</strong> STK push is now available! Select STK push as your payment method at checkout to receive a payment prompt on your phone.
                       </p>
                     </div>
                   )}
