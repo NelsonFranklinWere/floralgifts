@@ -79,6 +79,7 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
   const [isRecipient, setIsRecipient] = useState(true);
   const [stkPhone, setStkPhone] = useState("");
   const [isProcessingStk, setIsProcessingStk] = useState(false);
+  const [stkError, setStkError] = useState("");
   const [tipEnabled, setTipEnabled] = useState(false);
   const [tipPercentage, setTipPercentage] = useState<5 | 10 | 15 | null>(null);
   const { items, getTotal, clearCart } = useCartStore();
@@ -109,6 +110,100 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
   const handleMpesaCheckout = async (data: CheckoutFormData) => {
     // This now submits directly to WhatsApp instead of redirecting to checkout
     await handleWhatsAppOrder(data);
+  };
+
+  const handleSTKPush = async (data: CheckoutFormData) => {
+    setIsProcessingStk(true);
+    setStkError("");
+    
+    // Use phone from form or STK phone input
+    const phoneToUse = stkPhone || data.phone;
+    
+    if (!phoneToUse || !validatePhone(phoneToUse)) {
+      setStkError("Please enter a valid M-Pesa phone number (format: 2547XXXXXXXX)");
+      setIsProcessingStk(false);
+      return;
+    }
+
+    try {
+      // Create order in database first
+      const recipientName = isRecipient ? data.name : (data.recipientName || "");
+      const recipientPhone = isRecipient ? data.phone : (data.recipientPhone || "");
+      const deliveryLocation = data.deliveryLocation || "";
+      const deliveryAddress = data.deliveryAddress || "";
+
+      const orderResponse = await axios.post("/api/orders", {
+        items: items.map((item) => ({
+          productId: item.id,
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          options: item.options,
+        })),
+        total: total,
+        customer_name: data.name,
+        phone: formatPhone(data.phone),
+        email: null,
+        delivery_address: `${deliveryLocation}, ${deliveryAddress}`,
+        delivery_city: deliveryLocation,
+        delivery_date: data.deliveryInstructions || "As per instructions",
+        payment_method: "mpesa",
+        notes: `STK Push payment. Recipient: ${recipientName} (${formatPhone(recipientPhone)}). ${data.giftMessage ? `Gift message: ${data.giftMessage}` : ""}`,
+      });
+
+      const orderId = orderResponse.data.id;
+      const messageRef = `FLORAL-${orderId.slice(0, 8)}-${Date.now()}`;
+
+      // Initiate STK Push via Co-op Bank API
+      const stkResponse = await axios.post("/api/coopbank/stkpush", {
+        MobileNumber: phoneToUse,
+        Amount: total,
+        Narration: `Floral Whispers Order #${orderId.slice(0, 8)}`,
+        MessageReference: messageRef,
+        OtherDetails: [
+          { Name: "OrderID", Value: orderId },
+          { Name: "CustomerName", Value: data.name },
+        ],
+      });
+
+      // Co-op Bank STK Push response format
+      if (stkResponse.data.success && stkResponse.data.data) {
+        const responseData = stkResponse.data.data;
+        // Check if STK push was initiated successfully
+        if (responseData.ResponseCode === "00" || responseData.ResponseCode === "0" || responseData.MessageReference) {
+          const finalMessageRef = responseData.MessageReference || messageRef;
+          // Update order with message reference for callback matching
+          try {
+            await axios.patch(`/api/orders/${orderId}`, {
+              mpesa_checkout_request_id: finalMessageRef,
+              notes: `STK Push initiated. MessageReference: ${finalMessageRef}. Payment phone: ${phoneToUse}. ${orderResponse.data.notes || ''}`,
+            });
+          } catch (err) {
+            console.error("Failed to update order:", err);
+          }
+          
+          // Clear cart and redirect to success page
+          clearCart();
+          Analytics.trackPurchase(orderId, total, "mpesa");
+          
+          // Redirect to success page
+          router.push(`/order/success?id=${orderId}`);
+        } else {
+          setStkError(responseData.ResponseDescription || responseData.ResponseMessage || "STK Push failed. Please try again.");
+        }
+      } else {
+        setStkError(stkResponse.data.message || "Failed to initiate payment. Please try again.");
+      }
+    } catch (error: any) {
+      console.error("STK Push error:", error);
+      setStkError(
+        error.response?.data?.message || 
+        error.message || 
+        "Failed to initiate payment. Please try again or use another payment method."
+      );
+    } finally {
+      setIsProcessingStk(false);
+    }
   };
 
   const handleWhatsAppOrder = async (data: CheckoutFormData) => {
@@ -299,8 +394,13 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
       deliveryInstructions: sanitizeInput(data.deliveryInstructions),
     };
 
-    // Always submit to WhatsApp business number
-    await handleWhatsAppOrder(sanitizedData);
+    // Route to appropriate payment handler
+    if (paymentMethod === "stk") {
+      await handleSTKPush(sanitizedData);
+    } else {
+      // Till, Paybill, or WhatsApp - all go through WhatsApp order flow
+      await handleWhatsAppOrder(sanitizedData);
+    }
   });
 
   return (
@@ -626,10 +726,39 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
               </label>
             </div>
             {paymentMethod === "stk" && (
-              <div className="mt-3 ml-7 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <p className="text-xs text-yellow-800">
-                  <strong>Note:</strong> STK push coming soon. Please use Till Number or Paybill payment options for now.
-                </p>
+              <div className="mt-3 ml-7 space-y-3">
+                <div className="p-3 bg-brand-gray-50 rounded-lg border border-brand-gray-200">
+                  <p className="text-xs text-brand-gray-700 mb-3">
+                    Enter your M-Pesa phone number to receive a payment prompt:
+                  </p>
+                  <div>
+                    <label htmlFor="stk-phone" className="block text-xs font-medium text-brand-gray-900 mb-1.5">
+                      M-Pesa Phone Number <span className="text-brand-red">*</span>
+                    </label>
+                    <input
+                      id="stk-phone"
+                      type="tel"
+                      value={stkPhone}
+                      onChange={(e) => {
+                        setStkPhone(e.target.value);
+                        setStkError("");
+                      }}
+                      placeholder="2547XXXXXXXX"
+                      className="w-full px-3 py-2 border border-brand-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent"
+                    />
+                    {stkError && (
+                      <p className="mt-1 text-xs text-brand-red">{stkError}</p>
+                    )}
+                    <p className="mt-1 text-xs text-brand-gray-500">
+                      If left empty, we'll use your contact phone number: {formData.phone || "Not provided"}
+                    </p>
+                  </div>
+                </div>
+                <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                  <p className="text-xs text-green-800">
+                    <strong>How it works:</strong> After you place the order, you'll receive an M-Pesa prompt on your phone. Enter your PIN to complete the payment.
+                  </p>
+                </div>
               </div>
             )}
           </div>
@@ -755,10 +884,12 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
         {/* Checkout Button */}
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || isProcessingStk}
           className="w-full bg-brand-green hover:bg-brand-green/90 text-white font-semibold py-3.5 px-6 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base mb-3"
         >
-          {isSubmitting ? "Processing..." : `Place Order - ${formatCurrency(total)}`}
+          {isSubmitting || isProcessingStk 
+            ? (paymentMethod === "stk" ? "Initiating payment..." : "Processing...") 
+            : `Place Order - ${formatCurrency(total)}`}
         </button>
 
         <Link

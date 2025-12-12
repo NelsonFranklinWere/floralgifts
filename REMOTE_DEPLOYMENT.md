@@ -177,3 +177,7 @@ curl -X POST https://floralwhispersgifts.co.ke/api/coopbank/stkpush \
 3. Verify callback URL is accessible
 4. Check phone number format (must start with 254)
 
+
+
+
+

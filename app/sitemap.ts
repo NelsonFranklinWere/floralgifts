@@ -2,6 +2,7 @@ import { MetadataRoute } from "next";
 import { getProducts } from "@/lib/db";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // Use environment variable or default to correct domain
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
   const staticPages: MetadataRoute.Sitemap = [
