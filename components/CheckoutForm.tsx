@@ -155,11 +155,16 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
       const messageRef = `FLORAL-${orderId.slice(0, 8)}-${Date.now()}`;
 
       // Initiate STK Push via Co-op Bank API
+      const callbackUrl = process.env.NEXT_PUBLIC_BASE_URL 
+        ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/coopbank/callback`
+        : "https://floralwhispersgifts.co.ke/api/coopbank/callback";
+      
       const stkResponse = await axios.post("/api/coopbank/stkpush", {
         MobileNumber: phoneToUse,
         Amount: total,
         Narration: `Floral Whispers Order #${orderId.slice(0, 8)}`,
         MessageReference: messageRef,
+        CallBackUrl: callbackUrl,
         OtherDetails: [
           { Name: "OrderID", Value: orderId },
           { Name: "CustomerName", Value: data.name },
