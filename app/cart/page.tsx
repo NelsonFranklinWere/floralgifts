@@ -9,7 +9,7 @@ import { MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
 
 export default function CartPage() {
   const { items, updateQuantity, removeItem, getTotal } = useCartStore();
-  const total = getTotal();
+  const subtotal = getTotal();
 
   if (items.length === 0) {
     return (

@@ -384,28 +384,8 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
   };
 
   const onSubmit = handleSubmit(async (data) => {
-    if (!validateAmount(total)) {
-      alert("Invalid order total. Please contact support.");
-      return;
-    }
-
-    Analytics.trackCheckoutStart(total, items.length);
-
-    const sanitizedData = {
-      ...data,
-      name: sanitizeInput(data.name),
-      deliveryAddress: sanitizeInput(data.deliveryAddress),
-      giftMessage: data.giftMessage ? sanitizeInput(data.giftMessage) : undefined,
-      deliveryInstructions: sanitizeInput(data.deliveryInstructions),
-    };
-
-    // Route to appropriate payment handler
-    if (paymentMethod === "stk") {
-      await handleSTKPush(sanitizedData);
-    } else {
-      // Till, Paybill, or WhatsApp - all go through WhatsApp order flow
-      await handleWhatsAppOrder(sanitizedData);
-    }
+    // Redirect to checkout page instead of processing payment
+    router.push("/checkout");
   });
 
   return (

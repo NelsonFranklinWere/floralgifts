@@ -46,9 +46,11 @@ interface OrderData {
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { clearCart } = useCartStore();
+  const { items, getTotal, clearCart } = useCartStore();
   const [orderData, setOrderData] = useState<OrderData | null>(null);
-  const [paymentMethod, setPaymentMethod] = useState<"pesapal" | "mpesa" | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<"stk" | "till" | "paybill" | "card" | null>(null);
+  const [stkPhone, setStkPhone] = useState("");
+  const [stkError, setStkError] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [emailNewsletter, setEmailNewsletter] = useState(true);
@@ -60,7 +62,6 @@ export default function CheckoutPage() {
   const [postalCode, setPostalCode] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [saveInfo, setSaveInfo] = useState(false);
-  const [shippingMethod, setShippingMethod] = useState<"nairobi" | "kenya">("nairobi");
   const [billingSame, setBillingSame] = useState(false);
   const [billingFirstName, setBillingFirstName] = useState("");
   const [billingLastName, setBillingLastName] = useState("");
@@ -72,113 +73,236 @@ export default function CheckoutPage() {
   const [tipAmount, setTipAmount] = useState<number | null>(null);
   const [customTip, setCustomTip] = useState("");
   const [showTip, setShowTip] = useState(true);
-  const [discountCode, setDiscountCode] = useState("");
   const [showOrderSummary, setShowOrderSummary] = useState(true);
   const [phoneError, setPhoneError] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
+    // If cart is empty, redirect to cart
+    if (items.length === 0) {
+      router.push("/cart");
+      return;
+    }
+
+    // Check if there's saved order data in sessionStorage
     const savedOrder = sessionStorage.getItem("pendingOrder");
     if (savedOrder) {
-      const data = JSON.parse(savedOrder);
-      setOrderData(data);
-      setPhone(data.customer.phone.replace(/^\+/, ""));
-      setEmail(data.customer.email || "");
-      if (data.recipient.name) {
-        const nameParts = data.recipient.name.split(" ");
-        setFirstName(nameParts[0] || "");
-        setLastName(nameParts.slice(1).join(" ") || "");
+      try {
+        const data = JSON.parse(savedOrder);
+        setOrderData(data);
+        setPhone(data.customer?.phone?.replace(/^\+/, "") || "");
+        setEmail(data.customer?.email || "");
+        if (data.recipient?.name) {
+          const nameParts = data.recipient.name.split(" ");
+          setFirstName(nameParts[0] || "");
+          setLastName(nameParts.slice(1).join(" ") || "");
+        }
+        setAddress(data.delivery?.address || "");
+        setCity(data.delivery?.location || "Nairobi");
+        setPhoneNumber(data.recipient?.phone?.replace(/^\+/, "") || "");
+      } catch (error) {
+        console.error("Error parsing saved order:", error);
+        // Initialize from cart
+        const cartSubtotal = getTotal();
+        setOrderData({
+          customer: { name: "", phone: "", email: "", whatsapp: null },
+          recipient: { name: "", phone: "", whatsapp: null },
+          delivery: { location: "Nairobi", address: "", instructions: null },
+          giftMessage: null,
+          items: items.map(item => ({
+            id: item.id,
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+            image: item.image,
+            slug: item.slug,
+            options: item.options,
+          })),
+          deliveryFee: 0,
+          total: cartSubtotal,
+          subtotal: cartSubtotal,
+        });
       }
-      setAddress(data.delivery.address || "");
-      setCity(data.delivery.location || "Nairobi");
-      setPhoneNumber(data.recipient.phone.replace(/^\+/, "") || "");
     } else {
-      router.push("/cart");
+      // Initialize orderData from cart
+      const cartSubtotal = getTotal();
+      setOrderData({
+        customer: { name: "", phone: "", email: "", whatsapp: null },
+        recipient: { name: "", phone: "", whatsapp: null },
+        delivery: { location: "Nairobi", address: "", instructions: null },
+        giftMessage: null,
+        items: items.map(item => ({
+          id: item.id,
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          image: item.image,
+          slug: item.slug,
+          options: item.options,
+        })),
+        deliveryFee: 0,
+        total: cartSubtotal,
+        subtotal: cartSubtotal,
+      });
     }
-  }, [router]);
+  }, [router, items.length, getTotal, items]);
 
-  if (!orderData) {
+  // Show loading only while redirecting or if cart is empty
+  if (items.length === 0 || !orderData) {
     return (
       <div className="py-12 bg-white min-h-screen">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-brand-gray-600">Loading...</p>
+          <p className="text-brand-gray-600">{items.length === 0 ? "Redirecting to cart..." : "Loading..."}</p>
         </div>
       </div>
     );
   }
 
-  const shippingFee = shippingMethod === "nairobi" ? 35000 : 95000; // in cents
-  const taxRate = 0.16; // 16% VAT
-  const subtotal = orderData.subtotal;
-  const estimatedTax = Math.round(subtotal * taxRate);
+  const subtotal = orderData?.subtotal || getTotal();
   const tipValue = tipAmount !== null ? (tipAmount === 0 ? 0 : Math.round(subtotal * (tipAmount / 100))) : 0;
-  const total = subtotal + shippingFee + estimatedTax + tipValue;
+  const total = subtotal + tipValue;
 
   const handleSTKPush = async () => {
     setIsProcessing(true);
     setError("");
+    setStkError("");
 
     try {
-      const getImageUrl = (imagePath: string): string => {
-        if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-          return imagePath;
+      // Handle STK Push
+      if (paymentMethod === "stk") {
+        if (!stkPhone || !validatePhone(stkPhone)) {
+          setStkError("Please enter a valid M-Pesa phone number (format: 2547XXXXXXXX)");
+          setIsProcessing(false);
+          return;
         }
-        const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-        return `${baseUrl}${imagePath.startsWith('/') ? imagePath : `/${imagePath}`}`;
-      };
 
-      // Create order in database
-      const orderResponse = await axios.post("/api/orders", {
-        items: orderData.items.map((item) => ({
-          productId: item.id,
-          name: item.name,
-          quantity: item.quantity,
-          price: item.price,
-          options: item.options,
-        })),
-        total: total,
-        customer_name: "Customer",
-        phone: "",
-        email: null,
-        delivery_address: "To be confirmed",
-        delivery_city: "Nairobi",
-        delivery_date: "As per instructions",
-        payment_method: paymentMethod === "mpesa" ? "mpesa" : paymentMethod === "pesapal" ? "pesapal" : "whatsapp",
-        notes: `Order placed via checkout. Payment method: ${paymentMethod}`,
-      });
+        // Create order in database
+        const orderResponse = await axios.post("/api/orders", {
+          items: (orderData?.items || items).map((item) => ({
+            productId: item.id,
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+            options: item.options,
+          })),
+          total: total,
+          customer_name: firstName && lastName ? `${firstName} ${lastName}`.trim() : "Customer",
+          phone: formatPhone(stkPhone),
+          email: email || null,
+          delivery_address: address || "To be confirmed",
+          delivery_city: city || "Nairobi",
+          delivery_date: "As per instructions",
+          payment_method: "mpesa",
+          notes: `STK Push payment initiated. Phone: ${stkPhone}`,
+        });
 
-      const orderId = orderResponse.data.id;
+        const orderId = orderResponse.data.id;
+        const messageRef = `FLORAL-${orderId.slice(0, 8)}-${Date.now()}`;
 
-      // Generate WhatsApp message with order details
-      let orderMessage = `*NEW ORDER #${orderId}*\n\n`;
-      orderMessage += `*Items:*\n`;
-      orderData.items.forEach((item, index) => {
-        orderMessage += `${index + 1}. ${item.name} x${item.quantity} - ${formatCurrency(item.price * item.quantity)}\n`;
-        if (item.options) {
-          orderMessage += `   Options: ${Object.entries(item.options).map(([k, v]) => `${k}: ${v}`).join(", ")}\n`;
+        // Initiate STK Push via Co-op Bank API
+        const callbackUrl = typeof window !== 'undefined' 
+          ? `${window.location.origin}/api/coopbank/callback`
+          : "https://floralwhispersgifts.co.ke/api/coopbank/callback";
+        
+        const stkResponse = await axios.post("/api/coopbank/stkpush", {
+          MobileNumber: stkPhone,
+          Amount: total,
+          Narration: `Floral Whispers Order #${orderId.slice(0, 8)}`,
+          MessageReference: messageRef,
+          CallBackUrl: callbackUrl,
+          OtherDetails: [
+            { Name: "OrderID", Value: orderId },
+            { Name: "CustomerName", Value: firstName && lastName ? `${firstName} ${lastName}`.trim() : "Customer" },
+          ],
+        });
+
+        if (stkResponse.data.success && stkResponse.data.data) {
+          const responseData = stkResponse.data.data;
+          if (responseData.ResponseCode === "00" || responseData.ResponseCode === "0" || responseData.MessageReference) {
+            const finalMessageRef = responseData.MessageReference || messageRef;
+            // Update order with message reference
+            try {
+              await axios.patch(`/api/orders/${orderId}`, {
+                mpesa_checkout_request_id: finalMessageRef,
+                notes: `STK Push initiated. MessageReference: ${finalMessageRef}. Payment phone: ${stkPhone}.`,
+              });
+            } catch (err) {
+              console.error("Failed to update order:", err);
+            }
+            
+            clearCart();
+            sessionStorage.removeItem("pendingOrder");
+            Analytics.trackPurchase(orderId, total, "mpesa");
+            router.push(`/order/success?id=${orderId}`);
+            return;
+          } else {
+            setStkError(responseData.ResponseDescription || responseData.ResponseMessage || "STK Push failed. Please try again.");
+            setIsProcessing(false);
+            return;
+          }
+        } else {
+          setStkError(stkResponse.data.message || "Failed to initiate payment. Please try again.");
+          setIsProcessing(false);
+          return;
         }
-      });
-      orderMessage += `\n*Total: ${formatCurrency(total)}*\n`;
-      orderMessage += `*Payment Method: ${paymentMethod === "mpesa" ? "M-Pesa (Till/Paybill)" : paymentMethod === "pesapal" ? "Pesapal" : "WhatsApp"}*\n\n`;
-      orderMessage += `Please confirm this order and provide payment instructions.`;
+      }
 
-      // Create WhatsApp link
-      const encoded = encodeURIComponent(orderMessage);
-      const whatsappLink = `https://wa.me/${SHOP_INFO.whatsapp}?text=${encoded}`;
+      // Handle Till or Paybill - redirect to WhatsApp
+      if (paymentMethod === "till" || paymentMethod === "paybill") {
+        // Create order in database
+        const orderResponse = await axios.post("/api/orders", {
+          items: (orderData?.items || items).map((item) => ({
+            productId: item.id,
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+            options: item.options,
+          })),
+          total: total,
+          customer_name: firstName && lastName ? `${firstName} ${lastName}`.trim() : "Customer",
+          phone: formatPhone(phoneNumber || phone),
+          email: email || null,
+          delivery_address: address || "To be confirmed",
+          delivery_city: city || "Nairobi",
+          delivery_date: "As per instructions",
+          payment_method: paymentMethod === "till" ? "mpesa_till" : "mpesa_paybill",
+          notes: `Payment via ${paymentMethod === "till" ? "M-Pesa Till Number" : "M-Pesa Paybill"}. Total: ${formatCurrency(total)}`,
+        });
 
-      // Clear cart and redirect
-      sessionStorage.removeItem("pendingOrder");
-      clearCart();
-      
-      // Open WhatsApp
-      window.open(whatsappLink, "_blank");
-      
-      // Track order
-      Analytics.trackPurchase(orderId, total, paymentMethod || "whatsapp");
-      
-      // Redirect to success page
-      router.push(`/order/success?orderId=${orderId}`);
+        const orderId = orderResponse.data.id;
+
+        // Generate WhatsApp message with order details
+        let orderMessage = `*NEW ORDER #${orderId}*\n\n`;
+        orderMessage += `*Items:*\n`;
+        (orderData?.items || items).forEach((item, index) => {
+          orderMessage += `${index + 1}. ${item.name} x${item.quantity} - ${formatCurrency(item.price * item.quantity)}\n`;
+          if (item.options) {
+            orderMessage += `   Options: ${Object.entries(item.options).map(([k, v]) => `${k}: ${v}`).join(", ")}\n`;
+          }
+        });
+        orderMessage += `\n*Total: ${formatCurrency(total)}*\n`;
+        orderMessage += `*Payment Method: ${paymentMethod === "till" ? "M-Pesa Till Number" : "M-Pesa Paybill"}*\n\n`;
+        orderMessage += `Please confirm this order and complete payment.`;
+
+        // Create WhatsApp link
+        const encoded = encodeURIComponent(orderMessage);
+        const whatsappLink = `https://wa.me/${SHOP_INFO.whatsapp}?text=${encoded}`;
+
+        // Clear cart and redirect
+        sessionStorage.removeItem("pendingOrder");
+        clearCart();
+        
+        // Open WhatsApp
+        window.open(whatsappLink, "_blank");
+        
+        // Track order
+        Analytics.trackPurchase(orderId, total, paymentMethod || "whatsapp");
+        
+        // Redirect to success page
+        router.push(`/order/success?orderId=${orderId}`);
+        return;
+      }
     } catch (err: any) {
       console.error("Order submission error:", err);
       setError(err.response?.data?.message || err.message || "An error occurred. Please try again.");
@@ -219,7 +343,7 @@ export default function CheckoutPage() {
               {showOrderSummary && (
                 <>
                   <div className="space-y-3 mb-4">
-                    {orderData.items.map((item, index) => (
+                    {(orderData?.items || items).map((item, index) => (
                       <div key={index} className="flex items-center gap-3">
                         <div className="relative w-16 h-16 overflow-hidden rounded-md bg-brand-gray-100 flex-shrink-0">
                           <Image
@@ -239,34 +363,11 @@ export default function CheckoutPage() {
                     ))}
                   </div>
 
-                  <div className="border-t border-brand-gray-200 pt-4 mb-4">
-                    <input
-                      type="text"
-                      placeholder="Discount code or gift card"
-                      value={discountCode}
-                      onChange={(e) => setDiscountCode(e.target.value)}
-                      className="w-full px-4 py-2 border border-brand-gray-300 rounded-md mb-2"
-                    />
-                    <button
-                      type="button"
-                      className="w-full px-4 py-2 bg-brand-gray-100 hover:bg-brand-gray-200 rounded-md text-sm font-medium"
-                    >
-                      Apply
-                    </button>
-                  </div>
 
                   <div className="space-y-2 border-t border-brand-gray-200 pt-4">
                     <div className="flex justify-between text-sm">
-                      <span className="text-brand-gray-600">Subtotal {orderData.items.length} items</span>
+                      <span className="text-brand-gray-600">Subtotal {(orderData?.items || items).length} items</span>
                       <span className="font-medium">{formatCurrency(subtotal)}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-brand-gray-600">Shipping</span>
-                      <span className="font-medium">{formatCurrency(shippingFee)}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-brand-gray-600">Estimated taxes</span>
-                      <span className="font-medium">{formatCurrency(estimatedTax)}</span>
                     </div>
                     {tipValue > 0 && (
                       <div className="flex justify-between text-sm">
@@ -288,33 +389,166 @@ export default function CheckoutPage() {
                 </div>
               )}
 
-              {paymentMethod === "mpesa" && (
-                <div className="mt-4 pt-4 border-t border-brand-gray-200">
-                  <div className="p-4 bg-brand-gray-50 rounded-lg border border-brand-gray-200">
-                    <h4 className="font-semibold text-sm text-brand-gray-900 mb-3 flex items-center gap-2">
-                      <div className="w-6 h-5 bg-[#007C42] rounded flex items-center justify-center">
-                        <span className="text-white font-bold text-[8px]">M-PESA</span>
-                      </div>
-                      How to Pay via Till Number
-                    </h4>
-                    <ol className="list-decimal list-inside space-y-2 text-brand-gray-700 text-sm">
-                      <li>Go to M-Pesa on your phone</li>
-                      <li>Select <strong>Lipa na M-Pesa</strong></li>
-                      <li>Select <strong>Buy Goods</strong></li>
-                      <li>Enter Till Number: <strong className="text-brand-green">{SHOP_INFO.mpesa.till}</strong></li>
-                      <li>Enter the amount: <strong className="text-brand-green">{formatCurrency(total)}</strong></li>
-                      <li>Enter your M-Pesa PIN</li>
-                      <li>Confirm payment</li>
-                      <li>Name: <strong>Floral Whispers</strong></li>
-                    </ol>
-                    <div className="mt-4 pt-4 border-t border-brand-gray-200">
-                      <h4 className="font-semibold text-sm text-brand-gray-900 mb-3 flex items-center gap-2">
+              {stkError && (
+                <div className="mt-4 p-3 bg-brand-red/10 border border-brand-red rounded-md text-brand-red text-sm">
+                  {stkError}
+                </div>
+              )}
+
+              {/* Payment Methods */}
+              <div className="mt-6 space-y-3">
+                <h3 className="font-semibold text-base text-brand-gray-900 mb-4">Payment Method</h3>
+                
+                {/* STK Push */}
+                <div>
+                  <label className="flex items-start gap-3 p-4 border border-brand-gray-200 rounded-md cursor-pointer hover:bg-brand-gray-50">
+                    <input
+                      type="radio"
+                      name="payment"
+                      value="stk"
+                      checked={paymentMethod === "stk"}
+                      onChange={() => setPaymentMethod("stk")}
+                      className="w-4 h-4 mt-1 text-brand-green focus:ring-brand-green"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
                         <div className="w-6 h-5 bg-[#007C42] rounded flex items-center justify-center">
+                          <span className="text-white font-bold text-[10px]">M-PESA</span>
+                        </div>
+                        <span className="font-medium text-sm text-brand-gray-900">M-Pesa STK Push</span>
+                      </div>
+                    </div>
+                  </label>
+                  {paymentMethod === "stk" && (
+                    <div className="mt-3 ml-7 space-y-3">
+                      <div className="p-3 bg-brand-gray-50 rounded-lg border border-brand-gray-200">
+                        <p className="text-xs text-brand-gray-700 mb-3">
+                          Enter your M-Pesa phone number to receive a payment prompt:
+                        </p>
+                        <div>
+                          <label htmlFor="stk-phone-checkout" className="block text-xs font-medium text-brand-gray-900 mb-1.5">
+                            M-Pesa Phone Number <span className="text-brand-red">*</span>
+                          </label>
+                          <input
+                            id="stk-phone-checkout"
+                            type="tel"
+                            value={stkPhone}
+                            onChange={(e) => {
+                              setStkPhone(e.target.value);
+                              setStkError("");
+                            }}
+                            placeholder="2547XXXXXXXX"
+                            className="w-full px-3 py-2 border border-brand-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent"
+                          />
+                          {stkError && (
+                            <p className="mt-1 text-xs text-brand-red">{stkError}</p>
+                          )}
+                        </div>
+                      </div>
+                      <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                        <p className="text-xs text-green-800">
+                          <strong>How it works:</strong> After you confirm, you&apos;ll receive an M-Pesa prompt on your phone. Enter your PIN to complete the payment.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Card Payments (Disabled) */}
+                <div>
+                  <label className="flex items-start gap-3 p-4 border border-brand-gray-200 rounded-md cursor-pointer opacity-50">
+                    <input
+                      type="radio"
+                      name="payment"
+                      value="card"
+                      checked={paymentMethod === "card"}
+                      onChange={() => setPaymentMethod(null)}
+                      disabled
+                      className="w-4 h-4 mt-1"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-5 bg-white border border-gray-300 rounded flex items-center justify-center px-1">
+                          <span className="text-[#1434CB] font-bold text-[10px]">VISA</span>
+                        </div>
+                        <span className="font-medium text-sm text-brand-gray-900">Card Payments</span>
+                        <span className="text-xs text-brand-gray-500">(Coming Soon)</span>
+                      </div>
+                    </div>
+                  </label>
+                </div>
+
+                {/* Till Number */}
+                <div>
+                  <label className="flex items-start gap-3 p-4 border border-brand-gray-200 rounded-md cursor-pointer hover:bg-brand-gray-50">
+                    <input
+                      type="radio"
+                      name="payment"
+                      value="till"
+                      checked={paymentMethod === "till"}
+                      onChange={() => setPaymentMethod("till")}
+                      className="w-4 h-4 mt-1 text-brand-green focus:ring-brand-green"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-5 bg-[#007C42] rounded flex items-center justify-center">
+                          <span className="text-white font-bold text-[10px]">M-PESA</span>
+                        </div>
+                        <span className="font-medium text-sm text-brand-gray-900">M-Pesa Till Number</span>
+                      </div>
+                    </div>
+                  </label>
+                  {paymentMethod === "till" && (
+                    <div className="mt-3 ml-7 p-3 bg-brand-gray-50 rounded-lg border border-brand-gray-200">
+                      <h4 className="font-semibold text-sm text-brand-gray-900 mb-3 flex items-center gap-2">
+                        <div className="w-5 h-4 bg-[#007C42] rounded flex items-center justify-center">
+                          <span className="text-white font-bold text-[8px]">M-PESA</span>
+                        </div>
+                        How to Pay via Till Number
+                      </h4>
+                      <ol className="list-decimal list-inside space-y-2 text-brand-gray-700 text-xs">
+                        <li>Go to M-Pesa on your phone</li>
+                        <li>Select <strong>Lipa na M-Pesa</strong></li>
+                        <li>Select <strong>Buy Goods</strong></li>
+                        <li>Enter Till Number: <strong className="text-brand-green">{SHOP_INFO.mpesa.till}</strong></li>
+                        <li>Enter the amount: <strong className="text-brand-green">{formatCurrency(total)}</strong></li>
+                        <li>Enter your M-Pesa PIN</li>
+                        <li>Confirm payment</li>
+                        <li>Name: <strong>Floral Whispers</strong></li>
+                      </ol>
+                    </div>
+                  )}
+                </div>
+
+                {/* Paybill */}
+                <div>
+                  <label className="flex items-start gap-3 p-4 border border-brand-gray-200 rounded-md cursor-pointer hover:bg-brand-gray-50">
+                    <input
+                      type="radio"
+                      name="payment"
+                      value="paybill"
+                      checked={paymentMethod === "paybill"}
+                      onChange={() => setPaymentMethod("paybill")}
+                      className="w-4 h-4 mt-1 text-brand-green focus:ring-brand-green"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-5 bg-[#007C42] rounded flex items-center justify-center">
+                          <span className="text-white font-bold text-[10px]">M-PESA</span>
+                        </div>
+                        <span className="font-medium text-sm text-brand-gray-900">M-Pesa Paybill</span>
+                      </div>
+                    </div>
+                  </label>
+                  {paymentMethod === "paybill" && (
+                    <div className="mt-3 ml-7 p-3 bg-brand-gray-50 rounded-lg border border-brand-gray-200">
+                      <h4 className="font-semibold text-sm text-brand-gray-900 mb-3 flex items-center gap-2">
+                        <div className="w-5 h-4 bg-[#007C42] rounded flex items-center justify-center">
                           <span className="text-white font-bold text-[8px]">M-PESA</span>
                         </div>
                         How to Pay via Paybill
                       </h4>
-                      <ol className="list-decimal list-inside space-y-2 text-brand-gray-700 text-sm">
+                      <ol className="list-decimal list-inside space-y-2 text-brand-gray-700 text-xs">
                         <li>Go to M-Pesa on your phone</li>
                         <li>Select <strong>Lipa na M-Pesa</strong></li>
                         <li>Select <strong>Paybill</strong></li>
@@ -327,56 +561,25 @@ export default function CheckoutPage() {
                         <li>Name: <strong>Floral Whispers</strong></li>
                       </ol>
                     </div>
-                  </div>
+                  )}
                 </div>
-              )}
-
-              <div className="mt-6 space-y-3">
-                <label className="flex items-start gap-3 p-4 border-2 border-brand-green rounded-md cursor-pointer">
-                  <input
-                    type="radio"
-                    name="payment"
-                    value="pesapal"
-                    checked={paymentMethod === "pesapal"}
-                    onChange={() => setPaymentMethod("pesapal")}
-                    className="w-4 h-4 mt-1"
-                  />
-                  <div className="flex-1">
-                    <div className="font-medium mb-2">Pesapal</div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xs">Visa</span>
-                      <span className="text-xs">Mastercard</span>
-                      <span className="text-xs">M-Pesa</span>
-                      <span className="text-xs">+2</span>
-                    </div>
-                    <p className="text-xs text-brand-gray-600">
-                      Clicking &quot;Pay now&quot; will redirect you to Pesapal to complete your purchase securely.
-                    </p>
-                  </div>
-                </label>
-                <label className="flex items-start gap-3 p-4 border border-brand-gray-200 rounded-md cursor-pointer hover:bg-brand-gray-50">
-                  <input
-                    type="radio"
-                    name="payment"
-                    value="mpesa"
-                    checked={paymentMethod === "mpesa"}
-                    onChange={() => setPaymentMethod("mpesa")}
-                    className="w-4 h-4 mt-1"
-                  />
-                  <div className="flex-1">
-                    <div className="font-medium">M-Pesa (Till Number or Paybill)</div>
-                  </div>
-                </label>
               </div>
 
-              {paymentMethod === "pesapal" && (
+              {/* Complete Payment Button */}
+              {paymentMethod && (
                 <button
                   type="button"
                   onClick={handleSTKPush}
-                  disabled={isProcessing || !paymentMethod}
-                  className="w-full mt-4 bg-brand-pink text-white px-6 py-3 rounded-md font-semibold hover:bg-brand-pink/90 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isProcessing || (paymentMethod === "stk" && !stkPhone)}
+                  className="w-full mt-4 bg-brand-green text-white px-6 py-3 rounded-md font-semibold hover:bg-brand-green/90 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isProcessing ? "Processing..." : "Pay now"}
+                  {isProcessing 
+                    ? "Processing..." 
+                    : paymentMethod === "stk"
+                      ? `Pay with STK Push - ${formatCurrency(total)}`
+                      : paymentMethod === "till" || paymentMethod === "paybill"
+                        ? `Complete Order - ${formatCurrency(total)}`
+                        : "Complete Payment"}
                 </button>
               )}
 

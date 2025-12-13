@@ -37,7 +37,7 @@ export interface Order {
   delivery_address: string;
   delivery_city?: string | null;
   delivery_date: string;
-  payment_method: "mpesa" | "whatsapp";
+  payment_method: "mpesa" | "mpesa_till" | "mpesa_paybill" | "whatsapp";
   mpesa_checkout_request_id?: string | null;
   mpesa_result_code?: number | null;
   mpesa_receipt_number?: string | null;
