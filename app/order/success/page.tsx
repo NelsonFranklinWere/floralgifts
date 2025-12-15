@@ -50,17 +50,20 @@ function OrderSuccessContent() {
         const updatedOrder = response.data;
         setOrder(updatedOrder);
 
-        // Stop polling if payment is confirmed or failed
-        if (updatedOrder.status === "paid" || updatedOrder.status === "failed") {
+        // Stop polling if payment is confirmed
+        if (updatedOrder.status === "paid") {
           setIsPolling(false);
           clearInterval(pollInterval);
           
-          // If payment is successful, redirect to WhatsApp after a short delay
-          if (updatedOrder.status === "paid") {
+          // Redirect to WhatsApp after payment confirmation
+          const hasRedirected = sessionStorage.getItem(`whatsapp_redirected_${orderId}`);
+          if (!hasRedirected) {
             setTimeout(() => {
               const whatsappMessage = `Hello! I just completed payment for order #${orderId.slice(0, 8)}. Please confirm receipt and delivery details.`;
               const whatsappLink = `https://wa.me/${SHOP_INFO.whatsapp}?text=${encodeURIComponent(whatsappMessage)}`;
               window.open(whatsappLink, "_blank");
+              sessionStorage.setItem(`whatsapp_redirected_${orderId}`, "true");
+              console.log("WhatsApp redirect triggered for order:", orderId);
             }, 2000); // Wait 2 seconds before opening WhatsApp
           }
         }

@@ -118,25 +118,24 @@ export async function POST(request: NextRequest) {
           <p><strong>Action Required:</strong> Process and prepare this order for delivery.</p>
         `;
 
-        // Send email notification
+        // Send email notification directly (don't use fetch to avoid CORS/network issues)
         try {
-          const emailResponse = await fetch(
-            `${process.env.NEXT_PUBLIC_BASE_URL || 'https://floralwhispersgifts.co.ke'}/api/email`,
-            {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                type: 'order',
-                subject: emailSubject,
-                html: emailHtml,
-              }),
-            }
-          );
+          const { Resend } = await import("resend");
+          const resend = new Resend(process.env.RESEND_API_KEY || "re_jE9T351o_6gDh55gy8PHW4LWZJENwXFKR");
+          const recipientEmail = process.env.ADMIN_EMAIL || "whispersfloral@gmail.com";
+          const fromEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev";
           
-          if (!emailResponse.ok) {
-            console.error('Email API returned error:', await emailResponse.text());
+          const emailResult = await resend.emails.send({
+            from: fromEmail,
+            to: recipientEmail,
+            subject: emailSubject,
+            html: emailHtml,
+          });
+          
+          if (emailResult.error) {
+            console.error('Email sending error:', emailResult.error);
           } else {
-            console.log('Email notification sent successfully');
+            console.log('Email notification sent successfully:', emailResult.data?.id);
           }
         } catch (emailErr) {
           console.error('Failed to send email notification:', emailErr);
