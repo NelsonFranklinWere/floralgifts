@@ -17,11 +17,23 @@ export async function POST(request: NextRequest) {
     } = body;
 
     // Validate required fields
-    if (!MobileNumber || !Amount) {
+    if (!MobileNumber || Amount === undefined || Amount === null) {
       return NextResponse.json(
         {
           success: false,
           message: "Missing required fields: MobileNumber, Amount",
+        },
+        { status: 400 }
+      );
+    }
+
+    // Validate Amount: must be > 0 and positive integer
+    const amountNum = typeof Amount === 'string' ? parseFloat(Amount) : Amount;
+    if (isNaN(amountNum) || amountNum <= 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Amount must be greater than 0",
         },
         { status: 400 }
       );
@@ -58,7 +70,7 @@ export async function POST(request: NextRequest) {
       TransactionCurrency: TransactionCurrency || "KES",
       MobileNumber: phoneFormatted,
       Narration: Narration || "Floral Whispers Gifts",
-      Amount: Math.floor(Amount),
+      Amount: Math.floor(Math.abs(amountNum)), // Ensure positive integer
       MessageDateTime: messageDateTime,
       OtherDetails: OtherDetails || [],
     };
