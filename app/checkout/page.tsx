@@ -192,7 +192,7 @@ export default function CheckoutPage() {
           email: email || null,
           delivery_address: address || "To be confirmed",
           delivery_city: city || "Nairobi",
-          delivery_date: "As per instructions",
+          delivery_date: new Date().toISOString(),
           payment_method: "mpesa",
           notes: `STK Push payment initiated. Phone: ${stkPhone}`,
         });
@@ -265,7 +265,7 @@ export default function CheckoutPage() {
           email: email || null,
           delivery_address: address || "To be confirmed",
           delivery_city: city || "Nairobi",
-          delivery_date: "As per instructions",
+          delivery_date: new Date().toISOString(),
           payment_method: paymentMethod === "till" ? "mpesa_till" : "mpesa_paybill",
           notes: `Payment via ${paymentMethod === "till" ? "M-Pesa Till Number" : "M-Pesa Paybill"}. Total: ${formatCurrency(total)}`,
         });

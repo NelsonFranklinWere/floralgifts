@@ -146,7 +146,7 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
         email: null,
         delivery_address: `${deliveryLocation}, ${deliveryAddress}`,
         delivery_city: deliveryLocation,
-        delivery_date: data.deliveryInstructions || "As per instructions",
+        delivery_date: new Date().toISOString(),
         payment_method: "mpesa",
         notes: `STK Push payment. Recipient: ${recipientName} (${formatPhone(recipientPhone)}). ${data.giftMessage ? `Gift message: ${data.giftMessage}` : ""}`,
       });
