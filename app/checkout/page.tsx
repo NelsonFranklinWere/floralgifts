@@ -198,7 +198,8 @@ export default function CheckoutPage() {
         });
 
         const orderId = orderResponse.data.id;
-        const messageRef = `FLORAL-${orderId.slice(0, 8)}-${Date.now()}`;
+        // Shortened format: FL-{orderId6}-{timestamp8} = max 18 chars (Co-op Bank limit ~20)
+        const messageRef = `FL-${orderId.slice(0, 6)}-${Date.now().toString().slice(-8)}`;
 
         // Initiate STK Push via Co-op Bank API
         const callbackUrl = typeof window !== 'undefined' 

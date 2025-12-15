@@ -45,7 +45,8 @@ export async function POST(request: NextRequest) {
     const phoneFormatted = phone.startsWith("254") ? phone : `254${phone.substring(1)}`;
 
     // Generate MessageReference if not provided
-    const messageRef = MessageReference || `FLORAL-${Date.now()}`;
+    // Shortened format: FL-{timestamp8} = 11 chars (Co-op Bank limit ~20)
+    const messageRef = MessageReference || `FL-${Date.now().toString().slice(-8)}`;
 
     // Use current datetime if not provided
     const messageDateTime = MessageDateTime || new Date().toISOString();

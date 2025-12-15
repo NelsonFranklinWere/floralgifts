@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Find order by MessageReference in notes or by extracting from MessageReference format
-    // MessageReference format: FLORAL-{orderId}-{timestamp}
+    // MessageReference format: FL-{orderId6}-{timestamp8} or FL-{timestamp8}
     const orders = await getOrders({});
     let order = orders.find((o) => 
       o.notes?.includes(messageReference) || 
@@ -34,11 +34,12 @@ export async function POST(request: NextRequest) {
     );
 
     // If not found, try to extract order ID from MessageReference
-    if (!order && messageReference.startsWith("FLORAL-")) {
+    // Supports both old format (FLORAL-...) and new format (FL-...)
+    if (!order && (messageReference.startsWith("FLORAL-") || messageReference.startsWith("FL-"))) {
       const parts = messageReference.split("-");
       if (parts.length >= 2) {
         const orderIdPrefix = parts[1];
-        // Try to find order by matching ID prefix
+        // Try to find order by matching ID prefix (first 6 chars)
         order = orders.find((o) => o.id.startsWith(orderIdPrefix) || o.id.includes(orderIdPrefix));
       }
     }
