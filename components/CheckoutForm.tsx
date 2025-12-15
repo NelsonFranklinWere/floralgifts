@@ -694,236 +694,25 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
         </div>
       </div>
 
-      {/* Payment Methods */}
-      <div className="border-t border-brand-gray-200 pt-4">
-        <h3 className="font-semibold text-base text-brand-gray-900 mb-4">Payment Method</h3>
-        
-        {/* Payment Icons */}
-        <div className="flex flex-wrap items-center gap-3 mb-4 pb-4 border-b border-brand-gray-200">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-7 bg-[#007C42] rounded flex items-center justify-center">
-              <span className="text-white font-bold text-xs">M-PESA</span>
-            </div>
-            <span className="text-xs text-brand-gray-700">M-Pesa</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-7 bg-white border border-gray-300 rounded flex items-center justify-center px-1">
-              <span className="text-[#1434CB] font-bold text-xs">VISA</span>
-            </div>
-            <span className="text-xs text-brand-gray-700">Visa</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-7 bg-white border border-gray-300 rounded flex items-center justify-center px-1">
-              <div className="flex items-center">
-                <div className="w-3 h-3 bg-[#EB001B] rounded-full -mr-1.5"></div>
-                <div className="w-3 h-3 bg-[#F79E1B] rounded-full"></div>
-              </div>
-            </div>
-            <span className="text-xs text-brand-gray-700">Mastercard</span>
-          </div>
-          <span className="text-xs text-brand-gray-500">Card payments coming soon</span>
-        </div>
+      {/* Payment Methods - Removed from cart page (payment selection happens on checkout page) */}
 
-        {/* Payment Method Selection */}
-        <div className="space-y-3 mb-4">
-          <div>
-            <div className="flex items-start gap-3">
-              <input
-                type="radio"
-                id="checkout-stk"
-                name="checkout-payment"
-                value="stk"
-                checked={paymentMethod === "stk"}
-                onChange={(e) => setPaymentMethod(paymentMethod === "stk" ? null : "stk")}
-                className="mt-1 w-4 h-4 text-brand-green focus:ring-brand-green"
-              />
-              <label htmlFor="checkout-stk" className="flex-1 cursor-pointer">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-5 bg-[#007C42] rounded flex items-center justify-center">
-                    <span className="text-white font-bold text-[10px]">M-PESA</span>
-                  </div>
-                  <span className="font-medium text-sm text-brand-gray-900">M-Pesa STK Push</span>
-                </div>
-              </label>
-            </div>
-            {paymentMethod === "stk" && (
-              <div className="mt-3 ml-7 space-y-3">
-                <div className="p-3 bg-brand-gray-50 rounded-lg border border-brand-gray-200">
-                  <p className="text-xs text-brand-gray-700 mb-3">
-                    Enter your M-Pesa phone number to receive a payment prompt:
-                  </p>
-                  <div>
-                    <label htmlFor="stk-phone" className="block text-xs font-medium text-brand-gray-900 mb-1.5">
-                      M-Pesa Phone Number <span className="text-brand-red">*</span>
-                    </label>
-                    <input
-                      id="stk-phone"
-                      type="tel"
-                      value={stkPhone}
-                      onChange={(e) => {
-                        setStkPhone(e.target.value);
-                        setStkError("");
-                      }}
-                      placeholder="2547XXXXXXXX"
-                      className="w-full px-3 py-2 border border-brand-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent"
-                    />
-                    {stkError && (
-                      <p className="mt-1 text-xs text-brand-red">{stkError}</p>
-                    )}
-                    <p className="mt-1 text-xs text-brand-gray-500">
-                      If left empty, we&apos;ll use your contact phone number: {formData.phone || "Not provided"}
-                    </p>
-                  </div>
-                </div>
-                <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-                  <p className="text-xs text-green-800">
-                    <strong>How it works:</strong> After you place the order, you&apos;ll receive an M-Pesa prompt on your phone. Enter your PIN to complete the payment.
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
+      {/* Checkout Button */}
+      <button
+        type="submit"
+        disabled={isSubmitting || isProcessingStk}
+        className="w-full bg-brand-green hover:bg-brand-green/90 text-white font-semibold py-3.5 px-6 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base mb-3"
+      >
+        {isSubmitting || isProcessingStk 
+          ? "Processing..." 
+          : `Proceed to Checkout - ${formatCurrency(total)}`}
+      </button>
 
-          <div>
-            <div className="flex items-start gap-3">
-              <input
-                type="radio"
-                id="checkout-card"
-                name="checkout-payment"
-                value="card"
-                checked={paymentMethod === "card"}
-                onChange={(e) => setPaymentMethod(paymentMethod === "card" ? null : "card")}
-                className="mt-1 w-4 h-4 text-brand-green focus:ring-brand-green"
-                disabled
-              />
-              <label htmlFor="checkout-card" className="flex-1 cursor-pointer opacity-50">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-5 bg-white border border-gray-300 rounded flex items-center justify-center px-1">
-                    <span className="text-[#1434CB] font-bold text-[10px]">VISA</span>
-                  </div>
-                  <span className="font-medium text-sm text-brand-gray-900">Card Payments</span>
-                  <span className="text-xs text-brand-gray-500">(Coming Soon)</span>
-                </div>
-              </label>
-            </div>
-            {paymentMethod === "card" && (
-              <div className="mt-3 ml-7 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <p className="text-xs text-yellow-800">
-                  <strong>Note:</strong> Card payments coming soon. Please use Till Number or Paybill payment options for now.
-                </p>
-              </div>
-            )}
-          </div>
-
-          <div>
-            <div className="flex items-start gap-3">
-              <input
-                type="radio"
-                id="checkout-till"
-                name="checkout-payment"
-                value="till"
-                checked={paymentMethod === "till"}
-                onChange={(e) => setPaymentMethod(paymentMethod === "till" ? null : "till")}
-                className="mt-1 w-4 h-4 text-brand-green focus:ring-brand-green"
-              />
-              <label htmlFor="checkout-till" className="flex-1 cursor-pointer">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-5 bg-[#007C42] rounded flex items-center justify-center">
-                    <span className="text-white font-bold text-[10px]">M-PESA</span>
-                  </div>
-                  <span className="font-medium text-sm text-brand-gray-900">M-Pesa Till Number</span>
-                </div>
-              </label>
-            </div>
-            {paymentMethod === "till" && (
-              <div className="mt-3 ml-7 p-3 bg-brand-gray-50 rounded-lg border border-brand-gray-200">
-                <h4 className="font-semibold text-sm text-brand-gray-900 mb-3 flex items-center gap-2">
-                  <div className="w-5 h-4 bg-[#007C42] rounded flex items-center justify-center">
-                    <span className="text-white font-bold text-[8px]">M-PESA</span>
-                  </div>
-                  How to Pay via Till Number
-                </h4>
-                <ol className="list-decimal list-inside space-y-2 text-brand-gray-700 text-xs">
-                  <li>Go to M-Pesa on your phone</li>
-                  <li>Select <strong>Lipa na M-Pesa</strong></li>
-                  <li>Select <strong>Buy Goods</strong></li>
-                  <li>Enter Till Number: <strong className="text-brand-green">{SHOP_INFO.mpesa.till}</strong></li>
-                  <li>Enter the amount: <strong className="text-brand-green">{formatCurrency(total)}</strong></li>
-                  <li>Enter your M-Pesa PIN</li>
-                  <li>Confirm payment</li>
-                  <li>Name: <strong>Floral Whispers</strong></li>
-                </ol>
-              </div>
-            )}
-          </div>
-
-          <div>
-            <div className="flex items-start gap-3">
-              <input
-                type="radio"
-                id="checkout-paybill"
-                name="checkout-payment"
-                value="paybill"
-                checked={paymentMethod === "paybill"}
-                onChange={(e) => setPaymentMethod(paymentMethod === "paybill" ? null : "paybill")}
-                className="mt-1 w-4 h-4 text-brand-green focus:ring-brand-green"
-              />
-              <label htmlFor="checkout-paybill" className="flex-1 cursor-pointer">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-5 bg-[#007C42] rounded flex items-center justify-center">
-                    <span className="text-white font-bold text-[10px]">M-PESA</span>
-                  </div>
-                  <span className="font-medium text-sm text-brand-gray-900">M-Pesa Paybill</span>
-                </div>
-              </label>
-            </div>
-            {paymentMethod === "paybill" && (
-              <div className="mt-3 ml-7 p-3 bg-brand-gray-50 rounded-lg border border-brand-gray-200">
-                <h4 className="font-semibold text-sm text-brand-gray-900 mb-3 flex items-center gap-2">
-                  <div className="w-5 h-4 bg-[#007C42] rounded flex items-center justify-center">
-                    <span className="text-white font-bold text-[8px]">M-PESA</span>
-                  </div>
-                  How to Pay via Paybill
-                </h4>
-                <ol className="list-decimal list-inside space-y-2 text-brand-gray-700 text-xs">
-                  <li>Go to M-Pesa on your phone</li>
-                  <li>Select <strong>Lipa na M-Pesa</strong></li>
-                  <li>Select <strong>Paybill</strong></li>
-                  <li>Enter Business Number: <strong className="text-brand-green">{SHOP_INFO.mpesa.paybill}</strong></li>
-                  <li>Enter Account Number: <strong className="text-brand-green">{SHOP_INFO.mpesa.account}</strong></li>
-                  <li>Enter the amount: <strong className="text-brand-green">{formatCurrency(total)}</strong></li>
-                  <li>Enter your M-Pesa PIN</li>
-                  <li>Confirm payment</li>
-                  <li>Goes to: <strong>Coop Bank</strong></li>
-                  <li>Name: <strong>Floral Whispers</strong></li>
-                </ol>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Checkout Button */}
-        <button
-          type="submit"
-          disabled={isSubmitting || isProcessingStk || !paymentMethod}
-          className="w-full bg-brand-green hover:bg-brand-green/90 text-white font-semibold py-3.5 px-6 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base mb-3"
-        >
-          {isSubmitting || isProcessingStk 
-            ? (paymentMethod === "stk" ? "Initiating payment..." : "Processing...") 
-            : paymentMethod === "stk" 
-              ? `Proceed to Payment - ${formatCurrency(total)}`
-              : paymentMethod
-              ? `Place Order - ${formatCurrency(total)}`
-              : "Select Payment Method"}
-        </button>
-
-        <Link
-          href="/collections"
-          className="block w-full border-2 border-brand-gray-900 text-brand-gray-900 font-semibold py-3.5 px-6 rounded-md text-center hover:bg-brand-gray-50 transition-colors text-base"
-        >
-          Continue Shopping
-        </Link>
-      </div>
+      <Link
+        href="/collections"
+        className="block w-full border-2 border-brand-gray-900 text-brand-gray-900 font-semibold py-3.5 px-6 rounded-md text-center hover:bg-brand-gray-50 transition-colors text-base"
+      >
+        Continue Shopping
+      </Link>
     </form>
   );
 }
