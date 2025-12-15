@@ -384,7 +384,42 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
   };
 
   const onSubmit = handleSubmit(async (data) => {
-    // Redirect to checkout page instead of processing payment
+    // Save form data to sessionStorage for checkout page
+    const orderData = {
+      customer: {
+        name: data.name,
+        phone: data.phone,
+        email: null,
+        whatsapp: data.whatsapp || null,
+      },
+      recipient: {
+        name: isRecipient ? data.name : (data.recipientName || ""),
+        phone: isRecipient ? data.phone : (data.recipientPhone || ""),
+        whatsapp: isRecipient ? (data.whatsapp || null) : (data.recipientWhatsapp || null),
+      },
+      delivery: {
+        location: data.deliveryLocation || "Nairobi",
+        address: data.deliveryAddress || "",
+        instructions: data.deliveryInstructions || null,
+      },
+      giftMessage: data.giftMessage || null,
+      items: items.map(item => ({
+        id: item.id,
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+        image: item.image,
+        slug: item.slug,
+        options: item.options,
+      })),
+      subtotal: subtotal,
+      deliveryFee: deliveryFeeInCents / 100,
+      total: total,
+    };
+    
+    sessionStorage.setItem("pendingOrder", JSON.stringify(orderData));
+    
+    // Redirect to checkout page
     router.push("/checkout");
   });
 
