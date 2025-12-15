@@ -55,16 +55,32 @@ function OrderSuccessContent() {
           setIsPolling(false);
           clearInterval(pollInterval);
           
-          // Redirect to WhatsApp after payment confirmation
+          // Wait 15 seconds to ensure payment is fully confirmed and email sent to business, then redirect to WhatsApp
           const hasRedirected = sessionStorage.getItem(`whatsapp_redirected_${orderId}`);
-          if (!hasRedirected) {
+          const hasStartedTimer = sessionStorage.getItem(`whatsapp_timer_started_${orderId}`);
+          
+          if (!hasRedirected && !hasStartedTimer) {
+            // Mark timer as started to prevent multiple timers
+            sessionStorage.setItem(`whatsapp_timer_started_${orderId}`, "true");
+            
+            // Wait 15 seconds (email should be sent by callback during this time)
             setTimeout(() => {
-              const whatsappMessage = `Hello! I just completed payment for order #${orderId.slice(0, 8)}. Please confirm receipt and delivery details.`;
-              const whatsappLink = `https://wa.me/${SHOP_INFO.whatsapp}?text=${encodeURIComponent(whatsappMessage)}`;
-              window.open(whatsappLink, "_blank");
-              sessionStorage.setItem(`whatsapp_redirected_${orderId}`, "true");
-              console.log("WhatsApp redirect triggered for order:", orderId);
-            }, 2000); // Wait 2 seconds before opening WhatsApp
+              // Double-check order status before redirecting
+              axios.get(`/api/orders/${orderId}`).then(response => {
+                const finalOrder = response.data;
+                if (finalOrder.status === "paid") {
+                  const whatsappMessage = `Hello! I just completed payment for order #${orderId.slice(0, 8)}. Please confirm receipt and delivery details.`;
+                  const whatsappLink = `https://wa.me/${SHOP_INFO.whatsapp}?text=${encodeURIComponent(whatsappMessage)}`;
+                  window.open(whatsappLink, "_blank");
+                  sessionStorage.setItem(`whatsapp_redirected_${orderId}`, "true");
+                  console.log("WhatsApp redirect triggered for order:", orderId, "after 15 second confirmation wait");
+                } else {
+                  console.log("Payment status changed during wait, not redirecting to WhatsApp");
+                }
+              }).catch(err => {
+                console.error("Error verifying order status before WhatsApp redirect:", err);
+              });
+            }, 15000); // Wait 15 seconds before opening WhatsApp
           }
         }
       } catch (error) {
@@ -89,13 +105,30 @@ function OrderSuccessContent() {
     if (order && order.status === "paid" && !isPolling) {
       // Only redirect once, check if we haven't redirected yet
       const hasRedirected = sessionStorage.getItem(`whatsapp_redirected_${orderId}`);
-      if (!hasRedirected) {
+      const hasStartedTimer = sessionStorage.getItem(`whatsapp_timer_started_${orderId}`);
+      
+      if (!hasRedirected && !hasStartedTimer) {
+        // Mark timer as started to prevent multiple timers
+        sessionStorage.setItem(`whatsapp_timer_started_${orderId}`, "true");
+        
+        // Wait 15 seconds to ensure email has been sent to business, then redirect to WhatsApp
         setTimeout(() => {
-          const whatsappMessage = `Hello! I just completed payment for order #${orderId?.slice(0, 8)}. Please confirm receipt and delivery details.`;
-          const whatsappLink = `https://wa.me/${SHOP_INFO.whatsapp}?text=${encodeURIComponent(whatsappMessage)}`;
-          window.open(whatsappLink, "_blank");
-          sessionStorage.setItem(`whatsapp_redirected_${orderId}`, "true");
-        }, 2000);
+          // Verify order is still paid before redirecting
+          axios.get(`/api/orders/${orderId}`).then(response => {
+            const finalOrder = response.data;
+            if (finalOrder.status === "paid") {
+              const whatsappMessage = `Hello! I just completed payment for order #${orderId?.slice(0, 8)}. Please confirm receipt and delivery details.`;
+              const whatsappLink = `https://wa.me/${SHOP_INFO.whatsapp}?text=${encodeURIComponent(whatsappMessage)}`;
+              window.open(whatsappLink, "_blank");
+              sessionStorage.setItem(`whatsapp_redirected_${orderId}`, "true");
+              console.log("WhatsApp redirect triggered for already-paid order:", orderId, "after 15 second wait");
+            } else {
+              console.log("Payment status changed during wait, not redirecting to WhatsApp");
+            }
+          }).catch(err => {
+            console.error("Error verifying order status before WhatsApp redirect:", err);
+          });
+        }, 15000); // Wait 15 seconds before opening WhatsApp
       }
     }
   }, [order, orderId, isPolling]);
