@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
       OperatorCode: OperatorCode || process.env.COOP_BANK_OPERATOR_CODE || "FLORAL",
       TransactionCurrency: TransactionCurrency || "KES",
       MobileNumber: phoneFormatted,
-      Narration: Narration || "Floral Whispers Gifts Purchase",
+      Narration: Narration || "Floral Whispers Gifts",
       Amount: Math.floor(Amount),
       MessageDateTime: messageDateTime,
       OtherDetails: OtherDetails || [],

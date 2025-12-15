@@ -163,7 +163,7 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
       const stkResponse = await axios.post("/api/coopbank/stkpush", {
         MobileNumber: phoneToUse,
         Amount: total,
-        Narration: `Floral Whispers Order #${orderId.slice(0, 8)}`,
+        Narration: "Floral Whispers Gifts",
         MessageReference: messageRef,
         CallBackUrl: callbackUrl,
         OtherDetails: [
