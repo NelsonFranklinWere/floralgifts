@@ -149,14 +149,16 @@ export async function POST(request: NextRequest) {
         // Don't fail the callback if email fails
       }
     } else {
+      // Keep order as pending if payment fails (don't mark as failed)
+      // This allows the customer to retry payment later
       await updateOrder(order.id, {
-        status: "failed",
+        status: "pending",
         mpesa_result_code: responseCode || "1",
         mpesa_checkout_request_id: messageReference,
-        notes: `${order.notes || ''}\nPayment failed. Status: ${transactionStatus || responseDescription || 'Unknown'}`.trim(),
+        notes: `${order.notes || ''}\nPayment attempt failed. Status: ${transactionStatus || responseDescription || 'Unknown'}. Order remains pending.`.trim(),
       } as any);
       
-      console.log(`Order ${order.id} marked as failed. Status: ${transactionStatus || responseDescription}`);
+      console.log(`Order ${order.id} payment failed but kept as pending. Status: ${transactionStatus || responseDescription}`);
     }
 
     return NextResponse.json({

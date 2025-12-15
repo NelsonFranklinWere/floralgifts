@@ -28,12 +28,27 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate Amount: must be > 0 and positive integer
+    // Amount is expected in cents from frontend, convert to KES for Co-op Bank API (divide by 100)
     const amountNum = typeof Amount === 'string' ? parseFloat(Amount) : Amount;
     if (isNaN(amountNum) || amountNum <= 0) {
       return NextResponse.json(
         {
           success: false,
           message: "Amount must be greater than 0",
+        },
+        { status: 400 }
+      );
+    }
+    
+    // Convert cents to KES (Co-op Bank API expects amount in KES, not cents)
+    // e.g., 350000 cents = 3500 KES
+    const amountInKES = Math.floor(amountNum / 100);
+    
+    if (amountInKES <= 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Amount is too small (must be at least 1 KES)",
         },
         { status: 400 }
       );
@@ -70,7 +85,7 @@ export async function POST(request: NextRequest) {
       TransactionCurrency: TransactionCurrency || "KES",
       MobileNumber: phoneFormatted,
       Narration: Narration || "Floral Whispers Gifts",
-      Amount: Math.floor(Math.abs(amountNum)), // Ensure positive integer
+      Amount: amountInKES, // Amount in KES (converted from cents)
       MessageDateTime: messageDateTime,
       OtherDetails: OtherDetails || [],
     };
