@@ -17,6 +17,10 @@ export const SUBCATEGORIES = {
     "New Baby",
     "Corporate",
     "Just Because",
+    "Mothers Day Gifts",
+    "Men Gifts",
+    "Girlfriend Day Gifts",
+    "Mens Day Gifts",
   ],
   hampers: [], // Gift hampers have no subcategories, they use included_items instead
   teddy: [

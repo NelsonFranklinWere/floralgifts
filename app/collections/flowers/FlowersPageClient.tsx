@@ -56,16 +56,10 @@ export default function FlowersPageClient({ products, allFlowerImages = [], flow
     return [...safeProducts, ...flowerProductItems];
   }, [products, flowerProducts]);
 
-  // Get valid subcategories from admin (sync with frontend)
+  // Show all subcategories on frontend (all active)
   const validSubcategories = useMemo(() => {
-    return SUBCATEGORIES.flowers.filter(subcat => 
-      allDisplayItems.some(product => {
-        const subcats = product.tags?.filter(tag => SUBCATEGORIES.flowers.includes(tag as any)) || [];
-        const singleSubcat = product.subcategory && SUBCATEGORIES.flowers.includes(product.subcategory as any) ? [product.subcategory] : [];
-        return [...subcats, ...singleSubcat].includes(subcat);
-      })
-    );
-  }, [allDisplayItems]);
+    return SUBCATEGORIES.flowers;
+  }, []);
 
   // Group products by subcategory - support multiple subcategories via tags
   const productsBySubcategory = useMemo(() => {
@@ -156,19 +150,15 @@ export default function FlowersPageClient({ products, allFlowerImages = [], flow
                 All
               </button>
               {validSubcategories.map((subcat) => {
-                const hasProducts = productsBySubcategory[subcat] && productsBySubcategory[subcat].length > 0;
                 return (
                   <button
                     key={subcat}
                     type="button"
                     onClick={() => setSelectedSubcategory(subcat)}
-                    disabled={!hasProducts}
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 whitespace-nowrap flex-shrink-0 ${
                       selectedSubcategory === subcat
                         ? "bg-brand-green text-white border-2 border-brand-green"
-                        : hasProducts
-                        ? "bg-white text-brand-gray-900 border-2 border-brand-red hover:border-brand-green hover:bg-brand-green hover:text-white"
-                        : "bg-gray-100 text-gray-400 border-2 border-gray-200 cursor-not-allowed opacity-50"
+                        : "bg-white text-brand-gray-900 border-2 border-brand-red hover:border-brand-green hover:bg-brand-green hover:text-white"
                     }`}
                   >
                     {subcat}
