@@ -12,9 +12,9 @@ import { format } from "date-fns";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Premium Flower Delivery Nairobi | Same-Day Delivery | Whispers Floral Gifts",
+  title: "Best Christmas Gifts Nairobi | Flowers for Fiance, Husband & Mom | Floral Whispers Gifts",
   description:
-    "Premium flower delivery Nairobi, gift hampers Kenya, teddy bears Kenya. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Birthday flowers, anniversary flowers, funeral wreaths, roses Nairobi. Christmas flowers, holiday gifts, December specials, New Year hampers. Order online with M-Pesa payment. Fast delivery across Nairobi.",
+    "Best Christmas gifts Nairobi: flowers for your fiance, husband, and mom. Premium Christmas flowers, gift hampers, and teddy bears. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Order Christmas flowers online with M-Pesa. Fast Christmas gift delivery across Nairobi.",
   keywords: [
     "flower delivery Nairobi",
     "roses Nairobi",
@@ -48,13 +48,24 @@ export const metadata: Metadata = {
     "December flower delivery",
     "Christmas delivery Nairobi",
     "holiday season gifts",
+    "best gifts on Christmas Nairobi",
+    "best Christmas gifts Nairobi",
+    "Christmas gift ideas Nairobi",
+    "flowers for my fiance on Christmas Nairobi",
+    "flowers on Christmas Nairobi",
+    "Christmas flowers for fiance Nairobi",
+    "flowers for husband on Christmas Nairobi",
+    "gift for mom on Christmas Nairobi",
+    "Christmas flowers for mom Nairobi",
+    "Christmas flowers for husband Nairobi",
+    "best flowers for Christmas Nairobi",
   ],
   alternates: {
     canonical: baseUrl,
   },
   openGraph: {
-    title: "Whispers Floral Gifts | Premium Flower Delivery Nairobi | Same-Day Delivery",
-    description: "Premium flower delivery Nairobi, gift hampers Kenya, teddy bears Kenya. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Birthday flowers, anniversary flowers, roses Nairobi.",
+    title: "Best Christmas Gifts Nairobi | Flowers for Fiance, Husband & Mom | Floral Whispers Gifts",
+    description: "Best Christmas gifts Nairobi: flowers for your fiance, husband, and mom. Premium Christmas flowers, gift hampers, and teddy bears. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
     url: baseUrl,
     siteName: "Floral Whispers Gifts",
     images: [
@@ -62,7 +73,7 @@ export const metadata: Metadata = {
         url: "/images/logo/FloralLogo.jpg",
         width: 1200,
         height: 630,
-        alt: "Floral Whispers Gifts - Premium Flowers & Gifts in Nairobi",
+        alt: "Floral Whispers Gifts - Best Christmas Gifts & Flowers in Nairobi",
       },
     ],
     locale: "en_KE",
@@ -70,8 +81,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Whispers Floral Gifts | Premium Flower Delivery Nairobi",
-    description: "Premium flower delivery Nairobi, gift hampers Kenya, teddy bears Kenya. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
+    title: "Best Christmas Gifts Nairobi | Flowers for Fiance, Husband & Mom",
+    description: "Best Christmas gifts Nairobi: flowers for your fiance, husband, and mom. Premium Christmas flowers, gift hampers, and teddy bears. Same-day delivery across Nairobi.",
     images: ["/images/logo/FloralLogo.jpg"],
   },
 };

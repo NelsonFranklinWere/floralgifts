@@ -62,8 +62,11 @@ export const metadata: Metadata = {
     "Christmas gifts Kilimani",
     "holiday gifts Nairobi",
     "festive gifts Nairobi",
+    "best gifts on Christmas Nairobi",
+    "best Christmas gifts Nairobi",
+    "Christmas gift ideas Nairobi",
 
-    // Flowers
+    // Flowers - Christmas specific
     "flower delivery Nairobi",
     "flower delivery Westlands",
     "flower delivery Karen",
@@ -74,6 +77,14 @@ export const metadata: Metadata = {
     "Christmas roses Nairobi",
     "December flower delivery Nairobi",
     "New Year flowers Nairobi",
+    "flowers for my fiance on Christmas Nairobi",
+    "flowers on Christmas Nairobi",
+    "Christmas flowers for fiance Nairobi",
+    "flowers for husband on Christmas Nairobi",
+    "gift for mom on Christmas Nairobi",
+    "Christmas flowers for mom Nairobi",
+    "Christmas flowers for husband Nairobi",
+    "best flowers for Christmas Nairobi",
 
     // Hampers & gifts
     "gift hampers Kenya",
@@ -250,7 +261,17 @@ const localBusinessJsonLd = {
       },
       {
         "@type": "OfferCatalog",
+        name: "Christmas Flowers",
+        url: `${baseUrl}/collections/flowers`,
+      },
+      {
+        "@type": "OfferCatalog",
         name: "Gift Hampers",
+        url: `${baseUrl}/collections/gift-hampers`,
+      },
+      {
+        "@type": "OfferCatalog",
+        name: "Christmas Gift Hampers",
         url: `${baseUrl}/collections/gift-hampers`,
       },
       {
@@ -270,6 +291,45 @@ const localBusinessJsonLd = {
       },
     ],
   },
+};
+
+const christmasItemListJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Best Christmas Gifts Nairobi",
+  description: "Premium Christmas gifts including flowers for fiance, husband, and mom. Same-day delivery across Nairobi.",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Best Gifts on Christmas Nairobi",
+      url: `${baseUrl}/blog/best-gifts-on-christmas-nairobi`,
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Flowers for My Fiance on Christmas Nairobi",
+      url: `${baseUrl}/blog/flowers-for-my-fiance-on-christmas-nairobi`,
+    },
+    {
+      "@type": "ListItem",
+      position: 3,
+      name: "Flowers on Christmas Nairobi",
+      url: `${baseUrl}/blog/flowers-on-christmas-nairobi`,
+    },
+    {
+      "@type": "ListItem",
+      position: 4,
+      name: "Gifts for My Husband on Christmas Nairobi",
+      url: `${baseUrl}/blog/gifts-for-my-husband-on-christmas-nairobi`,
+    },
+    {
+      "@type": "ListItem",
+      position: 5,
+      name: "Gift for Mom on Christmas Nairobi",
+      url: `${baseUrl}/blog/gift-for-mom-on-christmas-nairobi`,
+    },
+  ],
 };
 
 const websiteJsonLd = {
@@ -310,6 +370,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(christmasItemListJsonLd) }}
         />
       </head>
       <body className={`${lato.className} flex flex-col min-h-screen`}>

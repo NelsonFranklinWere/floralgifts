@@ -5,9 +5,9 @@ import { getProducts } from "@/lib/db";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Flower Delivery Nairobi | Birthday Flowers, Anniversary Flowers, Roses Nairobi | Whispers Floral Gifts",
+  title: "Christmas Flowers Nairobi | Flowers for Fiance, Husband & Mom on Christmas | Flower Delivery Nairobi",
   description:
-    "Premium flower delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Birthday flowers Nairobi, anniversary flowers Kenya, get well soon flowers, funeral wreaths Nairobi, congratulatory flowers Kenya, roses Nairobi. Christmas flowers, holiday bouquets, December specials, New Year flowers. Same-day delivery available. Fast flower delivery across Nairobi.",
+    "Premium Christmas flowers Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Best flowers for your fiance, husband, and mom on Christmas. Christmas roses, holiday bouquets, December specials. Same-day Christmas flower delivery available. Order Christmas flowers online with M-Pesa. Fast flower delivery across Nairobi.",
   keywords: [
     "flower delivery Nairobi",
     "roses Nairobi",
@@ -39,20 +39,30 @@ export const metadata: Metadata = {
     "holiday season flowers",
     "Christmas bouquets Nairobi",
     "New Year flower delivery",
+    "flowers for my fiance on Christmas Nairobi",
+    "flowers on Christmas Nairobi",
+    "Christmas flowers for fiance Nairobi",
+    "flowers for husband on Christmas Nairobi",
+    "gift for mom on Christmas Nairobi",
+    "Christmas flowers for mom Nairobi",
+    "Christmas flowers for husband Nairobi",
+    "best flowers for Christmas Nairobi",
+    "best gifts on Christmas Nairobi",
+    "Christmas gift ideas Nairobi",
   ],
   alternates: {
     canonical: `${baseUrl}/collections/flowers`,
   },
   openGraph: {
-    title: "Flower Delivery Nairobi | Birthday Flowers, Anniversary Flowers, Roses Nairobi",
-    description: "Premium flower delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Birthday flowers, anniversary flowers, get well soon flowers, funeral wreaths, roses. Same-day delivery available.",
+    title: "Christmas Flowers Nairobi | Flowers for Fiance, Husband & Mom on Christmas",
+    description: "Premium Christmas flowers Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Best flowers for your fiance, husband, and mom on Christmas. Christmas roses, holiday bouquets. Same-day delivery available.",
     url: `${baseUrl}/collections/flowers`,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Flower Delivery Nairobi | Whispers Floral Gifts",
-    description: "Premium flower delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Birthday flowers, anniversary flowers, get well soon flowers, funeral wreaths, roses.",
+    title: "Christmas Flowers Nairobi | Flowers for Fiance, Husband & Mom",
+    description: "Premium Christmas flowers Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Best flowers for your fiance, husband, and mom on Christmas. Same-day delivery available.",
   },
 };
 
