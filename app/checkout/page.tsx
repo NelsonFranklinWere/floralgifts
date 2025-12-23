@@ -160,8 +160,10 @@ export default function CheckoutPage() {
   }
 
   const subtotal = orderData?.subtotal || getTotal();
+  // Convert delivery fee from regular currency to cents (multiply by 100)
+  const deliveryFeeInCents = (orderData?.deliveryFee || 0) * 100;
   const tipValue = tipAmount !== null ? (tipAmount === 0 ? 0 : Math.round(subtotal * (tipAmount / 100))) : 0;
-  const total = subtotal + tipValue;
+  const total = subtotal + deliveryFeeInCents + tipValue;
 
   const handleSTKPush = async () => {
     setIsProcessing(true);
@@ -370,6 +372,12 @@ export default function CheckoutPage() {
                       <span className="text-brand-gray-600">Subtotal {(orderData?.items || items).length} items</span>
                       <span className="font-medium">{formatCurrency(subtotal)}</span>
                     </div>
+                    {deliveryFeeInCents > 0 && (
+                      <div className="flex justify-between text-sm">
+                        <span className="text-brand-gray-600">Delivery Fee ({orderData?.delivery?.location || "Nairobi"})</span>
+                        <span className="font-medium">{formatCurrency(deliveryFeeInCents)}</span>
+                      </div>
+                    )}
                     {tipValue > 0 && (
                       <div className="flex justify-between text-sm">
                         <span className="text-brand-gray-600">Tip</span>
