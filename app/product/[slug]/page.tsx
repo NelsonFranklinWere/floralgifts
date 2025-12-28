@@ -22,11 +22,11 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
   const productUrl = `${baseUrl}/product/${slug}`;
   const categoryKeywords: Record<string, string[]> = {
-    flowers: ["flower delivery Nairobi", "roses Nairobi", "bouquet Nairobi", "flower delivery Nairobi CBD", "flower delivery Westlands", "flower delivery Karen", "flower delivery Lavington", "flower delivery Kilimani"],
-    teddy: ["teddy bears Kenya", "teddy bear gift", "teddy bears Nairobi"],
-    hampers: ["gift hampers Kenya", "luxury gift hampers Nairobi", "gift hampers Nairobi CBD", "gift hampers Westlands"],
-    wines: ["wines Nairobi", "wine gift hampers Kenya", "wines Nairobi CBD", "wines Westlands"],
-    chocolates: ["chocolates Kenya", "chocolate gift hampers Nairobi", "chocolates Nairobi CBD", "chocolates Westlands"],
+    flowers: ["flower delivery Nairobi", "roses Nairobi", "bouquet Nairobi", "money bouquet Nairobi", "romantic flowers Nairobi", "surprise flowers Nairobi", "flower delivery Nairobi CBD", "flower delivery Westlands", "flower delivery Karen", "flower delivery Lavington", "flower delivery Kilimani"],
+    teddy: ["teddy bears Kenya", "teddy bear gift", "teddy bears Nairobi", "best gifts for children Nairobi", "gifts for kids Nairobi"],
+    hampers: ["gift hampers Kenya", "luxury gift hampers Nairobi", "corporate gift hampers Nairobi", "best gifts for men Nairobi", "best gifts for women Nairobi", "best gifts for colleagues Nairobi", "gift hampers Nairobi CBD", "gift hampers Westlands"],
+    wines: ["wines Nairobi", "wine gift hampers Kenya", "corporate gifts Nairobi", "wines Nairobi CBD", "wines Westlands"],
+    chocolates: ["chocolates Kenya", "chocolate gift hampers Nairobi", "corporate gifts Nairobi", "chocolates Nairobi CBD", "chocolates Westlands"],
   };
 
   return {

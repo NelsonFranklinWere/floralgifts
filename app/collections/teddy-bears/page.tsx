@@ -7,7 +7,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts
 export const metadata: Metadata = {
   title: "Teddy Bears Kenya | Red, White, Brown, Pink, Blue Teddy Bears | Various Sizes 25cm-200cm | Whispers Floral Gifts",
   description:
-    "Cuddly teddy bears Kenya in various sizes (25cm, 50cm, 100cm, 120cm, 160cm, 180cm, 200cm) and colors (red teddy bear, white teddy bear, brown teddy bear, blue teddy bear, pink teddy bear). Perfect for gifts and special occasions. Christmas teddy bears, holiday gifts, December specials. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
+    "Cuddly teddy bears Kenya in various sizes (25cm, 50cm, 100cm, 120cm, 160cm, 180cm, 200cm) and colors (red teddy bear, white teddy bear, brown teddy bear, blue teddy bear, pink teddy bear). Perfect gifts for children, couples, and special occasions. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
   keywords: [
     "teddy bears Kenya",
     "red teddy bear",
@@ -26,20 +26,19 @@ export const metadata: Metadata = {
     "teddy bears Nairobi CBD",
     "teddy bears Westlands",
     "teddy bears Karen",
-    "Christmas teddy bears",
-    "holiday teddy bears Kenya",
-    "December teddy bears",
-    "New Year teddy bears",
-    "Christmas gift teddy bears",
-    "holiday season teddy bears",
-    "Christmas teddy bear delivery",
+    "best gifts for children Nairobi",
+    "gifts for couples Nairobi",
+    "teddy bears for children Nairobi",
+    "surprise gifts Nairobi",
+    "romantic teddy bears Nairobi",
+    "new year gifts for children Nairobi",
   ],
   alternates: {
     canonical: `${baseUrl}/collections/teddy-bears`,
   },
   openGraph: {
     title: "Teddy Bears Kenya | Red, White, Brown, Pink, Blue Teddy Bears | Various Sizes",
-    description: "Cuddly teddy bears Kenya in various sizes (25cm-200cm) and colors. Perfect for gifts and special occasions.",
+    description: "Cuddly teddy bears Kenya in various sizes (25cm-200cm) and colors. Perfect gifts for children, couples, and special occasions. Same-day delivery Nairobi.",
     url: `${baseUrl}/collections/teddy-bears`,
     type: "website",
   },

@@ -12,10 +12,28 @@ import { format } from "date-fns";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Best Christmas Gifts Nairobi | Flowers for Fiance, Husband & Mom | Floral Whispers Gifts",
+  title: "Best Gifts Nairobi | Flowers, Money Bouquet & Gift Hampers for Men, Wives, Couples | Floral Whispers Gifts",
   description:
-    "Best Christmas gifts Nairobi: flowers for your fiance, husband, and mom. Premium Christmas flowers, gift hampers, and teddy bears. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Order Christmas flowers online with M-Pesa. Fast Christmas gift delivery across Nairobi.",
+    "Best gifts Nairobi: flowers, money bouquet, and gift hampers for men, wives, couples, children, and colleagues. Surprise gifts for your wife, romantic flowers, corporate gifts, money bouquets. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Order online with M-Pesa.",
   keywords: [
+    "best gifts for men Nairobi",
+    "best gifts for wives Nairobi",
+    "best gifts for couples Nairobi",
+    "best gifts for children Nairobi",
+    "best gifts for colleagues Nairobi",
+    "surprise gifts for wife Nairobi",
+    "what to surprise wife with Nairobi",
+    "gifts to surprise wife Nairobi",
+    "new year gifts for men Nairobi",
+    "new year gifts for women Nairobi",
+    "new year gift for my wife Nairobi",
+    "new year gift for my love Nairobi",
+    "gifts for colleagues at work Nairobi",
+    "corporate gifts for colleagues Nairobi",
+    "gifts for work colleagues Nairobi",
+    "money bouquet Nairobi",
+    "money bouquet Kenya",
+    "money flower bouquet Nairobi",
     "flower delivery Nairobi",
     "roses Nairobi",
     "gift hampers Kenya",
@@ -25,6 +43,7 @@ export const metadata: Metadata = {
     "teddy bears Kenya",
     "same-day delivery Nairobi",
     "romantic flowers Nairobi",
+    "surprise flowers Nairobi",
     "flower delivery Nairobi CBD",
     "flower delivery Westlands",
     "flower delivery Karen",
@@ -34,38 +53,17 @@ export const metadata: Metadata = {
     "online flower shop Nairobi",
     "M-Pesa flower delivery Nairobi",
     "fast flower delivery Nairobi",
-    "Christmas flowers Nairobi",
-    "holiday gifts Kenya",
-    "December gift hampers",
-    "New Year flowers",
-    "Christmas gift delivery",
-    "holiday flower delivery",
-    "December special offers",
-    "Christmas hampers Nairobi",
-    "holiday teddy bears",
-    "Christmas roses Nairobi",
-    "New Year gift hampers",
-    "December flower delivery",
-    "Christmas delivery Nairobi",
-    "holiday season gifts",
-    "best gifts on Christmas Nairobi",
-    "best Christmas gifts Nairobi",
-    "Christmas gift ideas Nairobi",
-    "flowers for my fiance on Christmas Nairobi",
-    "flowers on Christmas Nairobi",
-    "Christmas flowers for fiance Nairobi",
-    "flowers for husband on Christmas Nairobi",
-    "gift for mom on Christmas Nairobi",
-    "Christmas flowers for mom Nairobi",
-    "Christmas flowers for husband Nairobi",
-    "best flowers for Christmas Nairobi",
+    "corporate gift hampers Nairobi",
+    "gift hampers for men Nairobi",
+    "gift hampers for women Nairobi",
+    "gift hampers for couples Nairobi",
   ],
   alternates: {
     canonical: baseUrl,
   },
   openGraph: {
-    title: "Best Christmas Gifts Nairobi | Flowers for Fiance, Husband & Mom | Floral Whispers Gifts",
-    description: "Best Christmas gifts Nairobi: flowers for your fiance, husband, and mom. Premium Christmas flowers, gift hampers, and teddy bears. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
+    title: "Best Gifts Nairobi | Flowers, Money Bouquet & Gift Hampers for Men, Wives, Couples | Floral Whispers Gifts",
+    description: "Best gifts Nairobi: flowers, money bouquet, and gift hampers for men, wives, couples, children, and colleagues. Surprise gifts for your wife, romantic flowers, corporate gifts. Same-day delivery across Nairobi.",
     url: baseUrl,
     siteName: "Floral Whispers Gifts",
     images: [
@@ -81,8 +79,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Best Christmas Gifts Nairobi | Flowers for Fiance, Husband & Mom",
-    description: "Best Christmas gifts Nairobi: flowers for your fiance, husband, and mom. Premium Christmas flowers, gift hampers, and teddy bears. Same-day delivery across Nairobi.",
+    title: "Best Gifts Nairobi | Flowers, Money Bouquet & Gift Hampers for Men, Wives, Couples",
+    description: "Best gifts Nairobi: flowers, money bouquet, and gift hampers for men, wives, couples, children, and colleagues. Surprise gifts for your wife, romantic flowers. Same-day delivery across Nairobi.",
     images: ["/images/logo/FloralLogo.jpg"],
   },
 };
@@ -103,11 +101,13 @@ const breadcrumbJsonLd = {
 // Helper function to create a product section
 function ProductSection({
   title,
+  subtitle,
   products,
   bgColor = "bg-white",
   linkHref,
 }: {
   title: string;
+  subtitle?: string;
   products: any[];
   bgColor?: string;
   linkHref?: string;
@@ -122,9 +122,16 @@ function ProductSection({
       />
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-6 md:mb-8 flex items-center justify-between">
-          <h2 className="font-heading font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl text-brand-gray-900">
-            {title}
-          </h2>
+          <div>
+            <h2 className="font-heading font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl text-brand-gray-900">
+              {title}
+            </h2>
+            {subtitle && (
+              <p className="text-xs sm:text-sm md:text-base text-brand-gray-600 mt-1 md:mt-2">
+                {subtitle}
+              </p>
+            )}
+          </div>
           {linkHref && (
             <Link
               href={linkHref}
@@ -589,8 +596,8 @@ export default async function HomePage() {
     return shuffleArray(mixed).slice(0, count);
   };
 
-  // End Of Year Gift Hampers - gift hampers first (first 3), then mix teddy bears and flowers
-  const endOfYearHampers = (() => {
+  // New Year Gift Hampers - gift hampers first (first 3), then mix teddy bears and flowers
+  const newYearHampers = (() => {
     const result: any[] = [];
     // Add hampers FIRST (first 3, not shuffled)
     if (allHampers.length > 0) {
@@ -653,8 +660,8 @@ export default async function HomePage() {
     return shuffleArray(result).slice(0, 8);
   })();
   
-  // Graduates celebration gifts - mix hampers, flowers, and teddy bears
-  const graduateProducts = (() => {
+  // Form Four Results Celebration Gifts - Parents celebrating their kids' KCSE results with hampers, flowers, and teddy bears
+  const formFourResultsProducts = (() => {
     const result: any[] = [];
     if (allHampers.length > 0) result.push(...allHampers.slice(0, 3));
     if (allTeddy.length > 0) result.push(...allTeddy.slice(0, 2));
@@ -671,7 +678,7 @@ export default async function HomePage() {
     return shuffleArray(result).slice(0, 8);
   })();
   
-  // End year anniversary celebrations - mix hampers, flowers, and teddy bears
+  // New Year anniversary celebrations - mix hampers, flowers, and teddy bears
   const anniversaryProducts = (() => {
     const result: any[] = [];
     if (allHampers.length > 0) result.push(...allHampers.slice(0, 3));
@@ -718,7 +725,7 @@ export default async function HomePage() {
     return result.slice(0, 8);
   })();
   
-  // End of year colleagues surprises - mix hampers, flowers, and teddy bears
+  // New Year colleagues surprises - mix hampers, flowers, and teddy bears
   const colleaguesProducts = (() => {
     const result: any[] = [];
     if (allHampers.length > 0) result.push(...allHampers.slice(0, 3));
@@ -771,10 +778,10 @@ export default async function HomePage() {
       <div>
         <HeroCarousel />
 
-        {/* End Of Year Gift Hampers */}
+        {/* New Year Gift Hampers */}
         <ProductSection
-          title="End Of Year Gift Hampers"
-          products={endOfYearHampers.length >= 8 ? endOfYearHampers : getFallbackProducts("hampers")}
+          title="New Year Gift Hampers"
+          products={newYearHampers.length >= 8 ? newYearHampers : getFallbackProducts("hampers")}
           bgColor="bg-white"
           linkHref="/collections/gift-hampers"
         />
@@ -795,17 +802,17 @@ export default async function HomePage() {
           linkHref="/collections"
         />
 
-        {/* Graduates Celebrations Gifts */}
+        {/* Form Four Results Celebration Gifts */}
         <ProductSection
-          title="Graduates Celebrations Gifts"
-          products={graduateProducts.length >= 8 ? graduateProducts : getFallbackProducts("mixed")}
+          title="Celebrate your kids best results with gifts"
+          products={formFourResultsProducts.length >= 8 ? formFourResultsProducts : getFallbackProducts("mixed")}
           bgColor="bg-gradient-to-br from-brand-gray-50 via-white to-brand-gray-50"
-          linkHref="/collections/flowers"
+          linkHref="/collections/gift-hampers"
         />
 
-        {/* End Year Anniversary Celebrations Gifts */}
+        {/* New Year Anniversary Celebrations Gifts */}
         <ProductSection
-          title="End Year Anniversary Celebrations Gifts"
+          title="New Year Anniversary Celebrations Gifts"
           products={anniversaryProducts.length >= 8 ? anniversaryProducts : getFallbackProducts("mixed")}
           bgColor="bg-white"
           linkHref="/collections/flowers?tags=anniversary"
@@ -835,9 +842,9 @@ export default async function HomePage() {
           linkHref="/collections/teddy-bears"
         />
 
-        {/* End Of Year Colleagues Surprises And Celebrations */}
+        {/* New Year Colleagues Surprises And Celebrations */}
         <ProductSection
-          title="End Of Year Colleagues Surprises And Celebrations"
+          title="New Year Colleagues Surprises And Celebrations"
           products={colleaguesProducts.length >= 8 ? colleaguesProducts : getFallbackProducts("mixed")}
           bgColor="bg-white"
           linkHref="/collections/gift-hampers"

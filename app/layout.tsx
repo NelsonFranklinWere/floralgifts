@@ -46,90 +46,89 @@ const playfairDisplay = Playfair_Display({
 export const metadata: Metadata = {
   title: {
     default:
-      "December Gifts Nairobi | Christmas Flowers, Hampers & Teddy Bears | Floral Whispers Gifts",
+      "Best Gifts Nairobi | Flowers, Money Bouquet & Gift Hampers | Floral Whispers Gifts",
     template: "%s | Floral Whispers Gifts Nairobi",
   },
   description:
-    "December and Christmas gifts Nairobi: same-day flower delivery, gift hampers, and teddy bears across Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Order Christmas flowers, birthday bouquets, anniversary flowers, graduation roses, and corporate gift hampers with M-Pesa. Fast December delivery across Nairobi County.",
+    "Best gifts Nairobi: flowers, money bouquet, gift hampers for men, wives, couples, children, and colleagues. Same-day flower delivery, surprise gifts for your wife, romantic flowers, corporate gifts, and money bouquets across Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Order online with M-Pesa.",
   keywords: [
-    // Core location + brand
-    "Floral Whispers Gifts",
-    "December gifts Nairobi",
-    "Christmas gifts Nairobi",
-    "Christmas gifts Westlands",
-    "Christmas gifts Karen",
-    "Christmas gifts Lavington",
-    "Christmas gifts Kilimani",
-    "holiday gifts Nairobi",
-    "festive gifts Nairobi",
-    "best gifts on Christmas Nairobi",
-    "best Christmas gifts Nairobi",
-    "Christmas gift ideas Nairobi",
+    // Core services - how people actually search
+    "best gifts for men Nairobi",
+    "best gifts for wives Nairobi",
+    "best gifts for couples Nairobi",
+    "best gifts for children Nairobi",
+    "best gifts for colleagues Nairobi",
+    "surprise gifts for wife Nairobi",
+    "what to surprise wife with Nairobi",
+    "gifts to surprise wife Nairobi",
+    "new year gifts for men Nairobi",
+    "new year gifts for women Nairobi",
+    "new year gift for my wife Nairobi",
+    "new year gift for my love Nairobi",
+    "gifts for colleagues at work Nairobi",
+    "corporate gifts for colleagues Nairobi",
+    "gifts for work colleagues Nairobi",
 
-    // Flowers - Christmas specific
+    // Products - service-based searches
+    "money bouquet Nairobi",
+    "money bouquet Kenya",
+    "money flower bouquet Nairobi",
+    "flowers Nairobi",
     "flower delivery Nairobi",
     "flower delivery Westlands",
     "flower delivery Karen",
     "flower delivery Lavington",
     "flower delivery Kilimani",
     "roses Nairobi",
-    "Christmas flowers Nairobi",
-    "Christmas roses Nairobi",
-    "December flower delivery Nairobi",
-    "New Year flowers Nairobi",
-    "flowers for my fiance on Christmas Nairobi",
-    "flowers on Christmas Nairobi",
-    "Christmas flowers for fiance Nairobi",
-    "flowers for husband on Christmas Nairobi",
-    "gift for mom on Christmas Nairobi",
-    "Christmas flowers for mom Nairobi",
-    "Christmas flowers for husband Nairobi",
-    "best flowers for Christmas Nairobi",
+    "romantic flowers Nairobi",
+    "surprise flowers Nairobi",
+    "bouquet delivery Nairobi",
+    "same-day flower delivery Nairobi",
+    "online flower shop Nairobi",
+    "M-Pesa flower delivery Nairobi",
+    "fast flower delivery Nairobi",
+    "Nairobi CBD flower delivery",
 
-    // Hampers & gifts
+    // Gift hampers
     "gift hampers Kenya",
     "gift hampers Nairobi",
-    "Christmas hampers Nairobi",
     "corporate gift hampers Nairobi",
     "chocolate gift hampers Kenya",
     "wine gift hampers Nairobi",
     "romantic gift hampers Nairobi",
+    "gift hampers for men Nairobi",
+    "gift hampers for women Nairobi",
+    "gift hampers for couples Nairobi",
 
-    // Occasions
+    // Occasions & services
     "birthday flowers Nairobi",
     "anniversary flowers Kenya",
     "graduation flowers Nairobi",
     "funeral wreaths Nairobi",
     "sympathy flowers Nairobi",
+    "wedding flowers Nairobi",
+    "corporate gifts Kenya",
+    "get well soon flowers",
+    "congratulatory flowers Kenya",
 
-    // Teddies & surprises
+    // Teddy bears & surprises
     "teddy bears Nairobi",
     "teddy bears Kenya",
     "surprise deliveries Nairobi",
-    "same-day delivery Nairobi",
-    "romantic flowers Nairobi",
+    "surprise gifts Nairobi",
+    "romantic gifts Nairobi",
+    "gifts for her Nairobi",
+    "gifts for him Nairobi",
+
+    // Location-based
     "flower shop Nairobi",
-    "bouquet delivery Nairobi",
-    "get well soon flowers",
-    "congratulatory flowers Kenya",
-    "chocolate gift hampers Kenya",
-    "wine gift hampers Nairobi",
-    "corporate gift hampers Kenya",
-    "romantic gift hampers Nairobi",
     "florist Nairobi",
-    "online flower shop Nairobi",
-    "M-Pesa flower delivery Nairobi",
-    "fast flower delivery Nairobi",
-    // Delivery & payment
-    "same-day delivery Nairobi",
-    "Nairobi CBD flower delivery",
-    "M-Pesa flower delivery Nairobi",
-    "online flower shop Nairobi",
     "Nairobi gift delivery",
     "Westlands gift delivery",
     "Karen gift delivery",
     "Lavington gift delivery",
     "Kilimani gift delivery",
+    "same-day delivery Nairobi",
   ],
   authors: [{ name: "Floral Whispers Gifts" }],
   creator: "Floral Whispers Gifts",
@@ -144,9 +143,9 @@ export const metadata: Metadata = {
     url: process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke",
     siteName: "Floral Whispers Gifts Nairobi",
     title:
-      "December Gifts Nairobi | Christmas Flowers, Hampers & Teddy Bears | Floral Whispers Gifts",
+      "Best Gifts Nairobi | Flowers, Money Bouquet & Gift Hampers | Floral Whispers Gifts",
     description:
-      "Shop December and Christmas gifts in Nairobi: flowers, gift hampers and teddy bears with same-day delivery to Nairobi CBD, Westlands, Karen, Lavington and Kilimani.",
+      "Best gifts Nairobi: flowers, money bouquet, gift hampers for men, wives, couples, children, and colleagues. Same-day delivery across Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
     images: [
       {
         url: "/images/logo/FloralLogo.jpg",
@@ -159,9 +158,9 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title:
-      "December & Christmas Gifts Nairobi | Flowers, Hampers & Teddies | Floral Whispers Gifts",
+      "Best Gifts Nairobi | Flowers, Money Bouquet & Gift Hampers | Floral Whispers Gifts",
     description:
-      "Order December and Christmas gifts in Nairobi: flowers, gift hampers and teddy bears with fast same-day delivery across Nairobi County.",
+      "Best gifts Nairobi: flowers, money bouquet, gift hampers for men, wives, couples, children, and colleagues. Same-day delivery across Nairobi.",
     images: ["/images/logo/FloralLogo.jpg"],
   },
   robots: {
@@ -261,7 +260,7 @@ const localBusinessJsonLd = {
       },
       {
         "@type": "OfferCatalog",
-        name: "Christmas Flowers",
+        name: "Money Bouquet",
         url: `${baseUrl}/collections/flowers`,
       },
       {
@@ -271,7 +270,7 @@ const localBusinessJsonLd = {
       },
       {
         "@type": "OfferCatalog",
-        name: "Christmas Gift Hampers",
+        name: "Corporate Gift Hampers",
         url: `${baseUrl}/collections/gift-hampers`,
       },
       {
@@ -293,41 +292,41 @@ const localBusinessJsonLd = {
   },
 };
 
-const christmasItemListJsonLd = {
+const modernGiftsItemListJsonLd = {
   "@context": "https://schema.org",
   "@type": "ItemList",
-  name: "Best Christmas Gifts Nairobi",
-  description: "Premium Christmas gifts including flowers for fiance, husband, and mom. Same-day delivery across Nairobi.",
+  name: "Best Gifts Nairobi - Flowers, Money Bouquet & Gift Hampers",
+  description: "Premium gifts including flowers, money bouquet, and gift hampers for men, wives, couples, children, and colleagues. Same-day delivery across Nairobi.",
   itemListElement: [
     {
       "@type": "ListItem",
       position: 1,
-      name: "Best Gifts on Christmas Nairobi",
-      url: `${baseUrl}/blog/best-gifts-on-christmas-nairobi`,
+      name: "Best Gifts for Men Nairobi",
+      url: `${baseUrl}/blog/best-gifts-for-men-nairobi`,
     },
     {
       "@type": "ListItem",
       position: 2,
-      name: "Flowers for My Fiance on Christmas Nairobi",
-      url: `${baseUrl}/blog/flowers-for-my-fiance-on-christmas-nairobi`,
+      name: "Best Gifts for Wives Nairobi",
+      url: `${baseUrl}/blog/best-gifts-for-wives-nairobi`,
     },
     {
       "@type": "ListItem",
       position: 3,
-      name: "Flowers on Christmas Nairobi",
-      url: `${baseUrl}/blog/flowers-on-christmas-nairobi`,
+      name: "Money Bouquet Nairobi",
+      url: `${baseUrl}/blog/money-bouquet-nairobi`,
     },
     {
       "@type": "ListItem",
       position: 4,
-      name: "Gifts for My Husband on Christmas Nairobi",
-      url: `${baseUrl}/blog/gifts-for-my-husband-on-christmas-nairobi`,
+      name: "Surprise Gifts for Wife Nairobi",
+      url: `${baseUrl}/blog/surprise-gifts-for-wife-nairobi`,
     },
     {
       "@type": "ListItem",
       position: 5,
-      name: "Gift for Mom on Christmas Nairobi",
-      url: `${baseUrl}/blog/gift-for-mom-on-christmas-nairobi`,
+      name: "Best Gifts for Colleagues Nairobi",
+      url: `${baseUrl}/blog/best-gifts-for-colleagues-nairobi`,
     },
   ],
 };
@@ -373,7 +372,7 @@ export default function RootLayout({
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(christmasItemListJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(modernGiftsItemListJsonLd) }}
         />
       </head>
       <body className={`${lato.className} flex flex-col min-h-screen`}>
