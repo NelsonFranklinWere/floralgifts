@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
@@ -30,6 +30,8 @@ export default function AdminBlogsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
     slug: "",
     title: "",
@@ -159,6 +161,110 @@ export default function AdminBlogsPage() {
       readTime: 5,
       featured: false,
     });
+  };
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    setIsUploading(true);
+    const token = localStorage.getItem("admin_token");
+
+    if (!token) {
+      alert("Please log in to upload images.");
+      setIsUploading(false);
+      return;
+    }
+
+    try {
+      const uploadPromises = Array.from(files).map(async (file) => {
+        try {
+          const formDataObj = new FormData();
+          formDataObj.append("file", file);
+
+          let response;
+          try {
+            response = await fetch("/api/admin/upload-blog-image", {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+              body: formDataObj,
+            });
+          } catch (fetchError: any) {
+            console.error("Network error details:", {
+              error: fetchError,
+              message: fetchError?.message,
+              name: fetchError?.name,
+              stack: fetchError?.stack
+            });
+
+            if (fetchError?.message?.includes("Failed to fetch") || fetchError?.name === "TypeError") {
+              throw new Error("Cannot connect to server. Please make sure the app is running and try again.");
+            }
+            if (fetchError?.message?.includes("network")) {
+              throw new Error("Network connection failed. Please check your internet connection.");
+            }
+            throw new Error(fetchError?.message || "Upload failed. Please try again.");
+          }
+
+          let data;
+          try {
+            const contentType = response.headers.get("content-type") || "";
+            if (contentType.includes("application/json")) {
+              const text = await response.text();
+              try {
+                data = JSON.parse(text);
+              } catch (parseError) {
+                console.error("JSON parse error:", parseError, "Response:", text);
+                throw new Error("Server response error. Please try again.");
+              }
+            } else {
+              const text = await response.text();
+              console.error("Non-JSON response:", text);
+              throw new Error("Server error. Please try again.");
+            }
+          } catch (parseError: any) {
+            throw new Error(parseError.message || "Error processing server response.");
+          }
+
+          if (!response.ok) {
+            const errorMessage = data?.message || `Upload failed (${response.status})`;
+            throw new Error(errorMessage);
+          }
+
+          if (!data || !data.url) {
+            throw new Error("Image uploaded but URL is missing. Please try again.");
+          }
+
+          return data.url as string;
+        } catch (fileError: any) {
+          console.error("File upload error:", fileError);
+          throw fileError;
+        }
+      });
+
+      const uploadedUrls = await Promise.all(uploadPromises);
+      // Set the first uploaded image URL in the form
+      if (uploadedUrls.length > 0) {
+        setFormData({ ...formData, image: uploadedUrls[0] });
+      }
+    } catch (error: any) {
+      console.error("Upload error:", error);
+      const errorMessage = error.message || "Failed to upload image. Please try again.";
+      alert(errorMessage);
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
+  const handleAddImageClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   if (isLoading) {
@@ -308,16 +414,67 @@ export default function AdminBlogsPage() {
 
               <div>
                 <label className="block text-sm font-medium text-brand-gray-900 mb-1">
-                  Image URL *
+                  Blog Image *
                 </label>
-                <input
-                  type="text"
-                  value={formData.image}
-                  onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                  required
-                  className="input-field"
-                  placeholder="/images/products/flowers/BouquetFlowers1.jpg"
-                />
+                <div className="space-y-2">
+                  {formData.image && (
+                    <div className="flex items-center gap-2">
+                      <div className="relative w-16 h-16 rounded border border-brand-gray-200 overflow-hidden bg-brand-gray-100 flex items-center justify-center">
+                        <img
+                          src={formData.image}
+                          alt="Blog image preview"
+                          className="w-full h-full object-cover"
+                          onLoad={() => console.log("Image loaded successfully:", formData.image)}
+                          onError={(e) => {
+                            console.error("Image failed to load:", formData.image);
+                            const target = e.target as HTMLImageElement;
+                            const parent = target.parentElement;
+                            if (parent) {
+                              target.style.display = 'none';
+                              const existingError = parent.querySelector('.image-error');
+                              if (!existingError) {
+                                const errorDiv = document.createElement('div');
+                                errorDiv.className = 'image-error text-xs text-brand-red text-center p-1 break-all';
+                                errorDiv.textContent = 'Load Error';
+                                errorDiv.title = formData.image;
+                                parent.appendChild(errorDiv);
+                              }
+                            }
+                          }}
+                          loading="lazy"
+                        />
+                      </div>
+                      <input type="text" value={formData.image} readOnly className="input-field flex-1 text-xs" />
+                      <button
+                        type="button"
+                        onClick={() => setFormData({ ...formData, image: "" })}
+                        className="btn-outline text-sm px-4 py-2"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  )}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                    disabled={isUploading}
+                  />
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleAddImageClick();
+                    }}
+                    disabled={isUploading}
+                    className="btn-outline text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isUploading ? "Uploading..." : "+ Upload Image from Device"}
+                  </button>
+                </div>
               </div>
 
               <div>
