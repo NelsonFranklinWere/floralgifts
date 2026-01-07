@@ -34,12 +34,13 @@ export async function getPesapalToken(): Promise<string> {
   console.log(`Using credentials: ${consumerKey}:${consumerSecret.substring(0, 4)}...`);
 
   const response = await fetch(`${baseUrl}/api/Auth/RequestToken`, {
-    method: "GET",
+    method: "POST", // Try POST instead of GET
     headers: {
       Authorization: `Basic ${creds}`,
       "Content-Type": "application/json",
       "Accept": "application/json",
     },
+    body: JSON.stringify({}), // Add empty body
   });
 
   console.log(`Pesapal token response status: ${response.status}`);
