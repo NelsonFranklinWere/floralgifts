@@ -326,7 +326,7 @@ export default function CheckoutPage() {
           delivery_address: address || "To be confirmed",
           delivery_city: city || "Nairobi",
           delivery_date: new Date().toISOString(),
-          payment_method: "mpesa", // Temporarily using mpesa until card constraint is fixed
+          payment_method: "card",
           notes: `Card payment initiated via Pesapal`,
         });
 

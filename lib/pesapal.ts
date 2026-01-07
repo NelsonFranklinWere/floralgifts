@@ -23,29 +23,36 @@ export async function getPesapalToken(): Promise<string> {
     throw new Error("PESAPAL_CONSUMER_KEY and PESAPAL_CONSUMER_SECRET must be configured");
   }
 
-  const baseUrl = env === 'production'
-    ? "https://pay.pesapal.com/v3"
-    : "https://cybqa.pesapal.com/v3";
+  // Pesapal uses the same endpoints for both sandbox and production
+  const baseUrl = "https://pay.pesapal.com/v3";
 
   const creds = Buffer.from(`${consumerKey}:${consumerSecret}`).toString("base64");
+
+  console.log(`Attempting to get Pesapal token from: ${baseUrl}/api/Auth/RequestToken`);
+  console.log(`Using credentials: ${consumerKey}:${consumerSecret.substring(0, 4)}...`);
 
   const response = await fetch(`${baseUrl}/api/Auth/RequestToken`, {
     method: "GET",
     headers: {
       Authorization: `Basic ${creds}`,
       "Content-Type": "application/json",
+      "Accept": "application/json",
     },
   });
 
+  console.log(`Pesapal token response status: ${response.status}`);
+
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Failed to fetch Pesapal token: ${errorText}`);
+    console.error(`Pesapal token error response:`, errorText);
+    throw new Error(`Failed to fetch Pesapal token: HTTP ${response.status} - ${errorText}`);
   }
 
   const data = await response.json();
+  console.log(`Pesapal token response:`, data);
 
   if (!data.token) {
-    throw new Error("Invalid token response from Pesapal");
+    throw new Error("Invalid token response from Pesapal - no token field");
   }
 
   // Pesapal tokens typically expire in 5 minutes (300 seconds)
