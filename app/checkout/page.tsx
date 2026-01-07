@@ -228,16 +228,17 @@ export default function CheckoutPage() {
             try {
               await axios.patch(`/api/orders/${orderId}`, {
                 mpesa_checkout_request_id: finalMessageRef,
-                notes: `STK Push initiated. MessageReference: ${finalMessageRef}. Payment phone: ${stkPhone}.`,
+                notes: `STK Push initiated. MessageReference: ${finalMessageRef}. Payment phone: ${stkPhone}. Waiting for payment confirmation...`,
               });
             } catch (err) {
               console.error("Failed to update order:", err);
             }
-            
-            clearCart();
-            sessionStorage.removeItem("pendingOrder");
+
+            // DON'T clear cart here - wait for payment confirmation
+            // clearCart(); // REMOVED
+            // sessionStorage.removeItem("pendingOrder"); // REMOVED
             Analytics.trackPurchase(orderId, total, "mpesa");
-            router.push(`/order/success?id=${orderId}`);
+            router.push(`/order/success?id=${orderId}&pending=true`);
             return;
           } else {
             setStkError(responseData.ResponseDescription || responseData.ResponseMessage || "STK Push failed. Please try again.");

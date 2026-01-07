@@ -7,13 +7,17 @@ import { formatCurrency, formatDateTime } from "@/lib/utils";
 import { SHOP_INFO } from "@/lib/constants";
 import type { Order } from "@/lib/db";
 import axios from "axios";
+import { useCartStore } from "@/lib/store/cart";
 
 function OrderSuccessContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get("id");
+  const isPaymentPending = searchParams.get("pending") === "true";
   const [order, setOrder] = useState<Order | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isPolling, setIsPolling] = useState(false);
+  const [cartCleared, setCartCleared] = useState(false);
+  const { clearCart } = useCartStore();
 
   useEffect(() => {
     if (!orderId) {
@@ -54,6 +58,14 @@ function OrderSuccessContent() {
         if (updatedOrder.status === "paid") {
           setIsPolling(false);
           clearInterval(pollInterval);
+
+          // Clear cart only when payment is confirmed
+          if (isPaymentPending && !cartCleared) {
+            clearCart();
+            sessionStorage.removeItem("pendingOrder");
+            setCartCleared(true);
+            console.log("Cart cleared after payment confirmation for order:", orderId);
+          }
           
           // Wait 15 seconds to ensure payment is fully confirmed and email sent to business, then redirect to WhatsApp
           const hasRedirected = sessionStorage.getItem(`whatsapp_redirected_${orderId}`);
@@ -103,14 +115,22 @@ function OrderSuccessContent() {
   // Also check if order is already paid when component loads and redirect to WhatsApp
   useEffect(() => {
     if (order && order.status === "paid" && !isPolling) {
+      // Clear cart if payment was pending and not yet cleared
+      if (isPaymentPending && !cartCleared) {
+        clearCart();
+        sessionStorage.removeItem("pendingOrder");
+        setCartCleared(true);
+        console.log("Cart cleared for already-confirmed payment:", orderId);
+      }
+
       // Only redirect once, check if we haven't redirected yet
       const hasRedirected = sessionStorage.getItem(`whatsapp_redirected_${orderId}`);
       const hasStartedTimer = sessionStorage.getItem(`whatsapp_timer_started_${orderId}`);
-      
+
       if (!hasRedirected && !hasStartedTimer) {
         // Mark timer as started to prevent multiple timers
         sessionStorage.setItem(`whatsapp_timer_started_${orderId}`, "true");
-        
+
         // Wait 15 seconds to ensure email has been sent to business, then redirect to WhatsApp
         setTimeout(() => {
           // Verify order is still paid before redirecting
@@ -131,7 +151,7 @@ function OrderSuccessContent() {
         }, 15000); // Wait 15 seconds before opening WhatsApp
       }
     }
-  }, [order, orderId, isPolling]);
+  }, [order, orderId, isPolling, isPaymentPending, cartCleared, clearCart]);
 
   if (isLoading) {
     return (
@@ -191,6 +211,21 @@ function OrderSuccessContent() {
             <div className="mt-4 flex items-center justify-center gap-2 text-sm text-brand-gray-600">
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-brand-green"></div>
               <span>Checking payment status...</span>
+            </div>
+          )}
+          {isPaymentPending && order.status === "pending" && (
+            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+              <p className="text-sm text-blue-800">
+                <strong>Your cart is safe:</strong> Items will remain in your cart until payment is confirmed.
+                If payment fails, you can easily retry without losing your selection.
+              </p>
+            </div>
+          )}
+          {cartCleared && (
+            <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
+              <p className="text-sm text-green-800">
+                ✅ <strong>Payment confirmed!</strong> Your cart has been cleared and order is now being processed.
+              </p>
             </div>
           )}
         </div>
@@ -264,14 +299,21 @@ function OrderSuccessContent() {
           <Link href="/collections" className="btn-outline flex-1 text-center">
             Continue Shopping
           </Link>
-          <a
-            href={`https://wa.me/${SHOP_INFO.whatsapp}?text=${encodeURIComponent(`Hello! I placed order ${order.id.slice(0, 8)}. Please confirm delivery details.`)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-secondary flex-1 text-center"
-          >
-            Contact via WhatsApp
-          </a>
+          {order.status === "failed" && isPaymentPending && !cartCleared && (
+            <Link href="/checkout" className="btn-primary flex-1 text-center">
+              Retry Payment
+            </Link>
+          )}
+          {order.status !== "failed" && (
+            <a
+              href={`https://wa.me/${SHOP_INFO.whatsapp}?text=${encodeURIComponent(`Hello! I placed order ${order.id.slice(0, 8)}. Please confirm delivery details.`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-secondary flex-1 text-center"
+            >
+              Contact via WhatsApp
+            </a>
+          )}
         </div>
       </div>
     </div>
