@@ -17,6 +17,7 @@ function OrderSuccessContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [isPolling, setIsPolling] = useState(false);
   const [cartCleared, setCartCleared] = useState(false);
+  const [paymentTimedOut, setPaymentTimedOut] = useState(false);
   const { clearCart } = useCartStore();
 
   useEffect(() => {
@@ -104,6 +105,10 @@ function OrderSuccessContent() {
     const timeout = setTimeout(() => {
       setIsPolling(false);
       clearInterval(pollInterval);
+      // If still pending after timeout, mark as timed out for alternative payment suggestions
+      if (order?.status === "pending") {
+        setPaymentTimedOut(true);
+      }
     }, 120000);
 
     return () => {
@@ -198,14 +203,16 @@ function OrderSuccessContent() {
             </svg>
           </div>
           <h1 className="font-heading font-bold text-3xl md:text-4xl text-brand-gray-900 mb-2">
-            {order.status === "pending" ? "Payment Pending" : order.status === "paid" ? "Order Confirmed!" : "Order Failed"}
+            {order.status === "pending" && paymentTimedOut ? "Payment Timed Out" : order.status === "pending" ? "Payment Pending" : order.status === "paid" ? "Order Confirmed!" : "Order Failed"}
           </h1>
           <p className="text-brand-gray-600">
-            {order.status === "pending" && order.mpesa_checkout_request_id
+            {order.status === "pending" && paymentTimedOut
+              ? "Payment confirmation timed out. Please try using alternative payment methods below."
+              : order.status === "pending" && order.mpesa_checkout_request_id
               ? "Waiting for M-Pesa payment confirmation. Please check your phone and enter your PIN."
               : order.status === "paid"
               ? "Thank you for your order. We'll process it shortly."
-              : "Your payment could not be processed. Please try again or contact support."}
+              : "Your M-Pesa STK Push payment could not be processed. Please try using M-Pesa Till Number or Paybill instead, or contact support."}
           </p>
           {isPolling && (
             <div className="mt-4 flex items-center justify-center gap-2 text-sm text-brand-gray-600">
@@ -225,6 +232,20 @@ function OrderSuccessContent() {
             <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
               <p className="text-sm text-green-800">
                 ✅ <strong>Payment confirmed!</strong> Your cart has been cleared and order is now being processed.
+              </p>
+            </div>
+          )}
+          {(order.status === "failed" || paymentTimedOut) && isPaymentPending && (
+            <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+              <p className="text-sm text-yellow-800 mb-2">
+                <strong>💡 Payment didn't complete. Try these alternative methods:</strong>
+              </p>
+              <ul className="text-xs text-yellow-700 space-y-1 ml-4">
+                <li>• <strong>M-Pesa Till Number:</strong> {SHOP_INFO.mpesa.till}</li>
+                <li>• <strong>M-Pesa Paybill:</strong> {SHOP_INFO.mpesa.paybill} (Account: {SHOP_INFO.mpesa.account})</li>
+              </ul>
+              <p className="text-xs text-yellow-700 mt-2">
+                These methods are processed manually and will be confirmed via WhatsApp.
               </p>
             </div>
           )}
@@ -299,9 +320,9 @@ function OrderSuccessContent() {
           <Link href="/collections" className="btn-outline flex-1 text-center">
             Continue Shopping
           </Link>
-          {order.status === "failed" && isPaymentPending && !cartCleared && (
+          {(order.status === "failed" || paymentTimedOut) && isPaymentPending && !cartCleared && (
             <Link href="/checkout" className="btn-primary flex-1 text-center">
-              Retry Payment
+              Try Alternative Payment
             </Link>
           )}
           {order.status !== "failed" && (
