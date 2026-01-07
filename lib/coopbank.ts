@@ -27,6 +27,8 @@ export async function getCoopBankToken(): Promise<string> {
     headers: {
       Authorization: `Basic ${creds}`,
       "Content-Type": "application/x-www-form-urlencoded",
+      "User-Agent": "FloralWhispersGifts/1.0",
+      "Accept": "application/json",
     },
     body: "grant_type=client_credentials",
   });
@@ -77,6 +79,8 @@ export async function initiateCoopBankSTKPush(
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
+      "User-Agent": "FloralWhispersGifts/1.0",
+      "Accept": "application/json",
     },
     body: JSON.stringify(params),
   });
@@ -112,6 +116,8 @@ export async function checkCoopBankSTKStatus(
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
+      "User-Agent": "FloralWhispersGifts/1.0",
+      "Accept": "application/json",
     },
     body: JSON.stringify(params),
   });
