@@ -238,7 +238,7 @@ function OrderSuccessContent() {
           {(order.status === "failed" || paymentTimedOut) && isPaymentPending && (
             <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
               <p className="text-sm text-yellow-800 mb-2">
-                <strong>💡 Payment didn't complete. Try these alternative methods:</strong>
+                <strong>💡 Payment didn&apos;t complete. Try these alternative methods:</strong>
               </p>
               <ul className="text-xs text-yellow-700 space-y-1 ml-4">
                 <li>• <strong>M-Pesa Till Number:</strong> {SHOP_INFO.mpesa.till}</li>
