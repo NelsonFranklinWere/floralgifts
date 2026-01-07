@@ -13,6 +13,7 @@ function OrderSuccessContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get("id");
   const isPaymentPending = searchParams.get("pending") === "true";
+  const pesapalTrackingId = searchParams.get("pesapal_tracking_id");
   const [order, setOrder] = useState<Order | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isPolling, setIsPolling] = useState(false);
@@ -31,8 +32,9 @@ function OrderSuccessContent() {
         const response = await axios.get(`/api/orders/${orderId}`);
         setOrder(response.data);
         
-        // If order is pending and has mpesa_checkout_request_id, start polling
-        if (response.data.status === "pending" && response.data.mpesa_checkout_request_id) {
+        // If order is pending and has mpesa_checkout_request_id or pesapal_order_tracking_id, start polling
+        if (response.data.status === "pending" &&
+            (response.data.mpesa_checkout_request_id || response.data.pesapal_order_tracking_id)) {
           setIsPolling(true);
         }
       } catch (error) {
@@ -210,6 +212,8 @@ function OrderSuccessContent() {
               ? "Payment confirmation timed out. Please try using alternative payment methods below."
               : order.status === "pending" && order.mpesa_checkout_request_id
               ? "Waiting for M-Pesa payment confirmation. Please check your phone and enter your PIN."
+              : order.status === "pending" && order.pesapal_order_tracking_id
+              ? "Processing your card payment. Please wait while we confirm the transaction..."
               : order.status === "paid"
               ? "Thank you for your order. We'll process it shortly."
               : "Your M-Pesa STK Push payment could not be processed. Please try using M-Pesa Till Number or Paybill instead, or contact support."}

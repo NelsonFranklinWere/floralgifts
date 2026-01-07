@@ -37,10 +37,13 @@ export interface Order {
   delivery_address: string;
   delivery_city?: string | null;
   delivery_date: string;
-  payment_method: "mpesa" | "mpesa_till" | "mpesa_paybill" | "whatsapp";
+  payment_method: "mpesa" | "mpesa_till" | "mpesa_paybill" | "card" | "whatsapp";
   mpesa_checkout_request_id?: string | null;
   mpesa_result_code?: number | null;
   mpesa_receipt_number?: string | null;
+  pesapal_order_tracking_id?: string | null;
+  pesapal_payment_method?: string | null;
+  pesapal_confirmation_code?: string | null;
   status: "pending" | "paid" | "failed" | "cancelled" | "shipped";
   notes?: string | null;
   created_at: string;
