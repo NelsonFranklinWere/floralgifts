@@ -23,7 +23,6 @@ export async function getCoopBankToken(): Promise<string> {
   const creds = Buffer.from(`${consumerKey}:${consumerSecret}`).toString("base64");
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
-  const domain = new URL(baseUrl).hostname;
 
   const response = await fetch(`${COOP_BANK_BASE_URL}/token`, {
     method: "POST",
@@ -34,7 +33,6 @@ export async function getCoopBankToken(): Promise<string> {
       "Accept": "application/json",
       "Origin": baseUrl,
       "Referer": `${baseUrl}/`,
-      "Host": domain,
     },
     body: "grant_type=client_credentials",
   });
@@ -80,7 +78,6 @@ export async function initiateCoopBankSTKPush(
 ): Promise<CoopBankSTKPushResponse> {
   const token = await getCoopBankToken();
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
-  const domain = new URL(baseUrl).hostname;
 
   const response = await fetch(`${COOP_BANK_BASE_URL}/FT/stk/1.0.0`, {
     method: "POST",
@@ -91,7 +88,6 @@ export async function initiateCoopBankSTKPush(
       "Accept": "application/json",
       "Origin": baseUrl,
       "Referer": `${baseUrl}/`,
-      "Host": domain,
     },
     body: JSON.stringify(params),
   });
@@ -122,7 +118,6 @@ export async function checkCoopBankSTKStatus(
 ): Promise<CoopBankStatusResponse> {
   const token = await getCoopBankToken();
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
-  const domain = new URL(baseUrl).hostname;
 
   const response = await fetch(`${COOP_BANK_BASE_URL}/Enquiry/STK/1.0.0/`, {
     method: "POST",
@@ -133,7 +128,6 @@ export async function checkCoopBankSTKStatus(
       "Accept": "application/json",
       "Origin": baseUrl,
       "Referer": `${baseUrl}/`,
-      "Host": domain,
     },
     body: JSON.stringify(params),
   });
