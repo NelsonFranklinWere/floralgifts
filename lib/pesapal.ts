@@ -23,8 +23,10 @@ export async function getPesapalToken(): Promise<string> {
     throw new Error("PESAPAL_CONSUMER_KEY and PESAPAL_CONSUMER_SECRET must be configured");
   }
 
-  // Pesapal uses the same endpoints for both sandbox and production
-  const baseUrl = "https://pay.pesapal.com/v3";
+  // Pesapal uses different endpoints for sandbox and production
+  const baseUrl = env === 'production'
+    ? "https://pay.pesapal.com/v3"
+    : "https://cybqa.pesapal.com/v3";
 
   const creds = Buffer.from(`${consumerKey}:${consumerSecret}`).toString("base64");
 
