@@ -194,7 +194,7 @@ export async function verifyPesapalIPN(notificationData: any): Promise<boolean> 
   // In production, you should verify the notification signature
   // For now, we'll implement basic verification
 
-  const requiredFields = ['OrderTrackingId', 'OrderMerchantReference', 'OrderTrackingId', 'Status'];
+  const requiredFields = ['OrderTrackingId', 'OrderMerchantReference', 'Status'];
 
   for (const field of requiredFields) {
     if (!notificationData[field]) {
@@ -203,6 +203,18 @@ export async function verifyPesapalIPN(notificationData: any): Promise<boolean> 
     }
   }
 
+  // Validate that OrderTrackingId and OrderMerchantReference are non-empty strings
+  if (typeof notificationData.OrderTrackingId !== 'string' || notificationData.OrderTrackingId.trim() === '') {
+    console.error('Invalid OrderTrackingId in Pesapal IPN');
+    return false;
+  }
+
+  if (typeof notificationData.OrderMerchantReference !== 'string' || notificationData.OrderMerchantReference.trim() === '') {
+    console.error('Invalid OrderMerchantReference in Pesapal IPN');
+    return false;
+  }
+
   // Additional verification can be added here (signature verification, etc.)
+  // In production, verify the IPN signature using Pesapal's public key
   return true;
 }
