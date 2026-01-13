@@ -64,12 +64,16 @@ export async function POST(request: NextRequest) {
       };
     }
 
+    // Get IPN ID from environment variables
+    const ipnId = process.env.PESAPAL_IPN_ID || "";
+
     const params: PesapalPaymentParams = {
       id: orderId,
       currency: currency || "KES",
       amount: amountNum,
       description: description || "Floral Whispers Gifts Order",
       callback_url: callbackUrl || defaultCallbackUrl,
+      notification_id: ipnId, // Use registered IPN ID
       billing_address: billingAddressObj || undefined,
     };
 
