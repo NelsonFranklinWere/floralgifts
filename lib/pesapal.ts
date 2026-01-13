@@ -33,14 +33,15 @@ export async function getPesapalToken(): Promise<string> {
   console.log(`Attempting to get Pesapal token from: ${baseUrl}/api/Auth/RequestToken`);
   console.log(`Using credentials: ${consumerKey}:${consumerSecret.substring(0, 4)}...`);
 
+  // Pesapal v3 uses POST with Basic Auth, no body required
   const response = await fetch(`${baseUrl}/api/Auth/RequestToken`, {
-    method: "POST", // Try POST instead of GET
+    method: "POST",
     headers: {
       Authorization: `Basic ${creds}`,
-      "Content-Type": "application/json",
       "Accept": "application/json",
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify({}), // Add empty body
+    // No body needed for Pesapal token request
   });
 
   console.log(`Pesapal token response status: ${response.status}`);
