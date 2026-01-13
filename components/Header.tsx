@@ -423,7 +423,7 @@ export default function Header() {
                     </div>
                   ) : !isSearching ? (
                     <div className="px-4 py-8 text-center text-brand-gray-500">
-                      <p>No products found for "{searchQuery}"</p>
+                      <p>No products found for &quot;{searchQuery}&quot;</p>
                     </div>
                   ) : null}
                 </div>
