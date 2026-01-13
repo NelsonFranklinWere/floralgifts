@@ -165,7 +165,7 @@ export async function createOrder(order: Omit<Order, "id" | "created_at" | "upda
         customer_name: order.customer_name,
         phone: order.phone,
         email: order.email || null,
-        address: order.delivery_address, // Schema uses 'address' not 'delivery_address'
+        delivery_address: order.delivery_address, // Use delivery_address (updated schema)
         delivery_city: order.delivery_city || null,
         delivery_date: order.delivery_date,
         payment_method: order.payment_method,
@@ -205,8 +205,8 @@ export async function getOrderById(id: string): Promise<Order | null> {
     if (data) {
       // Add total alias for backward compatibility
       (data as any).total = data.total_amount;
-      // Map 'address' from DB to 'delivery_address' for Order interface
-      if (data.address && !data.delivery_address) {
+      // Map 'delivery_address' from DB (or 'address' if migration not run yet)
+      if (!data.delivery_address && data.address) {
         data.delivery_address = data.address;
       }
     }
