@@ -157,7 +157,6 @@ export async function getProductById(id: string): Promise<Product | null> {
 
 export async function createOrder(order: Omit<Order, "id" | "created_at" | "updated_at">): Promise<Order | null> {
   try {
-    // Try with delivery_address first, fallback to address for backward compatibility
     const insertData: any = {
       items: order.items,
       total_amount: order.total_amount || order.total || 0,
@@ -172,12 +171,9 @@ export async function createOrder(order: Omit<Order, "id" | "created_at" | "upda
       notes: order.notes || null,
     };
     
-    // Try delivery_address first (new schema), fallback to address (old schema)
-    try {
-      insertData.delivery_address = order.delivery_address;
-    } catch {
-      insertData.address = order.delivery_address;
-    }
+    // Use address (original column name) - the database still uses 'address'
+    // The migration to rename to 'delivery_address' needs to be run manually in Supabase
+    insertData.address = order.delivery_address;
 
     const { data, error } = await (supabaseAdmin
       .from("orders") as any)
