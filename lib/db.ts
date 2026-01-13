@@ -171,9 +171,8 @@ export async function createOrder(order: Omit<Order, "id" | "created_at" | "upda
       notes: order.notes || null,
     };
     
-    // Use address (original column name) - the database still uses 'address'
-    // The migration to rename to 'delivery_address' needs to be run manually in Supabase
-    insertData.address = order.delivery_address;
+    // Use delivery_address - the database column has been renamed
+    insertData.delivery_address = order.delivery_address;
 
     const { data, error } = await (supabaseAdmin
       .from("orders") as any)
