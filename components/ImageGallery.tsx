@@ -8,11 +8,26 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 interface ImageGalleryProps {
   images: string[];
   productName: string;
+  category?: string;
 }
 
-export default function ImageGallery({ images, productName }: ImageGalleryProps) {
+const categoryAltDescriptions: Record<string, string> = {
+  flowers: "Premium flower delivery Nairobi CBD, Westlands, Karen",
+  teddy: "Teddy bears Kenya, Nairobi gift delivery",
+  hampers: "Gift hampers Kenya, Nairobi CBD delivery",
+  wines: "Premium wines Nairobi, Westlands delivery",
+  chocolates: "Chocolates Kenya, Nairobi gift delivery",
+};
+
+export default function ImageGallery({ images, productName, category }: ImageGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+
+  const categoryDesc = category ? categoryAltDescriptions[category] || "" : "";
+  const getAltText = (index: number) =>
+    categoryDesc
+      ? `${productName} - ${categoryDesc} | Floral Whispers Gifts - Image ${index + 1}`
+      : `${productName} - Image ${index + 1}`;
 
   if (!images || images.length === 0) {
     return (
@@ -36,7 +51,7 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
       >
         <Image
           src={images[selectedIndex]}
-          alt={`${productName} - Image ${selectedIndex + 1}`}
+          alt={getAltText(selectedIndex)}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-300"
           priority={selectedIndex === 0}
@@ -69,7 +84,7 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
             >
               <Image
                 src={image}
-                alt={`${productName} thumbnail ${index + 1}`}
+                alt={`${productName} - thumbnail ${index + 1}${categoryDesc ? ` | ${categoryDesc}` : ""}`}
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 25vw, 12vw"
@@ -87,7 +102,7 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
           isOpen={isImageModalOpen}
           onClose={() => setIsImageModalOpen(false)}
           imageUrl={images[selectedIndex]}
-          alt={`${productName} - Image ${selectedIndex + 1}`}
+          alt={getAltText(selectedIndex)}
         />
       )}
     </div>

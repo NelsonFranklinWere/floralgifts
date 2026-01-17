@@ -29,6 +29,16 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     chocolates: ["chocolates Kenya", "chocolate gift hampers Nairobi", "corporate gifts Nairobi", "chocolates Nairobi CBD", "chocolates Westlands"],
   };
 
+  const categoryAltDescriptions: Record<string, string> = {
+    flowers: "Premium flower delivery Nairobi CBD, Westlands, Karen",
+    teddy: "Teddy bears Kenya, Nairobi gift delivery",
+    hampers: "Gift hampers Kenya, Nairobi CBD delivery",
+    wines: "Premium wines Nairobi, Westlands delivery",
+    chocolates: "Chocolates Kenya, Nairobi gift delivery",
+  };
+
+  const imageAlt = `${product.title} - ${categoryAltDescriptions[product.category] || "Floral Whispers Gifts Nairobi"}`;
+
   return {
     title: `${product.title} | Whispers Floral Gifts - ${product.category === "flowers" ? "Flower Delivery Nairobi" : product.category === "teddy" ? "Teddy Bears Kenya" : product.category === "hampers" ? "Gift Hampers Kenya" : product.category === "wines" ? "Wines Nairobi" : "Chocolates Kenya"}`,
     description: `${product.short_description || product.description} - ${product.category === "flowers" ? "Premium flower delivery Nairobi" : product.category === "teddy" ? "Cuddly teddy bears Kenya" : product.category === "hampers" ? "Luxury gift hampers Kenya" : product.category === "wines" ? "Premium wines Nairobi" : "Premium chocolates Kenya"}. Same-day delivery available.`,
@@ -44,7 +54,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
         url: img.startsWith("http") ? img : `${baseUrl}${img}`,
         width: 1200,
         height: 630,
-        alt: product.title,
+        alt: imageAlt,
       })) : [],
       type: "website",
     },
@@ -153,7 +163,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
-              <ImageGallery images={product.images} productName={product.title} />
+              <ImageGallery images={product.images} productName={product.title} category={product.category} />
             </div>
 
             <div>
