@@ -48,7 +48,7 @@ export default function CheckoutPage() {
   const router = useRouter();
   const { items, getTotal, clearCart } = useCartStore();
   const [orderData, setOrderData] = useState<OrderData | null>(null);
-  const [paymentMethod, setPaymentMethod] = useState<"stk" | "till" | "paybill" | "card" | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<"stk" | "till" | "paybill" | "pesapal" | null>(null);
   const [stkPhone, setStkPhone] = useState("");
   const [stkError, setStkError] = useState("");
   const [phone, setPhone] = useState("");
@@ -228,16 +228,17 @@ export default function CheckoutPage() {
             try {
               await axios.patch(`/api/orders/${orderId}`, {
                 mpesa_checkout_request_id: finalMessageRef,
-                notes: `STK Push initiated. MessageReference: ${finalMessageRef}. Payment phone: ${stkPhone}.`,
+                notes: `STK Push initiated. MessageReference: ${finalMessageRef}. Payment phone: ${stkPhone}. Waiting for payment confirmation...`,
               });
             } catch (err) {
               console.error("Failed to update order:", err);
             }
-            
-            clearCart();
-            sessionStorage.removeItem("pendingOrder");
+
+            // DON'T clear cart here - wait for payment confirmation
+            // clearCart(); // REMOVED
+            // sessionStorage.removeItem("pendingOrder"); // REMOVED
             Analytics.trackPurchase(orderId, total, "mpesa");
-            router.push(`/order/success?id=${orderId}`);
+            router.push(`/order/success?id=${orderId}&pending=true`);
             return;
           } else {
             setStkError(responseData.ResponseDescription || responseData.ResponseMessage || "STK Push failed. Please try again.");
@@ -305,6 +306,85 @@ export default function CheckoutPage() {
         // Redirect to success page
         router.push(`/order/success?orderId=${orderId}`);
         return;
+      }
+
+      // Handle Pesapal Card Payment
+      if (paymentMethod === "pesapal") {
+        // Create order in database
+        const orderResponse = await axios.post("/api/orders", {
+          items: (orderData?.items || items).map((item) => ({
+            productId: item.id,
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+            options: item.options,
+          })),
+          total: total,
+          customer_name: firstName && lastName ? `${firstName} ${lastName}`.trim() : "Customer",
+          phone: formatPhone(phoneNumber || phone),
+          email: email || null,
+          delivery_address: address || "To be confirmed",
+          delivery_city: city || "Nairobi",
+          delivery_date: new Date().toISOString(),
+          payment_method: "card",
+          notes: `Card payment initiated via Pesapal`,
+        });
+
+        const orderId = orderResponse.data.id;
+
+        // Prepare billing address for Pesapal
+        const billingAddress = {
+          email_address: email || "",
+          phone_number: formatPhone(phoneNumber || phone),
+          country_code: "KE",
+          first_name: firstName || "Customer",
+          middle_name: "",
+          last_name: lastName || "",
+          line_1: address || "To be confirmed",
+          line_2: apartment || "",
+          city: city || "Nairobi",
+          state: city || "Nairobi",
+          postal_code: postalCode || "",
+          zip_code: postalCode || "",
+        };
+
+        // Initiate Pesapal payment
+        const callbackUrl = typeof window !== 'undefined'
+          ? `${window.location.origin}/api/pesapal/callback`
+          : "https://floralwhispersgifts.co.ke/api/pesapal/callback";
+
+        const pesapalResponse = await axios.post("/api/pesapal/payment", {
+          orderId: orderId,
+          amount: total / 100, // Convert cents to KES
+          currency: "KES",
+          description: `Floral Whispers Gifts Order #${orderId.slice(0, 8)}`,
+          callbackUrl: callbackUrl,
+          customerEmail: email || null,
+          customerPhone: formatPhone(phoneNumber || phone),
+          customerName: firstName && lastName ? `${firstName} ${lastName}`.trim() : "Customer",
+          billingAddress: billingAddress,
+        });
+
+        if (pesapalResponse.data.success && pesapalResponse.data.data?.redirect_url) {
+          // Store order ID in session for callback handling
+          sessionStorage.setItem("pendingOrder", JSON.stringify({
+            id: orderId,
+            total: total,
+            paymentMethod: "pesapal",
+            orderTrackingId: pesapalResponse.data.data.order_tracking_id,
+          }));
+
+          // Track the purchase attempt
+          Analytics.trackPurchase(orderId, total, "card");
+
+          // Redirect to Pesapal payment page
+          window.location.href = pesapalResponse.data.data.redirect_url;
+          return;
+        } else {
+          setError(pesapalResponse.data.message || "Failed to initiate card payment. Please try again.");
+          setIsProcessing(false);
+          return;
+        }
       }
     } catch (err: any) {
       console.error("Order submission error:", err);
@@ -465,23 +545,21 @@ export default function CheckoutPage() {
 
                 {/* Card Payments (Disabled) */}
                 <div>
-                  <label className="flex items-start gap-3 p-4 border border-brand-gray-200 rounded-md cursor-pointer opacity-50">
+                  <label className="flex items-start gap-3 p-4 border border-brand-gray-200 rounded-md cursor-pointer hover:bg-brand-gray-50">
                     <input
                       type="radio"
                       name="payment"
-                      value="card"
-                      checked={paymentMethod === "card"}
-                      onChange={() => setPaymentMethod(null)}
-                      disabled
-                      className="w-4 h-4 mt-1"
+                      value="pesapal"
+                      checked={paymentMethod === "pesapal"}
+                      onChange={() => setPaymentMethod("pesapal")}
+                      className="w-4 h-4 mt-1 text-brand-green focus:ring-brand-green"
                     />
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         <div className="w-6 h-5 bg-white border border-gray-300 rounded flex items-center justify-center px-1">
                           <span className="text-[#1434CB] font-bold text-[10px]">VISA</span>
                         </div>
-                        <span className="font-medium text-sm text-brand-gray-900">Card Payments</span>
-                        <span className="text-xs text-brand-gray-500">(Coming Soon)</span>
+                        <span className="font-medium text-sm text-brand-gray-900">Credit/Debit Card</span>
                       </div>
                     </div>
                   </label>
@@ -582,13 +660,15 @@ export default function CheckoutPage() {
                   disabled={isProcessing || (paymentMethod === "stk" && !stkPhone)}
                   className="w-full mt-4 bg-brand-green text-white px-6 py-3 rounded-md font-semibold hover:bg-brand-green/90 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isProcessing 
-                    ? "Processing..." 
+                  {isProcessing
+                    ? "Processing..."
                     : paymentMethod === "stk"
                       ? `Pay with STK Push - ${formatCurrency(total)}`
-                      : paymentMethod === "till" || paymentMethod === "paybill"
-                        ? `Complete Order - ${formatCurrency(total)}`
-                        : "Complete Payment"}
+                      : paymentMethod === "pesapal"
+                        ? `Pay with Card - ${formatCurrency(total)}`
+                        : paymentMethod === "till" || paymentMethod === "paybill"
+                          ? `Complete Order - ${formatCurrency(total)}`
+                          : "Complete Payment"}
                 </button>
               )}
 

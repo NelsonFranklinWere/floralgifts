@@ -56,6 +56,16 @@ RESEND_API_KEY=re_Nw56zMAM_8ETmNmG34UqrD8VBkWBbpdBy
 RESEND_FROM_EMAIL=NewOrder@resend.dev
 
 # ============================================
+# PESAPAL CONFIGURATION (Card Payments)
+# ============================================
+PESAPAL_CONSUMER_KEY=zZv8hIaogJH1OP96YfKemq1O5I3TmwSX
+PESAPAL_CONSUMER_SECRET=a/POk+ULP7dJurds2FZkf06isn8=
+PESAPAL_ENV=production
+PESAPAL_IPN_ID=a6b958a3-a851-4521-b148-dadbd540ea64
+# UPDATE THIS AFTER VERCEL DEPLOYMENT to match your domain
+PESAPAL_CALLBACK_URL=https://floralwhispersgifts.co.ke/api/pesapal/callback
+
+# ============================================
 # GOOGLE SEARCH CONSOLE (Optional - SEO)
 # ============================================
 GOOGLE_VERIFICATION=

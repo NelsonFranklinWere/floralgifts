@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon, ShoppingCartIcon, MagnifyingGlassIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import { useCartStore } from "@/lib/store/cart";
@@ -10,6 +11,8 @@ import { useUIStore } from "@/lib/store/ui";
 import CartSidebar from "./CartSidebar";
 import Logo from "./Logo";
 import { SHOP_INFO } from "@/lib/constants";
+import { formatCurrency } from "@/lib/utils";
+import type { Product } from "@/lib/db";
 
 interface NavItem {
   name: string;
@@ -126,8 +129,12 @@ const navigation: NavItem[] = [
 ];
 
 export default function Header() {
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileExpanded, setMobileExpanded] = useState<{ [key: string]: boolean }>({});
   const [mounted, setMounted] = useState(false);
@@ -135,10 +142,90 @@ export default function Header() {
   const { getItemCount } = useCartStore();
   const itemCount = getItemCount();
   const dropdownRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const searchResultsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Debounced search function
+  const performSearch = useCallback(async (query: string) => {
+    if (!query.trim()) {
+      setSearchResults([]);
+      setIsSearching(false);
+      return;
+    }
+
+    setIsSearching(true);
+    try {
+      const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+      if (response.ok) {
+        const results = await response.json();
+        setSearchResults(results);
+      } else {
+        setSearchResults([]);
+      }
+    } catch (error) {
+      console.error("Search error:", error);
+      setSearchResults([]);
+    } finally {
+      setIsSearching(false);
+    }
+  }, []);
+
+  // Debounce search input
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      performSearch(searchQuery);
+    }, 300); // 300ms debounce
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery, performSearch]);
+
+  // Close search results when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchResultsRef.current &&
+        !searchResultsRef.current.contains(event.target as Node) &&
+        searchInputRef.current &&
+        !searchInputRef.current.contains(event.target as Node)
+      ) {
+        // Don't close if clicking on the search results themselves
+        if (!(event.target as Element).closest('[data-search-result]')) {
+          // Keep search open but clear results dropdown behavior handled by searchOpen state
+        }
+      }
+    };
+
+    if (searchOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => document.removeEventListener("mousedown", handleClickOutside);
+    }
+  }, [searchOpen]);
+
+  // Focus search input when search opens
+  useEffect(() => {
+    if (searchOpen && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [searchOpen]);
+
+  const handleSearchClick = () => {
+    setSearchOpen(!searchOpen);
+    if (!searchOpen) {
+      setSearchQuery("");
+      setSearchResults([]);
+    }
+  };
+
+  const handleResultClick = (product: Product) => {
+    router.push(`/product/${product.slug}`);
+    setSearchOpen(false);
+    setSearchQuery("");
+    setSearchResults([]);
+  };
 
   const handleMouseEnter = (itemName: string) => {
     if (navigation.find((item) => item.name === itemName)?.children) {
@@ -235,7 +322,7 @@ export default function Header() {
               {/* Search */}
               <button
                 type="button"
-                onClick={() => setSearchOpen(!searchOpen)}
+                onClick={handleSearchClick}
                 className="p-2 text-brand-gray-700 hover:text-brand-red transition-colors"
                 aria-label="Search"
               >
@@ -271,16 +358,76 @@ export default function Header() {
 
           {/* Search Bar */}
           {searchOpen && (
-            <div className="border-t border-brand-gray-200 py-4">
+            <div className="border-t border-brand-gray-200 py-4 relative">
               <div className="relative">
                 <input
+                  ref={searchInputRef}
                   type="text"
                   placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full px-4 py-2 pl-10 border border-brand-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent"
                   autoFocus
                 />
                 <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-brand-gray-400" />
+                {isSearching && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-brand-red"></div>
+                  </div>
+                )}
               </div>
+
+              {/* Search Results Dropdown */}
+              {searchQuery.trim() && (
+                <div
+                  ref={searchResultsRef}
+                  className="absolute top-full left-0 right-0 mt-2 bg-white border border-brand-gray-200 rounded-lg shadow-lg max-h-96 overflow-y-auto z-50"
+                  data-search-result
+                >
+                  {searchResults.length > 0 ? (
+                    <div className="py-2">
+                      {searchResults.map((product) => (
+                        <button
+                          key={product.id}
+                          type="button"
+                          onClick={() => handleResultClick(product)}
+                          className="w-full px-4 py-3 hover:bg-brand-gray-50 transition-colors text-left flex items-center gap-3 group"
+                          data-search-result
+                        >
+                          {product.images && product.images.length > 0 && (
+                            <div className="relative w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden bg-brand-gray-100">
+                              <Image
+                                src={product.images[0]}
+                                alt={product.title}
+                                fill
+                                className="object-cover group-hover:scale-105 transition-transform"
+                                sizes="64px"
+                              />
+                            </div>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-medium text-brand-gray-900 group-hover:text-brand-red transition-colors truncate">
+                              {product.title}
+                            </h3>
+                            {product.short_description && (
+                              <p className="text-sm text-brand-gray-500 truncate mt-0.5">
+                                {product.short_description}
+                              </p>
+                            )}
+                            <p className="text-sm font-semibold text-brand-green mt-1">
+                              {formatCurrency(product.price)}
+                            </p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  ) : !isSearching ? (
+                    <div className="px-4 py-8 text-center text-brand-gray-500">
+                      <p>No products found for &quot;{searchQuery}&quot;</p>
+                    </div>
+                  ) : null}
+                </div>
+              )}
             </div>
           )}
         </nav>

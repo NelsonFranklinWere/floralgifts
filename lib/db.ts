@@ -37,10 +37,13 @@ export interface Order {
   delivery_address: string;
   delivery_city?: string | null;
   delivery_date: string;
-  payment_method: "mpesa" | "mpesa_till" | "mpesa_paybill" | "whatsapp";
+  payment_method: "mpesa" | "mpesa_till" | "mpesa_paybill" | "card" | "whatsapp";
   mpesa_checkout_request_id?: string | null;
   mpesa_result_code?: number | null;
   mpesa_receipt_number?: string | null;
+  pesapal_order_tracking_id?: string | null;
+  pesapal_payment_method?: string | null;
+  pesapal_confirmation_code?: string | null;
   status: "pending" | "paid" | "failed" | "cancelled" | "shipped";
   notes?: string | null;
   created_at: string;
@@ -154,22 +157,26 @@ export async function getProductById(id: string): Promise<Product | null> {
 
 export async function createOrder(order: Omit<Order, "id" | "created_at" | "updated_at">): Promise<Order | null> {
   try {
+    const insertData: any = {
+      items: order.items,
+      total_amount: order.total_amount || order.total || 0,
+      customer_name: order.customer_name,
+      phone: order.phone,
+      email: order.email || null,
+      delivery_city: order.delivery_city || null,
+      delivery_date: order.delivery_date,
+      payment_method: order.payment_method,
+      status: order.status || "pending",
+      mpesa_checkout_request_id: order.mpesa_checkout_request_id || null,
+      notes: order.notes || null,
+    };
+    
+    // Use delivery_address - the database column has been renamed
+    insertData.delivery_address = order.delivery_address;
+
     const { data, error } = await (supabaseAdmin
       .from("orders") as any)
-      .insert({
-        items: order.items,
-        total_amount: order.total_amount || order.total || 0,
-        customer_name: order.customer_name,
-        phone: order.phone,
-        email: order.email || null,
-        address: order.delivery_address, // Schema uses 'address' not 'delivery_address'
-        delivery_city: order.delivery_city || null,
-        delivery_date: order.delivery_date,
-        payment_method: order.payment_method,
-        status: order.status || "pending",
-        mpesa_checkout_request_id: order.mpesa_checkout_request_id || null,
-        notes: order.notes || null,
-      })
+      .insert(insertData)
       .select()
       .single();
 
@@ -202,8 +209,8 @@ export async function getOrderById(id: string): Promise<Order | null> {
     if (data) {
       // Add total alias for backward compatibility
       (data as any).total = data.total_amount;
-      // Map 'address' from DB to 'delivery_address' for Order interface
-      if (data.address && !data.delivery_address) {
+      // Map 'delivery_address' from DB (or 'address' if migration not run yet)
+      if (!data.delivery_address && data.address) {
         data.delivery_address = data.address;
       }
     }
