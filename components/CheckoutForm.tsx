@@ -115,10 +115,10 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
   const handleSTKPush = async (data: CheckoutFormData) => {
     setIsProcessingStk(true);
     setStkError("");
-    
+
     // Use phone from form or STK phone input
     const phoneToUse = stkPhone || data.phone;
-    
+
     if (!phoneToUse || !validatePhone(phoneToUse)) {
       setStkError("Please enter a valid M-Pesa phone number (format: 2547XXXXXXXX)");
       setIsProcessingStk(false);
@@ -148,63 +148,66 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
         delivery_city: deliveryLocation,
         delivery_date: new Date().toISOString(),
         payment_method: "mpesa",
-        notes: `STK Push payment. Recipient: ${recipientName} (${formatPhone(recipientPhone)}). ${data.giftMessage ? `Gift message: ${data.giftMessage}` : ""}`,
+        notes: `M-Pesa payment via Pesapal. Recipient: ${recipientName} (${formatPhone(recipientPhone)}). ${data.giftMessage ? `Gift message: ${data.giftMessage}` : ""}`,
       });
 
       const orderId = orderResponse.data.id;
-      // Shortened format: FL-{orderId6}-{timestamp8} = max 18 chars (Co-op Bank limit ~20)
-      const messageRef = `FL-${orderId.slice(0, 6)}-${Date.now().toString().slice(-8)}`;
 
-      // Initiate STK Push via Co-op Bank API
-      const callbackUrl = process.env.NEXT_PUBLIC_BASE_URL 
-        ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/coopbank/callback`
-        : "https://floralwhispersgifts.co.ke/api/coopbank/callback";
-      
-      const stkResponse = await axios.post("/api/coopbank/stkpush", {
-        MobileNumber: phoneToUse,
-        Amount: total,
-        Narration: "Floral Whispers Gifts",
-        MessageReference: messageRef,
-        CallBackUrl: callbackUrl,
-        OtherDetails: [
-          { Name: "OrderID", Value: orderId },
-          { Name: "CustomerName", Value: data.name },
-        ],
+      // Prepare billing address for Pesapal
+      const billingAddress = {
+        email_address: "",
+        phone_number: formatPhone(phoneToUse),
+        country_code: "KE",
+        first_name: data.name.split(" ")[0] || "Customer",
+        middle_name: "",
+        last_name: data.name.split(" ").slice(1).join(" ") || "",
+        line_1: `${deliveryLocation}, ${deliveryAddress}`,
+        line_2: "",
+        city: deliveryLocation || "Nairobi",
+        state: deliveryLocation || "Nairobi",
+        postal_code: "",
+        zip_code: "",
+      };
+
+      // Initiate Pesapal payment
+      const callbackUrl = process.env.NEXT_PUBLIC_BASE_URL
+        ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/pesapal/callback`
+        : "https://floralwhispersgifts.co.ke/api/pesapal/callback";
+
+      const pesapalResponse = await axios.post("/api/pesapal/payment", {
+        orderId: orderId,
+        amount: total / 100, // Convert cents to KES
+        currency: "KES",
+        description: `Floral Whispers Gifts Order #${orderId.slice(0, 8)}`,
+        callbackUrl: callbackUrl,
+        customerEmail: null,
+        customerPhone: formatPhone(phoneToUse),
+        customerName: data.name,
+        billingAddress: billingAddress,
       });
 
-      // Co-op Bank STK Push response format
-      if (stkResponse.data.success && stkResponse.data.data) {
-        const responseData = stkResponse.data.data;
-        // Check if STK push was initiated successfully
-        if (responseData.ResponseCode === "00" || responseData.ResponseCode === "0" || responseData.MessageReference) {
-          const finalMessageRef = responseData.MessageReference || messageRef;
-          // Update order with message reference for callback matching
-          try {
-            await axios.patch(`/api/orders/${orderId}`, {
-              mpesa_checkout_request_id: finalMessageRef,
-              notes: `STK Push initiated. MessageReference: ${finalMessageRef}. Payment phone: ${phoneToUse}. ${orderResponse.data.notes || ''}`,
-            });
-          } catch (err) {
-            console.error("Failed to update order:", err);
-          }
-          
-          // Clear cart and redirect to success page
-          clearCart();
-          Analytics.trackPurchase(orderId, total, "mpesa");
-          
-          // Redirect to success page
-          router.push(`/order/success?id=${orderId}`);
-        } else {
-          setStkError(responseData.ResponseDescription || responseData.ResponseMessage || "STK Push failed. Please try again.");
-        }
+      if (pesapalResponse.data.success && pesapalResponse.data.data?.redirect_url) {
+        // Store order ID in session for callback handling
+        sessionStorage.setItem("pendingOrder", JSON.stringify({
+          id: orderId,
+          total: total,
+          paymentMethod: "mpesa",
+          orderTrackingId: pesapalResponse.data.data.order_tracking_id,
+        }));
+
+        // Track the purchase attempt
+        Analytics.trackPurchase(orderId, total, "mpesa");
+
+        // Redirect to Pesapal payment page
+        window.location.href = pesapalResponse.data.data.redirect_url;
       } else {
-        setStkError(stkResponse.data.message || "Failed to initiate payment. Please try again.");
+        setStkError(pesapalResponse.data.message || "Failed to initiate payment. Please try again.");
       }
     } catch (error: any) {
-      console.error("STK Push error:", error);
+      console.error("Pesapal payment error:", error);
       setStkError(
-        error.response?.data?.message || 
-        error.message || 
+        error.response?.data?.message ||
+        error.message ||
         "Failed to initiate payment. Please try again or use another payment method."
       );
     } finally {

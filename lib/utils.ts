@@ -44,7 +44,11 @@ export function formatDateTime(date: Date | string): string {
 
 export function validatePhone(phone: string): boolean {
   const cleaned = formatPhone(phone);
-  return /^2547\d{8}$/.test(cleaned);
+  // Allow Kenyan phone formats:
+  // - 07xx (2547xxxxxxxx) - 12 digits total
+  // - 011x (25411xxxxxxx) - 12 digits total
+  // - 01xx (2541xxxxxxxx) - 12 digits total (other 01 prefixes)
+  return /^254(7\d{8}|1\d{8})$/.test(cleaned);
 }
 
 export function sanitizeInput(input: string): string {

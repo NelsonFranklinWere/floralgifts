@@ -26,22 +26,22 @@ export async function getPesapalToken(): Promise<string> {
   // Pesapal uses different endpoints for sandbox and production
   const baseUrl = env === 'production'
     ? "https://pay.pesapal.com/v3"
-    : "https://cybqa.pesapal.com/v3";
-
-  const creds = Buffer.from(`${consumerKey}:${consumerSecret}`).toString("base64");
+    : "https://cybqa.pesapal.com/pesapalv3";
 
   console.log(`Attempting to get Pesapal token from: ${baseUrl}/api/Auth/RequestToken`);
   console.log(`Using credentials: ${consumerKey}:${consumerSecret.substring(0, 4)}...`);
 
-  // Pesapal v3 uses POST with Basic Auth, no body required
+  // Pesapal v3 uses POST with JSON body containing consumer_key and consumer_secret
   const response = await fetch(`${baseUrl}/api/Auth/RequestToken`, {
     method: "POST",
     headers: {
-      Authorization: `Basic ${creds}`,
       "Accept": "application/json",
       "Content-Type": "application/json",
     },
-    // No body needed for Pesapal token request
+    body: JSON.stringify({
+      consumer_key: consumerKey,
+      consumer_secret: consumerSecret,
+    }),
   });
 
   console.log(`Pesapal token response status: ${response.status}`);
@@ -106,7 +106,7 @@ export async function initiatePesapalPayment(params: PesapalPaymentParams): Prom
 
   const baseUrl = env === 'production'
     ? "https://pay.pesapal.com/v3"
-    : "https://cybqa.pesapal.com/v3";
+    : "https://cybqa.pesapal.com/pesapalv3";
 
   const payload = {
     id: params.id,
@@ -164,25 +164,29 @@ export async function checkPesapalPaymentStatus(params: PesapalStatusParams): Pr
 
   const baseUrl = env === 'production'
     ? "https://pay.pesapal.com/v3"
-    : "https://cybqa.pesapal.com/v3";
+    : "https://cybqa.pesapal.com/pesapalv3";
+
+  console.log(`Fetching Pesapal status for: ${params.order_tracking_id}`);
 
   const response = await fetch(`${baseUrl}/api/Transactions/GetTransactionStatus?orderTrackingId=${params.order_tracking_id}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
+      "Accept": "application/json",
     },
   });
 
+  const data = await response.json();
+  console.log("Pesapal status response:", JSON.stringify(data, null, 2));
+
   if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Pesapal status check failed: ${errorText}`);
+    throw new Error(`Pesapal status check failed: ${JSON.stringify(data)}`);
   }
 
-  const data = await response.json();
-
-  if (data.error) {
-    throw new Error(`Pesapal API error: ${data.error.message || data.error}`);
+  // Only throw if error has actual content (not null values)
+  if (data.error && (data.error.error_type || data.error.code || data.error.message)) {
+    const errorMsg = typeof data.error === 'object' ? JSON.stringify(data.error) : data.error;
+    throw new Error(`Pesapal API error: ${errorMsg}`);
   }
 
   return data;

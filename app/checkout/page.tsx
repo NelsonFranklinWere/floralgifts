@@ -171,7 +171,7 @@ export default function CheckoutPage() {
     setStkError("");
 
     try {
-      // Handle STK Push
+      // Handle STK Push (M-Pesa) via Pesapal
       if (paymentMethod === "stk") {
         if (!stkPhone || !validatePhone(stkPhone)) {
           setStkError("Please enter a valid M-Pesa phone number (format: 2547XXXXXXXX)");
@@ -196,57 +196,61 @@ export default function CheckoutPage() {
           delivery_city: city || "Nairobi",
           delivery_date: new Date().toISOString(),
           payment_method: "mpesa",
-          notes: `STK Push payment initiated. Phone: ${stkPhone}`,
+          notes: `M-Pesa payment initiated via Pesapal. Phone: ${stkPhone}`,
         });
 
         const orderId = orderResponse.data.id;
-        // Shortened format: FL-{orderId6}-{timestamp8} = max 18 chars (Co-op Bank limit ~20)
-        const messageRef = `FL-${orderId.slice(0, 6)}-${Date.now().toString().slice(-8)}`;
 
-        // Initiate STK Push via Co-op Bank API
-        const callbackUrl = typeof window !== 'undefined' 
-          ? `${window.location.origin}/api/coopbank/callback`
-          : "https://floralwhispersgifts.co.ke/api/coopbank/callback";
-        
-        const stkResponse = await axios.post("/api/coopbank/stkpush", {
-          MobileNumber: stkPhone,
-          Amount: total,
-          Narration: "Floral Whispers Gifts",
-          MessageReference: messageRef,
-          CallBackUrl: callbackUrl,
-          OtherDetails: [
-            { Name: "OrderID", Value: orderId },
-            { Name: "CustomerName", Value: firstName && lastName ? `${firstName} ${lastName}`.trim() : "Customer" },
-          ],
+        // Prepare billing address for Pesapal
+        const billingAddressData = {
+          email_address: email || "",
+          phone_number: formatPhone(stkPhone),
+          country_code: "KE",
+          first_name: firstName || "Customer",
+          middle_name: "",
+          last_name: lastName || "",
+          line_1: address || "To be confirmed",
+          line_2: apartment || "",
+          city: city || "Nairobi",
+          state: city || "Nairobi",
+          postal_code: postalCode || "",
+          zip_code: postalCode || "",
+        };
+
+        // Initiate Pesapal payment
+        const callbackUrl = typeof window !== 'undefined'
+          ? `${window.location.origin}/api/pesapal/callback`
+          : "https://floralwhispersgifts.co.ke/api/pesapal/callback";
+
+        const pesapalResponse = await axios.post("/api/pesapal/payment", {
+          orderId: orderId,
+          amount: total / 100, // Convert cents to KES
+          currency: "KES",
+          description: `Floral Whispers Gifts Order #${orderId.slice(0, 8)}`,
+          callbackUrl: callbackUrl,
+          customerEmail: email || null,
+          customerPhone: formatPhone(stkPhone),
+          customerName: firstName && lastName ? `${firstName} ${lastName}`.trim() : "Customer",
+          billingAddress: billingAddressData,
         });
 
-        if (stkResponse.data.success && stkResponse.data.data) {
-          const responseData = stkResponse.data.data;
-          if (responseData.ResponseCode === "00" || responseData.ResponseCode === "0" || responseData.MessageReference) {
-            const finalMessageRef = responseData.MessageReference || messageRef;
-            // Update order with message reference
-            try {
-              await axios.patch(`/api/orders/${orderId}`, {
-                mpesa_checkout_request_id: finalMessageRef,
-                notes: `STK Push initiated. MessageReference: ${finalMessageRef}. Payment phone: ${stkPhone}. Waiting for payment confirmation...`,
-              });
-            } catch (err) {
-              console.error("Failed to update order:", err);
-            }
+        if (pesapalResponse.data.success && pesapalResponse.data.data?.redirect_url) {
+          // Store order ID in session for callback handling
+          sessionStorage.setItem("pendingOrder", JSON.stringify({
+            id: orderId,
+            total: total,
+            paymentMethod: "mpesa",
+            orderTrackingId: pesapalResponse.data.data.order_tracking_id,
+          }));
 
-            // DON'T clear cart here - wait for payment confirmation
-            // clearCart(); // REMOVED
-            // sessionStorage.removeItem("pendingOrder"); // REMOVED
-            Analytics.trackPurchase(orderId, total, "mpesa");
-            router.push(`/order/success?id=${orderId}&pending=true`);
-            return;
-          } else {
-            setStkError(responseData.ResponseDescription || responseData.ResponseMessage || "STK Push failed. Please try again.");
-            setIsProcessing(false);
-            return;
-          }
+          // Track the purchase attempt
+          Analytics.trackPurchase(orderId, total, "mpesa");
+
+          // Redirect to Pesapal payment page (user can select M-Pesa there)
+          window.location.href = pesapalResponse.data.data.redirect_url;
+          return;
         } else {
-          setStkError(stkResponse.data.message || "Failed to initiate payment. Please try again.");
+          setStkError(pesapalResponse.data.message || "Failed to initiate M-Pesa payment. Please try again.");
           setIsProcessing(false);
           return;
         }
@@ -512,7 +516,7 @@ export default function CheckoutPage() {
                     <div className="mt-3 ml-7 space-y-3">
                       <div className="p-3 bg-brand-gray-50 rounded-lg border border-brand-gray-200">
                         <p className="text-xs text-brand-gray-700 mb-3">
-                          Enter your M-Pesa phone number to receive a payment prompt:
+                          Enter your M-Pesa phone number for payment:
                         </p>
                         <div>
                           <label htmlFor="stk-phone-checkout" className="block text-xs font-medium text-brand-gray-900 mb-1.5">
@@ -536,7 +540,7 @@ export default function CheckoutPage() {
                       </div>
                       <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
                         <p className="text-xs text-green-800">
-                          <strong>How it works:</strong> After you confirm, you&apos;ll receive an M-Pesa prompt on your phone. Enter your PIN to complete the payment.
+                          <strong>How it works:</strong> You&apos;ll be redirected to a secure payment page where you can complete your M-Pesa payment.
                         </p>
                       </div>
                     </div>
@@ -663,7 +667,7 @@ export default function CheckoutPage() {
                   {isProcessing
                     ? "Processing..."
                     : paymentMethod === "stk"
-                      ? `Pay with STK Push - ${formatCurrency(total)}`
+                      ? `Pay with M-Pesa - ${formatCurrency(total)}`
                       : paymentMethod === "pesapal"
                         ? `Pay with Card - ${formatCurrency(total)}`
                         : paymentMethod === "till" || paymentMethod === "paybill"

@@ -228,13 +228,17 @@ export async function updateOrder(
 ): Promise<Order | null> {
   try {
     const updateData: any = {};
-    
+
     if (updates.status !== undefined) updateData.status = updates.status;
     if (updates.mpesa_result_code !== undefined) updateData.mpesa_result_code = updates.mpesa_result_code;
     if (updates.mpesa_receipt_number !== undefined) updateData.mpesa_receipt_number = updates.mpesa_receipt_number;
     if (updates.mpesa_checkout_request_id !== undefined) updateData.mpesa_checkout_request_id = updates.mpesa_checkout_request_id;
     if (updates.delivery_city !== undefined) updateData.delivery_city = updates.delivery_city;
     if (updates.notes !== undefined) updateData.notes = updates.notes;
+    // Pesapal-specific fields
+    if (updates.pesapal_order_tracking_id !== undefined) updateData.pesapal_order_tracking_id = updates.pesapal_order_tracking_id;
+    if (updates.pesapal_payment_method !== undefined) updateData.pesapal_payment_method = updates.pesapal_payment_method;
+    if (updates.pesapal_confirmation_code !== undefined) updateData.pesapal_confirmation_code = updates.pesapal_confirmation_code;
 
     updateData.updated_at = new Date().toISOString();
 

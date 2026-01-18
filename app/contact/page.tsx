@@ -415,7 +415,7 @@ export default function ContactPage() {
                   {paymentMethod === "card" && (
                     <div className="mt-3 ml-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                       <p className="text-xs text-yellow-800">
-                        <strong>Note:</strong> Card payments coming soon. Please use Till Number or Paybill payment options for now.
+                        {/* <strong>Note:</strong> Card payments coming soon. Please use Till Number or Paybill payment options for now. */}
                       </p>
                     </div>
                   )}

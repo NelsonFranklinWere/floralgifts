@@ -291,7 +291,7 @@ export default function Footer() {
               </div>
               <span className="text-sm text-white">Mastercard</span>
             </div>
-            <span className="text-xs text-brand-gray-400">Card payments coming soon</span>
+            {/* <span className="text-xs text-brand-gray-400">Card payments coming soon</span> */}
           </div>
         </div>
 

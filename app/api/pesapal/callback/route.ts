@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyPesapalIPN } from "@/lib/pesapal";
+import { checkPesapalPaymentStatus } from "@/lib/pesapal";
 import { formatCurrency } from "@/lib/utils";
 import { Resend } from "resend";
 import { SHOP_INFO } from "@/lib/constants";
@@ -11,30 +11,20 @@ export async function POST(request: NextRequest) {
 
     console.log("Pesapal callback received:", JSON.stringify(body, null, 2));
 
-    // Verify the IPN notification
-    if (!verifyPesapalIPN(body)) {
-      console.error("Invalid Pesapal IPN notification");
-      return NextResponse.json({ error: "Invalid notification" }, { status: 400 });
-    }
-
     const {
       OrderTrackingId,
       OrderMerchantReference,
       OrderNotificationType,
-      Status,
-      Amount,
-      Currency,
-      ConfirmationCode,
-      PaymentMethod,
     } = body;
+
+    // Validate required fields
+    if (!OrderTrackingId || !OrderMerchantReference) {
+      console.error("Missing required fields in Pesapal callback");
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
 
     // Update order status in database
     const orderId = OrderMerchantReference;
-
-    if (!orderId) {
-      console.error("No order ID in Pesapal callback");
-      return NextResponse.json({ error: "No order ID" }, { status: 400 });
-    }
 
     // Find the order in database
     const order = await getOrderById(orderId);
@@ -44,23 +34,49 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
 
-    // Update order with Pesapal payment details
+    // Fetch actual payment status from Pesapal API
+    let paymentStatus: any = null;
+    try {
+      paymentStatus = await checkPesapalPaymentStatus({ order_tracking_id: OrderTrackingId });
+      console.log("Pesapal payment status:", JSON.stringify(paymentStatus, null, 2));
+    } catch (statusError) {
+      console.error("Failed to fetch payment status:", statusError);
+    }
+
+    // Determine order status from Pesapal response
     let newStatus = "pending";
-    if (Status === "COMPLETED" || Status === "200") {
-      newStatus = "paid";
-    } else if (Status === "FAILED" || Status === "400") {
-      newStatus = "failed";
+    let confirmationCode = "";
+    let paymentMethod = "";
+
+    if (paymentStatus) {
+      // Pesapal status_code: 0 = INVALID, 1 = COMPLETED, 2 = FAILED, 3 = REVERSED
+      // Note: status_code is numeric, payment_status_description is a string
+      const statusCode = paymentStatus.status_code;
+      const statusDesc = paymentStatus.payment_status_description?.toUpperCase();
+
+      if (statusCode === 1 || statusDesc === "COMPLETED") {
+        newStatus = "paid";
+      } else if (statusCode === 2 || statusDesc === "FAILED") {
+        newStatus = "failed";
+      } else if (statusCode === 3 || statusDesc === "REVERSED") {
+        newStatus = "failed";
+      }
+
+      confirmationCode = paymentStatus.confirmation_code || "";
+      paymentMethod = paymentStatus.payment_method || "";
+
+      console.log(`Pesapal status: code=${statusCode}, desc=${statusDesc}, newStatus=${newStatus}`);
     }
 
     const updateData: any = {
       status: newStatus,
       pesapal_order_tracking_id: OrderTrackingId,
-      pesapal_payment_method: PaymentMethod,
+      pesapal_payment_method: paymentMethod,
       updated_at: new Date().toISOString(),
     };
 
-    if (ConfirmationCode) {
-      updateData.pesapal_confirmation_code = ConfirmationCode;
+    if (confirmationCode) {
+      updateData.pesapal_confirmation_code = confirmationCode;
     }
 
     const updatedOrder = await updateOrder(orderId, updateData);
@@ -83,9 +99,9 @@ export async function POST(request: NextRequest) {
         const emailSubject = `✅ Payment Confirmed - Order #${orderId.slice(0, 8)}`;
         const emailHtml = `
           <h2>Payment Confirmed - Order Received</h2>
-          <p><strong>Payment Method:</strong> Card Payment (Pesapal)</p>
+          <p><strong>Payment Method:</strong> ${paymentMethod || 'Pesapal'}</p>
           <p><strong>Payment Status:</strong> ✅ Paid</p>
-          ${ConfirmationCode ? `<p><strong>Confirmation Code:</strong> ${ConfirmationCode}</p>` : ''}
+          ${confirmationCode ? `<p><strong>Confirmation Code:</strong> ${confirmationCode}</p>` : ''}
 
           <h3>Order Information</h3>
           <p><strong>Order ID:</strong> ${orderId.slice(0, 8)}</p>

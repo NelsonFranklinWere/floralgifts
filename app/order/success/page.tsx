@@ -275,8 +275,20 @@ function OrderSuccessContent() {
             </div>
             {order.mpesa_receipt_number && (
               <div className="flex justify-between">
-                <span className="text-brand-gray-600">MPESA Receipt:</span>
+                <span className="text-brand-gray-600">M-Pesa Receipt:</span>
                 <span className="font-medium font-mono">{order.mpesa_receipt_number}</span>
+              </div>
+            )}
+            {order.pesapal_confirmation_code && (
+              <div className="flex justify-between">
+                <span className="text-brand-gray-600">Confirmation Code:</span>
+                <span className="font-medium font-mono">{order.pesapal_confirmation_code}</span>
+              </div>
+            )}
+            {order.pesapal_payment_method && (
+              <div className="flex justify-between">
+                <span className="text-brand-gray-600">Payment Method:</span>
+                <span className="font-medium">{order.pesapal_payment_method}</span>
               </div>
             )}
                 <div className="flex justify-between">
