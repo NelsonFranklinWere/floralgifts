@@ -4,6 +4,14 @@ import { createOrder, getOrders } from "@/lib/db";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    console.log("📦 Creating new order:", {
+      customerName: body.customer_name,
+      phone: body.phone,
+      paymentMethod: body.payment_method,
+      totalAmount: body.total || body.total_amount,
+      itemCount: body.items?.length || 0,
+      deliveryAddress: body.delivery_address
+    });
 
     const order = await createOrder({
       items: body.items,
@@ -21,12 +29,19 @@ export async function POST(request: NextRequest) {
     } as any);
 
     if (!order) {
+      console.error("❌ Failed to create order in database");
       return NextResponse.json({ message: "Failed to create order" }, { status: 500 });
     }
 
+    console.log("✅ Order created successfully:", {
+      orderId: order.id,
+      status: order.status,
+      paymentMethod: order.payment_method
+    });
+
     return NextResponse.json(order);
   } catch (error: any) {
-    console.error("Create order error:", error);
+    console.error("❌ Create order error:", error);
     return NextResponse.json(
       { message: error.message || "Failed to create order" },
       { status: 500 }

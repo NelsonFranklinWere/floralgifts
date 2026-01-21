@@ -166,6 +166,13 @@ export default function CheckoutPage() {
   const total = subtotal + deliveryFeeInCents + tipValue;
 
   const handleSTKPush = async () => {
+    console.log("💳 Checkout: Starting payment process:", {
+      paymentMethod,
+      total,
+      itemCount: (orderData?.items || items).length,
+      customerName: firstName && lastName ? `${firstName} ${lastName}`.trim() : "Customer"
+    });
+    
     setIsProcessing(true);
     setError("");
     setStkError("");
@@ -235,6 +242,12 @@ export default function CheckoutPage() {
         });
 
         if (pesapalResponse.data.success && pesapalResponse.data.data?.redirect_url) {
+          console.log("✅ Checkout: Pesapal payment initiated successfully:", {
+            orderId,
+            redirectUrl: pesapalResponse.data.data.redirect_url,
+            orderTrackingId: pesapalResponse.data.data.order_tracking_id
+          });
+          
           // Store order ID in session for callback handling
           sessionStorage.setItem("pendingOrder", JSON.stringify({
             id: orderId,
@@ -250,6 +263,7 @@ export default function CheckoutPage() {
           window.location.href = pesapalResponse.data.data.redirect_url;
           return;
         } else {
+          console.error("❌ Checkout: Pesapal payment initiation failed:", pesapalResponse.data);
           setStkError(pesapalResponse.data.message || "Failed to initiate M-Pesa payment. Please try again.");
           setIsProcessing(false);
           return;
@@ -391,7 +405,13 @@ export default function CheckoutPage() {
         }
       }
     } catch (err: any) {
-      console.error("Order submission error:", err);
+      console.error("❌ Checkout: Order submission error:", {
+        error: err.message,
+        paymentMethod,
+        total,
+        response: err.response?.data,
+        stack: err.stack
+      });
       setError(err.response?.data?.message || err.message || "An error occurred. Please try again.");
     } finally {
       setIsProcessing(false);

@@ -4,6 +4,13 @@ import { initiateCoopBankSTKPush, CoopBankSTKPushParams } from "@/lib/coopbank";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    console.log("💳 Co-op Bank STK Push request:", {
+      mobileNumber: body.MobileNumber,
+      amount: body.Amount,
+      messageReference: body.MessageReference,
+      timestamp: new Date().toISOString()
+    });
+    
     const {
       MessageReference,
       CallBackUrl,
@@ -18,6 +25,7 @@ export async function POST(request: NextRequest) {
 
     // Validate required fields
     if (!MobileNumber || Amount === undefined || Amount === null) {
+      console.error("❌ STK Push validation failed:", { MobileNumber: !!MobileNumber, Amount });
       return NextResponse.json(
         {
           success: false,
@@ -92,12 +100,23 @@ export async function POST(request: NextRequest) {
 
     const result = await initiateCoopBankSTKPush(params);
 
+    console.log("✅ Co-op Bank STK Push successful:", {
+      messageReference: params.MessageReference,
+      responseCode: result.ResponseCode,
+      responseDescription: result.ResponseDescription,
+      requestId: result.RequestID
+    });
+
     return NextResponse.json({
       success: true,
       data: result,
     });
   } catch (error: any) {
-    console.error("Co-op Bank STK Push error:", error);
+    console.error("❌ Co-op Bank STK Push error:", {
+      error: error.message,
+      stack: error.stack,
+      timestamp: new Date().toISOString()
+    });
     return NextResponse.json(
       {
         success: false,
