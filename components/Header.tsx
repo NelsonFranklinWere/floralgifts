@@ -101,23 +101,23 @@ const navigation: NavItem[] = [
   },
   {
     name: "Cards",
-    href: "/collections",
+    href: "/collections/cards",
     children: [
       {
         title: "Occasions",
         items: [
-          { name: "View all", href: "/collections" },
-          { name: "Birthdays", href: "/collections" },
-          { name: "Graduations", href: "/collections" },
-          { name: "Anniversaries", href: "/collections" },
+          { name: "View all", href: "/collections/cards" },
+          { name: "Birthdays", href: "/collections/cards" },
+          { name: "Graduations", href: "/collections/cards" },
+          { name: "Anniversaries", href: "/collections/cards" },
         ],
       },
       {
         title: "Sentiment",
         items: [
-          { name: "Congrats", href: "/collections" },
-          { name: "Sympathy", href: "/collections" },
-          { name: "Good Luck", href: "/collections" },
+          { name: "Congrats", href: "/collections/cards" },
+          { name: "Sympathy", href: "/collections/cards" },
+          { name: "Good Luck", href: "/collections/cards" },
         ],
       },
     ],

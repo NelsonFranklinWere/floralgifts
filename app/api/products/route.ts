@@ -9,13 +9,18 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get("category");
+    const subcategory = searchParams.get("subcategory");
 
-    const dbProducts = await getProducts(category ? { category } : {});
+    const filters: any = {};
+    if (category) filters.category = category;
+    if (subcategory) filters.subcategory = subcategory;
+
+    const dbProducts = await getProducts(filters);
     
-    // Include predefined products for flowers, wines, and chocolates
+    // Include predefined products for flowers, wines, chocolates, and cards
     let allProducts = [...dbProducts];
-    if (category === "flowers" || category === "wines" || category === "chocolates") {
-      const predefinedProducts = getPredefinedProducts(category);
+    if (category === "flowers" || category === "wines" || category === "chocolates" || category === "cards") {
+      const predefinedProducts = getPredefinedProducts(category, subcategory);
       // Filter out predefined products that already exist in database (by slug)
       const dbSlugs = new Set(dbProducts.map(p => p.slug));
       const uniquePredefined = predefinedProducts.filter(p => !dbSlugs.has(p.slug));
