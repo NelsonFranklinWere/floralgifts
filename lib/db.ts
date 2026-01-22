@@ -297,6 +297,30 @@ export async function getOrders(filters?: {
         sample: testData?.[0] || 'none'
       });
       
+      // Special handling for failed orders - use the working test query approach
+      if (filters.status === "failed") {
+        const { data: failedData, error: failedError } = await (supabaseAdmin.from("orders") as any)
+          .select("*")
+          .eq("status", "failed")
+          .order("created_at", { ascending: false });
+        
+        if (failedError) {
+          console.error("Error fetching failed orders:", failedError);
+          return [];
+        }
+        
+        console.log(`📊 DB getOrders: Failed orders direct query count: ${failedData?.length || 0}`);
+        
+        // Process and return failed orders
+        const processedOrders = (failedData || []).map((order: any) => ({
+          ...order,
+          total: order.total_amount,
+          delivery_address: order.address || order.delivery_address,
+        })) as Order[];
+        
+        return processedOrders;
+      }
+      
       query = query.eq("status", filters.status);
     }
 
