@@ -267,87 +267,47 @@ export async function getOrders(filters?: {
   try {
     console.log(`🔍 DB getOrders: Filters:`, filters);
     
-    // First, let's see what's actually in the database
-    const { data: allData, error: allError } = await (supabaseAdmin.from("orders") as any)
-      .select("id, status, customer_name, created_at")
-      .order("created_at", { ascending: false })
-      .limit(10);
-    
-    if (!allError && allData) {
-      console.log(`🔍 DB getOrders: Recent orders in DB:`);
-      allData.forEach((order: any, index: number) => {
-        console.log(`  ${index + 1}. ${order.id?.slice(0, 8)}... Status: "${order.status}" Customer: ${order.customer_name}`);
-      });
-    }
-    
-    let query = (supabaseAdmin.from("orders") as any).select("*").order("created_at", { ascending: false });
-
-    if (filters?.status) {
-      console.log(`🔍 DB getOrders: Filtering by status: "${filters.status}"`);
+    // If no status filter, return all orders
+    if (!filters?.status) {
+      const { data, error } = await (supabaseAdmin.from("orders") as any)
+        .select("*")
+        .order("created_at", { ascending: false });
       
-      // Try direct query first to test RLS
-      const { data: testData, error: testError } = await (supabaseAdmin.from("orders") as any)
-        .select("id, status, customer_name")
-        .eq("status", filters.status)
-        .limit(5);
-      
-      console.log(`🧪 DB getOrders: Test query result:`, { 
-        count: testData?.length || 0, 
-        error: testError?.message || 'none',
-        sample: testData?.[0] || 'none'
-      });
-      
-      // Special handling for failed orders - use the working test query approach
-      if (filters.status === "failed") {
-        const { data: failedData, error: failedError } = await (supabaseAdmin.from("orders") as any)
-          .select("*")
-          .eq("status", "failed")
-          .order("created_at", { ascending: false });
-        
-        if (failedError) {
-          console.error("Error fetching failed orders:", failedError);
-          return [];
-        }
-        
-        console.log(`📊 DB getOrders: Failed orders direct query count: ${failedData?.length || 0}`);
-        
-        // Process and return failed orders
-        const processedOrders = (failedData || []).map((order: any) => ({
-          ...order,
-          total: order.total_amount,
-          delivery_address: order.address || order.delivery_address,
-        })) as Order[];
-        
-        return processedOrders;
+      if (error) {
+        console.error("Error fetching all orders:", error);
+        return [];
       }
       
-      query = query.eq("status", filters.status);
+      console.log(`📊 DB getOrders: All orders count: ${data?.length || 0}`);
+      
+      return (data || []).map((order: any) => ({
+        ...order,
+        total: order.total_amount,
+        delivery_address: order.address || order.delivery_address,
+      })) as Order[];
     }
-
-    const { data, error } = await query;
-
+    
+    // For any status filter, use direct query approach
+    console.log(`🔍 DB getOrders: Filtering by status: "${filters.status}"`);
+    
+    const { data, error } = await (supabaseAdmin.from("orders") as any)
+      .select("*")
+      .eq("status", filters.status)
+      .order("created_at", { ascending: false });
+    
     if (error) {
-      console.error("Error fetching orders:", error);
+      console.error(`Error fetching ${filters.status} orders:`, error);
       return [];
     }
-
-    console.log(`📊 DB getOrders: Raw data count: ${data?.length || 0}`);
     
-    if (filters?.status === "failed" && data) {
-      console.log(`❌ DB getOrders: Failed orders raw data:`);
-      data.forEach((order: any, index: number) => {
-        console.log(`  ${index + 1}. ID: ${order.id?.slice(0, 8)}... Status: ${order.status} Customer: ${order.customer_name}`);
-      });
-    }
-
-    // Add total alias and map address to delivery_address for backward compatibility
+    console.log(`📊 DB getOrders: ${filters.status} orders count: ${data?.length || 0}`);
+    
+    // Process and return orders
     const processedOrders = (data || []).map((order: any) => ({
       ...order,
       total: order.total_amount,
-      delivery_address: order.address || order.delivery_address, // Map 'address' from DB to 'delivery_address'
+      delivery_address: order.address || order.delivery_address,
     })) as Order[];
-    
-    console.log(`📊 DB getOrders: Processed orders count: ${processedOrders.length}`);
     
     return processedOrders;
   } catch (error) {
