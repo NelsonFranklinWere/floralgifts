@@ -265,9 +265,12 @@ export async function getOrders(filters?: {
   status?: string;
 }): Promise<Order[]> {
   try {
+    console.log(`🔍 DB getOrders: Filters:`, filters);
+    
     let query = (supabaseAdmin.from("orders") as any).select("*").order("created_at", { ascending: false });
 
     if (filters?.status) {
+      console.log(`🔍 DB getOrders: Filtering by status: ${filters.status}`);
       query = query.eq("status", filters.status);
     }
 
@@ -278,12 +281,25 @@ export async function getOrders(filters?: {
       return [];
     }
 
+    console.log(`📊 DB getOrders: Raw data count: ${data?.length || 0}`);
+    
+    if (filters?.status === "failed" && data) {
+      console.log(`❌ DB getOrders: Failed orders raw data:`);
+      data.forEach((order, index) => {
+        console.log(`  ${index + 1}. ID: ${order.id?.slice(0, 8)}... Status: ${order.status} Customer: ${order.customer_name}`);
+      });
+    }
+
     // Add total alias and map address to delivery_address for backward compatibility
-    return (data || []).map((order: any) => ({
+    const processedOrders = (data || []).map((order: any) => ({
       ...order,
       total: order.total_amount,
       delivery_address: order.address || order.delivery_address, // Map 'address' from DB to 'delivery_address'
     })) as Order[];
+    
+    console.log(`📊 DB getOrders: Processed orders count: ${processedOrders.length}`);
+    
+    return processedOrders;
   } catch (error) {
     console.error("Error fetching orders:", error);
     return [];
