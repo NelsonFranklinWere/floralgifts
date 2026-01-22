@@ -228,7 +228,7 @@ export default function Footer() {
                   <svg className="w-5 h-5 mt-0.5 flex-shrink-0 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                   </svg>
-                  <span className="text-sm">+{SHOP_INFO.phone}<br />0721554393</span>
+                  <span className="text-sm">+{SHOP_INFO.phone}</span>
                 </a>
               </li>
               <li>
@@ -291,7 +291,33 @@ export default function Footer() {
               </div>
               <span className="text-sm text-white">Mastercard</span>
             </div>
-            {/* <span className="text-xs text-brand-gray-400">Card payments coming soon</span> */}
+          </div>
+          
+          {/* M-Pesa Payment Options */}
+          <div className="mb-4">
+            <h4 className="font-heading font-medium text-sm mb-3 text-white">M-Pesa Payment Options</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+              <div className="bg-white/5 rounded-lg p-3">
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="w-6 h-6 bg-[#007C42] rounded flex items-center justify-center">
+                    <span className="text-white font-bold text-xs">T</span>
+                  </div>
+                  <span className="font-medium text-white">Till Number</span>
+                </div>
+                <p className="text-brand-gray-300 text-xs mb-1">Pay via Till:</p>
+                <p className="text-white font-mono font-bold">5938629</p>
+              </div>
+              <div className="bg-white/5 rounded-lg p-3">
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="w-6 h-6 bg-[#007C42] rounded flex items-center justify-center">
+                    <span className="text-white font-bold text-xs">P</span>
+                  </div>
+                  <span className="font-medium text-white">Paybill</span>
+                </div>
+                <p className="text-brand-gray-300 text-xs mb-1">Business: 247247</p>
+                <p className="text-brand-gray-300 text-xs">Account: <span className="text-white font-mono">floralwhispers</span></p>
+              </div>
+            </div>
           </div>
         </div>
 

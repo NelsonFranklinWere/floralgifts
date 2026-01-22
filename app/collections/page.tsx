@@ -152,6 +152,31 @@ export default function CollectionsPage() {
           </Link>
 
           <Link
+            href="/collections/cards"
+            className="card overflow-hidden group block"
+          >
+            <div className="relative h-48 md:h-80 overflow-hidden">
+              <Image
+                src="/images/products/cards/gift-card.jpg"
+                alt="Gift cards Kenya - Digital gift cards, physical gift cards Nairobi"
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-300"
+                sizes="(max-width: 768px) 50vw, 33vw"
+                loading="lazy"
+              />
+            </div>
+            <div className="p-3 md:p-8">
+              <h2 className="font-heading font-bold text-base md:text-3xl text-brand-gray-900 mb-2 md:mb-3 group-hover:text-brand-green transition-colors">
+                Gift Cards
+              </h2>
+              <p className="text-brand-gray-600 mb-2 md:mb-4 text-xs md:text-base line-clamp-2 md:line-clamp-none">
+                Perfect gift cards for any occasion - let them choose their favorite flowers and gifts
+              </p>
+              <span className="text-brand-green font-medium text-xs md:text-base">Shop Gift Cards →</span>
+            </div>
+          </Link>
+
+          <Link
             href="/collections/wines"
             className="card overflow-hidden group block"
           >

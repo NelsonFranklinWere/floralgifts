@@ -7,7 +7,7 @@ export interface Product {
   description: string;
   short_description: string;
   price: number;
-  category: "flowers" | "hampers" | "teddy" | "wines" | "chocolates";
+  category: "flowers" | "hampers" | "teddy" | "wines" | "chocolates" | "cards";
   subcategory?: string | null;
   tags: string[];
   teddy_size?: number | null;

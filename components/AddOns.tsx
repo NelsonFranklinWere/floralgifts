@@ -29,7 +29,7 @@ export default function AddOns({ excludeProductIds = [], onOpenChange }: AddOnsP
     const fetchAddOns = async () => {
       setLoading(true);
       try {
-        const categories = ["flowers", "wines", "chocolates"];
+        const categories = ["chocolates", "wines", "teddy", "cards"];
         const fetchedProducts: Product[] = [];
 
         for (const category of categories) {
