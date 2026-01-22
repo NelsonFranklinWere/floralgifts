@@ -27,20 +27,31 @@ export async function POST(request: NextRequest) {
     const orderId = OrderMerchantReference;
 
     // Find the order in database
+    console.log("🔍 Pesapal: Looking up order:", { orderId });
     const order = await getOrderById(orderId);
 
     if (!order) {
-      console.error("Order not found:", orderId);
+      console.error("❌ Pesapal: Order not found in database:", { orderId, searchAttempted: true });
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
 
+    console.log("✅ Pesapal: Order found:", {
+      orderId: order.id,
+      currentStatus: order.status,
+      customerName: order.customer_name,
+      totalAmount: order.total_amount || order.total,
+      paymentMethod: order.payment_method,
+      createdAt: order.created_at
+    });
+
     // Fetch actual payment status from Pesapal API
     let paymentStatus: any = null;
+    console.log("🔍 Fetching Pesapal status for:", OrderTrackingId);
     try {
       paymentStatus = await checkPesapalPaymentStatus({ order_tracking_id: OrderTrackingId });
-      console.log("Pesapal payment status:", JSON.stringify(paymentStatus, null, 2));
+      console.log("📊 Pesapal status response:", JSON.stringify(paymentStatus, null, 2));
     } catch (statusError) {
-      console.error("Failed to fetch payment status:", statusError);
+      console.error("❌ Failed to fetch payment status:", { error: statusError, orderTrackingId: OrderTrackingId });
     }
 
     // Determine order status from Pesapal response
@@ -65,8 +76,19 @@ export async function POST(request: NextRequest) {
       confirmationCode = paymentStatus.confirmation_code || "";
       paymentMethod = paymentStatus.payment_method || "";
 
-      console.log(`Pesapal status: code=${statusCode}, desc=${statusDesc}, newStatus=${newStatus}`);
+      console.log(`📊 Pesapal status: code=${statusCode}, desc=${statusDesc}, newStatus=${newStatus}`);
+    } else {
+      console.log("⚠️ Pesapal: No payment status received, keeping order as pending");
     }
+
+    console.log("🔄 Pesapal: Updating order status:", {
+      orderId,
+      previousStatus: order.status,
+      newStatus,
+      orderTrackingId: OrderTrackingId,
+      paymentMethod,
+      confirmationCode
+    });
 
     const updateData: any = {
       status: newStatus,
@@ -82,9 +104,17 @@ export async function POST(request: NextRequest) {
     const updatedOrder = await updateOrder(orderId, updateData);
 
     if (!updatedOrder) {
-      console.error("Error updating order:", orderId);
+      console.error("❌ Pesapal: Error updating order in database:", { orderId, updateData });
       return NextResponse.json({ error: "Failed to update order" }, { status: 500 });
     }
+
+    console.log("✅ Pesapal: Order updated successfully:", {
+      orderId: updatedOrder.id,
+      previousStatus: order.status,
+      newStatus: updatedOrder.status,
+      pesapalTrackingId: updatedOrder.pesapal_order_tracking_id,
+      confirmationCode: updatedOrder.pesapal_confirmation_code
+    });
 
     // Send email notification for successful payments
     if (newStatus === "paid") {
@@ -154,7 +184,20 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    console.log(`Pesapal payment ${newStatus} for order ${orderId}`);
+    console.log(`💰 Pesapal payment ${newStatus} for order ${orderId}`);
+
+    // Log summary for failed payments
+    if (newStatus === "failed") {
+      console.log("❌ Pesapal: Payment failure summary:", {
+        orderId,
+        customerName: order.customer_name,
+        phone: order.phone,
+        amount: order.total_amount || order.total,
+        paymentMethod,
+        failureReason: paymentStatus?.payment_status_code || 'unknown',
+        orderTrackingId: OrderTrackingId
+      });
+    }
 
     return NextResponse.json({
       status: "success",

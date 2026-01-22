@@ -56,6 +56,27 @@ export async function GET(request: NextRequest) {
 
     const orders = await getOrders({ status });
 
+    // Log failed orders summary
+    if (status === "failed" || !status) {
+      const failedOrders = status === "failed" ? orders : orders.filter(o => o.status === "failed");
+      
+      console.log(`📊 Failed Orders Summary: Found ${failedOrders.length} failed orders`);
+      
+      failedOrders.forEach((order, index) => {
+        console.log(`❌ Failed Order ${index + 1}:`, {
+          orderId: order.id.slice(0, 8),
+          customerName: order.customer_name,
+          phone: order.phone,
+          amount: order.total_amount || order.total || 0,
+          paymentMethod: order.payment_method,
+          createdAt: order.created_at,
+          pesapalTrackingId: order.pesapal_order_tracking_id,
+          pesapalPaymentMethod: order.pesapal_payment_method,
+          deliveryAddress: order.delivery_address
+        });
+      });
+    }
+
     return NextResponse.json(orders);
   } catch (error: any) {
     console.error("Get orders error:", error);
