@@ -285,7 +285,7 @@ export async function getOrders(filters?: {
     
     if (filters?.status === "failed" && data) {
       console.log(`❌ DB getOrders: Failed orders raw data:`);
-      data.forEach((order, index) => {
+      data.forEach((order: any, index: number) => {
         console.log(`  ${index + 1}. ID: ${order.id?.slice(0, 8)}... Status: ${order.status} Customer: ${order.customer_name}`);
       });
     }
