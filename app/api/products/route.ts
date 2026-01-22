@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     // Include predefined products for flowers, wines, chocolates, and cards
     let allProducts = [...dbProducts];
     if (category === "flowers" || category === "wines" || category === "chocolates" || category === "cards") {
-      const predefinedProducts = getPredefinedProducts(category, subcategory);
+      const predefinedProducts = getPredefinedProducts(category);
       // Filter out predefined products that already exist in database (by slug)
       const dbSlugs = new Set(dbProducts.map(p => p.slug));
       const uniquePredefined = predefinedProducts.filter(p => !dbSlugs.has(p.slug));
