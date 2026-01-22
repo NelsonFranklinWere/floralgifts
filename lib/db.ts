@@ -284,6 +284,19 @@ export async function getOrders(filters?: {
 
     if (filters?.status) {
       console.log(`🔍 DB getOrders: Filtering by status: "${filters.status}"`);
+      
+      // Try direct query first to test RLS
+      const { data: testData, error: testError } = await (supabaseAdmin.from("orders") as any)
+        .select("id, status, customer_name")
+        .eq("status", filters.status)
+        .limit(5);
+      
+      console.log(`🧪 DB getOrders: Test query result:`, { 
+        count: testData?.length || 0, 
+        error: testError?.message || 'none',
+        sample: testData?.[0] || 'none'
+      });
+      
       query = query.eq("status", filters.status);
     }
 
