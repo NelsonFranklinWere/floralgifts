@@ -267,10 +267,23 @@ export async function getOrders(filters?: {
   try {
     console.log(`🔍 DB getOrders: Filters:`, filters);
     
+    // First, let's see what's actually in the database
+    const { data: allData, error: allError } = await (supabaseAdmin.from("orders") as any)
+      .select("id, status, customer_name, created_at")
+      .order("created_at", { ascending: false })
+      .limit(10);
+    
+    if (!allError && allData) {
+      console.log(`🔍 DB getOrders: Recent orders in DB:`);
+      allData.forEach((order: any, index: number) => {
+        console.log(`  ${index + 1}. ${order.id?.slice(0, 8)}... Status: "${order.status}" Customer: ${order.customer_name}`);
+      });
+    }
+    
     let query = (supabaseAdmin.from("orders") as any).select("*").order("created_at", { ascending: false });
 
     if (filters?.status) {
-      console.log(`🔍 DB getOrders: Filtering by status: ${filters.status}`);
+      console.log(`🔍 DB getOrders: Filtering by status: "${filters.status}"`);
       query = query.eq("status", filters.status);
     }
 
