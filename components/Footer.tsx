@@ -305,7 +305,7 @@ export default function Footer() {
                   <span className="font-medium text-white">Till Number</span>
                 </div>
                 <p className="text-brand-gray-300 text-xs mb-1">Pay via Till:</p>
-                <p className="text-white font-mono font-bold">5938629</p>
+                <p className="text-white font-mono font-bold">8618626</p>
               </div>
               <div className="bg-white/5 rounded-lg p-3">
                 <div className="flex items-center gap-2 mb-1">
@@ -314,8 +314,8 @@ export default function Footer() {
                   </div>
                   <span className="font-medium text-white">Paybill</span>
                 </div>
-                <p className="text-brand-gray-300 text-xs mb-1">Business: 247247</p>
-                <p className="text-brand-gray-300 text-xs">Account: <span className="text-white font-mono">floralwhispers</span></p>
+                <p className="text-brand-gray-300 text-xs mb-1">Business: 400200</p>
+                <p className="text-brand-gray-300 text-xs">Account: <span className="text-white font-mono">40040549</span></p>
               </div>
             </div>
           </div>
