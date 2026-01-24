@@ -14,9 +14,8 @@ export default function Footer() {
           {/* Brand Section */}
           <div className="col-span-2 lg:col-span-1">
             <Link href="/" className="inline-block mb-4">
-              <h3 className="font-heading font-bold text-xl mb-2">
-                <span className="text-brand-red">floral whispers</span>
-                <span className="text-white ml-1">& gifts</span>
+              <h3 className="font-heading font-bold text-xl mb-2 text-white">
+                Floral Whispers & Gifts
               </h3>
             </Link>
             <p className="text-brand-gray-300 mb-3 text-sm leading-relaxed">
