@@ -157,7 +157,7 @@ export default function CollectionsPage() {
           >
             <div className="relative h-48 md:h-80 overflow-hidden">
               <Image
-                src="/images/products/cards/gift-card.jpg"
+                src="/images/giftcards/card1.png"
                 alt="Gift cards Kenya - Digital gift cards, physical gift cards Nairobi"
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-300"

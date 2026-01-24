@@ -51,7 +51,7 @@ export default function CardsPageClient() {
               <Link key={product.id} href={`/product/${product.slug}`} className="card overflow-hidden group">
                 <div className="relative aspect-square overflow-hidden bg-brand-gray-100">
                   <Image
-                    src={product.images[0] || "/images/products/cards/gift-card.jpg"}
+                    src={product.images[0] || "/images/giftcards/card1.png"}
                     alt={product.title}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
