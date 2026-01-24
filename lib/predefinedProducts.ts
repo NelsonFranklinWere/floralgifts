@@ -117,6 +117,59 @@ export const CHOCOLATE_PRODUCTS = [
   },
 ];
 
+// Gift card products mapped to images
+export const CARD_PRODUCTS = [
+  {
+    image: "/images/giftcards/card1.png",
+    title: "Special for You Gift Card",
+    description: "A heartfelt card perfect for showing someone they're special. Redeemable for flowers, gifts, and more.",
+    price: 25000, // 250 KES in cents
+    slug: "special-for-you-gift-card",
+  },
+  {
+    image: "/images/giftcards/card2.png",
+    title: "Happy Birthday Gift Card",
+    description: "Celebrate their special day with this birthday gift card. Let them choose their favorite flowers and gifts.",
+    price: 25000, // 250 KES in cents
+    slug: "happy-birthday-gift-card",
+  },
+  {
+    image: "/images/giftcards/card3.png",
+    title: "Happy Mother's Day Gift Card",
+    description: "Honor Mom with a gift card she can use to select her favorite flowers and thoughtful presents.",
+    price: 25000, // 250 KES in cents
+    slug: "happy-mothers-day-gift-card",
+  },
+  {
+    image: "/images/giftcards/card4.png",
+    title: "Congratulation Gift Card",
+    description: "Celebrate their achievement with balloons and joy. Perfect for graduations, promotions, and milestones.",
+    price: 25000, // 250 KES in cents
+    slug: "congratulation-gift-card",
+  },
+  {
+    image: "/images/giftcards/card5.png",
+    title: "Happy Anniversary Gift Card",
+    description: "Mark your special milestone together. A romantic gift card for anniversaries and celebrations of love.",
+    price: 25000, // 250 KES in cents
+    slug: "happy-anniversary-gift-card",
+  },
+  {
+    image: "/images/giftcards/card6.png",
+    title: "Congratulations Gift Card",
+    description: "Celebrate success with fireworks and excitement. Ideal for new jobs, new homes, and life's big moments.",
+    price: 25000, // 250 KES in cents
+    slug: "congratulations-gift-card",
+  },
+  {
+    image: "/images/giftcards/card7.png",
+    title: "Special for You Gift Card with Tulips",
+    description: "A beautiful tulip-themed card for someone truly special. Perfect for any occasion.",
+    price: 25000, // 250 KES in cents
+    slug: "special-for-you-tulips-gift-card",
+  },
+];
+
 // Convert predefined products to Product format
 export function getPredefinedProducts(category: string): Product[] {
   const now = new Date().toISOString();
@@ -168,7 +221,23 @@ export function getPredefinedProducts(category: string): Product[] {
       updated_at: now,
     }));
   }
-  
+
+  if (category === "cards") {
+    return CARD_PRODUCTS.map((cp) => ({
+      id: `card-${cp.slug}`,
+      title: cp.title,
+      price: cp.price,
+      images: [cp.image],
+      slug: cp.slug,
+      short_description: cp.description,
+      description: cp.description,
+      category: "cards" as const,
+      tags: [] as string[],
+      created_at: now,
+      updated_at: now,
+    }));
+  }
+
   return [];
 }
 
