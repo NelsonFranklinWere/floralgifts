@@ -9,20 +9,20 @@ export default function Footer() {
         <div className="absolute inset-0 bg-[url('/images/patterns/diagonal-lines.svg')] bg-repeat"></div>
       </div>
       
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 lg:py-10">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
           {/* Brand Section */}
           <div className="col-span-2 lg:col-span-1">
-            <Link href="/" className="inline-block mb-4">
-              <h3 className="font-heading font-bold text-xl mb-2">
+            <Link href="/" className="inline-block mb-3">
+              <h3 className="font-heading font-bold text-lg mb-1">
                 <span className="text-brand-red">Floral Whispers</span>
                 <span className="text-white ml-1">& Gifts</span>
               </h3>
             </Link>
-            <p className="text-brand-gray-300 mb-3 text-sm leading-relaxed">
+            <p className="text-brand-gray-300 mb-2 text-xs leading-relaxed">
               Premium flowers, gift hampers, and teddy bears in Nairobi. Same-day delivery available across the city.
             </p>
-            <p className="text-brand-gray-400 text-xs mb-4">{SHOP_INFO.hours}</p>
+            <p className="text-brand-gray-400 text-xs mb-3">{SHOP_INFO.hours}</p>
             
             {/* Social Media Icons - Modern Style */}
             <div className="flex gap-3">
@@ -86,7 +86,7 @@ export default function Footer() {
 
           {/* Quick Links */}
             <div>
-            <h3 className="font-heading font-bold text-base mb-4 text-white">Quick Links</h3>
+            <h3 className="font-heading font-bold text-sm mb-3 text-white">Quick Links</h3>
               <ul className="space-y-2">
                 <li>
                 <Link href="/collections/flowers" className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group">
@@ -156,7 +156,7 @@ export default function Footer() {
 
           {/* Services */}
             <div>
-            <h3 className="font-heading font-bold text-base mb-4 text-white">Services</h3>
+            <h3 className="font-heading font-bold text-sm mb-3 text-white">Services</h3>
               <ul className="space-y-2">
                 <li>
                   <Link
@@ -218,8 +218,8 @@ export default function Footer() {
 
           {/* Contact & Payment */}
           <div className="col-span-2 lg:col-span-1">
-            <h3 className="font-heading font-bold text-base mb-4 text-white">Contact Us</h3>
-            <ul className="space-y-2 text-brand-gray-300 mb-4">
+            <h3 className="font-heading font-bold text-sm mb-3 text-white">Contact Us</h3>
+            <ul className="space-y-1 text-brand-gray-300 mb-3">
               <li>
                 <a
                   href={`tel:+${SHOP_INFO.phone}`}
@@ -266,65 +266,57 @@ export default function Footer() {
           </div>
         </div>
 
-                    {/* Payment Methods Icons */}
-        <div className="border-t border-white/10 mt-6 pt-6">
-          <h3 className="font-heading font-semibold text-base mb-4 text-white">Accepted Payment Methods</h3>
-          <div className="flex flex-wrap items-center gap-4 mb-6">
-            <div className="flex items-center gap-2">
+                    {/* Payment Methods */}
+        <div className="border-t border-white/10 mt-4 pt-4">
+          <h3 className="font-heading font-semibold text-sm mb-3 text-white">Accepted Payment Methods</h3>
+
+          {/* Payment Icons and Details in One Row */}
+          <div className="flex flex-col lg:flex-row lg:items-center gap-4">
+            {/* Payment Method Icons */}
+            <div className="flex items-center gap-4">
               <div className="w-12 h-8 bg-[#007C42] rounded flex items-center justify-center">
                 <span className="text-white font-bold text-xs">M-PESA</span>
               </div>
-              <span className="text-sm text-white">M-Pesa</span>
-            </div>
-            <div className="flex items-center gap-2">
               <div className="w-12 h-8 bg-white border border-gray-300 rounded flex items-center justify-center px-2">
                 <span className="text-[#1434CB] font-bold text-xs">VISA</span>
-                </div>
-              <span className="text-sm text-white">Visa</span>
-                </div>
-            <div className="flex items-center gap-2">
+              </div>
               <div className="w-12 h-8 bg-white border border-gray-300 rounded flex items-center justify-center px-1">
                 <div className="flex items-center">
                   <div className="w-3 h-3 bg-[#EB001B] rounded-full -mr-1.5"></div>
                   <div className="w-3 h-3 bg-[#F79E1B] rounded-full"></div>
                 </div>
               </div>
-              <span className="text-sm text-white">Mastercard</span>
             </div>
-          </div>
-          
-          {/* M-Pesa Payment Options */}
-          <div className="mb-4">
-            <h4 className="font-heading font-medium text-sm mb-3 text-white">M-Pesa Payment Options</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-              <div className="bg-white/5 rounded-lg p-3">
-                <div className="flex items-center gap-2 mb-1">
-                  <div className="w-6 h-6 bg-[#007C42] rounded flex items-center justify-center">
+
+            {/* M-Pesa Details */}
+            <div className="flex flex-col sm:flex-row gap-2 text-xs">
+              <div className="bg-white/5 rounded-lg p-2 w-fit">
+                <div className="flex items-center gap-1 mb-1">
+                  <div className="w-4 h-4 bg-[#007C42] rounded flex items-center justify-center">
                     <span className="text-white font-bold text-xs">T</span>
                   </div>
-                  <span className="font-medium text-white">Till Number</span>
+                  <span className="font-medium text-white text-xs">Till Number</span>
                 </div>
-                <p className="text-brand-gray-300 text-xs mb-1">Pay via Till:</p>
                 <p className="text-white font-mono font-bold">8618626</p>
               </div>
-              <div className="bg-white/5 rounded-lg p-3">
-                <div className="flex items-center gap-2 mb-1">
-                  <div className="w-6 h-6 bg-[#007C42] rounded flex items-center justify-center">
+              <div className="bg-white/5 rounded-lg p-2 w-fit">
+                <div className="flex items-center gap-1 mb-1">
+                  <div className="w-4 h-4 bg-[#007C42] rounded flex items-center justify-center">
                     <span className="text-white font-bold text-xs">P</span>
                   </div>
-                  <span className="font-medium text-white">Paybill</span>
+                  <span className="font-medium text-white text-xs">Paybill</span>
                 </div>
-                <p className="text-brand-gray-300 text-xs mb-1">Business: 400200</p>
-                <p className="text-brand-gray-300 text-xs">Account: <span className="text-white font-mono">40040549</span></p>
+                <p className="text-brand-gray-300 text-xs">Business: <span className="text-white font-mono font-bold">400200</span></p>
+                <p className="text-brand-gray-300 text-xs">Account: <span className="text-white font-mono font-bold">40040549</span></p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-white/10 mt-6 pt-4">
+        <div className="border-t border-white/10 mt-4 pt-3">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
-            <p className="text-brand-gray-400 text-sm">
+            <p className="text-brand-gray-400 text-xs">
               &copy; {new Date().getFullYear()} Floral Whispers Gifts. All rights reserved. Designed by{" "}
               <a
                 href="https://nelson.strivego.online"
