@@ -945,13 +945,13 @@ export default async function HomePage() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-4 md:p-6 text-white">
-                    <h3 className="font-heading font-bold text-xs sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Gift Hampers</h3>
-                    <p className="text-[10px] sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Luxurious curated collections</p>
+                    <h3 className="font-heading font-bold text-xs sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Valentine's Gift Hampers</h3>
+                    <p className="text-[10px] sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Romantic surprise packages</p>
                   </div>
                 </div>
                 <div className="p-2 sm:p-4 md:p-6">
                   <p className="text-brand-gray-600 mb-2 sm:mb-3 md:mb-4 text-[10px] sm:text-xs md:text-sm lg:text-base line-clamp-2 sm:line-clamp-none">
-                    Thoughtfully curated hampers combining premium flowers with chocolates, wine, and more. Perfect for corporate gifting and special celebrations.
+                    Luxury Valentine's hampers with premium chocolates, teddy bears, and romantic flowers. Perfect surprise gifts for couples, girlfriends, and families celebrating love in Nairobi.
                   </p>
                   <span className="inline-flex items-center text-brand-red font-semibold group-hover:gap-2 gap-1 transition-all duration-300 text-[10px] sm:text-xs md:text-sm">
                     Explore Hampers
@@ -977,13 +977,13 @@ export default async function HomePage() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-4 md:p-6 text-white">
-                    <h3 className="font-heading font-bold text-xs sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Flowers</h3>
-                    <p className="text-[10px] sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Fresh blooms for every occasion</p>
+                    <h3 className="font-heading font-bold text-xs sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Valentine's Flowers</h3>
+                    <p className="text-[10px] sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Romantic roses for your loved one</p>
                   </div>
                 </div>
                 <div className="p-2 sm:p-4 md:p-6">
                   <p className="text-brand-gray-600 mb-2 sm:mb-3 md:mb-4 text-[10px] sm:text-xs md:text-sm lg:text-base line-clamp-2 sm:line-clamp-none">
-                    Beautiful flower arrangements delivered same-day across Nairobi. From romantic roses to vibrant mixed bouquets, express your feelings with fresh blooms.
+                    Express love with stunning Valentine's roses, mixed bouquets, and romantic arrangements. Perfect Valentine's gifts for wife, girlfriend, or family. Same-day delivery Nairobi.
                   </p>
                   <span className="inline-flex items-center text-brand-red font-semibold group-hover:gap-2 gap-1 transition-all duration-300 text-[10px] sm:text-xs md:text-sm">
                     Explore Flowers
@@ -1009,13 +1009,13 @@ export default async function HomePage() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-4 md:p-6 text-white">
-                    <h3 className="font-heading font-bold text-xs sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Teddy Bears</h3>
-                    <p className="text-[10px] sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Cuddly companions in all sizes</p>
+                    <h3 className="font-heading font-bold text-xs sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Valentine's Teddy Bears</h3>
+                    <p className="text-[10px] sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Romantic cuddly companions</p>
                   </div>
                 </div>
                 <div className="p-2 sm:p-4 md:p-6">
                   <p className="text-brand-gray-600 mb-2 sm:mb-3 md:mb-4 text-[10px] sm:text-xs md:text-sm lg:text-base line-clamp-2 sm:line-clamp-none">
-                    Soft and adorable teddy bears perfect for gifting. Available in various sizes and colors, these cuddly companions bring joy to any occasion.
+                    Express love with soft and adorable Valentine's teddy bears (25cm-200cm). Perfect romantic gifts for girlfriend, wife, or family. Available in romantic red, pink, and white colors.
                   </p>
                   <span className="inline-flex items-center text-brand-red font-semibold group-hover:gap-2 gap-1 transition-all duration-300 text-[10px] sm:text-xs md:text-sm">
                     Explore Teddy Bears
