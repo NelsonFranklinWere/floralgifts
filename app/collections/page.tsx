@@ -120,7 +120,7 @@ export default function CollectionsPage() {
                 Teddy Bears
               </h2>
               <p className="text-brand-gray-600 mb-2 md:mb-4 text-xs md:text-base line-clamp-2 md:line-clamp-none">
-                Cuddly teddy bears in various sizes and colors - perfect for gifts and special occasions
+                Soft and adorable companions in various sizes and colors - perfect for Valentine's gifts
               </p>
               <span className="text-brand-green font-medium text-xs md:text-base">Shop Teddy Bears →</span>
             </div>
