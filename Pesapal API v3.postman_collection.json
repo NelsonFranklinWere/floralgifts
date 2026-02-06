@@ -1,0 +1,390 @@
+{
+  "info": {
+    "_postman_id": "7ba3bc2c-016e-4b50-89fc-538d423dfae6",
+    "name": "Pesapal API v3",
+    "description": "Complete Pesapal API collection for payment integration",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "33572189",
+    "_collection_link": "https://go.postman.co/collection/33572189-7ba3bc2c-016e-4b50-89fc-538d423dfae6?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Request Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"access_token\", jsonData.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"consumer_key\": \"{{consumer_key}}\",\n  \"consumer_secret\": \"{{consumer_secret}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url_sandbox}}/api/Auth/RequestToken",
+              "host": [
+                "{{base_url_sandbox}}"
+              ],
+              "path": [
+                "api",
+                "Auth",
+                "RequestToken"
+              ]
+            },
+            "description": "Get authentication token using consumer key and secret"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "IPN Management",
+      "item": [
+        {
+          "name": "Register IPN URL",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"url\": \"https://yourdomain.com/ipn\",\n  \"ipn_notification_type\": \"GET\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url_sandbox}}/api/URLSetup/RegisterIPN",
+              "host": [
+                "{{base_url_sandbox}}"
+              ],
+              "path": [
+                "api",
+                "URLSetup",
+                "RegisterIPN"
+              ]
+            },
+            "description": "Register IPN URL for payment notifications"
+          },
+          "response": []
+        },
+        {
+          "name": "Get IPN List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_sandbox}}/api/URLSetup/GetIpnList",
+              "host": [
+                "{{base_url_sandbox}}"
+              ],
+              "path": [
+                "api",
+                "URLSetup",
+                "GetIpnList"
+              ]
+            },
+            "description": "Get list of registered IPN URLs"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Transactions",
+      "item": [
+        {
+          "name": "Submit Order Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{$randomUUID}}\",\n  \"currency\": \"KES\",\n  \"amount\": 1,\n  \"description\": \"Payment for order\",\n  \"callback_url\": \"https://floralwhispersgifts.co.ke/api/pesapal/callback\",\n  \"notification_id\": \"a6b958a3-a851-4521-b148-dadbd540ea64\",\n  \"billing_address\": {\n    \"email_address\": \"brianndesa262@gmail.com\",\n    \"phone_number\": \"254113765336\",\n    \"country_code\": \"KE\",\n    \"first_name\": \"Brian\",\n    \"middle_name\": \"\",\n    \"last_name\": \"Albert\",\n    \"line_1\": \"Pesapal Limited\",\n    \"line_2\": \"\",\n    \"city\": \"Nairobi\",\n    \"state\": \"\",\n    \"postal_code\": \"00100\",\n    \"zip_code\": \"00100\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url_sandbox}}/api/Transactions/SubmitOrderRequest",
+              "host": [
+                "{{base_url_sandbox}}"
+              ],
+              "path": [
+                "api",
+                "Transactions",
+                "SubmitOrderRequest"
+              ]
+            },
+            "description": "Submit order for payment processing"
+          },
+          "response": []
+        },
+        {
+          "name": "Direct Mobile Money STK",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"77667676\",\n  \"currency\": \"KES\",\n  \"amount\": 1,\n  \"description\": \"Mobile money payment\",\n  \"callback_url\": \"https://floralwhispersgifts.co.ke/api/pesapal/callback\",\n  \"notification_id\": \"a6b958a3-a851-4521-b148-dadbd540ea64\",\n  \"billing_address\": {\n    \"email_address\": \"brianndesa262@gmail.com\",\n    \"phone_number\": \"254113765336\",\n    \"country_code\": \"KE\",\n    \"first_name\": \"Brian\",\n    \"middle_name\": \"\",\n    \"last_name\": \"Albert\",\n    \"line_1\": \"Pesapal Limited\",\n    \"line_2\": \"\",\n    \"city\": \"Nairobi\",\n    \"state\": \"\",\n    \"postal_code\": \"00100\",\n    \"zip_code\": \"00100\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url_sandbox}}/api/Transactions/SubmitOrderRequest",
+              "host": [
+                "{{base_url_sandbox}}"
+              ],
+              "path": [
+                "api",
+                "Transactions",
+                "SubmitOrderRequest"
+              ]
+            },
+            "description": "Initiate M-Pesa STK push for payment"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Transaction Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_sandbox}}/api/Transactions/GetTransactionStatus?orderTrackingId=fa58cef1-90f4-48e8-ac79-dad7849b61f8",
+              "host": [
+                "{{base_url_sandbox}}"
+              ],
+              "path": [
+                "api",
+                "Transactions",
+                "GetTransactionStatus"
+              ],
+              "query": [
+                {
+                  "key": "orderTrackingId",
+                  "value": "fa58cef1-90f4-48e8-ac79-dad7849b61f8"
+                }
+              ]
+            },
+            "description": "Check status of a transaction"
+          },
+          "response": []
+        },
+        {
+          "name": "Recurring Payments",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{$randomUUID}}\",\n  \"currency\": \"KES\",\n  \"amount\": 5,\n  \"description\": \"Monthly subscription payment\",\n  \"callback_url\": \"https://floralwhispersgifts.co.ke/api/pesapal/callback\",\n  \"notification_id\": \"{{ipn_id}}\",\n  \"billing_address\": {\n    \"email_address\": \"brianndesa262@gmail.com\",\n    \"phone_number\": \"254113765336\",\n    \"country_code\": \"KE\",\n    \"first_name\": \"John\",\n    \"middle_name\": \"\",\n    \"last_name\": \"Doe\",\n    \"line_1\": \"Pesapal Limited\",\n    \"line_2\": \"\",\n    \"city\": \"Nairobi\",\n    \"state\": \"\",\n    \"postal_code\": \"00100\",\n    \"zip_code\": \"00100\"\n  },\n  \"account_number\":\"064-764\",\n    \"subscription_details\": {\n    \"start_date\": \"17-01-2026\",\n    \"end_date\": \"17-02-2026\",\n    \"frequency\": \"MONTHLY\"\n  }\n\n}"
+            },
+            "url": {
+              "raw": "{{base_url_sandbox}}/api/Transactions/SubmitOrderRequest",
+              "host": [
+                "{{base_url_sandbox}}"
+              ],
+              "path": [
+                "api",
+                "Transactions",
+                "SubmitOrderRequest"
+              ]
+            },
+            "description": "Setup recurring/subscription payments"
+          },
+          "response": []
+        },
+        {
+          "name": "Refund Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"confirmation_code\": \"TRANSACTION_CONFIRMATION_CODE\",\n  \"amount\": 1000,\n  \"username\": \"your_merchant_username\",\n  \"remarks\": \"Customer requested refund\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url_sandbox}}/api/Transactions/RefundRequest",
+              "host": [
+                "{{base_url_sandbox}}"
+              ],
+              "path": [
+                "api",
+                "Transactions",
+                "RefundRequest"
+              ]
+            },
+            "description": "Request refund for a completed transaction"
+          },
+          "response": []
+        },
+        {
+          "name": "Order Cancellation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderTrackingId\": \"fa58cef1-90f4-48e8-ac79-dad7849b61f8\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url_sandbox}}/api/Transactions/OrderCancellation",
+              "host": [
+                "{{base_url_sandbox}}"
+              ],
+              "path": [
+                "api",
+                "Transactions",
+                "OrderCancellation"
+              ]
+            },
+            "description": "Cancel a pending order"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url_sandbox",
+      "value": "https://cybqa.pesapal.com/pesapalv3",
+      "type": "string"
+    },
+    {
+      "key": "base_url_production",
+      "value": "https://pay.pesapal.com/v3",
+      "type": "string"
+    },
+    {
+      "key": "consumer_key",
+      "value": "YOUR_PESAPAL_CONSUMER_KEY",
+      "type": "string"
+    },
+    {
+      "key": "consumer_secret",
+      "value": "YOUR_PESAPAL_CONSUMER_SECRET",
+      "type": "string"
+    },
+    {
+      "key": "ipn_id",
+      "value": "YOUR_PESAPAL_IPN_ID",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

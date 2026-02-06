@@ -1,0 +1,163 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+  
+  body {
+    @apply bg-white text-brand-gray-900 font-body antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-semibold;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-brand-red text-white px-6 py-3 rounded-lg font-medium hover:bg-opacity-90 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-red focus:ring-offset-2;
+  }
+  
+  .btn-secondary {
+    @apply bg-brand-green text-white px-6 py-3 rounded-lg font-medium hover:bg-opacity-90 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-green focus:ring-offset-2;
+  }
+  
+  .btn-outline {
+    @apply border-2 border-brand-gray-200 text-brand-gray-900 px-6 py-3 rounded-lg font-medium hover:bg-brand-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-gray-800 focus:ring-offset-2;
+  }
+  
+  .card {
+    @apply bg-white rounded-lg border border-brand-gray-200 shadow-card hover:shadow-cardHover transition-shadow;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 border border-brand-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent;
+  }
+  
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-brand-red focus:text-white focus:rounded-lg;
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee {
+  display: flex;
+  width: fit-content;
+  animation: marquee 30s linear infinite;
+}
+
+.marquee:hover {
+  animation-play-state: paused;
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Custom scrollbar for mobile - visible and draggable with color animation */
+  .scrollbar-visible {
+    -webkit-overflow-scrolling: touch;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  
+  /* Firefox */
+  @media (max-width: 768px) {
+    .scrollbar-visible {
+      scrollbar-width: thin;
+      scrollbar-color: #10b981 #f3f4f6;
+    }
+  }
+  
+  /* Webkit browsers (Chrome, Safari, Edge) */
+  @media (max-width: 768px) {
+    .scrollbar-visible::-webkit-scrollbar {
+      height: 10px !important;
+      display: block !important;
+      -webkit-appearance: none;
+      background: transparent;
+    }
+    
+    .scrollbar-visible::-webkit-scrollbar-track {
+      background: #f3f4f6 !important;
+      border-radius: 10px;
+      -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.1);
+    }
+    
+    .scrollbar-visible::-webkit-scrollbar-thumb {
+      background: linear-gradient(90deg, #ef4444 0%, #10b981 33%, #000000 66%, #ef4444 100%) !important;
+      background-size: 300% 100% !important;
+      animation: scrollbarColorShift 3s linear infinite !important;
+      border-radius: 10px !important;
+      cursor: grab;
+      -webkit-box-shadow: 0 0 3px rgba(0,0,0,0.3);
+      min-width: 50px;
+    }
+    
+    .scrollbar-visible::-webkit-scrollbar-thumb:hover {
+      animation-duration: 1.5s !important;
+      cursor: grabbing;
+    }
+    
+    .scrollbar-visible::-webkit-scrollbar-thumb:active {
+      animation-duration: 0.8s !important;
+    }
+  }
+
+  @keyframes scrollbarColorShift {
+    0% {
+      background-position: 0% 0%;
+    }
+    33.33% {
+      background-position: 100% 0%;
+    }
+    66.66% {
+      background-position: 200% 0%;
+    }
+    100% {
+      background-position: 300% 0%;
+    }
+  }
+
+  /* Thin scrollbar for product sections */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(209 213 219) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgb(209 213 219);
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(156 163 175);
+  }
+}
+

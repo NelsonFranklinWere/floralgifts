@@ -1,0 +1,71 @@
+# ============================================
+# FLORAL WHISPERS GIFTS - PRODUCTION ENVIRONMENT
+# Ready for Vercel deployment
+# ============================================
+# IMPORTANT: After deploying to Vercel, update callback URLs to match your Vercel domain
+# Example: https://your-app.vercel.app/api/coopbank/callback
+# Or use your custom domain: https://floralwhispersgifts.co.ke/api/coopbank/callback
+# ============================================
+
+# ============================================
+# SUPABASE CONFIGURATION (Database & Storage)
+# ============================================
+NEXT_PUBLIC_SUPABASE_URL=https://xdrudxhwvznmvehtvcgx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkcnVkeGh3dnpubXZlaHR2Y2d4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQwNDU3MjcsImV4cCI6MjA0OTYyMTcyN30.eXqTF-H5WQbzNOlJ4UtgGvBzB1xJbAfSKpFrX6xZ88k
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkcnVkeGh3dnpubXZlaHR2Y2d4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTczNDA0NTcyNywiZXhwIjoyMDQ5NjIxNzI3fQ.Z_9KfiOqJ6tX2-JWGXqo3_JJyzVpXJzrqN-8KqJqFk4
+
+# ============================================
+# BASE URL (Update to your Vercel domain after deployment)
+# ============================================
+# For custom domain: https://floralwhispersgifts.co.ke
+# For Vercel default: https://your-app.vercel.app
+NEXT_PUBLIC_BASE_URL=https://floralwhispersgifts.co.ke
+
+# ============================================
+# CO-OP BANK API CONFIGURATION (STK Push - Primary Payment)
+# ============================================
+COOP_BANK_CONSUMER_KEY=gF8Si3TsoRyLl9Pnpv8XYBtn04ca
+COOP_BANK_CONSUMER_SECRET=ILYevkBdY_gHz0e1FQfzQWZljv4a
+# UPDATE THIS AFTER VERCEL DEPLOYMENT to match your domain
+COOP_BANK_CALLBACK_URL=https://floralwhispersgifts.co.ke/api/coopbank/callback
+COOP_BANK_OPERATOR_CODE=FLORAL
+COOP_BANK_USER_ID=FLORALWHISPERS
+
+# ============================================
+# M-PESA CONFIGURATION (Alternative Payment Method)
+# ============================================
+MPESA_ENV=sandbox
+MPESA_CONSUMER_KEY=gQE0zykwt3dXyXGemkfSdAGS1G6qGjGxjF5bwCBdGAsSHf0S
+MPESA_CONSUMER_SECRET=Hy6TP0ln3i4HoeH84OzVBvtmnRU9bSu0hpfXKQTITXn4uWOvjkL5fTPPkdyLMyMe
+MPESA_SHORTCODE=174379
+MPESA_PASSKEY=your_passkey_from_safaricom_portal
+# UPDATE THIS AFTER VERCEL DEPLOYMENT to match your domain
+MPESA_CALLBACK_URL=https://floralwhispersgifts.co.ke/api/mpesa/callback
+
+# ============================================
+# ADMIN AUTHENTICATION (JWT)
+# ============================================
+JWT_SECRET=TG1aEiPGPqvwtdqEJtKFHy2nc740e9izlxE2amhFQFI=
+ADMIN_EMAIL=admin@floralwhispersgifts.co.ke
+ADMIN_PASSWORD=CHANGE_THIS_TO_STRONG_PASSWORD
+
+# ============================================
+# EMAIL CONFIGURATION (Resend)
+# ============================================
+RESEND_API_KEY=re_Nw56zMAM_8ETmNmG34UqrD8VBkWBbpdBy
+RESEND_FROM_EMAIL=NewOrder@resend.dev
+
+# ============================================
+# PESAPAL CONFIGURATION (Card Payments)
+# ============================================
+PESAPAL_CONSUMER_KEY=zZv8hIaogJH1OP96YfKemq1O5I3TmwSX
+PESAPAL_CONSUMER_SECRET=a/POk+ULP7dJurds2FZkf06isn8=
+PESAPAL_ENV=production
+PESAPAL_IPN_ID=a6b958a3-a851-4521-b148-dadbd540ea64
+# UPDATE THIS AFTER VERCEL DEPLOYMENT to match your domain
+PESAPAL_CALLBACK_URL=https://floralwhispersgifts.co.ke/api/pesapal/callback
+
+# ============================================
+# GOOGLE SEARCH CONSOLE (Optional - SEO)
+# ============================================
+GOOGLE_VERIFICATION=

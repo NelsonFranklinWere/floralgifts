@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /cart
+Disallow: /order/
+
+# Sitemap
+Sitemap: https://floralwhispersgifts.co.ke/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1
+
