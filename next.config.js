@@ -1,3 +1,5 @@
+const path = require('path');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -28,6 +30,15 @@ const nextConfig = {
   poweredByHeader: false,
   // Optimize build output
   output: 'standalone',
+  // Webpack configuration for path aliases
+  webpack: (config) => {
+    // Ensure @/ alias resolves correctly
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': path.resolve(__dirname),
+    };
+    return config;
+  },
 }
 
 module.exports = nextConfig
