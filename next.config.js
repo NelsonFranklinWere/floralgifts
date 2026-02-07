@@ -26,9 +26,8 @@ const nextConfig = {
   // Performance optimizations
   compress: true,
   poweredByHeader: false,
-  // Enable static page generation for better performance
-  // Note: optimizeCss disabled to avoid critters dependency issue
-  // Vercel handles CSS optimization automatically
+  // Optimize build output
+  output: 'standalone',
 }
 
 module.exports = nextConfig

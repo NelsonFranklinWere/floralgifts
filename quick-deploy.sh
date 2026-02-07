@@ -27,9 +27,9 @@ ssh ${SERVER_USER}@${SERVER_IP} "cd ${PROJECT_PATH} && git pull origin main"
 echo -e "${YELLOW}📦 Installing dependencies...${NC}"
 ssh ${SERVER_USER}@${SERVER_IP} "cd ${PROJECT_PATH} && npm install --production"
 
-# Step 3: Build application
-echo -e "${YELLOW}🔨 Building application...${NC}"
-ssh ${SERVER_USER}@${SERVER_IP} "cd ${PROJECT_PATH} && npm run build"
+# Step 3: Build application (with increased memory)
+echo -e "${YELLOW}🔨 Building application (with 4GB memory limit)...${NC}"
+ssh ${SERVER_USER}@${SERVER_IP} "cd ${PROJECT_PATH} && NODE_OPTIONS='--max-old-space-size=4096' npm run build"
 
 # Step 4: Restart PM2
 echo -e "${YELLOW}🔄 Restarting application...${NC}"

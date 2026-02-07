@@ -11,6 +11,7 @@ module.exports = {
       env: {
         NODE_ENV: 'production',
         PORT: 3000,
+        NODE_OPTIONS: '--max-old-space-size=2048', // 2GB for runtime
       },
       error_file: '/home/floral/floralgifts/logs/pm2-error.log',
       out_file: '/home/floral/floralgifts/logs/pm2-out.log',
@@ -19,7 +20,7 @@ module.exports = {
       autorestart: true,
       max_restarts: 10,
       min_uptime: '10s',
-      max_memory_restart: '1G',
+      max_memory_restart: '1.5G', // Restart if memory exceeds 1.5GB
     },
   ],
 };

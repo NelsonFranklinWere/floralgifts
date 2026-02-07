@@ -17,7 +17,10 @@ git pull origin main
 # Install/update dependencies
 npm install --production
 
-# Build the application
+# Build the application (with increased memory limit)
+NODE_OPTIONS='--max-old-space-size=4096' npm run build
+
+# OR use the npm script (already configured)
 npm run build
 
 # Restart PM2
@@ -35,7 +38,7 @@ pm2 logs floralgifts --lines 50
 ### Option 2: One-Line Command (from your local machine)
 
 ```bash
-ssh floral@157.245.34.218 "cd /home/floral/floralgifts && git pull origin main && npm install --production && npm run build && pm2 restart floralgifts"
+ssh floral@157.245.34.218 "cd /home/floral/floralgifts && git pull origin main && npm install --production && NODE_OPTIONS='--max-old-space-size=4096' npm run build && pm2 restart floralgifts"
 ```
 
 ---
@@ -82,8 +85,8 @@ git pull origin main
 # Install dependencies (production only)
 npm install --production
 
-# Build Next.js app
-npm run build
+# Build Next.js app (with increased memory)
+NODE_OPTIONS='--max-old-space-size=4096' npm run build
 
 # Restart application with PM2
 pm2 restart floralgifts
@@ -99,7 +102,7 @@ pm2 logs floralgifts --lines 20
 
 ## Troubleshooting Commands
 
-### If Build Fails
+### If Build Fails (Memory Issues)
 
 ```bash
 # Clear Next.js cache
@@ -109,8 +112,11 @@ rm -rf .next
 rm -rf node_modules package-lock.json
 npm install --production
 
-# Try building again
-npm run build
+# Try building again with increased memory
+NODE_OPTIONS='--max-old-space-size=4096' npm run build
+
+# If still failing, try low-memory build
+npm run build:low-memory
 ```
 
 ### If PM2 App Won't Start
