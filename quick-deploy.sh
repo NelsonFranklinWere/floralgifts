@@ -13,7 +13,7 @@ NC='\033[0m'
 
 # Server details
 SERVER_USER="floral"
-SERVER_IP="157.245.34.218"
+SERVER_IP="64.227.50.213"
 PROJECT_PATH="/home/floral/floralgifts"
 
 echo -e "${GREEN}🚀 Deploying to Digital Ocean...${NC}"
