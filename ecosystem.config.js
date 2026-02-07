@@ -20,7 +20,7 @@ module.exports = {
       autorestart: true,
       max_restarts: 10,
       min_uptime: '10s',
-      max_memory_restart: '1.5G', // Restart if memory exceeds 1.5GB
+      max_memory_restart: '1536M', // Restart if memory exceeds 1.5GB (1536MB)
     },
   ],
 };
