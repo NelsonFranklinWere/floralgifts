@@ -103,17 +103,17 @@ export default function ContactPage() {
             <div className="card p-3 md:p-6 text-center">
               <div className="text-2xl md:text-4xl mb-2 md:mb-3">🎯</div>
               <h3 className="font-heading font-bold text-xs md:text-lg text-brand-gray-900 mb-1 md:mb-2">Trusted by Thousands</h3>
-              <p className="text-brand-gray-600 text-[10px] md:text-sm">10,000+ happy customers trust us for their special moments</p>
+              <p className="text-brand-gray-600 text-xs md:text-sm">10,000+ happy customers trust us for their special moments</p>
             </div>
             <div className="card p-3 md:p-6 text-center">
               <div className="text-2xl md:text-4xl mb-2 md:mb-3">⚡</div>
               <h3 className="font-heading font-bold text-xs md:text-lg text-brand-gray-900 mb-1 md:mb-2">Fast & Reliable</h3>
-              <p className="text-brand-gray-600 text-[10px] md:text-sm">Free same-day delivery in CBD. Your gifts arrive fresh and on time</p>
+              <p className="text-brand-gray-600 text-xs md:text-sm">Free same-day delivery in CBD. Your gifts arrive fresh and on time</p>
             </div>
             <div className="card p-3 md:p-6 text-center col-span-2 md:col-span-1">
               <div className="text-2xl md:text-4xl mb-2 md:mb-3">💎</div>
               <h3 className="font-heading font-bold text-xs md:text-lg text-brand-gray-900 mb-1 md:mb-2">Premium Quality</h3>
-              <p className="text-brand-gray-600 text-[10px] md:text-sm">Only the finest flowers and carefully curated gift hampers</p>
+              <p className="text-brand-gray-600 text-xs md:text-sm">Only the finest flowers and carefully curated gift hampers</p>
             </div>
           </div>
 

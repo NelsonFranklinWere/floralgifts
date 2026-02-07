@@ -8,6 +8,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      screens: {
+        'xs': '375px', // Extra small phones
+      },
       colors: {
         brand: {
           green: "#10b981",

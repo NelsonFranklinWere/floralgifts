@@ -508,6 +508,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${montserrat.variable} ${lato.variable} ${robotoMono.variable} ${dancingScript.variable} ${playfairDisplay.variable}`}>
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes" />
         <link rel="icon" href="/images/logo/FloralLogo.jpg" type="image/jpeg" />
         {/* Preconnect to Supabase CDN for faster image loading */}
         <link rel="preconnect" href="https://supabase.co" />

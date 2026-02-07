@@ -5,14 +5,27 @@
 @layer base {
   html {
     @apply scroll-smooth;
+    /* Prevent horizontal scroll on mobile */
+    overflow-x: hidden;
   }
   
   body {
     @apply bg-white text-brand-gray-900 font-body antialiased;
+    /* Prevent horizontal scroll on mobile */
+    overflow-x: hidden;
+    /* Ensure minimum width for very small screens */
+    min-width: 320px;
   }
   
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading font-semibold;
+  }
+  
+  /* Prevent text from being too small on mobile */
+  @media (max-width: 375px) {
+    body {
+      font-size: 14px;
+    }
   }
 }
 

@@ -204,7 +204,7 @@ function ProductSection({
         {products.length > 0 ? (
           <div className="flex overflow-x-auto gap-3 md:gap-5 lg:gap-6 pb-4 scrollbar-thin scrollbar-thumb-brand-gray-300 scrollbar-track-transparent -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
             {products.map((product, index) => (
-              <div key={`${product.id}-${index}`} className="flex-shrink-0 w-[calc((100vw-2rem-27px)/3.5)] min-w-[105px] max-w-[115px] sm:min-w-[280px] sm:max-w-[300px] md:w-[320px]">
+              <div key={`${product.id}-${index}`} className="flex-shrink-0 w-[calc(100vw-2rem)] min-w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] xs:min-w-[140px] xs:max-w-[140px] sm:min-w-[280px] sm:max-w-[300px] md:w-[320px]">
                 <ProductCard
                   id={product.id}
                   name={product.title}
@@ -495,7 +495,7 @@ Whether you're celebrating a university graduation, high school completion, or a
             <Link
               key={post.slug}
               href={`/blog/${post.slug}`}
-              className="flex-shrink-0 w-[calc((100vw-2rem-27px)/3.5)] min-w-[105px] max-w-[115px] sm:min-w-[280px] sm:max-w-[300px] md:w-[320px] card overflow-hidden group hover:shadow-cardHover transition-all duration-300"
+              className="flex-shrink-0 w-[calc(100vw-2rem)] min-w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] xs:min-w-[140px] xs:max-w-[140px] sm:min-w-[280px] sm:max-w-[300px] md:w-[320px] card overflow-hidden group hover:shadow-cardHover transition-all duration-300"
             >
               <div className="relative aspect-[4/3] overflow-hidden bg-brand-gray-100">
                 <Image
@@ -929,7 +929,7 @@ export default async function HomePage() {
               </p>
             </div>
             
-            <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6 lg:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 md:gap-6 lg:gap-8">
               {/* Gift Hampers Card */}
               <Link 
                 href="/collections/gift-hampers"
@@ -945,15 +945,15 @@ export default async function HomePage() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-4 md:p-6 text-white">
-                    <h3 className="font-heading font-bold text-xs sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Valentine's Gift Hampers</h3>
-                    <p className="text-[10px] sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Romantic surprise packages</p>
+                    <h3 className="font-heading font-bold text-sm sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Valentine's Gift Hampers</h3>
+                    <p className="text-xs sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Romantic surprise packages</p>
                   </div>
                 </div>
                 <div className="p-2 sm:p-4 md:p-6">
-                  <p className="text-brand-gray-600 mb-2 sm:mb-3 md:mb-4 text-[10px] sm:text-xs md:text-sm lg:text-base line-clamp-2 sm:line-clamp-none">
+                  <p className="text-brand-gray-600 mb-2 sm:mb-3 md:mb-4 text-xs sm:text-xs md:text-sm lg:text-base line-clamp-2 sm:line-clamp-none">
                     Luxury Valentine's hampers with premium chocolates, teddy bears, and romantic flowers. Perfect surprise gifts for couples, girlfriends, and families celebrating love in Nairobi.
                   </p>
-                  <span className="inline-flex items-center text-brand-red font-semibold group-hover:gap-2 gap-1 transition-all duration-300 text-[10px] sm:text-xs md:text-sm">
+                  <span className="inline-flex items-center text-brand-red font-semibold group-hover:gap-2 gap-1 transition-all duration-300 text-xs sm:text-xs md:text-sm">
                     Explore Hampers
                     <svg className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -977,15 +977,15 @@ export default async function HomePage() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-4 md:p-6 text-white">
-                    <h3 className="font-heading font-bold text-xs sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Valentine's Flowers</h3>
-                    <p className="text-[10px] sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Romantic roses for your loved one</p>
+                    <h3 className="font-heading font-bold text-sm sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Valentine's Flowers</h3>
+                    <p className="text-xs sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Romantic roses for your loved one</p>
                   </div>
                 </div>
                 <div className="p-2 sm:p-4 md:p-6">
-                  <p className="text-brand-gray-600 mb-2 sm:mb-3 md:mb-4 text-[10px] sm:text-xs md:text-sm lg:text-base line-clamp-2 sm:line-clamp-none">
+                  <p className="text-brand-gray-600 mb-2 sm:mb-3 md:mb-4 text-xs sm:text-xs md:text-sm lg:text-base line-clamp-2 sm:line-clamp-none">
                     Express love with stunning Valentine's roses, mixed bouquets, and romantic arrangements. Perfect Valentine's gifts for wife, girlfriend, or family. Same-day delivery Nairobi.
                   </p>
-                  <span className="inline-flex items-center text-brand-red font-semibold group-hover:gap-2 gap-1 transition-all duration-300 text-[10px] sm:text-xs md:text-sm">
+                  <span className="inline-flex items-center text-brand-red font-semibold group-hover:gap-2 gap-1 transition-all duration-300 text-xs sm:text-xs md:text-sm">
                     Explore Flowers
                     <svg className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -1009,15 +1009,15 @@ export default async function HomePage() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-4 md:p-6 text-white">
-                    <h3 className="font-heading font-bold text-xs sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Valentine's Teddy Bears</h3>
-                    <p className="text-[10px] sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Romantic cuddly companions</p>
+                    <h3 className="font-heading font-bold text-sm sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Valentine's Teddy Bears</h3>
+                    <p className="text-xs sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Romantic cuddly companions</p>
                   </div>
                 </div>
                 <div className="p-2 sm:p-4 md:p-6">
-                  <p className="text-brand-gray-600 mb-2 sm:mb-3 md:mb-4 text-[10px] sm:text-xs md:text-sm lg:text-base line-clamp-2 sm:line-clamp-none">
+                  <p className="text-brand-gray-600 mb-2 sm:mb-3 md:mb-4 text-xs sm:text-xs md:text-sm lg:text-base line-clamp-2 sm:line-clamp-none">
                     Express love with soft and adorable Valentine's teddy bears (25cm-200cm). Perfect romantic gifts for girlfriend, wife, or family. Available in romantic red, pink, and white colors.
                   </p>
-                  <span className="inline-flex items-center text-brand-red font-semibold group-hover:gap-2 gap-1 transition-all duration-300 text-[10px] sm:text-xs md:text-sm">
+                  <span className="inline-flex items-center text-brand-red font-semibold group-hover:gap-2 gap-1 transition-all duration-300 text-xs sm:text-xs md:text-sm">
                     Explore Teddy Bears
                     <svg className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

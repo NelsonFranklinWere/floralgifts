@@ -165,21 +165,21 @@ export default function AboutPage() {
             <div className="card p-2 md:p-6 text-center">
               <div className="text-2xl md:text-4xl mb-2 md:mb-4">🎯</div>
               <h3 className="font-heading font-bold text-xs md:text-xl text-brand-gray-900 mb-1 md:mb-3">Our Mission</h3>
-              <p className="text-brand-gray-700 text-[10px] md:text-sm leading-tight md:leading-normal">
+              <p className="text-brand-gray-700 text-xs md:text-sm leading-tight md:leading-normal">
                 To spread joy and create unforgettable moments through beautiful, thoughtfully curated gifts that express your emotions perfectly.
               </p>
             </div>
             <div className="card p-2 md:p-6 text-center">
               <div className="text-2xl md:text-4xl mb-2 md:mb-4">✨</div>
               <h3 className="font-heading font-bold text-xs md:text-xl text-brand-gray-900 mb-1 md:mb-3">Our Vision</h3>
-              <p className="text-brand-gray-700 text-[10px] md:text-sm leading-tight md:leading-normal">
+              <p className="text-brand-gray-700 text-xs md:text-sm leading-tight md:leading-normal">
                 To become Kenya&apos;s most trusted and beloved gift delivery service, known for excellence, reliability, and heartfelt service.
               </p>
             </div>
             <div className="card p-2 md:p-6 text-center">
               <div className="text-2xl md:text-4xl mb-2 md:mb-4">💚</div>
               <h3 className="font-heading font-bold text-xs md:text-xl text-brand-gray-900 mb-1 md:mb-3">Our Values</h3>
-              <p className="text-brand-gray-700 text-[10px] md:text-sm leading-tight md:leading-normal">
+              <p className="text-brand-gray-700 text-xs md:text-sm leading-tight md:leading-normal">
                 Quality, reliability, customer care, and attention to detail guide everything we do. Your happiness is our success.
               </p>
             </div>

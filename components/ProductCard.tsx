@@ -164,7 +164,7 @@ export default function ProductCard({
           {name}
         </h3>
         {shortDescription && (
-          <p className="text-brand-gray-600 text-[10px] sm:text-xs md:text-sm mb-0.5 sm:mb-1 md:mb-2 line-clamp-2">{shortDescription}</p>
+          <p className="text-brand-gray-600 text-xs sm:text-xs md:text-sm mb-0.5 sm:mb-1 md:mb-2 line-clamp-2">{shortDescription}</p>
         )}
         <p className="font-mono font-semibold text-brand-green text-xs sm:text-sm md:text-base mb-1 sm:mb-2 md:mb-3">
           {formatCurrency(price)}
@@ -175,7 +175,7 @@ export default function ProductCard({
       {category === "hampers" && !hideDetailsButton && (
         <Link
           href={`/product/${slug}`}
-          className="btn-outline w-full text-center text-[10px] sm:text-xs md:text-sm py-1 sm:py-1.5 md:py-2 mt-1 sm:mt-2"
+          className="btn-outline w-full text-center text-xs sm:text-xs md:text-sm py-1 sm:py-1.5 md:py-2 mt-1 sm:mt-2"
           aria-label={`View details for ${name}`}
         >
           Details
