@@ -38,6 +38,7 @@ export default function ProductCard({
 
   const { addItem } = useCartStore();
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     // Track product view when card is visible
@@ -47,11 +48,25 @@ export default function ProductCard({
   }, [id, name, category, price]);
 
   const handleAddToCart = () => {
+    const cartImage = imageError
+      ? (category === "flowers"
+          ? "/images/products/flowers/BouquetFlowers1.jpg"
+          : category === "hampers"
+          ? "/images/products/hampers/giftamper.jpg"
+          : category === "teddy"
+          ? "/images/products/teddies/Teddybear1.jpg"
+          : category === "chocolates"
+          ? "/images/products/Chocolates/Chocolates1.jpg"
+          : category === "wines"
+          ? "/images/products/wines/redwine.jpg"
+          : "/images/products/hampers/giftamper.jpg")
+      : image;
+
     addItem({
       id,
       name,
       price,
-      image,
+      image: cartImage,
       slug,
     });
     // Track add to cart
@@ -61,7 +76,7 @@ export default function ProductCard({
   const handleImageClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (image) {
+    if (image || imageError) {
       setIsImageModalOpen(true);
     }
   };
@@ -80,7 +95,7 @@ export default function ProductCard({
             className="relative aspect-square overflow-hidden rounded-lg bg-brand-gray-100 cursor-pointer group/image"
             onClick={handleImageClick}
           >
-            {image ? (
+            {image && !imageError ? (
               <>
                 <Image
                   src={image}
@@ -95,6 +110,7 @@ export default function ProductCard({
                   onError={(e) => {
                     console.error("[ProductCard] Image failed to load:", image);
                     console.error("[ProductCard] Error:", e);
+                    setImageError(true);
                   }}
                 />
                 {/* Basket icon overlay - always visible */}
@@ -116,9 +132,29 @@ export default function ProductCard({
                 )}
               </>
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-brand-gray-400 text-xs">
-                No image
-              </div>
+              <Image
+                src={
+                  category === "flowers"
+                    ? "/images/products/flowers/BouquetFlowers1.jpg"
+                    : category === "hampers"
+                    ? "/images/products/hampers/giftamper.jpg"
+                    : category === "teddy"
+                    ? "/images/products/teddies/Teddybear1.jpg"
+                    : category === "chocolates"
+                    ? "/images/products/Chocolates/Chocolates1.jpg"
+                    : category === "wines"
+                    ? "/images/products/wines/redwine.jpg"
+                    : "/images/products/hampers/giftamper.jpg"
+                }
+                alt={`${name} - Fallback image`}
+                fill
+                className="object-cover opacity-60 group-hover:scale-105 transition-transform duration-300"
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                loading={priority ? "eager" : "lazy"}
+                priority={priority}
+                quality={60}
+                fetchPriority={priority ? "high" : "auto"}
+              />
             )}
           </div>
         </div>
@@ -148,11 +184,25 @@ export default function ProductCard({
       </div>
 
       {/* Image Modal */}
-      {image && (
+      {(image || imageError) && (
         <ImageModal
           isOpen={isImageModalOpen}
           onClose={() => setIsImageModalOpen(false)}
-          imageUrl={image}
+          imageUrl={
+            imageError
+              ? (category === "flowers"
+                  ? "/images/products/flowers/BouquetFlowers1.jpg"
+                  : category === "hampers"
+                  ? "/images/products/hampers/giftamper.jpg"
+                  : category === "teddy"
+                  ? "/images/products/teddies/Teddybear1.jpg"
+                  : category === "chocolates"
+                  ? "/images/products/Chocolates/Chocolates1.jpg"
+                  : category === "wines"
+                  ? "/images/products/wines/redwine.jpg"
+                  : "/images/products/hampers/giftamper.jpg")
+              : image
+          }
           alt={name}
         />
       )}

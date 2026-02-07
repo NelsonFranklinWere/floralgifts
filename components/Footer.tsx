@@ -270,17 +270,17 @@ export default function Footer() {
         <div className="border-t border-white/10 mt-4 pt-4">
           <h3 className="font-heading font-semibold text-sm mb-3 text-white">Accepted Payment Methods</h3>
 
-          {/* Payment Icons and Details in One Row */}
+          {/* Payment Icons and Details - Responsive Layout */}
           <div className="flex flex-col lg:flex-row lg:items-center gap-4">
-            {/* Payment Method Icons */}
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-8 bg-[#007C42] rounded flex items-center justify-center">
+            {/* Payment Method Icons - Always in one row */}
+            <div className="flex items-center justify-center gap-3 sm:gap-4">
+              <div className="w-12 h-8 bg-[#007C42] rounded flex items-center justify-center flex-shrink-0">
                 <span className="text-white font-bold text-xs">M-PESA</span>
               </div>
-              <div className="w-12 h-8 bg-white border border-gray-300 rounded flex items-center justify-center px-2">
+              <div className="w-12 h-8 bg-white border border-gray-300 rounded flex items-center justify-center px-2 flex-shrink-0">
                 <span className="text-[#1434CB] font-bold text-xs">VISA</span>
               </div>
-              <div className="w-12 h-8 bg-white border border-gray-300 rounded flex items-center justify-center px-1">
+              <div className="w-12 h-8 bg-white border border-gray-300 rounded flex items-center justify-center px-1 flex-shrink-0">
                 <div className="flex items-center">
                   <div className="w-3 h-3 bg-[#EB001B] rounded-full -mr-1.5"></div>
                   <div className="w-3 h-3 bg-[#F79E1B] rounded-full"></div>
@@ -288,26 +288,28 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* M-Pesa Details */}
-            <div className="flex flex-col sm:flex-row gap-2 text-xs">
-              <div className="bg-white/5 rounded-lg p-2 w-fit">
+            {/* M-Pesa Details - Compact layout */}
+            <div className="flex flex-col sm:flex-row gap-2 text-xs justify-center">
+              <div className="bg-white/5 rounded-lg p-2 min-w-fit">
                 <div className="flex items-center gap-1 mb-1">
-                  <div className="w-4 h-4 bg-[#007C42] rounded flex items-center justify-center">
+                  <div className="w-4 h-4 bg-[#007C42] rounded flex items-center justify-center flex-shrink-0">
                     <span className="text-white font-bold text-xs">T</span>
                   </div>
                   <span className="font-medium text-white text-xs">Till Number</span>
                 </div>
-                <p className="text-white font-mono font-bold">8618626</p>
+                <p className="text-white font-mono font-bold text-center">8618626</p>
               </div>
-              <div className="bg-white/5 rounded-lg p-2 w-fit">
+              <div className="bg-white/5 rounded-lg p-2 min-w-fit">
                 <div className="flex items-center gap-1 mb-1">
-                  <div className="w-4 h-4 bg-[#007C42] rounded flex items-center justify-center">
+                  <div className="w-4 h-4 bg-[#007C42] rounded flex items-center justify-center flex-shrink-0">
                     <span className="text-white font-bold text-xs">P</span>
                   </div>
                   <span className="font-medium text-white text-xs">Paybill</span>
                 </div>
-                <p className="text-brand-gray-300 text-xs">Business: <span className="text-white font-mono font-bold">400200</span></p>
-                <p className="text-brand-gray-300 text-xs">Account: <span className="text-white font-mono font-bold">40040549</span></p>
+                <div className="text-center">
+                  <p className="text-brand-gray-300 text-xs">Business: <span className="text-white font-mono font-bold">400200</span></p>
+                  <p className="text-brand-gray-300 text-xs">Account: <span className="text-white font-mono font-bold">40040549</span></p>
+                </div>
               </div>
             </div>
           </div>
