@@ -178,7 +178,7 @@ export default function CheckoutPage() {
     setStkError("");
 
     try {
-      // Handle STK Push (M-Pesa) via Pesapal
+      // Handle STK Push (M-Pesa) via Co-op Bank API directly - NO Pesapal redirect
       if (paymentMethod === "stk") {
         if (!stkPhone || !validatePhone(stkPhone)) {
           setStkError("Please enter a valid M-Pesa phone number (format: 2547XXXXXXXX)");

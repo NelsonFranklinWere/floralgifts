@@ -1,58 +1,192 @@
-# Server Port Fix Commands
-# Run these commands directly on your server (SSH into: floral@64.227.50.213)
+# Server Console Commands for Digital Ocean Droplet
 
-## Complete Fix - Copy and paste these commands:
+## Quick Update Commands (Run on Server Console)
+
+### Option 1: Update from Git and Restart (Recommended)
 
 ```bash
-# 1. Stop PM2 completely (breaks restart loop)
-pm2 stop all
-pm2 kill
+cd /home/floral/floralgifts
+git pull origin main
+npm install --production
+rm -rf .next
+npm run build
+pm2 restart floralgifts
+pm2 save
+pm2 status floralgifts
+```
 
-# 2. Wait a moment
-sleep 2
+### Option 2: Using the Update Script
 
-# 3. Kill all Node processes
-pkill -9 node
+1. Copy the script to your server:
+```bash
+# On your local machine, copy the script:
+scp server-update.sh floral@157.245.34.218:/home/floral/
+```
 
-# 4. Kill anything on port 3000
-lsof -ti:3000 | xargs kill -9 2>/dev/null || true
+2. On the server console, run:
+```bash
+chmod +x /home/floral/server-update.sh
+/home/floral/server-update.sh
+```
 
-# 5. Wait again
-sleep 2
+### Option 3: Manual Step-by-Step Commands
 
-# 6. Verify port 3000 is free
-lsof -ti:3000
-# Should return nothing
-
-# 7. Navigate to project
+```bash
+# Navigate to app directory
 cd /home/floral/floralgifts
 
-# 8. Start PM2 fresh
-pm2 start ecosystem.config.js
+# Pull latest code
+git pull origin main
 
-# 9. Check status
-pm2 status
+# Update dependencies (if package.json changed)
+npm install --production
 
-# 10. Check logs
+# Rebuild application
+rm -rf .next
+npm run build
+
+# Restart application
+pm2 restart floralgifts
+pm2 save
+
+# Check status
+pm2 status floralgifts
+
+# View logs (optional)
 pm2 logs floralgifts --lines 20
 ```
 
 ---
 
-## One-Liner (copy entire line):
+## Useful PM2 Commands
 
 ```bash
-pm2 stop all && pm2 kill && sleep 2 && pkill -9 node && sleep 2 && lsof -ti:3000 | xargs kill -9 2>/dev/null; sleep 2 && cd /home/floral/floralgifts && pm2 start ecosystem.config.js && sleep 3 && pm2 status && pm2 logs floralgifts --lines 10 --nostream
+# Check application status
+pm2 status
+
+# View application logs
+pm2 logs floralgifts
+
+# View last 50 lines of logs
+pm2 logs floralgifts --lines 50
+
+# Restart application
+pm2 restart floralgifts
+
+# Stop application
+pm2 stop floralgifts
+
+# Start application
+pm2 start floralgifts
+
+# Reload application (zero-downtime restart)
+pm2 reload floralgifts
+
+# Delete application from PM2
+pm2 delete floralgifts
+
+# Save PM2 configuration
+pm2 save
+
+# View PM2 monitoring
+pm2 monit
 ```
 
 ---
 
-## If SSH Key Issues:
+## Environment Variables
 
-If you can't SSH with keys, use password authentication:
-
+Check/update environment variables:
 ```bash
-ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no floral@64.227.50.213
+cd /home/floral/floralgifts
+cat .env.local
+
+# Edit if needed
+nano .env.local
+
+# After editing, restart application
+pm2 restart floralgifts
 ```
 
-Or use the Digital Ocean console/web terminal to run the commands directly.
+---
+
+## Check Application Health
+
+```bash
+# Check if application is running
+curl http://localhost:3000
+
+# Check PM2 status
+pm2 status
+
+# Check system resources
+htop
+# or
+top
+
+# Check disk space
+df -h
+
+# Check application logs for errors
+pm2 logs floralgifts --err --lines 50
+```
+
+---
+
+## Troubleshooting
+
+### Application won't start:
+```bash
+# Check logs
+pm2 logs floralgifts --err
+
+# Check if port 3000 is in use
+lsof -i :3000
+
+# Kill process on port 3000 if needed
+lsof -ti:3000 | xargs kill -9
+
+# Restart application
+pm2 restart floralgifts
+```
+
+### Build fails:
+```bash
+# Clear cache and rebuild
+cd /home/floral/floralgifts
+rm -rf .next node_modules
+npm install
+npm run build
+pm2 restart floralgifts
+```
+
+### Git pull fails:
+```bash
+# Check git status
+cd /home/floral/floralgifts
+git status
+
+# If there are local changes, stash them
+git stash
+
+# Then pull again
+git pull origin main
+```
+
+---
+
+## Quick Update Script (Copy-Paste Ready)
+
+```bash
+#!/bin/bash
+cd /home/floral/floralgifts && \
+git pull origin main && \
+npm install --production && \
+rm -rf .next && \
+npm run build && \
+pm2 restart floralgifts && \
+pm2 save && \
+pm2 status floralgifts
+```
+
+Copy and paste this entire block into your server console.
