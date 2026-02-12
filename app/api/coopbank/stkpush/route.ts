@@ -62,14 +62,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Use callback URL from env if not provided
-    const callbackUrl = CallBackUrl || process.env.COOP_BANK_CALLBACK_URL || "";
+    // Use M-Pesa callback URL (Co-op Bank STK push processes M-Pesa payments)
+    const callbackUrl = CallBackUrl || process.env.MPESA_CALLBACK_URL || "";
 
     if (!callbackUrl) {
       return NextResponse.json(
         {
           success: false,
-          message: "CallBackUrl not provided and COOP_BANK_CALLBACK_URL not configured",
+          message: "CallBackUrl not provided and MPESA_CALLBACK_URL not configured",
         },
         { status: 400 }
       );

@@ -28,8 +28,6 @@ const nextConfig = {
   // Performance optimizations
   compress: true,
   poweredByHeader: false,
-  // Optimize build output
-  output: 'standalone',
   // Webpack configuration for path aliases
   webpack: (config) => {
     // Ensure @/ alias resolves correctly

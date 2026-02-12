@@ -45,6 +45,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Convert amount from cents to KES (M-Pesa API expects amount in KES)
+    // e.g., 350000 cents = 3500 KES
+    const amountInKES = Math.floor(amount / 100);
+    
+    if (amountInKES <= 0) {
+      return NextResponse.json(
+        { message: "Amount is too small (must be at least 1 KES)" },
+        { status: 400 }
+      );
+    }
+
     const callbackUrl = process.env.MPESA_CALLBACK_URL || "";
     if (!callbackUrl) {
       return NextResponse.json(
@@ -55,7 +66,7 @@ export async function POST(request: NextRequest) {
 
     const result = await initiateSTKPush({
       phone,
-      amount,
+      amount: amountInKES, // Amount in KES (converted from cents)
       accountRef,
       callbackUrl,
     });

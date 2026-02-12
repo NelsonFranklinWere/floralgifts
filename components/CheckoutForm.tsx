@@ -148,67 +148,48 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
         delivery_city: deliveryLocation,
         delivery_date: new Date().toISOString(),
         payment_method: "mpesa",
-        notes: `M-Pesa payment via Pesapal. Recipient: ${recipientName} (${formatPhone(recipientPhone)}). ${data.giftMessage ? `Gift message: ${data.giftMessage}` : ""}`,
+        notes: `M-Pesa STK Push payment. Recipient: ${recipientName} (${formatPhone(recipientPhone)}). ${data.giftMessage ? `Gift message: ${data.giftMessage}` : ""}`,
       });
 
       const orderId = orderResponse.data.id;
 
-      // Prepare billing address for Pesapal
-      const billingAddress = {
-        email_address: "",
-        phone_number: formatPhone(phoneToUse),
-        country_code: "KE",
-        first_name: data.name.split(" ")[0] || "Customer",
-        middle_name: "",
-        last_name: data.name.split(" ").slice(1).join(" ") || "",
-        line_1: `${deliveryLocation}, ${deliveryAddress}`,
-        line_2: "",
-        city: deliveryLocation || "Nairobi",
-        state: deliveryLocation || "Nairobi",
-        postal_code: "",
-        zip_code: "",
-      };
-
-      // Initiate Pesapal payment
-      const callbackUrl = process.env.NEXT_PUBLIC_BASE_URL
-        ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/pesapal/callback`
-        : "https://floralwhispersgifts.co.ke/api/pesapal/callback";
-
-      const pesapalResponse = await axios.post("/api/pesapal/payment", {
-        orderId: orderId,
-        amount: total / 100, // Convert cents to KES
-        currency: "KES",
-        description: `Floral Whispers Gifts Order #${orderId.slice(0, 8)}`,
-        callbackUrl: callbackUrl,
-        customerEmail: null,
-        customerPhone: formatPhone(phoneToUse),
-        customerName: data.name,
-        billingAddress: billingAddress,
+      // Initiate direct Co-op Bank STK Push (no Pesapal redirect)
+      const stkResponse = await axios.post("/api/coopbank/stkpush", {
+        MobileNumber: phoneToUse,
+        Amount: total, // Amount in cents (API will convert to KES)
+        MessageReference: `FL-${orderId.slice(0, 8)}`, // Use order ID as message reference
+        Narration: `Floral Whispers Order #${orderId.slice(0, 8)}`,
       });
 
-      if (pesapalResponse.data.success && pesapalResponse.data.data?.redirect_url) {
+      if (stkResponse.data.success && stkResponse.data.data?.ResponseCode === "00") {
         // Store order ID in session for callback handling
         sessionStorage.setItem("pendingOrder", JSON.stringify({
           id: orderId,
           total: total,
           paymentMethod: "mpesa",
-          orderTrackingId: pesapalResponse.data.data.order_tracking_id,
+          messageReference: stkResponse.data.data.MessageReference,
         }));
 
         // Track the purchase attempt
         Analytics.trackPurchase(orderId, total, "mpesa");
 
-        // Redirect to Pesapal payment page
-        window.location.href = pesapalResponse.data.data.redirect_url;
+        // Redirect to success page with pending status
+        // The success page will poll for payment confirmation
+        window.location.href = `/order/success?id=${orderId}&pending=true`;
       } else {
-        setStkError(pesapalResponse.data.message || "Failed to initiate payment. Please try again.");
+        setStkError(
+          stkResponse.data.data?.ResponseDescription || 
+          stkResponse.data.message || 
+          "Failed to initiate STK push. Please try again."
+        );
       }
     } catch (error: any) {
-      console.error("Pesapal payment error:", error);
+      console.error("Co-op Bank STK Push payment error:", error);
       setStkError(
+        error.response?.data?.data?.ResponseDescription ||
         error.response?.data?.message ||
         error.message ||
-        "Failed to initiate payment. Please try again or use another payment method."
+        "Failed to initiate STK push. Please try again or use another payment method."
       );
     } finally {
       setIsProcessingStk(false);

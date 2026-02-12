@@ -203,49 +203,30 @@ export default function CheckoutPage() {
           delivery_city: city || "Nairobi",
           delivery_date: new Date().toISOString(),
           payment_method: "mpesa",
-          notes: `M-Pesa payment initiated via Pesapal. Phone: ${stkPhone}`,
+          notes: `M-Pesa STK Push payment initiated. Phone: ${stkPhone}`,
         });
 
         const orderId = orderResponse.data.id;
 
-        // Prepare billing address for Pesapal
-        const billingAddressData = {
-          email_address: email || "",
-          phone_number: formatPhone(stkPhone),
-          country_code: "KE",
-          first_name: firstName || "Customer",
-          middle_name: "",
-          last_name: lastName || "",
-          line_1: address || "To be confirmed",
-          line_2: apartment || "",
-          city: city || "Nairobi",
-          state: city || "Nairobi",
-          postal_code: postalCode || "",
-          zip_code: postalCode || "",
-        };
-
-        // Initiate Pesapal payment
-        const callbackUrl = typeof window !== 'undefined'
-          ? `${window.location.origin}/api/pesapal/callback`
-          : "https://floralwhispersgifts.co.ke/api/pesapal/callback";
-
-        const pesapalResponse = await axios.post("/api/pesapal/payment", {
-          orderId: orderId,
-          amount: total / 100, // Convert cents to KES
-          currency: "KES",
-          description: `Floral Whispers Gifts Order #${orderId.slice(0, 8)}`,
-          callbackUrl: callbackUrl,
-          customerEmail: email || null,
-          customerPhone: formatPhone(stkPhone),
-          customerName: firstName && lastName ? `${firstName} ${lastName}`.trim() : "Customer",
-          billingAddress: billingAddressData,
+        // Initiate direct Co-op Bank STK Push (no Pesapal redirect)
+        console.log("💳 Checkout: Initiating direct Co-op Bank STK Push:", {
+          orderId,
+          phone: stkPhone,
+          amount: total
         });
 
-        if (pesapalResponse.data.success && pesapalResponse.data.data?.redirect_url) {
-          console.log("✅ Checkout: Pesapal payment initiated successfully:", {
+        const stkResponse = await axios.post("/api/coopbank/stkpush", {
+          MobileNumber: stkPhone,
+          Amount: total, // Amount in cents (API will convert to KES)
+          MessageReference: `FL-${orderId.slice(0, 8)}`, // Use order ID as message reference
+          Narration: `Floral Whispers Order #${orderId.slice(0, 8)}`,
+        });
+
+        if (stkResponse.data.success && stkResponse.data.data?.ResponseCode === "00") {
+          console.log("✅ Checkout: Co-op Bank STK Push initiated successfully:", {
             orderId,
-            redirectUrl: pesapalResponse.data.data.redirect_url,
-            orderTrackingId: pesapalResponse.data.data.order_tracking_id
+            messageReference: stkResponse.data.data.MessageReference,
+            responseDescription: stkResponse.data.data.ResponseDescription
           });
           
           // Store order ID in session for callback handling
@@ -253,18 +234,23 @@ export default function CheckoutPage() {
             id: orderId,
             total: total,
             paymentMethod: "mpesa",
-            orderTrackingId: pesapalResponse.data.data.order_tracking_id,
+            messageReference: stkResponse.data.data.MessageReference,
           }));
 
           // Track the purchase attempt
           Analytics.trackPurchase(orderId, total, "mpesa");
 
-          // Redirect to Pesapal payment page (user can select M-Pesa there)
-          window.location.href = pesapalResponse.data.data.redirect_url;
+          // Redirect to success page with pending status
+          // The success page will poll for payment confirmation
+          router.push(`/order/success?id=${orderId}&pending=true`);
           return;
         } else {
-          console.error("❌ Checkout: Pesapal payment initiation failed:", pesapalResponse.data);
-          setStkError(pesapalResponse.data.message || "Failed to initiate M-Pesa payment. Please try again.");
+          console.error("❌ Checkout: Co-op Bank STK Push initiation failed:", stkResponse.data);
+          setStkError(
+            stkResponse.data.data?.ResponseDescription || 
+            stkResponse.data.message || 
+            "Failed to initiate M-Pesa STK push. Please try again."
+          );
           setIsProcessing(false);
           return;
         }
@@ -560,7 +546,7 @@ export default function CheckoutPage() {
                       </div>
                       <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
                         <p className="text-xs text-green-800">
-                          <strong>How it works:</strong> You&apos;ll be redirected to a secure payment page where you can complete your M-Pesa payment.
+                          <strong>How it works:</strong> Enter your M-Pesa phone number and you&apos;ll receive a payment prompt on your phone. Complete the payment on your phone to finish your order.
                         </p>
                       </div>
                     </div>
