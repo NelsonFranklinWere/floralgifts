@@ -48,7 +48,7 @@ export default function CheckoutPage() {
   const router = useRouter();
   const { items, getTotal, clearCart } = useCartStore();
   const [orderData, setOrderData] = useState<OrderData | null>(null);
-  const [paymentMethod, setPaymentMethod] = useState<"stk" | "till" | "paybill" | "pesapal" | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<"stk" | "till" | "paybill" | "pesapal" | null>("stk");
   const [stkPhone, setStkPhone] = useState("");
   const [stkError, setStkError] = useState("");
   const [phone, setPhone] = useState("");
@@ -173,13 +173,28 @@ export default function CheckoutPage() {
       customerName: firstName && lastName ? `${firstName} ${lastName}`.trim() : "Customer"
     });
     
+    // CRITICAL: Log payment method to debug any redirect issues
+    console.log("🔍 Payment method check:", {
+      paymentMethod,
+      isSTK: paymentMethod === "stk",
+      isPesapal: paymentMethod === "pesapal",
+      stkPhone: stkPhone ? "provided" : "missing"
+    });
+    
     setIsProcessing(true);
     setError("");
     setStkError("");
 
     try {
-      // Handle STK Push (M-Pesa) via Co-op Bank API directly - NO Pesapal redirect
+      if (paymentMethod === null) {
+        setError("Please select a payment method.");
+        setIsProcessing(false);
+        return;
+      }
+      
+      // STK Push: Co-op Bank only - never use Pesapal or redirect to PayPal
       if (paymentMethod === "stk") {
+        console.log("✅ STK Push selected - using Co-op Bank API only (NO Pesapal)");
         if (!stkPhone || !validatePhone(stkPhone)) {
           setStkError("Please enter a valid M-Pesa phone number (format: 2547XXXXXXXX)");
           setIsProcessing(false);
@@ -208,8 +223,8 @@ export default function CheckoutPage() {
 
         const orderId = orderResponse.data.id;
 
-        // Initiate direct Co-op Bank STK Push (no Pesapal redirect)
-        console.log("💳 Checkout: Initiating direct Co-op Bank STK Push:", {
+        // Co-op Bank STK Push only - no Pesapal, no redirect to PayPal
+        console.log("💳 Checkout: Initiating Co-op Bank STK Push:", {
           orderId,
           phone: stkPhone,
           amount: total
@@ -218,11 +233,25 @@ export default function CheckoutPage() {
         const stkResponse = await axios.post("/api/coopbank/stkpush", {
           MobileNumber: stkPhone,
           Amount: total, // Amount in cents (API will convert to KES)
-          MessageReference: `FL-${orderId.slice(0, 8)}`, // Use order ID as message reference
+          MessageReference: `FL-${orderId.slice(0, 8)}`,
           Narration: `Floral Whispers Order #${orderId.slice(0, 8)}`,
         });
 
-        if (stkResponse.data.success && stkResponse.data.data?.ResponseCode === "00") {
+        console.log("💳 Checkout: Co-op Bank STK Push response:", {
+          success: stkResponse.data?.success,
+          responseCode: stkResponse.data?.data?.ResponseCode,
+          responseDescription: stkResponse.data?.data?.ResponseDescription,
+          fullResponse: stkResponse.data
+        });
+
+        // Co-op Bank success: ResponseCode "00" typically means success
+        // Also accept if success is true and ResponseCode is missing (API might return success without ResponseCode)
+        // NEVER redirect to Pesapal/PayPal for STK push
+        const isSuccess = stkResponse.data?.success && 
+          (stkResponse.data?.data?.ResponseCode === "00" || 
+           !stkResponse.data?.data?.ResponseCode); // Accept if no ResponseCode but success is true
+        
+        if (isSuccess) {
           console.log("✅ Checkout: Co-op Bank STK Push initiated successfully:", {
             orderId,
             messageReference: stkResponse.data.data.MessageReference,
@@ -245,15 +274,25 @@ export default function CheckoutPage() {
           router.push(`/order/success?id=${orderId}&pending=true`);
           return;
         } else {
-          console.error("❌ Checkout: Co-op Bank STK Push initiation failed:", stkResponse.data);
+          console.error("❌ Checkout: Co-op Bank STK Push failed or unexpected response:", {
+            success: stkResponse.data?.success,
+            responseCode: stkResponse.data?.data?.ResponseCode,
+            responseDescription: stkResponse.data?.data?.ResponseDescription,
+            message: stkResponse.data?.message,
+            fullResponse: stkResponse.data
+          });
+          
+          // Show error but NEVER redirect to Pesapal/PayPal
           setStkError(
-            stkResponse.data.data?.ResponseDescription || 
-            stkResponse.data.message || 
+            stkResponse.data?.data?.ResponseDescription || 
+            stkResponse.data?.message || 
             "Failed to initiate M-Pesa STK push. Please try again."
           );
           setIsProcessing(false);
-          return;
+          return; // CRITICAL: Return here to prevent any fallthrough
         }
+        // STK block ends - never fall through to Pesapal
+        return;
       }
 
       // Handle Till or Paybill - redirect to WhatsApp
@@ -312,8 +351,14 @@ export default function CheckoutPage() {
         return;
       }
 
-      // Handle Pesapal Card Payment
+      // Card payment only: Pesapal/PayPal redirect (STK never reaches here)
+      // CRITICAL GUARD: Only execute if paymentMethod is explicitly "pesapal"
       if (paymentMethod === "pesapal") {
+        console.log("💳 Checkout: Initiating Pesapal card payment (NOT STK):", {
+          orderId: orderId || "not created yet",
+          paymentMethod,
+          total
+        });
         // Create order in database
         const orderResponse = await axios.post("/api/orders", {
           items: (orderData?.items || items).map((item) => ({
@@ -390,6 +435,10 @@ export default function CheckoutPage() {
           return;
         }
       }
+
+      // Should not reach here: stk/till/paybill return above; only pesapal uses redirect
+      setError("Please select a payment method.");
+      setIsProcessing(false);
     } catch (err: any) {
       console.error("❌ Checkout: Order submission error:", {
         error: err.message,
@@ -398,7 +447,22 @@ export default function CheckoutPage() {
         response: err.response?.data,
         stack: err.stack
       });
-      setError(err.response?.data?.message || err.message || "An error occurred. Please try again.");
+      
+      // For STK push errors, show specific error message
+      if (paymentMethod === "stk") {
+        setStkError(
+          err.response?.data?.data?.ResponseDescription ||
+          err.response?.data?.message ||
+          err.message ||
+          "Failed to initiate M-Pesa STK push. Please try again."
+        );
+      } else {
+        setError(err.response?.data?.message || err.message || "An error occurred. Please try again.");
+      }
+      
+      // CRITICAL: Never redirect to Pesapal/PayPal on error
+      setIsProcessing(false);
+      return;
     } finally {
       setIsProcessing(false);
     }
