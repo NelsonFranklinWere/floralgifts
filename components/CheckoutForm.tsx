@@ -157,11 +157,13 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
       const stkResponse = await axios.post("/api/coopbank/stkpush", {
         MobileNumber: phoneToUse,
         Amount: total, // Amount in cents (API will convert to KES)
-        MessageReference: `FL-${orderId.slice(0, 8)}`, // Use order ID as message reference
+        MessageReference: `FL-${orderId.slice(0, 8)}`,
         Narration: `Floral Whispers Order #${orderId.slice(0, 8)}`,
+        OrderId: orderId, // So callback can find order and payment is recorded on dashboard
       });
 
-      if (stkResponse.data.success && stkResponse.data.data?.ResponseCode === "00") {
+      const isStkSuccess = stkResponse.data?.success && (stkResponse.data?.data?.ResponseCode === "00" || !stkResponse.data?.data?.ResponseCode);
+      if (isStkSuccess) {
         // Store order ID in session for callback handling
         sessionStorage.setItem("pendingOrder", JSON.stringify({
           id: orderId,

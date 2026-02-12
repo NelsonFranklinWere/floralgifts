@@ -235,6 +235,7 @@ export default function CheckoutPage() {
           Amount: total, // Amount in cents (API will convert to KES)
           MessageReference: `FL-${orderId.slice(0, 8)}`,
           Narration: `Floral Whispers Order #${orderId.slice(0, 8)}`,
+          OrderId: orderId, // So callback can find order and we record payment on dashboard
         });
 
         console.log("💳 Checkout: Co-op Bank STK Push response:", {
@@ -355,7 +356,6 @@ export default function CheckoutPage() {
       // CRITICAL GUARD: Only execute if paymentMethod is explicitly "pesapal"
       if (paymentMethod === "pesapal") {
         console.log("💳 Checkout: Initiating Pesapal card payment (NOT STK):", {
-          orderId: orderId || "not created yet",
           paymentMethod,
           total
         });
@@ -415,6 +415,14 @@ export default function CheckoutPage() {
         });
 
         if (pesapalResponse.data.success && pesapalResponse.data.data?.redirect_url) {
+          // HARD GUARD: Never redirect to PayPal/Pesapal if user chose STK
+          const redirectUrl = pesapalResponse.data.data.redirect_url;
+          if (paymentMethod !== "pesapal") {
+            console.error("BLOCKED: Attempted Pesapal redirect but paymentMethod is", paymentMethod);
+            setError("Payment method mismatch. Please try again.");
+            setIsProcessing(false);
+            return;
+          }
           // Store order ID in session for callback handling
           sessionStorage.setItem("pendingOrder", JSON.stringify({
             id: orderId,
@@ -426,8 +434,8 @@ export default function CheckoutPage() {
           // Track the purchase attempt
           Analytics.trackPurchase(orderId, total, "card");
 
-          // Redirect to Pesapal payment page
-          window.location.href = pesapalResponse.data.data.redirect_url;
+          // Redirect to Pesapal payment page (card only)
+          window.location.href = redirectUrl;
           return;
         } else {
           setError(pesapalResponse.data.message || "Failed to initiate card payment. Please try again.");

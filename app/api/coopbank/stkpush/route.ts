@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { initiateCoopBankSTKPush, CoopBankSTKPushParams } from "@/lib/coopbank";
+import { getOrderById, updateOrder } from "@/lib/db";
 
 export async function POST(request: NextRequest) {
   try {
@@ -8,6 +9,7 @@ export async function POST(request: NextRequest) {
       mobileNumber: body.MobileNumber,
       amount: body.Amount,
       messageReference: body.MessageReference,
+      orderId: body.OrderId ? `${body.OrderId.slice(0, 8)}...` : undefined,
       timestamp: new Date().toISOString()
     });
     
@@ -21,6 +23,7 @@ export async function POST(request: NextRequest) {
       Amount,
       MessageDateTime,
       OtherDetails,
+      OrderId,
     } = body;
 
     // Validate required fields
@@ -106,6 +109,23 @@ export async function POST(request: NextRequest) {
       responseDescription: result.ResponseDescription,
       requestId: result.RequestID
     });
+
+    // Store MessageReference on order so M-Pesa callback can find order and record payment
+    if (OrderId && (result.ResponseCode === "00" || !result.ResponseCode)) {
+      try {
+        const order = await getOrderById(OrderId);
+        if (order) {
+          await updateOrder(OrderId, {
+            mpesa_checkout_request_id: params.MessageReference,
+            status: "pending",
+          } as any);
+          console.log("✅ Order updated with MessageReference for callback:", OrderId.slice(0, 8));
+        }
+      } catch (updateErr) {
+        console.error("Failed to update order with MessageReference:", updateErr);
+        // Don't fail the request; callback can still find order by FL- prefix
+      }
+    }
 
     return NextResponse.json({
       success: true,
