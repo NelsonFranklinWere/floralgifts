@@ -7,7 +7,11 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import VisitorTracking from "@/components/VisitorTracking";
+import VisitorPing from "@/components/VisitorPing";
+import FormillaWidget from "@/components/FormillaWidget";
 import { SHOP_INFO } from "@/lib/constants";
+import { SITE_WIDE_KEYWORDS } from "@/lib/seo-keywords";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -46,12 +50,27 @@ const playfairDisplay = Playfair_Display({
 export const metadata: Metadata = {
   title: {
     default:
-      "Best Valentine's Gifts Nairobi | Romantic Flowers, Chocolates & Gift Hampers | Floral Whispers Gifts",
+      "Flower Delivery Nairobi | Fresh Pink Roses, Red Roses & White Flowers | Same-Day Delivery | Floral Whispers Gifts",
     template: "%s | Floral Whispers Gifts Nairobi",
   },
   description:
-    "Best Valentine's gifts Nairobi: romantic flowers, premium chocolates, wine, teddy bears & surprise hampers for your wife, husband, girlfriend. Pre-Valentine's Day orders, same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Order online with M-Pesa.",
+    "Flower delivery Nairobi: fresh pink roses, red roses, white flowers & blooming roses. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Valentine's gifts, money bouquet, romantic flowers. Order online with M-Pesa.",
   keywords: [
+    // Deep flower/rose SEO (top priority for discovery)
+    "flower delivery Nairobi",
+    "fresh flowers Nairobi",
+    "pink roses Nairobi",
+    "red roses Nairobi",
+    "white flowers Nairobi",
+    "fresh white flowers",
+    "blooming pink roses",
+    "blooming red roses",
+    "same day flower delivery Nairobi",
+    "florist Nairobi",
+    "roses Nairobi",
+    "fresh pink roses Nairobi",
+    "fresh red roses Nairobi",
+    "fresh white flowers Nairobi",
     // Valentine's Day Priority Keywords
     "valentine's gifts Nairobi",
     "valentine's day gifts Kenya",
@@ -218,6 +237,8 @@ export const metadata: Metadata = {
     "funeral wreaths Nairobi",
     "sympathy flowers Nairobi",
     "graduation flowers Nairobi",
+    // Deep SEO: pink roses, red roses, white flowers, flower delivery Nairobi (full list)
+    ...SITE_WIDE_KEYWORDS,
   ],
   authors: [{ name: "Floral Whispers Gifts" }],
   creator: "Floral Whispers Gifts",
@@ -232,9 +253,9 @@ export const metadata: Metadata = {
     url: process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke",
     siteName: "Floral Whispers Gifts Nairobi",
     title:
-      "Best Valentine's Gifts Nairobi | Romantic Flowers, Chocolates & Gift Hampers | Floral Whispers Gifts",
+      "Flower Delivery Nairobi | Fresh Pink Roses, Red Roses & White Flowers | Same-Day Delivery",
     description:
-      "Best Valentine's gifts Nairobi: romantic flowers, premium chocolates, wine, teddy bears & surprise hampers for your wife, husband, girlfriend, mom, dad. Pre-Valentine's Day orders, same-day delivery across Nairobi.",
+      "Flower delivery Nairobi: fresh pink roses, red roses, white flowers & blooming roses. Same-day delivery CBD, Westlands, Karen. Valentine's gifts, money bouquet, romantic flowers. Order with M-Pesa.",
     images: [
       {
         url: "/images/logo/FloralLogo.jpg",
@@ -247,9 +268,9 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title:
-      "Best Valentine's Gifts Nairobi | Romantic Flowers, Chocolates & Gift Hampers | Floral Whispers Gifts",
+      "Flower Delivery Nairobi | Fresh Pink Roses, Red Roses & White Flowers | Same-Day Delivery",
     description:
-      "Best Valentine's gifts Nairobi: romantic flowers, premium chocolates, wine, teddy bears & surprise hampers for your wife, husband, girlfriend, mom, dad. Pre-Valentine's Day orders, same-day delivery across Nairobi.",
+      "Flower delivery Nairobi: fresh pink roses, red roses, white flowers. Same-day delivery Nairobi. Valentine's gifts, money bouquet. Order with M-Pesa.",
     images: ["/images/logo/FloralLogo.jpg"],
   },
   robots: {
@@ -340,8 +361,33 @@ const localBusinessJsonLd = {
   ],
   hasOfferCatalog: {
     "@type": "OfferCatalog",
-    name: "Flowers, Gift Hampers, and Teddy Bears",
+    name: "Flower Delivery Nairobi, Roses, Gift Hampers, and Teddy Bears",
     itemListElement: [
+      {
+        "@type": "OfferCatalog",
+        name: "Flower Delivery Nairobi",
+        url: `${baseUrl}/collections/flowers`,
+      },
+      {
+        "@type": "OfferCatalog",
+        name: "Fresh Flowers & Roses",
+        url: `${baseUrl}/collections/flowers`,
+      },
+      {
+        "@type": "OfferCatalog",
+        name: "Pink Roses Nairobi",
+        url: `${baseUrl}/collections/flowers`,
+      },
+      {
+        "@type": "OfferCatalog",
+        name: "Red Roses Nairobi",
+        url: `${baseUrl}/collections/flowers`,
+      },
+      {
+        "@type": "OfferCatalog",
+        name: "White Flowers Nairobi",
+        url: `${baseUrl}/collections/flowers`,
+      },
       {
         "@type": "OfferCatalog",
         name: "Flowers",
@@ -379,6 +425,22 @@ const localBusinessJsonLd = {
       },
     ],
   },
+};
+
+const flowerDeliveryItemListJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Flower Delivery Nairobi - Fresh Pink Roses, Red Roses, White Flowers",
+  description: "Same-day flower delivery Nairobi: fresh pink roses, red roses, white flowers, blooming roses. CBD, Westlands, Karen, Lavington, Kilimani. Florist Nairobi.",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Flower Delivery Nairobi", url: `${baseUrl}/collections/flowers` },
+    { "@type": "ListItem", position: 2, name: "Pink Roses Nairobi", url: `${baseUrl}/collections/flowers` },
+    { "@type": "ListItem", position: 3, name: "Red Roses Nairobi", url: `${baseUrl}/collections/flowers` },
+    { "@type": "ListItem", position: 4, name: "White Flowers Nairobi", url: `${baseUrl}/collections/flowers` },
+    { "@type": "ListItem", position: 5, name: "Fresh White Flowers", url: `${baseUrl}/collections/flowers` },
+    { "@type": "ListItem", position: 6, name: "Blooming Pink Roses", url: `${baseUrl}/collections/flowers` },
+    { "@type": "ListItem", position: 7, name: "Fresh Flowers Nairobi", url: `${baseUrl}/collections/flowers` },
+  ],
 };
 
 const modernGiftsItemListJsonLd = {
@@ -532,6 +594,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(valentinesFaqJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(flowerDeliveryItemListJsonLd) }}
         />
       </head>
       <body className={`${lato.className} flex flex-col min-h-screen`}>

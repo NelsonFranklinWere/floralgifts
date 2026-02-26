@@ -4,6 +4,7 @@ import ImageGallery from "@/components/ImageGallery";
 import ProductDetailClient from "./ProductDetailClient";
 import { getProductBySlug } from "@/lib/db";
 import { formatCurrency } from "@/lib/utils";
+import { DEEP_FLOWER_ROSE_KEYWORDS } from "@/lib/seo-keywords";
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
@@ -23,13 +24,34 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   const productUrl = `${baseUrl}/product/${slug}`;
   const categoryKeywords: Record<string, string[]> = {
     flowers: [
-      // Valentine's Flowers Keywords
-      "valentine's flowers Nairobi", "valentine's roses Nairobi", "romantic valentine's flowers Nairobi", "valentine's bouquet Nairobi", "valentine's money bouquet Nairobi",
-      "valentine's flowers for wife Nairobi", "valentine's flowers for girlfriend Nairobi", "valentine's flowers for mom Nairobi",
-      "pre valentine's flowers Nairobi", "valentine's flower delivery Nairobi", "same day valentine's flowers Nairobi",
-      // Traditional Keywords
-      "flower delivery Nairobi", "roses Nairobi", "bouquet Nairobi", "money bouquet Nairobi", "romantic flowers Nairobi", "surprise flowers Nairobi",
-      "flower delivery Nairobi CBD", "flower delivery Westlands", "flower delivery Karen", "flower delivery Lavington", "flower delivery Kilimani"
+      // Deep SEO: pink roses, red roses, white flowers, flower delivery Nairobi
+      "flower delivery Nairobi",
+      "pink roses Nairobi",
+      "red roses Nairobi",
+      "white flowers Nairobi",
+      "fresh white flowers",
+      "blooming pink roses",
+      "fresh pink roses Nairobi",
+      "fresh red roses Nairobi",
+      "fresh white flowers Nairobi",
+      "fresh flowers Nairobi",
+      "florist Nairobi",
+      "roses Nairobi",
+      "same day flower delivery Nairobi",
+      ...DEEP_FLOWER_ROSE_KEYWORDS,
+      // Valentine's
+      "valentine's flowers Nairobi",
+      "valentine's roses Nairobi",
+      "valentine's bouquet Nairobi",
+      "valentine's money bouquet Nairobi",
+      "money bouquet Nairobi",
+      "romantic flowers Nairobi",
+      "bouquet Nairobi",
+      "flower delivery Nairobi CBD",
+      "flower delivery Westlands",
+      "flower delivery Karen",
+      "flower delivery Lavington",
+      "flower delivery Kilimani",
     ],
     teddy: [
       // Valentine's Teddy Bears Keywords
@@ -70,7 +92,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   };
 
   const categoryAltDescriptions: Record<string, string> = {
-    flowers: "Premium flower delivery Nairobi CBD, Westlands, Karen",
+    flowers: "Flower delivery Nairobi - fresh pink roses, red roses, white flowers. Same-day delivery CBD, Westlands, Karen",
     teddy: "Teddy bears Kenya, Nairobi gift delivery",
     hampers: "Gift hampers Kenya, Nairobi CBD delivery",
     wines: "Premium wines Nairobi, Westlands delivery",
@@ -80,8 +102,8 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   const imageAlt = `${product.title} - ${categoryAltDescriptions[product.category] || "Floral Whispers Gifts Nairobi"}`;
 
   return {
-    title: `${product.title} | Valentine's ${product.category === "flowers" ? "Flowers" : product.category === "teddy" ? "Teddy Bears" : product.category === "hampers" ? "Gift Hampers" : product.category === "wines" ? "Wine Gifts" : "Chocolates"} Nairobi | Floral Whispers Gifts`,
-    description: `${product.short_description || product.description} - Perfect Valentine's gift for your wife, husband, or girlfriend. Pre-Valentine's orders, same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Order online with M-Pesa.`,
+    title: `${product.title} | ${product.category === "flowers" ? "Flower Delivery Nairobi - Pink Roses, Red Roses, White Flowers" : product.category === "teddy" ? "Teddy Bears Nairobi" : product.category === "hampers" ? "Gift Hampers Nairobi" : product.category === "wines" ? "Wine Gifts Nairobi" : "Chocolates Nairobi"} | Floral Whispers Gifts`,
+    description: `${product.short_description || product.description}${product.category === "flowers" ? " Flower delivery Nairobi: fresh roses, same-day delivery CBD, Westlands, Karen." : " Same-day delivery Nairobi. Order online with M-Pesa."}`,
     keywords: categoryKeywords[product.category] || [],
     alternates: {
       canonical: productUrl,

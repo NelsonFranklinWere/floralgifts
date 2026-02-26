@@ -111,6 +111,12 @@ export default function AdminDashboard() {
         </div>
 
         <div className="grid grid-cols-3 gap-6">
+          <Link href="/admin/live-visitors" className="card p-6 hover:shadow-cardHover transition-shadow block border-2 border-brand-green/20">
+            <h2 className="font-heading font-bold text-xl text-brand-gray-900 mb-2">Live Visitors</h2>
+            <p className="text-brand-gray-600 mb-4">See who is on your site now. Sound &amp; desktop alerts for new visitors.</p>
+            <span className="text-brand-green font-medium">Open Live Visitors →</span>
+          </Link>
+
           <Link href="/admin/products" className="card p-6 hover:shadow-cardHover transition-shadow block">
             <h2 className="font-heading font-bold text-xl text-brand-gray-900 mb-2">Manage Products</h2>
             <p className="text-brand-gray-600 mb-4">Add, edit, or remove products from your catalog</p>

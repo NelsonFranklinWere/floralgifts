@@ -1,102 +1,52 @@
 import { Metadata } from "next";
 import FlowersPageClient from "./FlowersPageClient";
 import { getProducts } from "@/lib/db";
+import { DEEP_FLOWER_ROSE_KEYWORDS } from "@/lib/seo-keywords";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Valentine's Flowers Nairobi | Romantic Roses, Money Bouquet & Surprise Gifts for Wife, Girlfriend | Same-Day Delivery",
+  title: "Flower Delivery Nairobi | Fresh Pink Roses, Red Roses & White Flowers | Same-Day Delivery",
   description:
-    "Best Valentine's flowers Nairobi: romantic roses, money bouquets, surprise gifts for your wife, girlfriend, mom. Pre-Valentine's orders, same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Order Valentine's flowers online with M-Pesa.",
+    "Flower delivery Nairobi: fresh pink roses, red roses, white flowers & blooming roses. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Money bouquet, romantic flowers, Valentine's bouquets. Order online with M-Pesa.",
   keywords: [
-    // Valentine's Flowers Core Keywords
+    // Deep SEO: pink roses, red roses, white flowers, flower delivery (primary)
+    "flower delivery Nairobi",
+    "pink roses Nairobi",
+    "red roses Nairobi",
+    "white flowers Nairobi",
+    "fresh white flowers",
+    "blooming pink roses",
+    "blooming red roses",
+    "fresh pink roses Nairobi",
+    "fresh red roses Nairobi",
+    "fresh white flowers Nairobi",
+    "fresh flowers Nairobi",
+    "florist Nairobi",
+    "roses Nairobi",
+    "same day flower delivery Nairobi",
+    ...DEEP_FLOWER_ROSE_KEYWORDS,
+    // Valentine's
     "valentine's flowers Nairobi",
     "valentine's roses Nairobi",
-    "romantic valentine's flowers Nairobi",
-    "valentine's bouquet Nairobi",
-    "valentine's money bouquet Nairobi",
     "valentine's flower delivery Nairobi",
-
-    // Valentine's Relationship Gifts
-    "valentine's flowers for wife Nairobi",
-    "valentine's flowers for girlfriend Nairobi",
-    "valentine's flowers for husband Nairobi",
-    "valentine's flowers for mom Nairobi",
-    "valentine's flowers for dad Nairobi",
-    "romantic flowers for valentine's Nairobi",
-
-    // Valentine's Surprise Gifts
-    "valentine's surprise flowers Nairobi",
-    "surprise valentine's bouquet Nairobi",
-    "valentine's gift flowers Nairobi",
-    "romantic valentine's gifts Nairobi",
-
-    // Valentine's Planning
-    "pre valentine's flowers Nairobi",
-    "early valentine's flower orders Nairobi",
-    "valentine's flower arrangements Nairobi",
-    "plan valentine's surprise flowers Nairobi",
-
-    // Valentine's Flower Types
-    "valentine's red roses Nairobi",
-    "valentine's pink roses Nairobi",
-    "valentine's white roses Nairobi",
-    "valentine's mixed bouquet Nairobi",
-    "luxury valentine's flowers Nairobi",
-
-    // Valentine's Delivery
-    "same day valentine's flowers Nairobi",
-    "valentine's flower delivery CBD Nairobi",
-    "valentine's flowers Westlands",
-    "valentine's flowers Karen Nairobi",
-    "valentine's flowers Lavington",
-    "valentine's flowers Kilimani",
-
-    // Valentine's AI Search
-    "where to buy valentine's flowers Nairobi",
-    "best valentine's florist Nairobi",
-    "valentine's flower shop near me",
-    "how to surprise with valentine's flowers Nairobi",
-    "beautiful valentine's arrangements Nairobi",
-
-    // Valentine's Voice Search
-    "order valentine's flowers online Nairobi",
-    "find romantic flowers near me Nairobi",
-    "valentine's florist near me Kenya",
-
-    // Valentine's Long-tail
-    "personalized valentine's flower bouquets Nairobi",
-    "romantic valentine's flower deliveries Nairobi",
-    "luxury valentine's rose arrangements Nairobi",
-    "thoughtful valentine's flower gifts Nairobi",
-
-    // Valentine's Seasonal
-    "february valentine's flowers Nairobi",
-    "2025 valentine's flowers Nairobi",
-    "love month flowers Nairobi Kenya",
-
-    // Keeping some traditional keywords
     "money bouquet Nairobi",
     "romantic flowers Nairobi",
-    "surprise flowers Nairobi",
-    "flower delivery Nairobi",
-    "roses Nairobi",
     "bouquet delivery Nairobi",
-    "same-day flower delivery Nairobi",
   ],
   alternates: {
     canonical: `${baseUrl}/collections/flowers`,
   },
   openGraph: {
-    title: "Valentine's Flowers Nairobi | Romantic Roses, Money Bouquet & Surprise Gifts for Wife, Girlfriend | Same-Day Delivery",
-    description: "Best Valentine's flowers Nairobi: romantic roses, money bouquets, surprise gifts for your wife, girlfriend, mom. Pre-Valentine's orders, same-day delivery across Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
+    title: "Flower Delivery Nairobi | Fresh Pink Roses, Red Roses & White Flowers | Same-Day Delivery",
+    description: "Flower delivery Nairobi: fresh pink roses, red roses, white flowers & blooming roses. Same-day delivery CBD, Westlands, Karen, Lavington, Kilimani. Money bouquet, romantic flowers.",
     url: `${baseUrl}/collections/flowers`,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Valentine's Flowers Nairobi | Romantic Roses, Money Bouquet & Surprise Gifts for Wife, Girlfriend",
-    description: "Best Valentine's flowers Nairobi: romantic roses, money bouquets, surprise gifts for your wife, girlfriend, mom. Pre-Valentine's orders, same-day delivery across Nairobi.",
+    title: "Flower Delivery Nairobi | Fresh Pink Roses, Red Roses & White Flowers",
+    description: "Flower delivery Nairobi: fresh pink roses, red roses, white flowers. Same-day delivery across Nairobi. Order with M-Pesa.",
   },
 };
 
@@ -163,13 +113,48 @@ const FLOWER_PRODUCTS = [
 // Extract just the image URLs for backward compatibility
 const FLOWER_IMAGES = FLOWER_PRODUCTS.map(p => p.image);
 
+const flowersPageJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Flower Delivery Nairobi - Fresh Pink Roses, Red Roses, White Flowers",
+  description: "Same-day flower delivery Nairobi: fresh pink roses, red roses, white flowers, blooming roses. Florist Nairobi. CBD, Westlands, Karen, Lavington, Kilimani.",
+  url: `${baseUrl}/collections/flowers`,
+  mainEntity: {
+    "@type": "ItemList",
+    name: "Fresh Flowers & Roses Nairobi",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Pink Roses Nairobi", url: `${baseUrl}/collections/flowers` },
+      { "@type": "ListItem", position: 2, name: "Red Roses Nairobi", url: `${baseUrl}/collections/flowers` },
+      { "@type": "ListItem", position: 3, name: "White Flowers Nairobi", url: `${baseUrl}/collections/flowers` },
+      { "@type": "ListItem", position: 4, name: "Fresh White Flowers", url: `${baseUrl}/collections/flowers` },
+      { "@type": "ListItem", position: 5, name: "Blooming Pink Roses", url: `${baseUrl}/collections/flowers` },
+    ],
+  },
+};
+
 export default async function FlowersPage() {
   try {
     const products = await getProducts({ category: "flowers" });
     const safeProducts = Array.isArray(products) ? products : [];
-    return <FlowersPageClient products={safeProducts} allFlowerImages={FLOWER_IMAGES} flowerProducts={FLOWER_PRODUCTS} />;
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(flowersPageJsonLd) }}
+        />
+        <FlowersPageClient products={safeProducts} allFlowerImages={FLOWER_IMAGES} flowerProducts={FLOWER_PRODUCTS} />
+      </>
+    );
   } catch (error) {
-    return <FlowersPageClient products={[]} allFlowerImages={FLOWER_IMAGES} flowerProducts={FLOWER_PRODUCTS} />;
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(flowersPageJsonLd) }}
+        />
+        <FlowersPageClient products={[]} allFlowerImages={FLOWER_IMAGES} flowerProducts={FLOWER_PRODUCTS} />
+      </>
+    );
   }
 }
 

@@ -6,24 +6,26 @@ import JsonLd from "@/components/JsonLd";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Collections | Whispers Floral Gifts - Flowers, Teddy Bears, Gift Hampers Nairobi",
-  description: "Browse our collections: premium flowers Nairobi, teddy bears Kenya, gift hampers Kenya, wines Nairobi, chocolates Kenya. Christmas gifts, holiday collections, December specials. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Fast delivery across Nairobi.",
+  title: "Flower Delivery Nairobi | Pink Roses, Red Roses, White Flowers | Collections - Floral Whispers Gifts",
+  description: "Flower delivery Nairobi: fresh pink roses, red roses, white flowers. Browse flowers, teddy bears, gift hampers, wines, chocolates. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
   keywords: [
+    "flower delivery Nairobi",
+    "pink roses Nairobi",
+    "red roses Nairobi",
+    "white flowers Nairobi",
+    "fresh flowers Nairobi",
     "flower collections Nairobi",
     "teddy bear collections Kenya",
     "gift hamper collections Kenya",
     "wine collections Nairobi",
     "chocolate collections Kenya",
     "flowers Nairobi CBD",
+    "roses Nairobi",
+    "florist Nairobi",
     "gift hampers Westlands",
     "teddy bears Karen",
     "wines Lavington",
     "chocolates Kilimani",
-    "Christmas collections Nairobi",
-    "holiday gift collections",
-    "December gift collections",
-    "Christmas gift collections Kenya",
-    "holiday season collections",
   ],
   alternates: {
     canonical: `${baseUrl}/collections`,

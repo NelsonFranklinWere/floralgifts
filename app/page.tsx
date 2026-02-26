@@ -12,10 +12,21 @@ import { format } from "date-fns";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Best Valentine's Gifts Nairobi | Romantic Flowers, Chocolates & Gift Hampers for Wife, Husband, Girlfriend | Floral Whispers Gifts",
+  title: "Flower Delivery Nairobi | Fresh Pink Roses, Red Roses & White Flowers | Same-Day Delivery | Floral Whispers Gifts",
   description:
-    "Best Valentine's gifts Nairobi: romantic flowers, premium chocolates, wine, teddy bears & surprise hampers for your wife, husband, girlfriend, mom, dad. Pre-Valentine's Day orders, same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Order Valentine's gifts online with M-Pesa.",
+    "Flower delivery Nairobi: fresh pink roses, red roses, white flowers & blooming roses. Same-day delivery Nairobi CBD, Westlands, Karen. Valentine's gifts, money bouquet, chocolates, hampers. Order with M-Pesa.",
   keywords: [
+    // Deep flower/rose SEO
+    "flower delivery Nairobi",
+    "fresh flowers Nairobi",
+    "pink roses Nairobi",
+    "red roses Nairobi",
+    "white flowers Nairobi",
+    "fresh white flowers",
+    "blooming pink roses",
+    "same day flower delivery Nairobi",
+    "florist Nairobi",
+    "roses Nairobi",
     // Valentine's Day Core Keywords
     "valentine's gifts Nairobi",
     "valentine's day gifts Kenya",
