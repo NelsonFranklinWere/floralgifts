@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { persist, createJSONStorage, StateStorage } from "zustand/middleware";
 
 export interface CartItem {
   id: string;
@@ -19,6 +19,22 @@ interface CartStore {
   clearCart: () => void;
   getTotal: () => number;
   getItemCount: () => number;
+}
+
+const noopStorage: StateStorage = {
+  getItem: () => null,
+  setItem: () => {},
+  removeItem: () => {},
+};
+
+function getStorage(): StateStorage {
+  if (typeof window === "undefined") return noopStorage;
+  try {
+    window.localStorage.getItem("floral-cart");
+    return window.localStorage;
+  } catch {
+    return noopStorage;
+  }
 }
 
 const getItemKey = (id: string, options?: Record<string, string>) => {
@@ -82,7 +98,7 @@ export const useCartStore = create<CartStore>()(
     }),
     {
       name: "floral-cart",
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(getStorage),
     }
   )
 );

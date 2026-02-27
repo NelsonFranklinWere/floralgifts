@@ -31,9 +31,8 @@ export default function GoogleAnalytics() {
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', '${GA_MEASUREMENT_ID}', {
-              page_path: window.location.pathname,
-            });
+            var path = (typeof window !== 'undefined' && window.location && window.location.pathname) ? window.location.pathname : '/';
+            gtag('config', '${GA_MEASUREMENT_ID}', { page_path: path });
           `,
         }}
       />
