@@ -7,9 +7,7 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
-import VisitorTracking from "@/components/VisitorTracking";
 import VisitorPing from "@/components/VisitorPing";
-import FormillaWidget from "@/components/FormillaWidget";
 import { SHOP_INFO } from "@/lib/constants";
 import { SITE_WIDE_KEYWORDS } from "@/lib/seo-keywords";
 
@@ -602,6 +600,7 @@ export default function RootLayout({
       </head>
       <body className={`${lato.className} flex flex-col min-h-screen`}>
         <GoogleAnalytics />
+        <VisitorPing />
         <ErrorBoundary>
           <AnalyticsProvider>
             <a href="#main-content" className="skip-link">
