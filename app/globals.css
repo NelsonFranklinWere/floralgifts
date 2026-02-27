@@ -5,16 +5,19 @@
 @layer base {
   html {
     @apply scroll-smooth;
-    /* Prevent horizontal scroll on mobile */
     overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+    -webkit-text-size-adjust: 100%;
   }
   
   body {
     @apply bg-white text-brand-gray-900 font-body antialiased;
-    /* Prevent horizontal scroll on mobile */
     overflow-x: hidden;
-    /* Ensure minimum width for very small screens */
     min-width: 320px;
+    width: 100%;
+    max-width: 100vw;
+    position: relative;
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -84,68 +87,37 @@
     display: none;
   }
 
-  /* Custom scrollbar for mobile - visible and draggable with color animation */
+  /* Custom scrollbar for mobile - visible, draggable, static color (no animation to avoid WebKit issues) */
   .scrollbar-visible {
     -webkit-overflow-scrolling: touch;
     overflow-x: auto;
     overflow-y: hidden;
   }
   
-  /* Firefox */
   @media (max-width: 768px) {
     .scrollbar-visible {
       scrollbar-width: thin;
       scrollbar-color: #10b981 #f3f4f6;
     }
-  }
-  
-  /* Webkit browsers (Chrome, Safari, Edge) */
-  @media (max-width: 768px) {
     .scrollbar-visible::-webkit-scrollbar {
       height: 10px !important;
       display: block !important;
       -webkit-appearance: none;
       background: transparent;
     }
-    
     .scrollbar-visible::-webkit-scrollbar-track {
       background: #f3f4f6 !important;
       border-radius: 10px;
-      -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.1);
     }
-    
     .scrollbar-visible::-webkit-scrollbar-thumb {
-      background: linear-gradient(90deg, #ef4444 0%, #10b981 33%, #000000 66%, #ef4444 100%) !important;
-      background-size: 300% 100% !important;
-      animation: scrollbarColorShift 3s linear infinite !important;
+      background: #10b981 !important;
       border-radius: 10px !important;
       cursor: grab;
-      -webkit-box-shadow: 0 0 3px rgba(0,0,0,0.3);
       min-width: 50px;
     }
-    
     .scrollbar-visible::-webkit-scrollbar-thumb:hover {
-      animation-duration: 1.5s !important;
+      background: #059669 !important;
       cursor: grabbing;
-    }
-    
-    .scrollbar-visible::-webkit-scrollbar-thumb:active {
-      animation-duration: 0.8s !important;
-    }
-  }
-
-  @keyframes scrollbarColorShift {
-    0% {
-      background-position: 0% 0%;
-    }
-    33.33% {
-      background-position: 100% 0%;
-    }
-    66.66% {
-      background-position: 200% 0%;
-    }
-    100% {
-      background-position: 300% 0%;
     }
   }
 
