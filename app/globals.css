@@ -19,6 +19,14 @@
     max-width: 100vw;
     position: relative;
   }
+
+  /* Contain layout on mobile so nothing can force horizontal scroll */
+  @media (max-width: 768px) {
+    html, body {
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
   
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading font-semibold;
