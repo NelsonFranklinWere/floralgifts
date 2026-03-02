@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     template: "%s | Floral Whispers Gifts Nairobi",
   },
   description:
-    "Flower delivery Nairobi: fresh pink roses, red roses, white flowers & blooming roses. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Valentine's gifts, money bouquet, romantic flowers. Order online with M-Pesa.",
+    "Flower delivery Nairobi for Women's Day and every occasion: fresh pink roses, red roses, white flowers & blooming roses. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Gift hampers, teddy bears and romantic flowers. Order online with M-Pesa.",
   keywords: [
     "flower delivery Nairobi",
     "fresh flowers Nairobi",
@@ -76,6 +76,9 @@ export const metadata: Metadata = {
     "wedding flowers Nairobi",
     "M-Pesa flower delivery Nairobi",
     "online flower shop Nairobi",
+    "women's day gifts Nairobi",
+    "women's day flowers Nairobi",
+    "women's day roses Nairobi",
   ],
   authors: [{ name: "Floral Whispers Gifts" }],
   creator: "Floral Whispers Gifts",

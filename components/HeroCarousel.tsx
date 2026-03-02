@@ -8,41 +8,46 @@ const heroSlides = [
   {
     id: 1,
     image: "/images/products/flowers/BouquetFlowers1.jpg",
-    title: "Valentine's Day Gifts Nairobi | Romantic Flowers for Wife, Girlfriend, Mom",
-    subtitle: "Express love with beautiful Valentine's roses & premium chocolates. Same-day delivery across Nairobi CBD, Westlands, Karen. Perfect Valentine's surprises for your special someone.",
-    ctaText: "Shop Valentine's Gifts",
+    title: "Women's Day Gifts Nairobi | Pink Roses, Hampers & Teddy Bears for Her",
+    subtitle:
+      "Celebrate International Women's Day with pink roses, red roses, luxury gift hampers and cuddly teddy bears. Same-day delivery across Nairobi CBD, Westlands, Karen, Lavington and more.",
+    ctaText: "Shop Women's Day Gifts",
     ctaLink: "/collections",
   },
   {
     id: 2,
     image: "/images/products/flowers/BouquetFlowers2.jpg",
-    title: "Romantic Valentine's Flowers Nairobi | Best Gifts for Couples & Families",
-    subtitle: "Stunning Valentine's arrangements for your wife, girlfriend, husband, or family. Fresh roses, mixed bouquets, money bouquets. Express your love beautifully in Nairobi.",
-    ctaText: "Valentine's Flowers",
+    title: "Women's Day Flowers Nairobi | Pink & Red Roses for Amazing Women",
+    subtitle:
+      "Send blooming pink roses, red roses and white flowers to mothers, wives, girlfriends, sisters and colleagues in Nairobi. Fresh flower delivery for Women's Day.",
+    ctaText: "Women's Day Flowers",
     ctaLink: "/collections/flowers",
   },
   {
     id: 3,
     image: "/images/products/hampers/giftamper.jpg",
-    title: "Luxury Valentine's Gift Hampers Nairobi | Surprise Gifts for Loved Ones",
-    subtitle: "Premium Valentine's hampers with Ferrero Rocher chocolates, teddy bears, and romantic flowers. Perfect gifts for couples, families, and girlfriends in Nairobi.",
-    ctaText: "Valentine's Hampers",
+    title: "Women's Day Gift Hampers Nairobi | Surprise Gifts for Her",
+    subtitle:
+      "Premium Women's Day gift hampers with chocolates, wine, self-care treats and flowers. Thoughtful gifts for the special women in your life in Nairobi.",
+    ctaText: "Women's Day Hampers",
     ctaLink: "/collections/gift-hampers",
   },
   {
     id: 4,
     image: "/images/products/teddies/Teddybear1.jpg",
-    title: "Valentine's Teddy Bears Nairobi | Cuddly Gifts for Girlfriend, Wife, Family",
-    subtitle: "Soft and adorable Valentine's teddy bears (25cm-200cm) in romantic colors. Express love with cuddly companions - perfect gifts for couples and families in Nairobi.",
-    ctaText: "Valentine's Teddy Bears",
+    title: "Women's Day Teddy Bears Nairobi | Cuddly Gifts in Pink, Red & White",
+    subtitle:
+      "Soft and adorable teddy bears (25cm–200cm) in romantic pink, red, white and brown. Perfect Women's Day gifts for girlfriend, wife, mum and daughters in Nairobi.",
+    ctaText: "Women's Day Teddy Bears",
     ctaLink: "/collections/teddy-bears",
   },
   {
     id: 5,
     image: "/images/products/Chocolates/Chocolates1.jpg",
-    title: "Premium Valentine's Chocolates Nairobi | Romantic Gifts for Couples",
-    subtitle: "Luxury Ferrero Rocher chocolates and gourmet Valentine's treats. Sweet surprises for your wife, girlfriend, or family. Same-day delivery across Nairobi.",
-    ctaText: "Valentine's Chocolates",
+    title: "Women's Day Chocolates Nairobi | Sweet Gifts for Her",
+    subtitle:
+      "Luxury Ferrero Rocher chocolates and gourmet treats to spoil her on Women's Day. Pair with roses or hampers for same-day delivery across Nairobi.",
+    ctaText: "Women's Day Chocolates",
     ctaLink: "/collections/chocolates",
   },
 ];

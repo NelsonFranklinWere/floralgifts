@@ -8,133 +8,32 @@ import { getProducts } from "@/lib/db";
 import { getPredefinedProducts } from "@/lib/predefinedProducts";
 import { getBlogPosts } from "@/lib/blogData";
 import { format } from "date-fns";
+import { WOMENS_DAY_KEYWORDS } from "@/lib/seo-keywords";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Flower Delivery Nairobi | Fresh Pink Roses, Red Roses & White Flowers | Same-Day Delivery | Floral Whispers Gifts",
+  title:
+    "Women's Day Gifts Nairobi | Pink & Red Roses, Gift Hampers & Teddy Bears | Floral Whispers Gifts",
   description:
-    "Flower delivery Nairobi: fresh pink roses, red roses, white flowers & blooming roses. Same-day delivery Nairobi CBD, Westlands, Karen. Valentine's gifts, money bouquet, chocolates, hampers. Order with M-Pesa.",
+    "Women's Day gifts Nairobi: pink roses, red roses, white flowers, luxury gift hampers, chocolates and teddy bears for her. Celebrate amazing women with same-day delivery across Nairobi CBD, Westlands, Karen, Lavington and more.",
   keywords: [
-    // Deep flower/rose SEO
+    ...WOMENS_DAY_KEYWORDS,
     "flower delivery Nairobi",
     "fresh flowers Nairobi",
-    "pink roses Nairobi",
-    "red roses Nairobi",
-    "white flowers Nairobi",
-    "fresh white flowers",
-    "blooming pink roses",
-    "same day flower delivery Nairobi",
+    "gift hampers Nairobi",
+    "teddy bears Nairobi",
+    "online flower delivery Nairobi",
     "florist Nairobi",
-    "roses Nairobi",
-    // Valentine's Day Core Keywords
-    "valentine's gifts Nairobi",
-    "valentine's day gifts Kenya",
-    "best valentine's gifts for wife Nairobi",
-    "valentine's gifts for husband Nairobi",
-    "valentine's gifts for girlfriend Nairobi",
-    "romantic valentine's gifts Nairobi",
-    "surprise valentine's gifts Nairobi",
-    "pre valentine's day gifts Nairobi",
-    "valentine's flowers Nairobi",
-    "valentine's chocolates Nairobi",
-    "valentine's wine gifts Nairobi",
-    "valentine's teddy bears Nairobi",
-    "valentine's gift hampers Nairobi",
-    "valentine's cards Nairobi",
-
-    // Relationship-based Valentine's searches
-    "what to gift my wife on valentine's day Nairobi",
-    "valentine's gift for my husband Nairobi",
-    "valentine's surprise for girlfriend Nairobi",
-    "best valentine's gift for mom Nairobi",
-    "valentine's gift for dad Nairobi",
-    "valentine's gifts for couples Nairobi",
-    "romantic gifts for wife valentine's Nairobi",
-    "gifts to surprise husband valentine's Nairobi",
-    "valentine's day gifts for her Nairobi",
-    "valentine's day gifts for him Nairobi",
-
-    // Pre-Valentine's planning
-    "pre valentine's orders Nairobi",
-    "early valentine's gifts Nairobi",
-    "plan valentine's surprise Nairobi",
-    "valentine's day preparation Nairobi",
-    "book valentine's gifts early Nairobi",
-
-    // Product-specific Valentine's keywords
-    "valentine's roses Nairobi",
-    "valentine's bouquet Nairobi",
-    "romantic flowers valentine's Nairobi",
-    "valentine's chocolate hamper Nairobi",
-    "premium valentine's wine Nairobi",
-    "valentine's teddy bear gifts Nairobi",
-    "valentine's money bouquet Nairobi",
-    "luxury valentine's hampers Nairobi",
-
-    // Location-specific Valentine's delivery
-    "valentine's delivery Nairobi CBD",
-    "valentine's flowers Westlands",
-    "valentine's gifts Karen Nairobi",
-    "valentine's delivery Lavington",
-    "valentine's gifts Kilimani",
-
-    // Valentine's Day timing
-    "same day valentine's gifts Nairobi",
-    "last minute valentine's gifts Nairobi",
-    "urgent valentine's delivery Nairobi",
-
-    // Valentine's AI search patterns
-    "where to buy valentine's gifts Nairobi",
-    "best florist for valentine's Nairobi",
-    "valentine's gift ideas Nairobi",
-    "how to surprise partner valentine's Nairobi",
-    "valentine's romantic gestures Nairobi",
-    "affordable valentine's gifts Nairobi",
-    "luxury valentine's gifts Nairobi",
-
-    // Valentine's voice search
-    "find valentine's gifts near me Nairobi",
-    "valentine's florist near me Kenya",
-    "order valentine's flowers online Nairobi",
-    "valentine's gift delivery near me",
-
-    // Valentine's long-tail keywords
-    "beautiful valentine's flower arrangements Nairobi",
-    "personalized valentine's gift hampers Nairobi",
-    "romantic valentine's surprise packages Nairobi",
-    "valentine's day luxury gifts Nairobi",
-    "thoughtful valentine's presents Nairobi",
-    "memorable valentine's gifts Nairobi",
-    "unique valentine's gift ideas Nairobi",
-
-    // Valentine's seasonal keywords
-    "2025 valentine's gifts Nairobi",
-    "february valentine's gifts Nairobi",
-    "love month gifts Nairobi Kenya",
-
-    // Valentine's corporate/business
-    "corporate valentine's gifts Nairobi",
-    "valentine's team gifts Nairobi",
-    "office valentine's celebrations Nairobi",
-
-    // Valentine's traditional keywords (keeping some)
-    "best gifts for men Nairobi",
-    "best gifts for wives Nairobi",
-    "best gifts for couples Nairobi",
-    "surprise gifts for wife Nairobi",
-    "romantic flowers Nairobi",
-    "money bouquet Nairobi",
-    "flower delivery Nairobi",
-    "gift hampers Kenya",
-    "same-day delivery Nairobi",
   ],
   alternates: {
     canonical: baseUrl,
   },
   openGraph: {
-    title: "Best Valentine's Gifts Nairobi | Romantic Flowers, Chocolates & Gift Hampers for Wife, Husband, Girlfriend | Floral Whispers Gifts",
-    description: "Best Valentine's gifts Nairobi: romantic flowers, premium chocolates, wine, teddy bears & surprise hampers for your wife, husband, girlfriend, mom, dad. Pre-Valentine's Day orders, same-day delivery across Nairobi.",
+    title:
+      "Women's Day Gifts Nairobi | Pink & Red Roses, Gift Hampers & Teddy Bears | Floral Whispers Gifts",
+    description:
+      "Celebrate Women's Day in Nairobi with pink roses, red roses, gift hampers, chocolates and teddy bears. Same-day delivery for mothers, wives, girlfriends, sisters and colleagues across Nairobi.",
     url: baseUrl,
     siteName: "Floral Whispers Gifts",
     images: [
@@ -150,8 +49,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Best Valentine's Gifts Nairobi | Romantic Flowers, Chocolates & Gift Hampers for Wife, Husband, Girlfriend",
-    description: "Best Valentine's gifts Nairobi: romantic flowers, premium chocolates, wine, teddy bears & surprise hampers for your wife, husband, girlfriend, mom, dad. Pre-Valentine's Day orders, same-day delivery across Nairobi.",
+    title:
+      "Women's Day Gifts Nairobi | Pink & Red Roses, Gift Hampers & Teddy Bears",
+    description:
+      "Women's Day gifts Nairobi: pink & red roses, white flowers, hampers, chocolates and teddy bears for her. Same-day delivery across Nairobi.",
     images: ["/images/logo/FloralLogo.jpg"],
   },
 };
@@ -849,17 +750,19 @@ export default async function HomePage() {
       <div>
         <HeroCarousel />
 
-        {/* Valentine's Gift Hampers */}
+        {/* Women's Day Gift Hampers */}
         <ProductSection
-          title="Valentine's Gift Hampers"
+          title="Women's Day Gift Hampers Nairobi"
+          subtitle="Curated Women's Day hampers with pink roses, chocolates, wine and pamper gifts for her in Nairobi."
           products={newYearHampers.length >= 8 ? newYearHampers : getFallbackProducts("hampers")}
           bgColor="bg-white"
           linkHref="/collections/gift-hampers"
         />
 
-        {/* Flowers delivered same day in Nairobi */}
+        {/* Women's Day flowers delivered same day in Nairobi */}
         <ProductSection
-          title="Flowers delivered same day in Nairobi"
+          title="Women's Day Flowers Delivered Same Day in Nairobi"
+          subtitle="Pink roses, red roses and white flowers for Women's Day with same-day delivery across Nairobi."
           products={sameDayFlowers.length >= 8 ? sameDayFlowers : getFallbackProducts("flowers")}
           bgColor="bg-gradient-to-br from-brand-gray-50 via-white to-brand-gray-50"
           linkHref="/collections/flowers"
@@ -883,7 +786,7 @@ export default async function HomePage() {
 
         {/* Valentine's Anniversary Celebrations Gifts */}
         <ProductSection
-          title="Valentine's Anniversary Celebrations Gifts"
+          title="Women's Day Celebration Gifts"
           products={anniversaryProducts.length >= 8 ? anniversaryProducts : getFallbackProducts("mixed")}
           bgColor="bg-white"
           linkHref="/collections/flowers?tags=anniversary"
@@ -915,7 +818,7 @@ export default async function HomePage() {
 
         {/* Valentine's Colleagues Surprises And Celebrations */}
         <ProductSection
-          title="Valentine's Colleagues Surprises And Celebrations"
+          title="Women's Day Colleagues Surprises And Celebrations"
           products={colleaguesProducts.length >= 8 ? colleaguesProducts : getFallbackProducts("mixed")}
           bgColor="bg-white"
           linkHref="/collections/gift-hampers"
@@ -949,20 +852,20 @@ export default async function HomePage() {
                 <div className="relative h-32 sm:h-48 md:h-64 lg:h-72 overflow-hidden">
                   <Image
                     src="/images/products/hampers/giftamper.jpg"
-                    alt="Gift Hampers"
+                    alt="Women's Day gift hampers Nairobi"
                     fill
                     className="object-cover group-hover:scale-110 transition-transform duration-500"
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 33vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-4 md:p-6 text-white">
-                    <h3 className="font-heading font-bold text-sm sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Valentine's Gift Hampers</h3>
-                    <p className="text-xs sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Romantic surprise packages</p>
+                    <h3 className="font-heading font-bold text-sm sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Women's Day Gift Hampers</h3>
+                    <p className="text-xs sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Pink-themed surprise hampers for Women's Day</p>
                   </div>
                 </div>
                 <div className="p-2 sm:p-4 md:p-6">
                   <p className="text-brand-gray-600 mb-2 sm:mb-3 md:mb-4 text-xs sm:text-xs md:text-sm lg:text-base line-clamp-2 sm:line-clamp-none">
-                    Luxury Valentine's hampers with premium chocolates, teddy bears, and romantic flowers. Perfect surprise gifts for couples, girlfriends, and families celebrating love in Nairobi.
+                    Luxury Women's Day hampers with premium chocolates, self-care treats, pink roses and adorable teddy bears. Perfect gifts for wives, girlfriends, mums and female colleagues in Nairobi.
                   </p>
                   <span className="inline-flex items-center text-brand-red font-semibold group-hover:gap-2 gap-1 transition-all duration-300 text-xs sm:text-xs md:text-sm">
                     Explore Hampers
@@ -981,20 +884,20 @@ export default async function HomePage() {
                 <div className="relative h-32 sm:h-48 md:h-64 lg:h-72 overflow-hidden">
                   <Image
                     src="/images/products/flowers/BouquetFlowers1.jpg"
-                    alt="Flowers"
+                    alt="Women's Day flowers Nairobi pink and red roses"
                     fill
                     className="object-cover group-hover:scale-110 transition-transform duration-500"
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 33vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-4 md:p-6 text-white">
-                    <h3 className="font-heading font-bold text-sm sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Valentine's Flowers</h3>
-                    <p className="text-xs sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Romantic roses for your loved one</p>
+                    <h3 className="font-heading font-bold text-sm sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Women's Day Flowers</h3>
+                    <p className="text-xs sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Pink roses, red roses and white flowers for Women's Day</p>
                   </div>
                 </div>
                 <div className="p-2 sm:p-4 md:p-6">
                   <p className="text-brand-gray-600 mb-2 sm:mb-3 md:mb-4 text-xs sm:text-xs md:text-sm lg:text-base line-clamp-2 sm:line-clamp-none">
-                    Express love with stunning Valentine's roses, mixed bouquets, and romantic arrangements. Perfect Valentine's gifts for wife, girlfriend, or family. Same-day delivery Nairobi.
+                    Express appreciation with stunning Women's Day roses, mixed pink and red bouquets, and elegant white flowers. Perfect gifts for the amazing women in your life, with same-day delivery in Nairobi.
                   </p>
                   <span className="inline-flex items-center text-brand-red font-semibold group-hover:gap-2 gap-1 transition-all duration-300 text-xs sm:text-xs md:text-sm">
                     Explore Flowers
@@ -1013,20 +916,20 @@ export default async function HomePage() {
                 <div className="relative h-32 sm:h-48 md:h-64 lg:h-72 overflow-hidden">
                   <Image
                     src="/images/products/teddies/Teddybear1.jpg"
-                    alt="Teddy Bears"
+                    alt="Women's Day teddy bears Nairobi in pink red and white"
                     fill
                     className="object-cover group-hover:scale-110 transition-transform duration-500"
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 33vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-4 md:p-6 text-white">
-                    <h3 className="font-heading font-bold text-sm sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Valentine's Teddy Bears</h3>
-                    <p className="text-xs sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Romantic cuddly companions</p>
+                    <h3 className="font-heading font-bold text-sm sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Women's Day Teddy Bears</h3>
+                    <p className="text-xs sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Cuddly teddy bears in pink, red, white and brown</p>
                   </div>
                 </div>
                 <div className="p-2 sm:p-4 md:p-6">
                   <p className="text-brand-gray-600 mb-2 sm:mb-3 md:mb-4 text-xs sm:text-xs md:text-sm lg:text-base line-clamp-2 sm:line-clamp-none">
-                    Express love with soft and adorable Valentine's teddy bears (25cm-200cm). Perfect romantic gifts for girlfriend, wife, or family. Available in romantic red, pink, and white colors.
+                    Celebrate Women's Day with soft and adorable teddy bears (25cm–200cm). Perfect gifts for girlfriends, wives, mums and daughters, available in romantic red, pink, white and more.
                   </p>
                   <span className="inline-flex items-center text-brand-red font-semibold group-hover:gap-2 gap-1 transition-all duration-300 text-xs sm:text-xs md:text-sm">
                     Explore Teddy Bears
