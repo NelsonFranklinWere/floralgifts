@@ -87,7 +87,7 @@ export default function CartSidebar() {
                                 {Object.entries(item.options).map(([k, v]) => `${k}: ${v}`).join(", ")}
                               </p>
                             )}
-                            <p className="text-brand-green font-medium text-sm mb-2">
+                            <p className="text-brand-red font-medium text-sm mb-2">
                               {formatCurrency(item.price)}
                             </p>
                             <div className="flex items-center gap-2 mb-2">
@@ -137,7 +137,7 @@ export default function CartSidebar() {
                 <div className="border-t border-brand-gray-200 px-6 py-4 space-y-4">
                   <div className="flex items-center justify-between text-lg font-semibold">
                     <span>Total:</span>
-                    <span className="text-brand-green">{formatCurrency(total)}</span>
+                    <span className="text-brand-red">{formatCurrency(total)}</span>
                   </div>
                   <Link
                     href="/cart"

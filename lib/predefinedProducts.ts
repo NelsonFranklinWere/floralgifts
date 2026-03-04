@@ -170,6 +170,62 @@ export const CARD_PRODUCTS = [
   },
 ];
 
+// Gift hamper products mapped to images
+export const HAMPER_PRODUCTS = [
+  {
+    image: "/images/products/hampers/GiftAmper1.jpg",
+    title: "WarmHugs Gift Hamper",
+    description:
+      "100cm teddy bear, Pink Roses flower bouquet, 3 Piece Ferrero rocher chocolate, 4 Packets cuddburry chocolate, Customized gift Hamper",
+    price: 1780000, // 17,800 KES in cents
+    slug: "warmhugs-gift-hamper",
+  },
+  {
+    image: "/images/products/hampers/giftamper.jpg",
+    title: "Sweetheart Snuggler",
+    description:
+      "50cm teddy bear, Flower bouquet, Ferrero rocher chocolate, Bracelet",
+    price: 1250000, // 12,500 KES in cents
+    slug: "sweetheart-snuggler",
+  },
+  {
+    image: "/images/products/hampers/GiftAmper3.jpg",
+    title: "GentlePaw Hamper",
+    description:
+      "100cm Teddy bear, Flower bouquet, Non Alcoholic wine, Ferrero rocher chocolate T16, Necklace, Bracelet, Watch",
+    price: 2050000, // 20,500 KES in cents
+    slug: "gentlepaw-hamper",
+  },
+  {
+    image: "/images/products/hampers/GiftAmper6.jpg",
+    title: "Signature Celebration Basket",
+    description: "Luxury gift hamper with curated items",
+    price: 1050000, // 10,500 KES in cents
+    slug: "signature-celebration-basket",
+  },
+  {
+    image: "/images/products/hampers/GiftAmper7.jpg",
+    title: "Spoil Me Sweet Box",
+    description: "Luxury gift hamper with curated items",
+    price: 1450000, // 14,500 KES in cents
+    slug: "spoil-me-sweet-box",
+  },
+  {
+    image: "/images/products/hampers/GiftAmper8.jpg",
+    title: "Aroma & Delight Hamper",
+    description: "Luxury gift hamper with curated items",
+    price: 980000, // 9,800 KES in cents
+    slug: "aroma-delight-hamper",
+  },
+  {
+    image: "/images/products/hampers/GiftAmper10.jpg",
+    title: "Care Package Gift Hamper",
+    description: "Luxury gift hamper with curated items",
+    price: 850000, // 8,500 KES in cents
+    slug: "care-package-gift-hamper",
+  },
+];
+
 // Convert predefined products to Product format
 export function getPredefinedProducts(category: string): Product[] {
   const now = new Date().toISOString();
@@ -205,7 +261,7 @@ export function getPredefinedProducts(category: string): Product[] {
       updated_at: now,
     }));
   }
-  
+
   if (category === "chocolates") {
     return CHOCOLATE_PRODUCTS.map((cp) => ({
       id: `chocolate-${cp.slug}`,
@@ -216,6 +272,22 @@ export function getPredefinedProducts(category: string): Product[] {
       short_description: cp.description,
       description: cp.description,
       category: "chocolates" as const,
+      tags: [] as string[],
+      created_at: now,
+      updated_at: now,
+    }));
+  }
+
+  if (category === "hampers") {
+    return HAMPER_PRODUCTS.map((hp) => ({
+      id: `hamper-${hp.slug}`,
+      title: hp.title,
+      price: hp.price,
+      images: [hp.image],
+      slug: hp.slug,
+      short_description: hp.description,
+      description: hp.description,
+      category: "hampers" as const,
       tags: [] as string[],
       created_at: now,
       updated_at: now,

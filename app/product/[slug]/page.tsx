@@ -2,7 +2,8 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ImageGallery from "@/components/ImageGallery";
 import ProductDetailClient from "./ProductDetailClient";
-import { getProductBySlug } from "@/lib/db";
+import { getProductBySlug, type Product } from "@/lib/db";
+import { getPredefinedProducts } from "@/lib/predefinedProducts";
 import { formatCurrency } from "@/lib/utils";
 import { DEEP_FLOWER_ROSE_KEYWORDS } from "@/lib/seo-keywords";
 
@@ -10,9 +11,26 @@ interface ProductPageProps {
   params: Promise<{ slug: string }>;
 }
 
+async function getProductWithFallback(slug: string): Promise<Product | null> {
+  const dbProduct = await getProductBySlug(slug);
+  if (dbProduct) return dbProduct;
+
+  // Fallback to predefined products (flowers, hampers, wines, chocolates, cards)
+  const fallbackLists = [
+    getPredefinedProducts("flowers"),
+    getPredefinedProducts("hampers"),
+    getPredefinedProducts("wines"),
+    getPredefinedProducts("chocolates"),
+    getPredefinedProducts("cards"),
+  ];
+
+  const allFallback = fallbackLists.flat();
+  return allFallback.find((p) => p.slug === slug) || null;
+}
+
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const product = await getProductBySlug(slug);
+  const product = await getProductWithFallback(slug);
 
   if (!product) {
     return {
@@ -131,7 +149,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params;
-  const product = await getProductBySlug(slug);
+  const product = await getProductWithFallback(slug);
 
   if (!product) {
     notFound();
@@ -234,7 +252,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               </h1>
 
               <div className="mb-6">
-                <p className="font-mono font-semibold text-brand-green text-3xl mb-2">
+                <p className="font-mono font-semibold text-brand-red text-3xl mb-2">
                   {formatCurrency(product.price)}
                 </p>
               </div>

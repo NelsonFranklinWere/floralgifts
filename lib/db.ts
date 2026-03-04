@@ -58,7 +58,10 @@ export async function getProducts(filters?: {
   teddy_color?: string[];
 }): Promise<Product[]> {
   try {
-    let query = supabase.from("products").select("*").order("created_at", { ascending: false });
+    // Use admin client on the server so product listing is not blocked by RLS
+    let query = (supabaseAdmin.from("products") as any)
+      .select("*")
+      .order("created_at", { ascending: false });
 
     if (filters?.category) {
       query = query.eq("category", filters.category);
@@ -83,7 +86,12 @@ export async function getProducts(filters?: {
     const { data, error } = await query;
 
     if (error) {
-      console.error("Error fetching products:", error);
+      console.error("Error fetching products:", {
+        message: (error as any).message,
+        details: (error as any).details,
+        hint: (error as any).hint,
+        code: (error as any).code,
+      });
       return [];
     }
 
@@ -103,14 +111,24 @@ export async function getProducts(filters?: {
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
   try {
-    const { data, error } = await supabase
-      .from("products")
+    const { data, error } = await (supabaseAdmin
+      .from("products") as any)
       .select("*")
       .eq("slug", slug)
       .single();
 
     if (error) {
-      console.error("Error fetching product:", error);
+      const err: any = error;
+      // Treat "no rows found" as a simple 404 without logging noisy errors
+      if (err.code === "PGRST116" || err.message?.toLowerCase().includes("no rows") || err.details?.toLowerCase().includes("row not found")) {
+        return null;
+      }
+      console.error("Error fetching product by slug:", {
+        message: err.message,
+        details: err.details,
+        hint: err.hint,
+        code: err.code,
+      });
       return null;
     }
 
@@ -132,10 +150,23 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
 
 export async function getProductById(id: string): Promise<Product | null> {
   try {
-    const { data, error } = await supabase.from("products").select("*").eq("id", id).single();
+    const { data, error } = await (supabaseAdmin
+      .from("products") as any)
+      .select("*")
+      .eq("id", id)
+      .single();
 
     if (error) {
-      console.error("Error fetching product:", error);
+      const err: any = error;
+      if (err.code === "PGRST116" || err.message?.toLowerCase().includes("no rows") || err.details?.toLowerCase().includes("row not found")) {
+        return null;
+      }
+      console.error("Error fetching product by id:", {
+        message: err.message,
+        details: err.details,
+        hint: err.hint,
+        code: err.code,
+      });
       return null;
     }
 

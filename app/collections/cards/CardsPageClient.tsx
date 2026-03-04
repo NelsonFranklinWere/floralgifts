@@ -59,13 +59,13 @@ export default function CardsPageClient() {
                   />
                 </div>
                 <div className="p-4">
-                  <h3 className="font-heading font-semibold text-lg text-brand-gray-900 mb-2 group-hover:text-brand-green transition-colors">
+                  <h3 className="font-heading font-semibold text-lg text-brand-gray-900 mb-2 group-hover:text-brand-red transition-colors">
                     {product.title}
                   </h3>
                   <p className="text-brand-gray-600 text-sm mb-3 line-clamp-2">
                     {product.short_description}
                   </p>
-                  <p className="font-mono font-bold text-xl text-brand-green">
+                  <p className="font-mono font-bold text-xl text-brand-red">
                     {formatCurrency(product.price)}
                   </p>
                 </div>

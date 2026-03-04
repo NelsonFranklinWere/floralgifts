@@ -75,7 +75,7 @@ function ProductSection({
   title,
   subtitle,
   products,
-  bgColor = "bg-white",
+  bgColor = "bg-green-100",
   linkHref,
 }: {
   title: string;
@@ -747,7 +747,7 @@ export default async function HomePage() {
   return (
     <>
       <JsonLd data={breadcrumbJsonLd} />
-      <div>
+      <div className="bg-green-100">
         <HeroCarousel />
 
         {/* Women's Day Gift Hampers */}
@@ -755,7 +755,7 @@ export default async function HomePage() {
           title="Women's Day Gift Hampers Nairobi"
           subtitle="Curated Women's Day hampers with pink roses, chocolates, wine and pamper gifts for her in Nairobi."
           products={newYearHampers.length >= 8 ? newYearHampers : getFallbackProducts("hampers")}
-          bgColor="bg-white"
+          bgColor="bg-green-100"
           linkHref="/collections/gift-hampers"
         />
 
@@ -764,7 +764,7 @@ export default async function HomePage() {
           title="Women's Day Flowers Delivered Same Day in Nairobi"
           subtitle="Pink roses, red roses and white flowers for Women's Day with same-day delivery across Nairobi."
           products={sameDayFlowers.length >= 8 ? sameDayFlowers : getFallbackProducts("flowers")}
-          bgColor="bg-gradient-to-br from-brand-gray-50 via-white to-brand-gray-50"
+          bgColor="bg-gradient-to-br from-green-100 via-green-50 to-green-100"
           linkHref="/collections/flowers"
         />
 
@@ -772,7 +772,7 @@ export default async function HomePage() {
         <ProductSection
           title="Holiday Surprise Gifts For Families"
           products={holidayFamilyProducts.length >= 8 ? holidayFamilyProducts : getFallbackProducts("mixed")}
-          bgColor="bg-white"
+          bgColor="bg-green-100"
           linkHref="/collections"
         />
 
@@ -780,7 +780,7 @@ export default async function HomePage() {
         <ProductSection
           title="Celebrate your kids best results with gifts"
           products={formFourResultsProducts.length >= 8 ? formFourResultsProducts : getFallbackProducts("mixed")}
-          bgColor="bg-gradient-to-br from-brand-gray-50 via-white to-brand-gray-50"
+          bgColor="bg-gradient-to-br from-green-100 via-green-50 to-green-100"
           linkHref="/collections/gift-hampers"
         />
 
@@ -788,7 +788,7 @@ export default async function HomePage() {
         <ProductSection
           title="Women's Day Celebration Gifts"
           products={anniversaryProducts.length >= 8 ? anniversaryProducts : getFallbackProducts("mixed")}
-          bgColor="bg-white"
+          bgColor="bg-green-100"
           linkHref="/collections/flowers?tags=anniversary"
         />
 
@@ -796,7 +796,7 @@ export default async function HomePage() {
         <ProductSection
           title="Say It With Flowers"
           products={sayItWithFlowers.length >= 8 ? sayItWithFlowers : getFallbackProducts("flowers")}
-          bgColor="bg-gradient-to-br from-brand-gray-50 via-white to-brand-gray-50"
+          bgColor="bg-gradient-to-br from-green-100 via-green-50 to-green-100"
           linkHref="/collections/flowers"
         />
 
@@ -804,7 +804,7 @@ export default async function HomePage() {
         <ProductSection
           title="Gift Hampers"
           products={giftHampers.length >= 8 ? giftHampers : getFallbackProducts("hampers")}
-          bgColor="bg-white"
+          bgColor="bg-green-100"
           linkHref="/collections/gift-hampers"
         />
 
@@ -812,7 +812,7 @@ export default async function HomePage() {
         <ProductSection
           title="Teddy Bears"
           products={teddyBears}
-          bgColor="bg-gradient-to-br from-brand-gray-50 via-white to-brand-gray-50"
+          bgColor="bg-gradient-to-br from-green-50 via-green-50 to-green-50"
           linkHref="/collections/teddy-bears"
         />
 
@@ -820,12 +820,12 @@ export default async function HomePage() {
         <ProductSection
           title="Women's Day Colleagues Surprises And Celebrations"
           products={colleaguesProducts.length >= 8 ? colleaguesProducts : getFallbackProducts("mixed")}
-          bgColor="bg-white"
+          bgColor="bg-green-50"
           linkHref="/collections/gift-hampers"
         />
 
         {/* Explore Collections Section */}
-        <section className="py-12 md:py-16 lg:py-20 bg-gradient-to-br from-brand-gray-50 via-white to-brand-gray-50 relative overflow-hidden">
+        <section className="py-12 md:py-16 lg:py-20 bg-gradient-to-br from-green-100 via-green-50 to-green-100 relative overflow-hidden">
           <div className="absolute inset-0 opacity-[0.02] pointer-events-none" 
                style={{
                  backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,0.03) 10px, rgba(0,0,0,0.03) 20px)`,
@@ -944,7 +944,7 @@ export default async function HomePage() {
         </section>
 
         {/* About Floral Whispers Section */}
-        <section className="py-12 md:py-16 lg:py-20 bg-white relative overflow-hidden">
+        <section className="py-12 md:py-16 lg:py-20 bg-green-100 relative overflow-hidden">
           <div className="absolute inset-0 opacity-[0.02] pointer-events-none" 
                style={{
                  backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,0.03) 10px, rgba(0,0,0,0.03) 20px)`,

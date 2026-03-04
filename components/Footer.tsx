@@ -321,12 +321,12 @@ export default function Footer() {
             <p className="text-brand-gray-400 text-xs">
               &copy; {new Date().getFullYear()} Floral Whispers Gifts. All rights reserved. Designed by{" "}
               <a
-                href="https://nelson.strivego.online"
+                href="https://cresdynamics.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-brand-red hover:text-brand-green transition-colors"
               >
-                NelsonW
+                Cres Dynamics
               </a>
               .
             </p>

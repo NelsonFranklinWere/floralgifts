@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Montserrat, Lato, Roboto_Mono, Dancing_Script, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
@@ -448,9 +449,36 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(flowerDeliveryItemListJsonLd) }}
         />
       </head>
-      <body className={`${lato.className} flex flex-col min-h-screen`}>
+      <body className={`${lato.className} flex flex-col min-h-screen bg-green-100`}>
         <GoogleAnalytics />
         <VisitorPing />
+        <Script id="tawk-to" strategy="afterInteractive">
+          {`
+            var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+            Tawk_API.customStyle = {
+              visibility: {
+                desktop: {
+                  position: 'bl',
+                  xOffset: 24,
+                  yOffset: 24
+                },
+                mobile: {
+                  position: 'bl',
+                  xOffset: 16,
+                  yOffset: 16
+                }
+              }
+            };
+            (function(){
+              var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+              s1.async=true;
+              s1.src='https://embed.tawk.to/69a8288364380e1c36b31457/default';
+              s1.charset='UTF-8';
+              s1.setAttribute('crossorigin','*');
+              s0.parentNode.insertBefore(s1,s0);
+            })();
+          `}
+        </Script>
         <ErrorBoundary>
           <AnalyticsProvider>
             <a href="#main-content" className="skip-link">

@@ -160,13 +160,13 @@ export default function ProductCard({
         </div>
 
       <Link href={`/product/${slug}`} className="block">
-        <h3 className="font-heading font-semibold text-xs sm:text-sm md:text-base text-brand-gray-900 mb-0.5 sm:mb-1 group-hover:text-brand-green transition-colors line-clamp-2">
+        <h3 className="font-heading font-semibold text-xs sm:text-sm md:text-base text-brand-gray-900 mb-0.5 sm:mb-1 group-hover:text-brand-red transition-colors line-clamp-2">
           {name}
         </h3>
         {shortDescription && (
           <p className="text-brand-gray-600 text-xs sm:text-xs md:text-sm mb-0.5 sm:mb-1 md:mb-2 line-clamp-2">{shortDescription}</p>
         )}
-        <p className="font-mono font-semibold text-brand-green text-xs sm:text-sm md:text-base mb-1 sm:mb-2 md:mb-3">
+        <p className="font-mono font-semibold text-brand-red text-xs sm:text-sm md:text-base mb-1 sm:mb-2 md:mb-3">
           {formatCurrency(price)}
         </p>
       </Link>

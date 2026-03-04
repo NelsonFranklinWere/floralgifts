@@ -184,7 +184,7 @@ export default function AddOns({ excludeProductIds = [], onOpenChange }: AddOnsP
                       <h4 className="font-heading font-semibold text-xs text-brand-gray-900 mb-1 line-clamp-2">
                         {product.title}
                       </h4>
-                      <p className="font-mono font-semibold text-brand-green text-sm mb-2">
+                      <p className="font-mono font-semibold text-brand-red text-sm mb-2">
                         {formatCurrency(product.price)}
                       </p>
                       <button
