@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     try {
@@ -18,7 +18,7 @@ export async function PUT(
       );
     }
 
-    const id = params.id;
+    const { id } = await params;
     const body = await request.json();
     const { image, title, subtitle, ctaText, ctaLink, position } = body || {};
 
@@ -50,7 +50,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     try {
@@ -62,7 +62,7 @@ export async function DELETE(
       );
     }
 
-    const id = params.id;
+    const { id } = await params;
 
     const { error } = await (supabaseAdmin.from("hero_slides") as any)
       .delete()
