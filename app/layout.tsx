@@ -452,32 +452,18 @@ export default function RootLayout({
       <body className={`${lato.className} flex flex-col min-h-screen bg-green-100`}>
         <GoogleAnalytics />
         <VisitorPing />
+        {/* Tawk.to live chat - left side so it doesn't block WhatsApp */}
         <Script id="tawk-to" strategy="afterInteractive">
-          {`
-            var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-            Tawk_API.customStyle = {
-              visibility: {
-                desktop: {
-                  position: 'bl',
-                  xOffset: 24,
-                  yOffset: 24
-                },
-                mobile: {
-                  position: 'bl',
-                  xOffset: 16,
-                  yOffset: 16
-                }
-              }
-            };
-            (function(){
-              var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-              s1.async=true;
-              s1.src='https://embed.tawk.to/69a8288364380e1c36b31457/default';
-              s1.charset='UTF-8';
-              s1.setAttribute('crossorigin','*');
-              s0.parentNode.insertBefore(s1,s0);
-            })();
-          `}
+          {`var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+Tawk_API.customStyle={visibility:{desktop:{position:'bl',xOffset:24,yOffset:24},mobile:{position:'bl',xOffset:16,yOffset:16}}};
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/69a8288364380e1c36b31457/default';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();`}
         </Script>
         <ErrorBoundary>
           <AnalyticsProvider>

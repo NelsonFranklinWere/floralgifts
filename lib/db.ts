@@ -86,12 +86,11 @@ export async function getProducts(filters?: {
     const { data, error } = await query;
 
     if (error) {
-      console.error("Error fetching products:", {
-        message: (error as any).message,
-        details: (error as any).details,
-        hint: (error as any).hint,
-        code: (error as any).code,
-      });
+      const err = error as any;
+      const msg = err?.message ?? err?.error_description ?? String(error);
+      if (typeof window === "undefined") {
+        console.warn("[getProducts] Supabase error:", msg || err?.code || "Unknown");
+      }
       return [];
     }
 
@@ -103,8 +102,11 @@ export async function getProducts(filters?: {
       upsells: row.upsells || null,
       subcategory: row.subcategory || null,
     })) as Product[];
-  } catch (error) {
-    console.error("Error fetching products:", error);
+  } catch (err: any) {
+    const msg = err?.message ?? err?.cause?.message ?? String(err);
+    if (typeof window === "undefined") {
+      console.warn("[getProducts] Failed (using fallbacks):", msg || "Network/connection error");
+    }
     return [];
   }
 }
