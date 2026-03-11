@@ -3,9 +3,9 @@ import { Metadata } from "next";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Contact Floral Whispers Gifts | Valentine's Orders & Same-Day Delivery Nairobi | Phone: +254721554393",
+  title: "Contact Floral Whispers Gifts Nairobi — Order via WhatsApp",
   description:
-    "Contact Floral Whispers Gifts for Valentine's orders & premium flower delivery Nairobi. Phone: +254721554393 / 0721554393, Email: whispersfloral@gmail.com. Pre-Valentine's bookings, same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
+    "Contact Floral Whispers Gifts Nairobi via WhatsApp, phone or email to order flowers, gift hampers and teddy bears with same-day delivery across Nairobi.",
   keywords: [
     // Valentine's Contact Keywords
     "contact valentine's florist Nairobi",

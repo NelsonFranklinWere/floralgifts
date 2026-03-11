@@ -6,6 +6,7 @@ import { getProductBySlug, type Product } from "@/lib/db";
 import { getPredefinedProducts } from "@/lib/predefinedProducts";
 import { formatCurrency } from "@/lib/utils";
 import { DEEP_FLOWER_ROSE_KEYWORDS } from "@/lib/seo-keywords";
+import { supabaseAdmin } from "@/lib/supabase";
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
@@ -26,6 +27,16 @@ async function getProductWithFallback(slug: string): Promise<Product | null> {
 
   const allFallback = fallbackLists.flat();
   return allFallback.find((p) => p.slug === slug) || null;
+}
+
+export async function generateStaticParams() {
+  try {
+    const { data } = await (supabaseAdmin.from("products") as any).select("slug");
+    if (!data) return [];
+    return (data as Array<{ slug: string }>).map((p) => ({ slug: p.slug }));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
@@ -218,6 +229,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
       seller: {
         "@type": "Organization",
         name: "Floral Whispers Gifts",
+      },
+      areaServed: {
+        "@type": "City",
+        name: "Nairobi",
       },
     },
     aggregateRating: {

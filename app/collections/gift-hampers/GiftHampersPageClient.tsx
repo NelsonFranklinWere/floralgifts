@@ -57,10 +57,10 @@ export default function GiftHampersPageClient({ products, allHamperImages = [], 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-6">
           <h1 className="font-heading font-bold text-2xl md:text-3xl lg:text-4xl text-brand-gray-900 mb-2">
-            Gift Hampers
+            Gift Hampers Nairobi — Luxury Gifts Delivered to Your Door
           </h1>
           <p className="text-brand-gray-600 text-sm md:text-base">
-            Luxury gift hampers filled with curated items
+            Floral Whispers Gifts creates luxury gift hampers delivered across Nairobi. From birthday gift hampers to Women's Day boxes and chocolate hampers, every order is packaged beautifully and delivered same day. Order your gift hamper in Nairobi on WhatsApp.
           </p>
           <p className="text-brand-gray-500 text-xs md:text-sm mt-1">
             Showing {allDisplayItems.length} {allDisplayItems.length === 1 ? 'product' : 'products'}

@@ -5,9 +5,9 @@ import { getProducts } from "@/lib/db";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Valentine's Teddy Bears Nairobi | Cuddly Romantic Teddy Bears for Wife, Girlfriend, Mom | Sizes 25cm-200cm | Same-Day Delivery",
+  title: "Teddy Bears Nairobi — Delivered Same Day | Floral Whispers Gifts",
   description:
-    "Best Valentine's teddy bears Nairobi: cuddly romantic teddy bears (25cm-200cm) in red, white, brown, pink, blue for your wife, girlfriend, mom. Pre-Valentine's orders, same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
+    "Teddy bears delivered in Nairobi — same day. Giant bears, soft toys, bear and flower combos. Order on WhatsApp. Floral Whispers Gifts Nairobi.",
   keywords: [
     // Valentine's Teddy Bears Core Keywords
     "valentine's teddy bears Nairobi",

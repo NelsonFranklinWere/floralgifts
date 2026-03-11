@@ -6,47 +6,33 @@ import { DEEP_FLOWER_ROSE_KEYWORDS } from "@/lib/seo-keywords";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Flower Delivery Nairobi | Fresh Pink Roses, Red Roses & White Flowers | Same-Day Delivery",
+  title: "Flowers Nairobi — Fresh Bouquets & Roses Delivered Same Day | Floral Whispers",
   description:
-    "Flower delivery Nairobi: fresh pink roses, red roses, white flowers & blooming roses. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Money bouquet, romantic flowers, Valentine's bouquets. Order online with M-Pesa.",
+    "Fresh flower bouquets and roses delivered anywhere in Nairobi, same day. Red roses, mixed bouquets, sunflowers. Order now on WhatsApp — Floral Whispers Gifts Nairobi.",
   keywords: [
-    // Deep SEO: pink roses, red roses, white flowers, flower delivery (primary)
+    "flowers Nairobi",
     "flower delivery Nairobi",
-    "pink roses Nairobi",
-    "red roses Nairobi",
-    "white flowers Nairobi",
-    "fresh white flowers",
-    "blooming pink roses",
-    "blooming red roses",
-    "fresh pink roses Nairobi",
-    "fresh red roses Nairobi",
-    "fresh white flowers Nairobi",
-    "fresh flowers Nairobi",
-    "florist Nairobi",
+    "fresh bouquets Nairobi",
     "roses Nairobi",
     "same day flower delivery Nairobi",
+    "florist Nairobi",
     ...DEEP_FLOWER_ROSE_KEYWORDS,
-    // Valentine's
-    "valentine's flowers Nairobi",
-    "valentine's roses Nairobi",
-    "valentine's flower delivery Nairobi",
-    "money bouquet Nairobi",
-    "romantic flowers Nairobi",
-    "bouquet delivery Nairobi",
   ],
   alternates: {
     canonical: `${baseUrl}/collections/flowers`,
   },
   openGraph: {
-    title: "Flower Delivery Nairobi | Fresh Pink Roses, Red Roses & White Flowers | Same-Day Delivery",
-    description: "Flower delivery Nairobi: fresh pink roses, red roses, white flowers & blooming roses. Same-day delivery CBD, Westlands, Karen, Lavington, Kilimani. Money bouquet, romantic flowers.",
+    title: "Flowers Nairobi — Fresh Bouquets & Roses Delivered Same Day | Floral Whispers",
+    description:
+      "Fresh flower bouquets and roses delivered anywhere in Nairobi, same day. Red roses, mixed bouquets, sunflowers. Order now on WhatsApp — Floral Whispers Gifts Nairobi.",
     url: `${baseUrl}/collections/flowers`,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Flower Delivery Nairobi | Fresh Pink Roses, Red Roses & White Flowers",
-    description: "Flower delivery Nairobi: fresh pink roses, red roses, white flowers. Same-day delivery across Nairobi. Order with M-Pesa.",
+    title: "Flowers Nairobi — Fresh Bouquets & Roses Delivered Same Day | Floral Whispers",
+    description:
+      "Fresh flower bouquets and roses delivered anywhere in Nairobi, same day. Red roses, mixed bouquets, sunflowers. Order now on WhatsApp — Floral Whispers Gifts Nairobi.",
   },
 };
 

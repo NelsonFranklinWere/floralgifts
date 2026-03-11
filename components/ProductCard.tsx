@@ -87,6 +87,23 @@ export default function ProductCard({
     handleAddToCart();
   };
 
+  const getAltText = () => {
+    const baseType =
+      category === "flowers"
+        ? "flowers"
+        : category === "teddy"
+        ? "teddy bears"
+        : category === "hampers"
+        ? "gift hamper"
+        : category === "chocolates"
+        ? "chocolates"
+        : category === "wines"
+        ? "wine"
+        : "gifts";
+
+    return `${name} — ${baseType} delivered in Nairobi by Floral Whispers Gifts`;
+  };
+
   return (
     <>
       <div className="card p-2 sm:p-3 md:p-4 group">
@@ -99,7 +116,7 @@ export default function ProductCard({
               <>
                 <Image
                   src={image}
-                  alt={`${name} - ${category === "flowers" ? "Premium flower delivery Nairobi CBD, Westlands, Karen" : category === "teddy" ? "Teddy bears Kenya, Nairobi" : category === "hampers" ? "Gift hampers Kenya, Nairobi CBD" : category === "wines" ? "Wines Nairobi, Westlands" : "Chocolates Kenya, Nairobi"} | Whispers Floral Gifts`}
+                  alt={getAltText()}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                   sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
@@ -146,7 +163,7 @@ export default function ProductCard({
                     ? "/images/products/wines/redwine.jpg"
                     : "/images/products/hampers/giftamper.jpg"
                 }
-                alt={`${name} - Fallback image`}
+                alt={getAltText()}
                 fill
                 className="object-cover opacity-60 group-hover:scale-105 transition-transform duration-300"
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"

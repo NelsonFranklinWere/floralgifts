@@ -6,9 +6,9 @@ import { HAMPER_PRODUCTS } from "@/lib/predefinedProducts";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Valentine's Gift Hampers Nairobi | Luxury Romantic Hampers for Wife, Husband, Girlfriend | Chocolate, Wine, Flowers | Same-Day Delivery",
+  title: "Gift Hampers Nairobi — Luxury Hampers Delivered | Floral Whispers Gifts",
   description:
-    "Best Valentine's gift hampers Nairobi: luxury romantic hampers with flowers, chocolates, wine, teddy bears for your wife, husband, girlfriend. Pre-Valentine's orders, surprise hampers, same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
+    "Luxury gift hampers delivered in Nairobi. Chocolate hampers, birthday hampers, women's day gifts. Same-day delivery available. Floral Whispers Gifts Nairobi.",
   keywords: [
     // Valentine's Gift Hampers Core Keywords
     "valentine's gift hampers Nairobi",

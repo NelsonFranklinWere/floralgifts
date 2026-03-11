@@ -8,9 +8,9 @@ import { format } from "date-fns";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Valentine's Gift Guide Nairobi | Romantic Flowers, Chocolates & Gift Ideas | Floral Whispers Blog",
+  title: "Gift Ideas & Flower Guides Nairobi | Floral Whispers Gifts Blog",
   description:
-    "Complete Valentine's Day gift guide for Nairobi: romantic flowers, chocolates, wine, teddy bears & surprise hampers for your wife, husband, girlfriend. Pre-Valentine's planning tips, same-day delivery guides, gift ideas for every relationship. Valentine's gift hampers & flower arrangements Nairobi.",
+    "Gift ideas and flower guides for Nairobi — discover how to choose bouquets, hampers and teddy bears for every occasion. Floral Whispers Gifts Blog sharing delivery tips, gifting advice and Nairobi florist insights.",
   keywords: [
     // Valentine's Blog Keywords
     "valentine's gift guide nairobi",

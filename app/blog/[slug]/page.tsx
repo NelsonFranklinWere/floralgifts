@@ -13,26 +13,30 @@ interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
   const post = await getBlogPost(slug);
 
   if (!post) {
-    return {
-      title: "Post Not Found",
-    };
+    return {};
   }
 
+  const title = `${post.title} | Floral Whispers Gifts Nairobi`;
+  const description =
+    post.excerpt ||
+    `${post.title} — gift and flower ideas for Nairobi. Floral Whispers Gifts delivers same day across Nairobi.`;
+
   return {
-    title: `${post.title} | Floral Whispers Gifts Blog`,
-    description: post.excerpt,
-    keywords: post.tags,
+    title,
+    description,
     alternates: {
       canonical: `${baseUrl}/blog/${slug}`,
     },
     openGraph: {
-      title: post.title,
-      description: post.excerpt,
+      title,
+      description,
       url: `${baseUrl}/blog/${slug}`,
       siteName: "Floral Whispers Gifts",
       images: [
@@ -46,13 +50,11 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       locale: "en_KE",
       type: "article",
       publishedTime: post.publishedAt,
-      authors: [post.author],
-      tags: post.tags,
     },
     twitter: {
       card: "summary_large_image",
-      title: post.title,
-      description: post.excerpt,
+      title,
+      description,
       images: [post.image],
     },
   };

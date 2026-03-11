@@ -28,6 +28,21 @@ const nextConfig = {
   // Performance optimizations
   compress: true,
   poweredByHeader: false,
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'floralwhispersgifts.co.ke',
+          },
+        ],
+        destination: 'https://www.floralwhispersgifts.co.ke/:path*',
+        permanent: true,
+      },
+    ];
+  },
   // Webpack configuration for path aliases
   webpack: (config) => {
     // Ensure @/ alias resolves correctly

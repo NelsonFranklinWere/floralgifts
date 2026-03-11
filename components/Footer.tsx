@@ -20,7 +20,7 @@ export default function Footer() {
               </h3>
             </Link>
             <p className="text-brand-gray-300 mb-2 text-xs leading-relaxed">
-              Premium flowers, gift hampers, and teddy bears in Nairobi. Same-day delivery available across the city.
+              Floral Whispers Gifts — Nairobi&apos;s florist for fresh flowers, gift hampers, teddy bears and same-day delivery across Nairobi. Order on WhatsApp: +{SHOP_INFO.whatsapp}
             </p>
             <p className="text-brand-gray-400 text-xs mb-3">{SHOP_INFO.hours}</p>
             

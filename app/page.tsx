@@ -9,31 +9,33 @@ import { getPredefinedProducts } from "@/lib/predefinedProducts";
 import { getBlogPosts } from "@/lib/blogData";
 import { format } from "date-fns";
 import { WOMENS_DAY_KEYWORDS } from "@/lib/seo-keywords";
+import { SHOP_INFO } from "@/lib/constants";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
   title:
-    "Women's Day Gifts Nairobi | Pink & Red Roses, Gift Hampers & Teddy Bears | Floral Whispers Gifts",
+    "Flower Delivery Nairobi | Florist & Gift Hampers | Floral Whispers Gifts",
   description:
-    "Women's Day gifts Nairobi: pink roses, red roses, white flowers, luxury gift hampers, chocolates and teddy bears for her. Celebrate amazing women with same-day delivery across Nairobi CBD, Westlands, Karen, Lavington and more.",
+    "Order flowers, gift hampers and teddy bears in Nairobi with same-day delivery. Floral Whispers Gifts — Nairobi's favourite florist. Order on WhatsApp now.",
   keywords: [
     ...WOMENS_DAY_KEYWORDS,
     "flower delivery Nairobi",
-    "fresh flowers Nairobi",
+    "flowers Nairobi",
+    "florist Nairobi",
     "gift hampers Nairobi",
     "teddy bears Nairobi",
-    "online flower delivery Nairobi",
-    "florist Nairobi",
+    "same day delivery Nairobi",
+    "Floral Whispers Gifts",
   ],
   alternates: {
     canonical: baseUrl,
   },
   openGraph: {
     title:
-      "Women's Day Gifts Nairobi | Pink & Red Roses, Gift Hampers & Teddy Bears | Floral Whispers Gifts",
+      "Flower Delivery Nairobi | Florist & Gift Hampers | Floral Whispers Gifts",
     description:
-      "Celebrate Women's Day in Nairobi with pink roses, red roses, gift hampers, chocolates and teddy bears. Same-day delivery for mothers, wives, girlfriends, sisters and colleagues across Nairobi.",
+      "Order flowers, gift hampers and teddy bears in Nairobi with same-day delivery. Floral Whispers Gifts — Nairobi's favourite florist.",
     url: baseUrl,
     siteName: "Floral Whispers Gifts",
     images: [
@@ -41,7 +43,7 @@ export const metadata: Metadata = {
         url: "/images/logo/FloralLogo.jpg",
         width: 1200,
         height: 630,
-        alt: "Floral Whispers Gifts - Best Valentine's Day Gifts & Romantic Flowers in Nairobi",
+        alt: "Floral Whispers Gifts - Flower Delivery Nairobi",
       },
     ],
     locale: "en_KE",
@@ -50,9 +52,9 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title:
-      "Women's Day Gifts Nairobi | Pink & Red Roses, Gift Hampers & Teddy Bears",
+      "Flower Delivery Nairobi | Florist & Gift Hampers | Floral Whispers Gifts",
     description:
-      "Women's Day gifts Nairobi: pink & red roses, white flowers, hampers, chocolates and teddy bears for her. Same-day delivery across Nairobi.",
+      "Order flowers, gift hampers and teddy bears in Nairobi with same-day delivery. Floral Whispers Gifts — Nairobi's favourite florist.",
     images: ["/images/logo/FloralLogo.jpg"],
   },
 };
@@ -748,6 +750,25 @@ export default async function HomePage() {
     <>
       <JsonLd data={breadcrumbJsonLd} />
       <div className="bg-green-100">
+        <section className="px-4 sm:px-6 lg:px-8 pt-8 pb-4 max-w-7xl mx-auto">
+          <h1 className="font-heading font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-brand-gray-900 mb-3">
+            Flower Delivery in Nairobi — Bouquets, Hampers & Teddy Bears
+          </h1>
+          <h2 className="font-heading font-semibold text-base sm:text-lg md:text-xl text-brand-gray-800 mb-2">
+            Same Day Flower Delivery Across Nairobi
+          </h2>
+          <h2 className="font-heading font-semibold text-base sm:text-lg md:text-xl text-brand-gray-800 mb-4">
+            Gift Hampers, Teddy Bears & Roses — Delivered by Floral Whispers
+          </h2>
+          <a
+            href={`https://wa.me/${SHOP_INFO.whatsapp}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center px-5 py-3 rounded-full bg-brand-green text-white font-semibold text-sm sm:text-base shadow-lg hover:bg-brand-green/90 transition-colors"
+          >
+            Order on WhatsApp — Fast Delivery Anywhere in Nairobi
+          </a>
+        </section>
         <HeroCarousel />
 
         {/* Women's Day Gift Hampers */}
