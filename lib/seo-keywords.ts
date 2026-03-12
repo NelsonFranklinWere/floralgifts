@@ -109,55 +109,18 @@ export const DEEP_FLOWER_ROSE_KEYWORDS = [
   "congratulations flowers Nairobi",
 ];
 
-/** Keywords for layout/homepage that include both valentine and deep flower terms */
+/** Site-wide keywords for diverse Nairobi flowers, gifts and delivery (no seasonal limit) */
 export const SITE_WIDE_KEYWORDS = [
   ...DEEP_FLOWER_ROSE_KEYWORDS,
-  "valentine's flowers Nairobi",
-  "valentine's roses Nairobi",
-  "valentine's gifts Nairobi",
+  "flowers Nairobi",
+  "red roses Nairobi",
+  "pink roses Nairobi",
+  "white roses Nairobi",
+  "flower bouquets Nairobi",
   "gift hampers Nairobi",
   "teddy bears Nairobi",
   "chocolates Nairobi",
   "wines Nairobi",
-  "M-Pesa flower delivery Nairobi",
-  "online flower shop Nairobi",
-];
-
-/** Focused Women's Day SEO keywords for Nairobi */
-export const WOMENS_DAY_KEYWORDS = [
-  // Core Women's Day gift intent
-  "women's day gifts Nairobi",
-  "womens day gifts Nairobi",
-  "international women's day gifts Nairobi",
-  "8th March women's day gifts Nairobi",
-  "women's day gift ideas Nairobi",
-  "women's day surprise gifts Nairobi",
-
-  // Flowers for Women's Day
-  "women's day flowers Nairobi",
-  "women's day roses Nairobi",
-  "women's day pink roses Nairobi",
-  "women's day red roses Nairobi",
-  "women's day white flowers Nairobi",
-  "pink roses for women's day Nairobi",
-  "red roses for women's day Nairobi",
-
-  // Gifts for specific recipients
-  "women's day gifts for wife Nairobi",
-  "women's day gifts for girlfriend Nairobi",
-  "women's day gifts for mom Nairobi",
-  "women's day gifts for mum Nairobi",
-  "women's day gifts for sister Nairobi",
-  "women's day gifts for colleagues Nairobi",
-
-  // Gift types
-  "women's day gift hampers Nairobi",
-  "women's day teddy bears Nairobi",
-  "women's day chocolate hampers Nairobi",
-
-  // Delivery & location
-  "same day women's day delivery Nairobi",
-  "women's day flower delivery Nairobi CBD",
-  "women's day flowers Westlands",
-  "women's day gifts Karen Nairobi",
+  "same day delivery Nairobi",
+  "Nairobi gift delivery",
 ];

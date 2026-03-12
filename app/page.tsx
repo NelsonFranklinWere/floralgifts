@@ -8,7 +8,7 @@ import { getProducts } from "@/lib/db";
 import { getPredefinedProducts } from "@/lib/predefinedProducts";
 import { getBlogPosts } from "@/lib/blogData";
 import { format } from "date-fns";
-import { WOMENS_DAY_KEYWORDS } from "@/lib/seo-keywords";
+import { SITE_WIDE_KEYWORDS } from "@/lib/seo-keywords";
 import { SHOP_INFO } from "@/lib/constants";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   description:
     "Order flowers, gift hampers and teddy bears in Nairobi with same-day delivery. Floral Whispers Gifts — Nairobi's favourite florist. Order on WhatsApp now.",
   keywords: [
-    ...WOMENS_DAY_KEYWORDS,
+    ...SITE_WIDE_KEYWORDS,
     "flower delivery Nairobi",
     "flowers Nairobi",
     "florist Nairobi",
@@ -771,19 +771,19 @@ export default async function HomePage() {
         </section>
         <HeroCarousel />
 
-        {/* Women's Day Gift Hampers */}
+        {/* Nairobi Gift Hampers */}
         <ProductSection
-          title="Women's Day Gift Hampers Nairobi"
-          subtitle="Curated Women's Day hampers with pink roses, chocolates, wine and pamper gifts for her in Nairobi."
+          title="Gift Hampers Nairobi — Flowers, Chocolates & More"
+          subtitle="Curated Nairobi gift hampers with red roses, pink and white bouquets, chocolates, wine and self-care treats for every occasion."
           products={newYearHampers.length >= 8 ? newYearHampers : getFallbackProducts("hampers")}
           bgColor="bg-green-100"
           linkHref="/collections/gift-hampers"
         />
 
-        {/* Women's Day flowers delivered same day in Nairobi */}
+        {/* Flowers delivered same day in Nairobi */}
         <ProductSection
-          title="Women's Day Flowers Delivered Same Day in Nairobi"
-          subtitle="Pink roses, red roses and white flowers for Women's Day with same-day delivery across Nairobi."
+          title="Red, Pink & White Flowers Delivered in Nairobi"
+          subtitle="Red roses, pink roses and white flowers delivered same day across Nairobi — perfect for birthdays, anniversaries and everyday surprises."
           products={sameDayFlowers.length >= 8 ? sameDayFlowers : getFallbackProducts("flowers")}
           bgColor="bg-gradient-to-br from-green-100 via-green-50 to-green-100"
           linkHref="/collections/flowers"
@@ -805,9 +805,9 @@ export default async function HomePage() {
           linkHref="/collections/gift-hampers"
         />
 
-        {/* Valentine's Anniversary Celebrations Gifts */}
+        {/* Anniversary & Special Occasion Gifts */}
         <ProductSection
-          title="Women's Day Celebration Gifts"
+          title="Celebration Gifts — Flowers, Hampers & Teddy Bears"
           products={anniversaryProducts.length >= 8 ? anniversaryProducts : getFallbackProducts("mixed")}
           bgColor="bg-green-100"
           linkHref="/collections/flowers?tags=anniversary"
@@ -837,9 +837,9 @@ export default async function HomePage() {
           linkHref="/collections/teddy-bears"
         />
 
-        {/* Valentine's Colleagues Surprises And Celebrations */}
+        {/* Colleagues Surprises And Celebrations */}
         <ProductSection
-          title="Women's Day Colleagues Surprises And Celebrations"
+          title="Office & Colleague Gifts in Nairobi"
           products={colleaguesProducts.length >= 8 ? colleaguesProducts : getFallbackProducts("mixed")}
           bgColor="bg-green-50"
           linkHref="/collections/gift-hampers"
