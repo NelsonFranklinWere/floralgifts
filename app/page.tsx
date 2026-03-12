@@ -1018,6 +1018,17 @@ export default async function HomePage() {
           </div>
         </section>
 
+        {/* Nairobi SEO intro for flowers, roses & teddy bears */}
+        <section className="py-6 md:py-8 bg-white border-t border-brand-gray-200">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <p className="text-brand-gray-700 text-sm md:text-base leading-relaxed">
+              If you&apos;re searching for fresh flowers Nairobi, Nairobi flowers, a pink roses shop, a red roses shop or a teddy bear shop Nairobi,
+              Floral Whispers Gifts is your trusted local choice. We stock red, pink and white roses, mixed bouquets, luxury gift hampers and soft teddy bears,
+              all available with fast same-day delivery across Nairobi.
+            </p>
+          </div>
+        </section>
+
         {/* Blog Section */}
         <BlogSection />
       </div>

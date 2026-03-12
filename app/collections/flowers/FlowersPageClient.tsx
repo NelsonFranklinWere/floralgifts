@@ -125,10 +125,10 @@ export default function FlowersPageClient({ products, allFlowerImages = [], flow
             Floral Whispers Gifts delivers fresh flowers across Nairobi — same day. Whether you need red roses for a birthday, a mixed bouquet for a surprise, or sunflowers for someone special, we deliver to homes, hotels and offices throughout Nairobi. Order directly on WhatsApp and your flowers will be on their way.
           </p>
           <h2 className="font-heading font-semibold text-base md:text-lg text-brand-gray-900">
-            Red Roses & Mixed Bouquets Delivered in Nairobi
+            Fresh Flowers Nairobi — Red, Pink & White Roses
           </h2>
           <h2 className="font-heading font-semibold text-base md:text-lg text-brand-gray-900">
-            Surprise Flower Delivery Nairobi — Same Day Available
+            Nairobi Flowers Shop — Same Day Flower Delivery
           </h2>
           <div className="text-brand-gray-500 text-xs md:text-sm mt-1">
             <span>
