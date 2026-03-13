@@ -66,6 +66,8 @@ export default function CaseStudyForm({ initialId }: Props) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [slugLocked, setSlugLocked] = useState(false);
+  const [uploadingHero, setUploadingHero] = useState(false);
+  const [uploadingGallery, setUploadingGallery] = useState(false);
 
   const token =
     typeof window !== "undefined"
@@ -205,6 +207,102 @@ export default function CaseStudyForm({ initialId }: Props) {
       ...prev,
       gallery_images: prev.gallery_images.filter((u) => u !== url),
     }));
+  };
+
+  const ensureSlugForUpload = () => {
+    if (!values.slug) {
+      setError("Please enter a title/slug before uploading images.");
+      return false;
+    }
+    return true;
+  };
+
+  const handleHeroUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!ensureSlugForUpload()) return;
+    if (!token) {
+      router.push("/admin/login");
+      return;
+    }
+    setUploadingHero(true);
+    setError(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("slug", values.slug);
+      formData.append("kind", "hero");
+
+      const res = await fetch("/api/admin/case-studies/upload", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to upload hero image.");
+      }
+      setValues((prev) => ({
+        ...prev,
+        hero_image_url: data.url,
+      }));
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || "Failed to upload hero image.");
+    } finally {
+      setUploadingHero(false);
+      e.target.value = "";
+    }
+  };
+
+  const handleGalleryUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    if (!ensureSlugForUpload()) return;
+    if (!token) {
+      router.push("/admin/login");
+      return;
+    }
+    setUploadingGallery(true);
+    setError(null);
+    try {
+      const newUrls: string[] = [];
+      for (const file of Array.from(files)) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("slug", values.slug);
+        formData.append("kind", "gallery");
+
+        const res = await fetch("/api/admin/case-studies/upload", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.message || "Failed to upload gallery image.");
+        }
+        newUrls.push(data.url);
+      }
+      if (newUrls.length > 0) {
+        setValues((prev) => ({
+          ...prev,
+          gallery_images: [...prev.gallery_images, ...newUrls],
+        }));
+      }
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || "Failed to upload gallery images.");
+    } finally {
+      setUploadingGallery(false);
+      e.target.value = "";
+    }
   };
 
   const seoTitleCount = values.seo_title.length;
@@ -533,57 +631,73 @@ export default function CaseStudyForm({ initialId }: Props) {
         <h2 className="font-heading text-lg text-brand-gray-900">
           Images
         </h2>
-        <p className="text-xs text-brand-gray-600">
-          Upload images to your Supabase storage bucket and paste the public
-          URLs here. You can refine this later with a drag-and-drop uploader.
-        </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-brand-gray-800 mb-1">
-              Hero Image URL*
+              Hero Image*
             </label>
-            <input
-              type="text"
-              className="input-field"
-              value={values.hero_image_url}
-              onChange={(e) => handleChange("hero_image_url", e.target.value)}
-              placeholder="https://...hero.webp"
-            />
+            <div className="space-y-2">
+              {values.hero_image_url && (
+                <img
+                  src={values.hero_image_url}
+                  alt="Hero preview"
+                  className="w-full max-h-48 object-cover rounded-lg border border-brand-gray-200"
+                />
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleHeroUpload}
+                className="block w-full text-sm text-brand-gray-700 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-sm file:font-medium file:bg-brand-gray-100 file:text-brand-gray-800 hover:file:bg-brand-gray-200"
+              />
+              {uploadingHero && (
+                <p className="text-xs text-brand-gray-500">
+                  Uploading hero image…
+                </p>
+              )}
+            </div>
           </div>
           <div>
             <div className="flex items-center justify-between mb-1">
               <label className="block text-sm font-medium text-brand-gray-800">
                 Gallery Images
               </label>
-              <button
-                type="button"
-                onClick={handleAddGalleryUrl}
-                className="text-xs text-brand-green hover:text-brand-green/80"
-              >
-                + Add Image URL
-              </button>
             </div>
-            <div className="space-y-2 max-h-40 overflow-y-auto border border-dashed border-brand-gray-200 rounded-md p-2">
-              {values.gallery_images.map((url) => (
-                <div
-                  key={url}
-                  className="flex items-center justify-between gap-2 text-xs"
-                >
-                  <span className="truncate">{url}</span>
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveGalleryImage(url)}
-                    className="text-brand-red"
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
-              {values.gallery_images.length === 0 && (
+            <div className="space-y-2">
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleGalleryUpload}
+                className="block w-full text-sm text-brand-gray-700 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-sm file:font-medium file:bg-brand-gray-100 file:text-brand-gray-800 hover:file:bg-brand-gray-200"
+              />
+              {uploadingGallery && (
                 <p className="text-xs text-brand-gray-500">
-                  No gallery images yet.
+                  Uploading gallery images…
                 </p>
               )}
+              <div className="space-y-2 max-h-40 overflow-y-auto border border-dashed border-brand-gray-200 rounded-md p-2">
+                {values.gallery_images.map((url) => (
+                  <div
+                    key={url}
+                    className="flex items-center justify-between gap-2 text-xs"
+                  >
+                    <span className="truncate">{url}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveGalleryImage(url)}
+                      className="text-brand-red"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+                {values.gallery_images.length === 0 && !uploadingGallery && (
+                  <p className="text-xs text-brand-gray-500">
+                    No gallery images yet.
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </div>
