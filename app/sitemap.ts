@@ -54,13 +54,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",
       priority: 0.8,
     },
+    {
+      url: `${baseUrl}/case-studies`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
   ];
 
   try {
-    const [{ data: products }, { data: posts }] = await Promise.all([
-      (supabaseAdmin.from("products") as any).select("slug, updated_at"),
-      (supabaseAdmin.from("blog_posts") as any).select("slug, updated_at"),
-    ]);
+    const [{ data: products }, { data: posts }, { data: caseStudies }] =
+      await Promise.all([
+        (supabaseAdmin.from("products") as any).select("slug, updated_at"),
+        (supabaseAdmin.from("blog_posts") as any).select("slug, updated_at"),
+        (supabaseAdmin.from("case_studies") as any)
+          .select("slug, updated_at, published")
+          .eq("published", true),
+      ]);
 
     const productUrls: MetadataRoute.Sitemap = (products ?? []).map(
       (p: { slug: string; updated_at: string }) => ({
@@ -80,7 +90,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }),
     );
 
-    return [...staticUrls, ...productUrls, ...blogUrls];
+    const caseStudyUrls: MetadataRoute.Sitemap = (caseStudies ?? []).map(
+      (p: { slug: string; updated_at: string }) => ({
+        url: `${baseUrl}/case-studies/${p.slug}`,
+        lastModified: p.updated_at ? new Date(p.updated_at) : new Date(),
+        changeFrequency: "monthly",
+        priority: 0.8,
+      }),
+    );
+
+    return [...staticUrls, ...productUrls, ...blogUrls, ...caseStudyUrls];
   } catch (error) {
     console.error("Error generating sitemap:", error);
     return staticUrls;

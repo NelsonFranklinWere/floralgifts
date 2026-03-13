@@ -10,6 +10,9 @@ import { getBlogPosts } from "@/lib/blogData";
 import { format } from "date-fns";
 import { SITE_WIDE_KEYWORDS } from "@/lib/seo-keywords";
 import { SHOP_INFO } from "@/lib/constants";
+import { getFeaturedCaseStudies } from "@/lib/case-studies";
+import CaseStudyCard from "@/components/CaseStudyCard";
+import StaticReviewsSection from "@/components/reviews/StaticReviewsSection";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
@@ -459,10 +462,11 @@ Whether you're celebrating a university graduation, high school completion, or a
 
 export default async function HomePage() {
   // Fetch all products
-  const [dbFlowers, dbHampers, dbTeddy] = await Promise.all([
+  const [dbFlowers, dbHampers, dbTeddy, featuredCaseStudies] = await Promise.all([
     getProducts({ category: "flowers" }),
     getProducts({ category: "hampers" }),
     getProducts({ category: "teddy" }),
+    getFeaturedCaseStudies(),
   ]);
 
   // Include predefined products for flowers
@@ -1031,6 +1035,43 @@ export default async function HomePage() {
 
         {/* Blog Section */}
         <BlogSection />
+
+        {/* Hard-coded Google-style Reviews Section (10 reviews, auto-scrolling) */}
+        <StaticReviewsSection />
+
+        {/* Our Work - Case Studies Preview */}
+        {featuredCaseStudies.length > 0 && (
+          <section className="py-12 md:py-16 bg-[#FAF7F2] border-t border-[#F0E8E8]">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-8">
+                <div className="text-[0.7rem] tracking-[0.25em] uppercase text-[#D4617A] mb-2">
+                  Real Stories
+                </div>
+                <h2 className="font-heading text-2xl md:text-3xl lg:text-4xl text-[#2C2C2C] mb-3">
+                  Flowers That Tell a Story
+                </h2>
+                <p className="text-sm md:text-base text-gray-600 max-w-xl mx-auto">
+                  From intimate birthdays to grand weddings — see how we&apos;ve
+                  brought our clients&apos; visions to life across Nairobi.
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-6">
+                {featuredCaseStudies.map((cs) => (
+                  <CaseStudyCard key={cs.id} caseStudy={cs} />
+                ))}
+              </div>
+              <div className="text-center">
+                <Link
+                  href="/case-studies"
+                  className="inline-flex items-center text-sm md:text-base font-medium text-[#D4617A] hover:underline"
+                >
+                  See all our work
+                  <span className="ml-1">→</span>
+                </Link>
+              </div>
+            </div>
+          </section>
+        )}
       </div>
     </>
   );

@@ -93,10 +93,22 @@ export default function AdminDashboard() {
             Products
           </Link>
           <Link
+            href="/admin/reviews"
+            className="block rounded-md px-3 py-2 text-sm text-brand-gray-700 hover:bg-brand-gray-100"
+          >
+            Reviews
+          </Link>
+          <Link
             href="/admin/blogs"
             className="block rounded-md px-3 py-2 text-sm text-brand-gray-700 hover:bg-brand-gray-100"
           >
             Blogs
+          </Link>
+          <Link
+            href="/admin/case-studies"
+            className="block rounded-md px-3 py-2 text-sm text-brand-gray-700 hover:bg-brand-gray-100"
+          >
+            Case Studies
           </Link>
           <Link
             href="/admin/orders"
@@ -204,6 +216,14 @@ export default function AdminDashboard() {
                 Create, edit and publish blog posts.
               </p>
               <span className="text-brand-green font-medium">Manage blog →</span>
+            </Link>
+
+            <Link href="/admin/case-studies" className="card p-6 hover:shadow-cardHover transition-shadow block">
+              <h2 className="font-heading font-bold text-xl text-brand-gray-900 mb-2">Case Studies</h2>
+              <p className="text-brand-gray-600 mb-4">
+                Showcase real weddings, events, birthdays and corporate floral work.
+              </p>
+              <span className="text-brand-green font-medium">Manage case studies →</span>
             </Link>
 
             <Link href="/admin/hero-slides" className="card p-6 hover:shadow-cardHover transition-shadow block">
