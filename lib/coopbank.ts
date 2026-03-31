@@ -22,6 +22,13 @@ export async function getCoopBankToken(): Promise<string> {
 
   const creds = Buffer.from(`${consumerKey}:${consumerSecret}`).toString("base64");
 
+  console.log("🔐 Co-op Bank Token Request:", {
+    baseUrl: COOP_BANK_BASE_URL,
+    consumerKey: consumerKey.substring(0, 8) + "...",
+    consumerSecret: consumerSecret.substring(0, 8) + "...",
+    credsLength: creds.length
+  });
+
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
   const response = await fetch(`${COOP_BANK_BASE_URL}/token`, {
@@ -31,8 +38,8 @@ export async function getCoopBankToken(): Promise<string> {
       "Content-Type": "application/x-www-form-urlencoded",
       "User-Agent": "FloralWhispersGifts/1.0",
       "Accept": "application/json",
-      "Origin": baseUrl,
-      "Referer": `${baseUrl}/`,
+      "Cache-Control": "no-cache",
+      "Pragma": "no-cache"
     },
     body: "grant_type=client_credentials",
   });
