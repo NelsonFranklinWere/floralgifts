@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { formatCurrency } from "@/lib/utils";
 import { useCartStore } from "@/lib/store/cart";
 import { ShoppingCartIcon as ShoppingCartIconSolid } from "@heroicons/react/24/solid";
 import { Analytics } from "@/lib/analytics";
-import { generateProductWhatsAppLink } from "@/lib/whatsapp";
 
 interface ProductCardProps {
   id: string;
@@ -77,8 +76,6 @@ export default function ProductCard({
     handleAddToCart();
   };
 
-  const whatsappLink = useMemo(() => generateProductWhatsAppLink(name, price, 1), [name, price]);
-
   const getAltText = () => {
     const baseType =
       category === "flowers"
@@ -123,18 +120,6 @@ export default function ProductCard({
                     setImageError(true);
                   }}
                 />
-                {/* Basket icon overlay - always visible */}
-                <button
-                  type="button"
-                  onClick={handleBasketClick}
-                  className="absolute top-0 right-0 z-10 bg-white rounded-full px-2 py-1.5 sm:px-2.5 sm:py-2 shadow-lg hover:bg-brand-red hover:text-white transition-all duration-300 group-hover:scale-110 flex items-center gap-1"
-                  aria-label={`Add ${name} to cart`}
-                >
-                  <ShoppingCartIconSolid className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-brand-red group-hover:text-white transition-colors" />
-                  <span className="text-[10px] sm:text-[11px] md:text-xs font-semibold leading-none text-brand-gray-900 group-hover:text-white transition-colors">
-                    cart
-                  </span>
-                </button>
               </>
             ) : (
               <Image
@@ -176,15 +161,15 @@ export default function ProductCard({
         </p>
       </Link>
 
-      <a
-        href={whatsappLink}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="btn-secondary w-full text-center text-[10px] sm:text-[11px] md:text-xs py-1 sm:py-1.5 md:py-2 mt-1 sm:mt-1.5 flex items-center justify-center"
-        aria-label={`Order ${name} on WhatsApp`}
+      <button
+        type="button"
+        onClick={handleBasketClick}
+        className="mt-1 sm:mt-1.5 w-full inline-flex items-center justify-center gap-1.5 rounded-full bg-white border border-brand-gray-200 text-brand-gray-900 text-[10px] sm:text-[11px] md:text-xs font-semibold py-1.5 sm:py-2 px-3 shadow-sm hover:bg-brand-red hover:text-white hover:border-brand-red transition-colors"
+        aria-label={`Add ${name} to cart`}
       >
-        Order on WhatsApp
-      </a>
+        <ShoppingCartIconSolid className="h-4 w-4" />
+        Add to Cart
+      </button>
       </div>
     </>
   );

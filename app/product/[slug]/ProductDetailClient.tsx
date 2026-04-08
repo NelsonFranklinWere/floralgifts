@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { useCartStore } from "@/lib/store/cart";
-import { generateProductWhatsAppLink } from "@/lib/whatsapp";
-import { ShoppingCartIcon, ChatBubbleLeftRightIcon } from "@heroicons/react/24/outline";
+import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 import type { Product } from "@/lib/db";
 
 interface ProductDetailClientProps {
@@ -25,8 +24,6 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
       });
     }
   };
-
-  const whatsappLink = generateProductWhatsAppLink(product.title, product.price, quantity);
 
   return (
     <div className="space-y-4">
@@ -55,26 +52,16 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
         </div>
       </div>
 
-      <div className="flex gap-4">
+      <div className="flex">
         <button
           type="button"
           onClick={handleAddToCart}
-          className="btn-primary flex-1 flex items-center justify-center gap-2"
+          className="btn-primary w-full flex items-center justify-center gap-2"
           aria-label={`Add ${quantity} ${product.title} to cart`}
         >
           <ShoppingCartIcon className="h-5 w-5" />
           Add to Cart
         </button>
-        <a
-          href={whatsappLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn-secondary px-6 flex items-center justify-center gap-2"
-          aria-label={`Order ${product.title} via WhatsApp`}
-        >
-          <ChatBubbleLeftRightIcon className="h-5 w-5" />
-          Order via WhatsApp
-        </a>
       </div>
     </div>
   );
