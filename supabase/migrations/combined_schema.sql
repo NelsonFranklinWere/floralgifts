@@ -138,7 +138,7 @@ CREATE TABLE IF NOT EXISTS products (
   description TEXT,
   short_description TEXT,
   price INTEGER NOT NULL,
-  category TEXT CHECK (category IN ('flowers', 'hampers', 'teddy', 'wines', 'chocolates')) NOT NULL,
+  category TEXT CHECK (category IN ('flowers', 'hampers', 'teddy', 'wines', 'chocolates', 'cards', 'cakes')) NOT NULL,
   tags TEXT[] DEFAULT '{}',
   teddy_size INTEGER,
   teddy_color TEXT,
@@ -156,7 +156,7 @@ ALTER TABLE products DROP CONSTRAINT IF EXISTS products_category_check;
 
 -- Add the correct constraint with all categories
 ALTER TABLE products ADD CONSTRAINT products_category_check 
-  CHECK (category IN ('flowers', 'hampers', 'teddy', 'wines', 'chocolates'));
+  CHECK (category IN ('flowers', 'hampers', 'teddy', 'wines', 'chocolates', 'cards', 'cakes'));
 
 -- Orders table
 CREATE TABLE IF NOT EXISTS orders (

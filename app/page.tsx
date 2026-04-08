@@ -4,6 +4,7 @@ import Image from "next/image";
 import JsonLd from "@/components/JsonLd";
 import HeroCarousel from "@/components/HeroCarousel";
 import ProductCard from "@/components/ProductCard";
+import RotatingProductSection from "@/components/RotatingProductSection";
 import { getProducts } from "@/lib/db";
 import { getPredefinedProducts } from "@/lib/predefinedProducts";
 import { getBlogPosts } from "@/lib/blogData";
@@ -74,75 +75,6 @@ const breadcrumbJsonLd = {
     },
   ],
 };
-
-// Helper function to create a product section
-function ProductSection({
-  title,
-  subtitle,
-  products,
-  bgColor = "bg-green-100",
-  linkHref,
-}: {
-  title: string;
-  subtitle?: string;
-  products: any[];
-  bgColor?: string;
-  linkHref?: string;
-}) {
-  return (
-    <section className={`py-10 md:py-14 lg:py-16 ${bgColor} relative overflow-hidden`}>
-      {/* Magazine-style background pattern */}
-      <div className="absolute inset-0 opacity-[0.02] pointer-events-none" 
-           style={{
-             backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,0.03) 10px, rgba(0,0,0,0.03) 20px)`,
-           }}
-      />
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-6 md:mb-8 flex items-center justify-between">
-          <div>
-            <h2 className="font-heading font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl text-brand-gray-900">
-              {title}
-            </h2>
-            {subtitle && (
-              <p className="text-xs sm:text-sm md:text-base text-brand-gray-600 mt-1 md:mt-2">
-                {subtitle}
-              </p>
-            )}
-          </div>
-          {linkHref && (
-            <Link
-              href={linkHref}
-              className="text-brand-red hover:text-brand-red/80 font-medium text-base md:text-lg transition-colors"
-            >
-              View all
-            </Link>
-          )}
-        </div>
-        {products.length > 0 ? (
-          <div className="flex overflow-x-auto gap-3 md:gap-5 lg:gap-6 pb-4 scrollbar-thin scrollbar-thumb-brand-gray-300 scrollbar-track-transparent -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
-            {products.map((product, index) => (
-              <div key={`${product.id}-${index}`} className="flex-shrink-0 w-[calc(100vw-2rem)] min-w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] xs:min-w-[140px] xs:max-w-[140px] sm:min-w-[280px] sm:max-w-[300px] md:w-[320px]">
-                <ProductCard
-                  id={product.id}
-                  name={product.title}
-                  price={product.price}
-                  image={product.images[0] || "/images/products/hampers/giftamper.jpg"}
-                  slug={product.slug}
-                  shortDescription={product.short_description}
-                  category={product.category}
-                  homePage={true}
-                  priority={index < 3}
-                />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-brand-gray-600 text-center py-8">No products available at the moment.</p>
-        )}
-      </div>
-    </section>
-  );
-}
 
 // Blog Section Component
 async function BlogSection() {
@@ -462,10 +394,14 @@ Whether you're celebrating a university graduation, high school completion, or a
 
 export default async function HomePage() {
   // Fetch all products
-  const [dbFlowers, dbHampers, dbTeddy, featuredCaseStudies] = await Promise.all([
+  const [dbFlowers, dbHampers, dbTeddy, dbWines, dbChocolates, dbCards, dbCakes, featuredCaseStudies] = await Promise.all([
     getProducts({ category: "flowers" }),
     getProducts({ category: "hampers" }),
     getProducts({ category: "teddy" }),
+    getProducts({ category: "wines" }),
+    getProducts({ category: "chocolates" }),
+    getProducts({ category: "cards" }),
+    getProducts({ category: "cakes" }),
     getFeaturedCaseStudies(),
   ]);
 
@@ -501,6 +437,23 @@ export default async function HomePage() {
   const allHampers = dbHampers.length > 0 ? dbHampers : HAMPER_FALLBACK;
   const allTeddy = dbTeddy.length > 0 ? dbTeddy : TEDDY_FALLBACK;
 
+  // Include predefined products for wines/chocolates/cards/cakes (and fallback when DB empty)
+  const predefinedWines = getPredefinedProducts("wines");
+  const predefinedChocolates = getPredefinedProducts("chocolates");
+  const predefinedCards = getPredefinedProducts("cards");
+  const predefinedCakes = getPredefinedProducts("cakes");
+
+  const mergeUniqueBySlug = (dbProducts: any[], predefined: any[]) => {
+    const dbSlugs = new Set((dbProducts || []).map((p) => p.slug));
+    const uniquePredefined = (predefined || []).filter((p) => !dbSlugs.has(p.slug));
+    return [...(dbProducts || []), ...uniquePredefined];
+  };
+
+  const allWines = dbWines.length > 0 ? mergeUniqueBySlug(dbWines, predefinedWines) : predefinedWines;
+  const allChocolates = dbChocolates.length > 0 ? mergeUniqueBySlug(dbChocolates, predefinedChocolates) : predefinedChocolates;
+  const allCards = dbCards.length > 0 ? mergeUniqueBySlug(dbCards, predefinedCards) : predefinedCards;
+  const allCakes = dbCakes.length > 0 ? mergeUniqueBySlug(dbCakes, predefinedCakes) : predefinedCakes;
+
   // Helper function to filter products by tags
   const filterByTags = (products: any[], tags: string[]) => {
     if (tags.length === 0) return products;
@@ -521,56 +474,43 @@ export default async function HomePage() {
     return shuffled;
   };
 
-  // Helper function to mix different product types - ensures all types are included
-  const mixProducts = (hampers: any[], flowers: any[], teddies: any[], count: number = 8) => {
+  // Helper function to mix product groups across categories without changing scroll UI
+  const mixProductGroups = (groups: any[][], count: number = 8) => {
+    const nonEmptyGroups = groups.filter((g) => Array.isArray(g) && g.length > 0);
     const mixed: any[] = [];
-    
-    // Ensure we have at least some from each category if available
-    const hampersAvailable = hampers.length > 0;
-    const flowersAvailable = flowers.length > 0;
-    const teddiesAvailable = teddies.length > 0;
-    
-    const availableTypes = [hampersAvailable, flowersAvailable, teddiesAvailable].filter(Boolean).length;
-    const itemsPerType = Math.max(2, Math.floor(count / Math.max(1, availableTypes)));
-    
-    // Add products from each category
-    if (hampersAvailable && hampers.length > 0) {
-      mixed.push(...hampers.slice(0, itemsPerType));
-    }
-    if (flowersAvailable && flowers.length > 0) {
-      mixed.push(...flowers.slice(0, itemsPerType));
-    }
-    if (teddiesAvailable && teddies.length > 0) {
-      mixed.push(...teddies.slice(0, itemsPerType));
-    }
-    
-    // Fill remaining slots by cycling through available categories
-    let typeIndex = 0;
-    const allProducts = [
-      ...(hampersAvailable ? hampers : []),
-      ...(flowersAvailable ? flowers : []),
-      ...(teddiesAvailable ? teddies : []),
-    ];
-    
-    while (mixed.length < count && allProducts.length > 0) {
-      const product = allProducts[typeIndex % allProducts.length];
-      if (!mixed.some(p => p.id === product.id)) {
-        mixed.push(product);
+
+    // Seed with at least one from each group when possible
+    for (const group of nonEmptyGroups) {
+      if (mixed.length >= count) break;
+      const candidate = group[0];
+      if (candidate?.id && !mixed.some((p) => p.id === candidate.id)) {
+        mixed.push(candidate);
       }
-      typeIndex++;
-      if (typeIndex > allProducts.length * 2) break; // Prevent infinite loop
     }
-    
-    // If still not enough, repeat products
-    if (mixed.length < count) {
+
+    // Fill by round-robin through groups to keep categories mixed
+    let guard = 0;
+    while (mixed.length < count && nonEmptyGroups.length > 0 && guard < 500) {
+      const group = nonEmptyGroups[mixed.length % nonEmptyGroups.length];
+      const candidate = group[mixed.length % group.length];
+      if (candidate?.id && !mixed.some((p) => p.id === candidate.id)) {
+        mixed.push(candidate);
+      } else {
+        // try another candidate from same group
+        const alt = group[(mixed.length + guard) % group.length];
+        if (alt?.id && !mixed.some((p) => p.id === alt.id)) mixed.push(alt);
+      }
+      guard++;
+    }
+
+    // If still short, repeat from what we have
+    if (mixed.length > 0 && mixed.length < count) {
       const needed = count - mixed.length;
-      const allMixed = [...mixed];
       for (let i = 0; i < needed; i++) {
-        allMixed.push(allMixed[i % allMixed.length]);
+        mixed.push(mixed[i % mixed.length]);
       }
-      return shuffleArray(allMixed).slice(0, count);
     }
-    
+
     return shuffleArray(mixed).slice(0, count);
   };
 
@@ -722,33 +662,8 @@ export default async function HomePage() {
   })();
 
   // Fallback if no tagged products - ensure at least 8
-  const getFallbackProducts = (category: string) => {
-    if (category === "hampers") {
-      // Only hampers, no mixing
-      if (allHampers.length >= 8) {
-        return allHampers.slice(0, 8);
-      }
-      const result = [...allHampers];
-      while (result.length < 8 && allHampers.length > 0) {
-        result.push(...allHampers);
-      }
-      return result.slice(0, 8);
-    }
-    if (category === "flowers") {
-      return shuffleArray(allFlowers).slice(0, Math.max(8, allFlowers.length));
-    }
-    if (category === "teddy") {
-      if (allTeddy.length >= 8) {
-        return allTeddy.slice(0, 8);
-      }
-      const result = [...allTeddy];
-      while (result.length < 8 && allTeddy.length > 0) {
-        result.push(...allTeddy);
-      }
-      return result.slice(0, 8);
-    }
-    return mixProducts(allHampers, allFlowers, allTeddy, 8);
-  };
+  const getFallbackProducts = () =>
+    mixProductGroups([allFlowers, allHampers, allTeddy, allWines, allChocolates, allCakes], 8);
 
   return (
     <>
@@ -776,75 +691,231 @@ export default async function HomePage() {
         <HeroCarousel />
 
         {/* Nairobi Gift Hampers */}
-        <ProductSection
+        <RotatingProductSection
           title="Gift Hampers Nairobi — Flowers, Chocolates & More"
           subtitle="Curated Nairobi gift hampers with red roses, pink and white bouquets, chocolates, wine and self-care treats for every occasion."
-          products={newYearHampers.length >= 8 ? newYearHampers : getFallbackProducts("hampers")}
+          flowers={allFlowers}
+          teddy={allTeddy}
+          wines={allWines}
+          chocolates={allChocolates}
+          cakes={allCakes}
+          other={allHampers}
           bgColor="bg-green-100"
           linkHref="/collections/gift-hampers"
         />
 
         {/* Flowers delivered same day in Nairobi */}
-        <ProductSection
+        <RotatingProductSection
           title="Red, Pink & White Flowers Delivered in Nairobi"
           subtitle="Red roses, pink roses and white flowers delivered same day across Nairobi — perfect for birthdays, anniversaries and everyday surprises."
-          products={sameDayFlowers.length >= 8 ? sameDayFlowers : getFallbackProducts("flowers")}
+          flowers={allFlowers}
+          teddy={allTeddy}
+          wines={allWines}
+          chocolates={allChocolates}
+          cakes={allCakes}
+          other={allHampers}
           bgColor="bg-gradient-to-br from-green-100 via-green-50 to-green-100"
           linkHref="/collections/flowers"
         />
 
+        {/* Quick category links */}
+        <section className="py-8 md:py-10 bg-green-100">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-center gap-6 sm:gap-10">
+              <Link href="/collections/flowers" className="group text-center">
+                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white shadow-md border border-brand-gray-200 flex items-center justify-center overflow-hidden group-hover:shadow-lg transition-shadow">
+                  <Image
+                    src="/images/products/flowers/BouquetFlowers2.jpg"
+                    alt="Shop Flowers"
+                    width={112}
+                    height={112}
+                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <div className="mt-2 text-xs sm:text-sm font-semibold text-brand-gray-900 group-hover:text-brand-red transition-colors">
+                  Flowers
+                </div>
+              </Link>
+
+              <Link href="/collections/wines" className="group text-center">
+                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white shadow-md border border-brand-gray-200 flex items-center justify-center overflow-hidden group-hover:shadow-lg transition-shadow">
+                  <Image
+                    src="/images/products/wines/Wines1.jpg"
+                    alt="Shop Wines"
+                    width={112}
+                    height={112}
+                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <div className="mt-2 text-xs sm:text-sm font-semibold text-brand-gray-900 group-hover:text-brand-red transition-colors">
+                  Wines
+                </div>
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* Holiday Surprise Gifts For Families */}
-        <ProductSection
+        <RotatingProductSection
           title="Holiday Surprise Gifts For Families"
-          products={holidayFamilyProducts.length >= 8 ? holidayFamilyProducts : getFallbackProducts("mixed")}
+          flowers={allFlowers}
+          teddy={allTeddy}
+          wines={allWines}
+          chocolates={allChocolates}
+          cakes={allCakes}
+          other={allHampers}
           bgColor="bg-green-100"
           linkHref="/collections"
         />
 
         {/* Form Four Results Celebration Gifts */}
-        <ProductSection
+        <RotatingProductSection
           title="Celebrate your kids best results with gifts"
-          products={formFourResultsProducts.length >= 8 ? formFourResultsProducts : getFallbackProducts("mixed")}
+          flowers={allFlowers}
+          teddy={allTeddy}
+          wines={allWines}
+          chocolates={allChocolates}
+          cakes={allCakes}
+          other={allHampers}
           bgColor="bg-gradient-to-br from-green-100 via-green-50 to-green-100"
           linkHref="/collections/gift-hampers"
         />
 
+        {/* Quick category links */}
+        <section className="py-8 md:py-10 bg-green-100">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-center gap-6 sm:gap-10">
+              <Link href="/collections/gift-hampers" className="group text-center">
+                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white shadow-md border border-brand-gray-200 flex items-center justify-center overflow-hidden group-hover:shadow-lg transition-shadow">
+                  <Image
+                    src="/images/products/hampers/giftamper.jpg"
+                    alt="Shop Gift Hampers"
+                    width={112}
+                    height={112}
+                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <div className="mt-2 text-xs sm:text-sm font-semibold text-brand-gray-900 group-hover:text-brand-red transition-colors">
+                  Gift Hampers
+                </div>
+              </Link>
+
+              <Link href="/collections/teddy-bears" className="group text-center">
+                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white shadow-md border border-brand-gray-200 flex items-center justify-center overflow-hidden group-hover:shadow-lg transition-shadow">
+                  <Image
+                    src="/images/products/teddies/Teddybear1.jpg"
+                    alt="Shop Teddy Bears"
+                    width={112}
+                    height={112}
+                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <div className="mt-2 text-xs sm:text-sm font-semibold text-brand-gray-900 group-hover:text-brand-red transition-colors">
+                  Teddy Bears
+                </div>
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* Anniversary & Special Occasion Gifts */}
-        <ProductSection
+        <RotatingProductSection
           title="Celebration Gifts — Flowers, Hampers & Teddy Bears"
-          products={anniversaryProducts.length >= 8 ? anniversaryProducts : getFallbackProducts("mixed")}
+          flowers={allFlowers}
+          teddy={allTeddy}
+          wines={allWines}
+          chocolates={allChocolates}
+          cakes={allCakes}
+          other={allHampers}
           bgColor="bg-green-100"
           linkHref="/collections/flowers?tags=anniversary"
         />
 
         {/* Say It With Flowers */}
-        <ProductSection
+        <RotatingProductSection
           title="Say It With Flowers"
-          products={sayItWithFlowers.length >= 8 ? sayItWithFlowers : getFallbackProducts("flowers")}
+          flowers={allFlowers}
+          teddy={allTeddy}
+          wines={allWines}
+          chocolates={allChocolates}
+          cakes={allCakes}
+          other={allHampers}
           bgColor="bg-gradient-to-br from-green-100 via-green-50 to-green-100"
           linkHref="/collections/flowers"
         />
 
+        {/* Quick category links */}
+        <section className="py-8 md:py-10 bg-green-100">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-center gap-6 sm:gap-10">
+              <Link href="/collections/cards" className="group text-center">
+                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white shadow-md border border-brand-gray-200 flex items-center justify-center overflow-hidden group-hover:shadow-lg transition-shadow">
+                  <Image
+                    src="/images/giftcards/card1.png"
+                    alt="Shop Cards"
+                    width={112}
+                    height={112}
+                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <div className="mt-2 text-xs sm:text-sm font-semibold text-brand-gray-900 group-hover:text-brand-red transition-colors">
+                  Cards
+                </div>
+              </Link>
+
+              <Link href="/collections/cakes" className="group text-center">
+                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white shadow-md border border-brand-gray-200 flex items-center justify-center overflow-hidden group-hover:shadow-lg transition-shadow">
+                  <Image
+                    src="/images/products/cakes.webp"
+                    alt="Shop Cakes"
+                    width={112}
+                    height={112}
+                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <div className="mt-2 text-xs sm:text-sm font-semibold text-brand-gray-900 group-hover:text-brand-red transition-colors">
+                  Cakes
+                </div>
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* Gift Hampers */}
-        <ProductSection
+        <RotatingProductSection
           title="Gift Hampers"
-          products={giftHampers.length >= 8 ? giftHampers : getFallbackProducts("hampers")}
+          flowers={allFlowers}
+          teddy={allTeddy}
+          wines={allWines}
+          chocolates={allChocolates}
+          cakes={allCakes}
+          other={allHampers}
           bgColor="bg-green-100"
           linkHref="/collections/gift-hampers"
         />
 
         {/* Teddy Bears */}
-        <ProductSection
+        <RotatingProductSection
           title="Teddy Bears"
-          products={teddyBears}
+          flowers={allFlowers}
+          teddy={allTeddy}
+          wines={allWines}
+          chocolates={allChocolates}
+          cakes={allCakes}
+          other={allHampers}
           bgColor="bg-gradient-to-br from-green-50 via-green-50 to-green-50"
           linkHref="/collections/teddy-bears"
         />
 
         {/* Colleagues Surprises And Celebrations */}
-        <ProductSection
+        <RotatingProductSection
           title="Office & Colleague Gifts in Nairobi"
-          products={colleaguesProducts.length >= 8 ? colleaguesProducts : getFallbackProducts("mixed")}
+          flowers={allFlowers}
+          teddy={allTeddy}
+          wines={allWines}
+          chocolates={allChocolates}
+          cakes={allCakes}
+          other={allHampers}
           bgColor="bg-green-50"
           linkHref="/collections/gift-hampers"
         />
@@ -868,11 +939,11 @@ export default async function HomePage() {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 md:gap-6 lg:gap-8">
+            <div className="flex sm:grid flex-nowrap sm:flex-wrap overflow-x-auto sm:overflow-visible gap-2 sm:gap-4 md:gap-6 lg:gap-8 pb-3 sm:pb-0 -mx-4 sm:mx-0 px-4 sm:px-0 scrollbar-thin scrollbar-thumb-brand-gray-300 scrollbar-track-transparent">
               {/* Gift Hampers Card */}
               <Link 
                 href="/collections/gift-hampers"
-                className="group relative bg-white rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2"
+                className="group relative bg-white rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2 flex-shrink-0 w-[260px] xs:w-[280px] sm:w-auto"
               >
                 <div className="relative h-32 sm:h-48 md:h-64 lg:h-72 overflow-hidden">
                   <Image
@@ -904,7 +975,7 @@ export default async function HomePage() {
               {/* Flowers Card */}
               <Link 
                 href="/collections/flowers"
-                className="group relative bg-white rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2"
+                className="group relative bg-white rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2 flex-shrink-0 w-[260px] xs:w-[280px] sm:w-auto"
               >
                 <div className="relative h-32 sm:h-48 md:h-64 lg:h-72 overflow-hidden">
                   <Image
@@ -936,7 +1007,7 @@ export default async function HomePage() {
               {/* Teddy Bears Card */}
               <Link 
                 href="/collections/teddy-bears"
-                className="group relative bg-white rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2"
+                className="group relative bg-white rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2 flex-shrink-0 w-[260px] xs:w-[280px] sm:w-auto"
               >
                 <div className="relative h-32 sm:h-48 md:h-64 lg:h-72 overflow-hidden">
                   <Image

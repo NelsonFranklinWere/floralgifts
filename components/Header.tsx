@@ -123,6 +123,10 @@ const navigation: NavItem[] = [
     ],
   },
   {
+    name: "Cakes",
+    href: "/collections/cakes",
+  },
+  {
     name: "Contact",
     href: "/contact",
   },

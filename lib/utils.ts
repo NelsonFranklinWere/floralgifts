@@ -110,6 +110,10 @@ export function getCategoryFallbackImage(category: string): string {
       return "/images/products/hampers/giftamper.jpg"; // Using hamper image as placeholder
     case "chocolates":
       return "/images/products/hampers/giftamper.jpg"; // Using hamper image as placeholder
+    case "cards":
+      return "/images/giftcards/card1.png";
+    case "cakes":
+      return "/images/products/hampers/giftamper.jpg"; // Placeholder until cake images are added
     default:
       return "/images/products/flowers/BouquetFlowers1.jpg";
   }

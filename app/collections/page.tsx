@@ -7,7 +7,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts
 
 export const metadata: Metadata = {
   title: "Flower Delivery Nairobi | Pink Roses, Red Roses, White Flowers | Collections - Floral Whispers Gifts",
-  description: "Flower delivery Nairobi: fresh pink roses, red roses, white flowers. Browse flowers, teddy bears, gift hampers, wines, chocolates. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
+  description: "Flower delivery Nairobi: fresh pink roses, red roses, white flowers. Browse flowers, teddy bears, gift hampers, wines, chocolates, cards and cakes. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
   keywords: [
     "flower delivery Nairobi",
     "pink roses Nairobi",
@@ -19,6 +19,7 @@ export const metadata: Metadata = {
     "gift hamper collections Kenya",
     "wine collections Nairobi",
     "chocolate collections Kenya",
+    "cake collections Nairobi",
     "flowers Nairobi CBD",
     "roses Nairobi",
     "florist Nairobi",
@@ -73,7 +74,7 @@ export default function CollectionsPage() {
             Our Collections
           </h1>
           <p className="text-brand-gray-600 text-lg">
-            Explore our beautiful range of flowers, teddy bears, gift hampers, wines, and chocolates
+            Explore our beautiful range of flowers, teddy bears, gift hampers, wines, chocolates, cards, and cakes
           </p>
         </div>
 
@@ -225,6 +226,31 @@ export default function CollectionsPage() {
                 Delicious premium chocolates - perfect for gifts, celebrations, and sweet moments
               </p>
               <span className="text-brand-green font-medium text-xs md:text-base">Shop Chocolates →</span>
+            </div>
+          </Link>
+
+          <Link
+            href="/collections/cakes"
+            className="card overflow-hidden group block"
+          >
+            <div className="relative h-48 md:h-80 overflow-hidden">
+              <Image
+                src="/images/products/hampers/giftamper.jpg"
+                alt="Cakes Nairobi - chocolate cake, red velvet cake, birthday cakes Nairobi delivery"
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-300"
+                sizes="(max-width: 768px) 50vw, 33vw"
+                loading="lazy"
+              />
+            </div>
+            <div className="p-3 md:p-8">
+              <h2 className="font-heading font-bold text-base md:text-3xl text-brand-gray-900 mb-2 md:mb-3 group-hover:text-brand-green transition-colors">
+                Cakes
+              </h2>
+              <p className="text-brand-gray-600 mb-2 md:mb-4 text-xs md:text-base line-clamp-2 md:line-clamp-none">
+                Cakes for birthdays, anniversaries and celebrations — pair with flowers, wine and chocolates
+              </p>
+              <span className="text-brand-green font-medium text-xs md:text-base">Shop Cakes →</span>
             </div>
           </Link>
         </div>

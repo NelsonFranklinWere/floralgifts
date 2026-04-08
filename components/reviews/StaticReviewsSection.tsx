@@ -208,7 +208,7 @@ export default function StaticReviewsSection() {
 
       <div className="text-center mt-10 px-4">
         <a
-          href="https://search.google.com/local/writereview?placeid=FLORAL_WHISPERS_PLACE_ID"
+          href="https://share.google/SLquYNat2Z1Ag1AO8"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 bg-white border border-gray-200 text-gray-600 text-sm font-medium px-6 py-3 rounded-full hover:shadow-md transition-all"

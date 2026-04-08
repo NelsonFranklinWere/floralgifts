@@ -170,6 +170,24 @@ export const CARD_PRODUCTS = [
   },
 ];
 
+// Cake products mapped to images (add real images when available)
+export const CAKE_PRODUCTS = [
+  {
+    image: "/images/products/hampers/giftamper.jpg",
+    title: "Chocolate Fudge Cake",
+    description: "Rich chocolate cake — perfect with flowers, wine and chocolates.",
+    price: 250000, // 2,500 KES in cents
+    slug: "chocolate-fudge-cake",
+  },
+  {
+    image: "/images/products/hampers/giftamper.jpg",
+    title: "Red Velvet Cake",
+    description: "Classic red velvet cake — ideal for birthdays and anniversaries.",
+    price: 300000, // 3,000 KES in cents
+    slug: "red-velvet-cake",
+  },
+];
+
 // Gift hamper products mapped to images
 export const HAMPER_PRODUCTS = [
   {
@@ -304,6 +322,22 @@ export function getPredefinedProducts(category: string): Product[] {
       short_description: cp.description,
       description: cp.description,
       category: "cards" as const,
+      tags: [] as string[],
+      created_at: now,
+      updated_at: now,
+    }));
+  }
+
+  if (category === "cakes") {
+    return CAKE_PRODUCTS.map((cp) => ({
+      id: `cake-${cp.slug}`,
+      title: cp.title,
+      price: cp.price,
+      images: [cp.image],
+      slug: cp.slug,
+      short_description: cp.description,
+      description: cp.description,
+      category: "cakes" as const,
       tags: [] as string[],
       created_at: now,
       updated_at: now,

@@ -59,6 +59,8 @@ export async function POST(request: NextRequest) {
     revalidatePath("/collections/gift-hampers");
     revalidatePath("/collections/wines");
     revalidatePath("/collections/chocolates");
+    revalidatePath("/collections/cards");
+    revalidatePath("/collections/cakes");
     revalidatePath(`/product/${data.slug}`);
 
     return NextResponse.json(data);

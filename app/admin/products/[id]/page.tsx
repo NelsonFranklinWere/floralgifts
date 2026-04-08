@@ -17,7 +17,7 @@ const schema = yup.object({
   short_description: yup.string().required("Short description is required"),
   description: yup.string().required("Description is required"),
   price: yup.number().required("Price is required").min(1, "Price must be greater than 0"),
-  category: yup.string().oneOf(["flowers", "hampers", "teddy", "wines", "chocolates", "cards"]).required("Category is required"),
+  category: yup.string().oneOf(["flowers", "hampers", "teddy", "wines", "chocolates", "cards", "cakes"]).required("Category is required"),
   subcategory: yup.string().nullable().when("category", {
     is: "teddy",
     then: (schema) => schema.required("Size is required for teddy bears"),
@@ -271,7 +271,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
           price: Math.round(data.price * 100), // Convert to cents
           images,
           tags: tagsArray,
-          category: data.category as "flowers" | "hampers" | "teddy" | "wines" | "chocolates" | "cards",
+          category: data.category as "flowers" | "hampers" | "teddy" | "wines" | "chocolates" | "cards" | "cakes",
           subcategory: subcategoryValue,
           teddy_size: category === "teddy" ? data.teddy_size : null,
           teddy_color: teddyColorValue,
@@ -548,6 +548,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
                 <option value="wines">Wines</option>
                 <option value="chocolates">Chocolates</option>
                 <option value="cards">Gift Cards</option>
+                <option value="cakes">Cakes</option>
               </select>
               {errors.category && (
                 <p className="mt-1 text-sm text-brand-red">{errors.category.message}</p>

@@ -2,7 +2,9 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ImageGallery from "@/components/ImageGallery";
 import ProductDetailClient from "./ProductDetailClient";
-import { getProductBySlug, type Product } from "@/lib/db";
+import ProductCard from "@/components/ProductCard";
+import BackButton from "@/components/BackButton";
+import { getProductBySlug, getProducts, type Product } from "@/lib/db";
 import { getPredefinedProducts } from "@/lib/predefinedProducts";
 import { formatCurrency } from "@/lib/utils";
 import { DEEP_FLOWER_ROSE_KEYWORDS } from "@/lib/seo-keywords";
@@ -23,6 +25,7 @@ async function getProductWithFallback(slug: string): Promise<Product | null> {
     getPredefinedProducts("wines"),
     getPredefinedProducts("chocolates"),
     getPredefinedProducts("cards"),
+    getPredefinedProducts("cakes"),
   ];
 
   const allFallback = fallbackLists.flat();
@@ -166,6 +169,21 @@ export default async function ProductPage({ params }: ProductPageProps) {
     notFound();
   }
 
+  const dbRelated = await getProducts({ category: product.category });
+  const fallbackRelated = getPredefinedProducts(product.category);
+  const relatedCandidates = [...dbRelated, ...fallbackRelated]
+    .filter((p) => p.slug !== product.slug)
+    .filter((p) => p.category === product.category);
+
+  const seen = new Set<string>();
+  const relatedProducts = relatedCandidates
+    .filter((p) => {
+      if (seen.has(p.slug)) return false;
+      seen.add(p.slug);
+      return true;
+    })
+    .slice(0, 8);
+
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispers.co.ke";
   const productUrl = `${baseUrl}/product/${product.slug}`;
   const categoryMap: Record<string, string> = {
@@ -174,6 +192,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
     hampers: "Gift",
     wines: "Wine",
     chocolates: "Food",
+    cards: "GiftCard",
+    cakes: "Food",
   };
 
   const breadcrumbJsonLd = {
@@ -195,8 +215,35 @@ export default async function ProductPage({ params }: ProductPageProps) {
       {
         "@type": "ListItem",
         position: 3,
-        name: product.category === "flowers" ? "Flowers" : product.category === "teddy" ? "Teddy Bears" : product.category === "hampers" ? "Gift Hampers" : product.category === "wines" ? "Wines" : "Chocolates",
-        item: `${baseUrl}/collections/${product.category === "flowers" ? "flowers" : product.category === "teddy" ? "teddy-bears" : product.category === "hampers" ? "gift-hampers" : product.category === "wines" ? "wines" : "chocolates"}`,
+        name:
+          product.category === "flowers"
+            ? "Flowers"
+            : product.category === "teddy"
+            ? "Teddy Bears"
+            : product.category === "hampers"
+            ? "Gift Hampers"
+            : product.category === "wines"
+            ? "Wines"
+            : product.category === "chocolates"
+            ? "Chocolates"
+            : product.category === "cards"
+            ? "Gift Cards"
+            : "Cakes",
+        item: `${baseUrl}/collections/${
+          product.category === "flowers"
+            ? "flowers"
+            : product.category === "teddy"
+            ? "teddy-bears"
+            : product.category === "hampers"
+            ? "gift-hampers"
+            : product.category === "wines"
+            ? "wines"
+            : product.category === "chocolates"
+            ? "chocolates"
+            : product.category === "cards"
+            ? "cards"
+            : "cakes"
+        }`,
       },
       {
         "@type": "ListItem",
@@ -256,6 +303,26 @@ export default async function ProductPage({ params }: ProductPageProps) {
       />
       <div className="py-12 bg-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-6">
+            <BackButton
+              label="Back"
+              fallbackHref={`/collections/${
+                product.category === "flowers"
+                  ? "flowers"
+                  : product.category === "teddy"
+                  ? "teddy-bears"
+                  : product.category === "hampers"
+                  ? "gift-hampers"
+                  : product.category === "wines"
+                  ? "wines"
+                  : product.category === "chocolates"
+                  ? "chocolates"
+                  : "cards"
+              }`}
+              className="btn-outline text-xs sm:text-sm py-1.5 px-3"
+            />
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
               <ImageGallery images={product.images} productName={product.title} category={product.category} />
@@ -319,6 +386,29 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <ProductDetailClient product={product} />
             </div>
           </div>
+
+          {relatedProducts.length > 0 && (
+            <div className="mt-12">
+              <h2 className="font-heading font-semibold text-lg sm:text-xl text-brand-gray-900 mb-4">
+                More products
+              </h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+                {relatedProducts.map((p) => (
+                  <ProductCard
+                    key={p.slug}
+                    id={p.id}
+                    name={p.title}
+                    price={p.price}
+                    image={p.images?.[0] || ""}
+                    slug={p.slug}
+                    shortDescription={p.short_description || ""}
+                    category={p.category}
+                    hideDetailsButton
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>

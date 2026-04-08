@@ -17,9 +17,9 @@ export async function GET(request: NextRequest) {
 
     const dbProducts = await getProducts(filters);
     
-    // Include predefined products for flowers, wines, chocolates, and cards
+    // Include predefined products for flowers, wines, chocolates, cards, and cakes
     let allProducts = [...dbProducts];
-    if (category === "flowers" || category === "wines" || category === "chocolates" || category === "cards") {
+    if (category === "flowers" || category === "wines" || category === "chocolates" || category === "cards" || category === "cakes") {
       const predefinedProducts = getPredefinedProducts(category);
       // Filter out predefined products that already exist in database (by slug)
       const dbSlugs = new Set(dbProducts.map(p => p.slug));

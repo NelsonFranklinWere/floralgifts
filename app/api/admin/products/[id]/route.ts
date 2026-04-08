@@ -77,6 +77,8 @@ export async function PUT(
     revalidatePath("/collections/gift-hampers");
     revalidatePath("/collections/wines");
     revalidatePath("/collections/chocolates");
+    revalidatePath("/collections/cards");
+    revalidatePath("/collections/cakes");
     revalidatePath(`/product/${data.slug}`);
     if (oldProduct && oldProduct.slug !== data.slug) {
       // If slug changed, revalidate old slug too
@@ -121,6 +123,8 @@ export async function DELETE(
       revalidatePath("/collections/gift-hampers");
       revalidatePath("/collections/wines");
       revalidatePath("/collections/chocolates");
+      revalidatePath("/collections/cards");
+      revalidatePath("/collections/cakes");
       revalidatePath(`/product/${product.slug}`);
     }
 

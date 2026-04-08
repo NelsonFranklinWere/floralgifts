@@ -69,10 +69,11 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
           href={whatsappLink}
           target="_blank"
           rel="noopener noreferrer"
-          className="btn-secondary px-6 flex items-center justify-center"
+          className="btn-secondary px-6 flex items-center justify-center gap-2"
           aria-label={`Order ${product.title} via WhatsApp`}
         >
           <ChatBubbleLeftRightIcon className="h-5 w-5" />
+          Order via WhatsApp
         </a>
       </div>
     </div>
