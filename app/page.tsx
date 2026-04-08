@@ -669,7 +669,7 @@ export default async function HomePage() {
     <>
       <JsonLd data={breadcrumbJsonLd} />
       <div className="bg-green-100">
-        <section className="px-4 sm:px-6 lg:px-8 pt-8 pb-4 max-w-7xl mx-auto">
+        <section className="px-4 sm:px-6 lg:px-8 pt-8 pb-4 max-w-7xl mx-auto hero-rotating-bg rounded-b-2xl">
           <h1 className="font-heading font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-brand-gray-900 mb-3">
             Flower Delivery in Nairobi — Bouquets, Hampers & Teddy Bears
           </h1>
@@ -679,14 +679,6 @@ export default async function HomePage() {
           <h2 className="font-heading font-semibold text-base sm:text-lg md:text-xl text-brand-gray-800 mb-4">
             Gift Hampers, Teddy Bears & Roses — Delivered by Floral Whispers
           </h2>
-          <a
-            href={`https://wa.me/${SHOP_INFO.whatsapp}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center px-5 py-3 rounded-full bg-brand-green text-white font-semibold text-sm sm:text-base shadow-lg hover:bg-brand-green/90 transition-colors"
-          >
-            Order on WhatsApp — Fast Delivery Anywhere in Nairobi
-          </a>
         </section>
         <HeroCarousel />
 
