@@ -200,6 +200,12 @@ export default function AdminOrdersPage() {
                         {formatDateTime(order.created_at)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm space-x-2">
+                        <Link
+                          href={`/admin/orders/${order.id}`}
+                          className="text-brand-green hover:text-brand-green/80"
+                        >
+                          View
+                        </Link>
                         {order.status === "pending" && (
                           <>
                             <button

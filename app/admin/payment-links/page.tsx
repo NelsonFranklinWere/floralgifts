@@ -45,6 +45,26 @@ export default function AdminPaymentLinksPage() {
   const [success, setSuccess] = useState("");
 
   useEffect(() => {
+    // Prefill from query params (useful when coming from an order)
+    const sp = new URLSearchParams(window.location.search);
+    const customerName = sp.get("customerName") || "";
+    const customerPhone = sp.get("customerPhone") || "";
+    const customerEmail = sp.get("customerEmail") || "";
+    const amount = sp.get("amount") || "";
+    const description = sp.get("description") || "";
+    if (customerName || customerPhone || customerEmail || amount || description) {
+      setFormData((prev) => ({
+        ...prev,
+        customerName,
+        customerPhone,
+        customerEmail,
+        amount,
+        description,
+      }));
+    }
+  }, []);
+
+  useEffect(() => {
     const token = localStorage.getItem("admin_token");
     if (!token) {
       router.push("/admin/login");
