@@ -56,7 +56,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
         <button
           type="button"
           onClick={handleAddToCart}
-          className="btn-primary w-full flex items-center justify-center gap-2"
+          className="btn-primary w-full inline-flex items-center justify-center gap-2"
           aria-label={`Add ${quantity} ${product.title} to cart`}
         >
           <ShoppingCartIcon className="h-5 w-5" />

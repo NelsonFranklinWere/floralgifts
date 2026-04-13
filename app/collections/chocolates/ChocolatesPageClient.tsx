@@ -56,24 +56,50 @@ export default function ChocolatesPageClient({ products, allChocolateImages = []
   return (
     <div className="py-12 bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-8">
+        {/* Hero Section */}
+        <div className="text-center mb-12">
           <h1 className="font-heading font-bold text-4xl md:text-5xl text-brand-gray-900 mb-4">
-            Chocolate Collections
+            Premium Chocolate Collections
           </h1>
-          <p className="text-brand-gray-600 text-lg">
-            Delicious premium chocolates for every occasion
+          <p className="text-brand-gray-600 text-lg max-w-3xl mx-auto mb-4">
+            Indulge in our exquisite selection of premium chocolates, from luxurious Ferrero Rocher to artisanal truffles. Perfect for romantic gestures, celebrations, or simply treating yourself to something extraordinary.
           </p>
-          <p className="text-brand-gray-500 text-sm mt-2">
-            Showing {allDisplayItems.length} {allDisplayItems.length === 1 ? 'product' : 'products'}
+          <div className="flex flex-wrap justify-center gap-4 text-sm text-brand-gray-500">
+            <span className="bg-brand-gray-100 px-3 py-1 rounded-full">🍫 Luxury Brands</span>
+            <span className="bg-brand-gray-100 px-3 py-1 rounded-full">🎁 Beautiful Packaging</span>
+            <span className="bg-brand-gray-100 px-3 py-1 rounded-full">✨ Same-Day Delivery</span>
+          </div>
+        </div>
+
+        {/* Results Count */}
+        <div className="mb-8 text-center">
+          <p className="text-brand-gray-500 text-sm">
+            Showing {allDisplayItems.length} {allDisplayItems.length === 1 ? 'chocolate delight' : 'chocolate delights'}
           </p>
         </div>
 
         {allDisplayItems.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-brand-gray-600 text-lg mb-4">No chocolates available at the moment.</p>
+          <div className="text-center py-16">
+            <div className="bg-brand-gray-50 rounded-2xl p-8 max-w-md mx-auto">
+              <div className="text-4xl mb-4">🍫</div>
+              <h3 className="font-heading font-semibold text-xl text-brand-gray-900 mb-2">
+                Sweet Treats Coming Soon
+              </h3>
+              <p className="text-brand-gray-600 mb-6">
+                Our premium chocolate collection is being refreshed with new delightful treats. Check back soon for irresistible indulgences perfect for any occasion.
+              </p>
+              <a
+                href="https://wa.me/254721554393"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary inline-block"
+              >
+                Contact for Chocolate Recommendations
+              </a>
+            </div>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {allDisplayItems.map((item) => {
               const imageUrl = item.images && item.images.length > 0 && item.images[0] 
                 ? item.images[0] 

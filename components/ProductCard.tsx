@@ -164,7 +164,7 @@ export default function ProductCard({
       <button
         type="button"
         onClick={handleBasketClick}
-        className="mt-1 sm:mt-1.5 w-full inline-flex items-center justify-center gap-1.5 rounded-full bg-white border border-brand-gray-200 text-brand-gray-900 text-[10px] sm:text-[11px] md:text-xs font-semibold py-1.5 sm:py-2 px-3 shadow-sm hover:bg-brand-red hover:text-white hover:border-brand-red transition-colors"
+        className="mt-1 sm:mt-1.5 w-full btn-primary-sm"
         aria-label={`Add ${name} to cart`}
       >
         <ShoppingCartIconSolid className="h-4 w-4" />

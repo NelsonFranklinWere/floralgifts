@@ -45,6 +45,10 @@
     @apply bg-brand-red text-white px-6 py-3 rounded-lg font-medium hover:bg-opacity-90 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-red focus:ring-offset-2;
   }
   
+  .btn-primary-sm {
+    @apply bg-brand-red text-white px-3 py-1.5 rounded-lg font-medium text-xs hover:bg-opacity-90 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-red focus:ring-offset-2 inline-flex items-center justify-center gap-1.5;
+  }
+  
   .btn-secondary {
     @apply bg-brand-green text-white px-6 py-3 rounded-lg font-medium hover:bg-opacity-90 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-green focus:ring-offset-2;
   }

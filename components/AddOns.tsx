@@ -190,7 +190,7 @@ export default function AddOns({ excludeProductIds = [], onOpenChange }: AddOnsP
                       <button
                         type="button"
                         onClick={handleAddToCart}
-                        className="btn-primary w-full flex items-center justify-center gap-1 text-xs py-1.5"
+                        className="btn-primary-sm w-full"
                         aria-label={`Add ${product.title} to cart`}
                       >
                         <ShoppingCartIcon className="h-3 w-3" />
