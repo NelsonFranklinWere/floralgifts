@@ -97,8 +97,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/images/logo/FloralLogo.jpg",
-        width: 1200,
-        height: 630,
+        width: 676,
+        height: 677,
         alt: "Floral Whispers Gifts - Premium Flowers & Gifts in Nairobi",
       },
     ],
@@ -361,48 +361,48 @@ const websiteJsonLd = {
   },
 };
 
-const valentinesFaqJsonLd = {
+const evergreenFaqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
   mainEntity: [
     {
       "@type": "Question",
-      name: "What are the best Valentine's gifts for my wife in Nairobi?",
+      name: "Do you deliver flowers same day in Nairobi?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "The best Valentine's gifts for your wife in Nairobi include romantic roses, premium chocolate hampers, luxury wine, personalized teddy bears, and surprise gift baskets. We offer same-day delivery across Nairobi with beautiful arrangements starting from KES 3,500."
+        text: "Yes! We offer same-day flower delivery in Nairobi CBD for orders placed before 2 PM. For areas outside CBD including Westlands, Karen, Lavington, and Kilimani, we provide next-day delivery. All orders include beautiful packaging and reliable delivery service."
       }
     },
     {
       "@type": "Question",
-      name: "Can I order Valentine's flowers for delivery in Nairobi same day?",
+      name: "How do I pay for flower delivery with M-Pesa?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes! We offer same-day Valentine's flower delivery in Nairobi CBD. For areas outside CBD (Westlands, Karen, Lavington, Kilimani), we provide next-day delivery. Place your order before 2 PM for guaranteed Valentine's Day delivery."
+        text: "Payment is simple with M-Pesa! After selecting your flowers and gift items, proceed to checkout and select M-Pesa as your payment method. You'll receive a payment prompt to complete the transaction securely. We also accept cash and card payments for your convenience."
       }
     },
     {
       "@type": "Question",
-      name: "What should I gift my girlfriend for Valentine's Day in Nairobi?",
+      name: "What areas do you deliver to in Nairobi?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "For Valentine's Day in Nairobi, consider romantic red roses, premium Ferrero Rocher chocolates, cuddly teddy bears, personalized gift hampers, or luxury wine. We help you choose the perfect romantic gift with beautiful packaging and same-day delivery."
+        text: "We deliver across all major Nairobi areas including Nairobi CBD, Westlands, Karen, Lavington, Kilimani, Kileleshwa, Riverside, and surrounding neighborhoods. Same-day delivery available for CBD orders, next-day for other areas. Contact us for delivery to specific locations."
       }
     },
     {
       "@type": "Question",
-      name: "Do you offer pre-Valentine's Day orders in Nairobi?",
+      name: "What types of flowers and gifts do you offer?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes! We accept pre-Valentine's Day orders in Nairobi. Early booking ensures you get the best selection and avoids Valentine's Day rush. Order now for guaranteed delivery on February 14th across all Nairobi areas."
+        text: "We offer fresh flowers including red roses, pink roses, white flowers, and mixed bouquets. Our gift collection includes chocolate hampers, teddy bears, wines, gift baskets, and money bouquets. All items are carefully curated for quality and presentation."
       }
     },
     {
       "@type": "Question",
-      name: "What are Valentine's chocolate hamper options in Nairobi?",
+      name: "Can I customize flower arrangements for special occasions?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Our Valentine's chocolate hampers in Nairobi include premium Ferrero Rocher collections (8, 16, 24 pieces), gourmet chocolate baskets, and chocolate gift boxes. Perfect for romantic Valentine's surprises with same-day delivery available."
+        text: "Absolutely! We specialize in custom flower arrangements for birthdays, anniversaries, corporate events, and special celebrations. Contact us with your preferences and we'll create a personalized arrangement with your choice of flowers, colors, and gift items."
       }
     }
   ]
@@ -439,7 +439,7 @@ export default function RootLayout({
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(valentinesFaqJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(evergreenFaqJsonLd) }}
         />
         <script
           type="application/ld+json"

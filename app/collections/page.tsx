@@ -135,7 +135,7 @@ export default function CollectionsPage() {
           >
             <div className="relative h-48 md:h-80 overflow-hidden">
               <Image
-                src="/images/products/hampers/giftamper.jpg"
+                src="/images/products/cakes.webp"
                 alt="Gift hampers Kenya - Chocolate gift hampers, wine gift hampers, corporate gift hampers Nairobi"
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-300"

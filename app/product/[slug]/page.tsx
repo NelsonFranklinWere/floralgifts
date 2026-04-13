@@ -37,8 +37,10 @@ export async function generateStaticParams() {
     const { data } = await (supabaseAdmin.from("products") as any).select("slug");
     if (!data) return [];
     return (data as Array<{ slug: string }>).map((p) => ({ slug: p.slug }));
-  } catch {
+  } catch(err) {
+    console.error("Error generating params", err)//to log in the error since products are loaded in real-time only when one is online
     return [];
+
   }
 }
 
@@ -146,8 +148,8 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
       url: productUrl,
       images: product.images.length > 0 ? product.images.map(img => ({
         url: img.startsWith("http") ? img : `${baseUrl}${img}`,
-        width: 1200,
-        height: 630,
+        width: 676,
+        height: 677,
         alt: imageAlt,
       })) : [],
       type: "website",
@@ -184,7 +186,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     })
     .slice(0, 8);
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispers.co.ke";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
   const productUrl = `${baseUrl}/product/${product.slug}`;
   const categoryMap: Record<string, string> = {
     flowers: "Florist",
@@ -281,13 +283,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
         "@type": "City",
         name: "Nairobi",
       },
-    },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "5.0",
-      reviewCount: "0",
-      bestRating: "5",
-      worstRating: "1",
     },
   };
 
