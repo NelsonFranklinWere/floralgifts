@@ -48,7 +48,7 @@ export default function CheckoutPage() {
   const router = useRouter();
   const { items, getTotal, clearCart } = useCartStore();
   const [orderData, setOrderData] = useState<OrderData | null>(null);
-  const [paymentMethod, setPaymentMethod] = useState<"stk" | "till" | "paybill" | "pesapal" | null>("stk");
+  const [paymentMethod, setPaymentMethod] = useState<"stk" | "coopbank" | "till" | "paybill" | "pesapal" | null>("stk");
   const [stkPhone, setStkPhone] = useState("");
   const [stkError, setStkError] = useState("");
   const [phone, setPhone] = useState("");
@@ -174,9 +174,10 @@ export default function CheckoutPage() {
     });
     
     // CRITICAL: Log payment method to debug any redirect issues
-    console.log("🔍 Payment method check:", {
+    console.log("Payment method check:", {
       paymentMethod,
       isSTK: paymentMethod === "stk",
+      isCoopBank: paymentMethod === "coopbank",
       isPesapal: paymentMethod === "pesapal",
       stkPhone: stkPhone ? "provided" : "missing"
     });
@@ -192,9 +193,9 @@ export default function CheckoutPage() {
         return;
       }
       
-      // STK Push: Co-op Bank only - never use Pesapal or redirect to PayPal
-      if (paymentMethod === "stk") {
-        console.log("✅ STK Push selected - using Co-op Bank API only (NO Pesapal)");
+      // STK Push: Handle both M-Pesa STK and Co-op Bank options
+      if (paymentMethod === "stk" || paymentMethod === "coopbank") {
+        console.log(`${paymentMethod === "coopbank" ? "Co-op Bank" : "M-Pesa"} STK Push selected - using Co-op Bank API`);
         if (!stkPhone || !validatePhone(stkPhone)) {
           setStkError("Please enter a valid M-Pesa phone number (format: 2547XXXXXXXX)");
           setIsProcessing(false);
@@ -625,6 +626,62 @@ export default function CheckoutPage() {
                   )}
                 </div>
 
+                {/* Co-op Bank STK Push */}
+                <div>
+                  <label className="flex items-start gap-3 p-4 border border-brand-gray-200 rounded-md cursor-pointer hover:bg-brand-gray-50">
+                    <input
+                      type="radio"
+                      name="payment"
+                      value="coopbank"
+                      checked={paymentMethod === "coopbank"}
+                      onChange={() => setPaymentMethod("coopbank")}
+                      className="w-4 h-4 mt-1 text-brand-green focus:ring-brand-green"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-5 bg-gradient-to-br from-green-600 to-green-800 rounded flex items-center justify-center">
+                          <span className="text-white font-bold text-[8px]">COOP</span>
+                        </div>
+                        <span className="font-medium text-sm text-brand-gray-900">Co-op Bank STK Push</span>
+                        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Direct Bank</span>
+                      </div>
+                    </div>
+                  </label>
+                  {paymentMethod === "coopbank" && (
+                    <div className="mt-3 ml-7 space-y-3">
+                      <div className="p-3 bg-brand-gray-50 rounded-lg border border-brand-gray-200">
+                        <p className="text-xs text-brand-gray-700 mb-3">
+                          Enter your M-Pesa phone number for Co-op Bank payment:
+                        </p>
+                        <div>
+                          <label htmlFor="coopbank-phone-checkout" className="block text-xs font-medium text-brand-gray-900 mb-1.5">
+                            M-Pesa Phone Number <span className="text-brand-red">*</span>
+                          </label>
+                          <input
+                            id="coopbank-phone-checkout"
+                            type="tel"
+                            value={stkPhone}
+                            onChange={(e) => {
+                              setStkPhone(e.target.value);
+                              setStkError("");
+                            }}
+                            placeholder="2547XXXXXXXX"
+                            className="w-full px-3 py-2 border border-brand-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent"
+                          />
+                          {stkError && (
+                            <p className="mt-1 text-xs text-brand-red">{stkError}</p>
+                          )}
+                        </div>
+                      </div>
+                      <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                        <p className="text-xs text-green-800">
+                          <strong>How it works:</strong> Co-op Bank will send you an M-Pesa payment prompt. Complete the payment on your phone to finish your order. This is a direct bank payment method.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 {/* Card Payments (Disabled) */}
                 <div>
                   <label className="flex items-start gap-3 p-4 border border-brand-gray-200 rounded-md cursor-pointer hover:bg-brand-gray-50">
@@ -739,17 +796,19 @@ export default function CheckoutPage() {
                 <button
                   type="button"
                   onClick={handleSTKPush}
-                  disabled={isProcessing || (paymentMethod === "stk" && !stkPhone)}
+                  disabled={isProcessing || ((paymentMethod === "stk" || paymentMethod === "coopbank") && !stkPhone)}
                   className="w-full mt-4 bg-brand-green text-white px-6 py-3 rounded-md font-semibold hover:bg-brand-green/90 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isProcessing
                     ? "Processing..."
                     : paymentMethod === "stk"
                       ? `Pay with M-Pesa - ${formatCurrency(total)}`
-                      : paymentMethod === "pesapal"
-                        ? `Pay with Card - ${formatCurrency(total)}`
-                        : paymentMethod === "till" || paymentMethod === "paybill"
-                          ? `Complete Order - ${formatCurrency(total)}`
+                      : paymentMethod === "coopbank"
+                        ? `Pay with Co-op Bank - ${formatCurrency(total)}`
+                        : paymentMethod === "pesapal"
+                          ? `Pay with Card - ${formatCurrency(total)}`
+                          : paymentMethod === "till" || paymentMethod === "paybill"
+                            ? `Complete Order - ${formatCurrency(total)}`
                           : "Complete Payment"}
                 </button>
               )}

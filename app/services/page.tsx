@@ -181,40 +181,48 @@ export default function ServicesPage() {
   return (
     <>
       <JsonLd data={breadcrumbJsonLd} />
-      <div className="py-12 bg-white">
+      <div className="py-12 bg-gradient-to-br from-brand-green/5 via-white to-brand-red/5">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h1 className="font-heading font-bold text-4xl md:text-5xl text-brand-gray-900 mb-4">
-            Our Services
+        {/* Hero Section */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-brand-green/20 to-brand-red/20 backdrop-blur-sm rounded-full mb-6 shadow-lg border border-white/50">
+            <span className="text-2xl">🎉</span>
+          </div>
+          <h1 className="font-heading font-bold text-4xl md:text-5xl bg-gradient-to-r from-brand-green to-brand-red bg-clip-text text-transparent mb-6">
+            Our Event Services
           </h1>
-          <p className="text-brand-gray-600 text-lg max-w-2xl mx-auto">
-            Comprehensive floral and gift services for every occasion in Nairobi and beyond
+          <p className="text-brand-gray-700 text-lg max-w-3xl mx-auto bg-white/60 backdrop-blur-sm p-4 rounded-xl border border-brand-gray-200 shadow-md">
+            Comprehensive floral and gift services for every occasion in Nairobi and beyond. From intimate celebrations to grand corporate events.
           </p>
         </div>
 
-        <div className="flex overflow-x-auto gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8 mb-12 pb-3 md:pb-0 scrollbar-visible md:scrollbar-hide">
+        <div className="flex overflow-x-auto gap-6 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8 mb-16 pb-4 md:pb-0 scrollbar-visible md:scrollbar-hide">
           {services.map((service, index) => (
-            <div key={index} className="flex-shrink-0 w-[70vw] sm:w-[65vw] md:w-auto card overflow-hidden group">
+            <div key={index} className="flex-shrink-0 w-[70vw] sm:w-[65vw] md:w-auto bg-white/70 backdrop-blur-md rounded-2xl overflow-hidden group shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border border-white/50">
               <div className="relative h-64 overflow-hidden">
                 <Image
                   src={service.image}
                   alt={`${service.title} - Floral Whispers Gifts Nairobi`}
                   fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="object-cover group-hover:scale-110 transition-transform duration-500"
                   sizes="(max-width: 768px) 70vw, (max-width: 1024px) 50vw, 33vw"
                   loading="lazy"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg">
+                  <span className="text-lg">🌸</span>
+                </div>
               </div>
-              <div className="p-6">
-                <h2 className="font-heading font-bold text-xl text-brand-gray-900 mb-3 group-hover:text-brand-green transition-colors">
+              <div className="p-6 bg-gradient-to-br from-white/80 to-brand-gray-50/50">
+                <h2 className="font-heading font-bold text-xl bg-gradient-to-r from-brand-gray-900 to-brand-gray-700 bg-clip-text text-transparent mb-3 group-hover:from-brand-green group-hover:to-brand-red group-hover:bg-clip-text transition-all duration-300">
                   {service.title}
                 </h2>
-                <p className="text-brand-gray-700 mb-4">{service.description}</p>
+                <p className="text-brand-gray-700 mb-4 leading-relaxed">{service.description}</p>
                 <ul className="space-y-2 mb-4">
                   {service.features.map((feature, idx) => (
-                    <li key={idx} className="text-sm text-brand-gray-600 flex items-start">
-                      <span className="text-brand-green mr-2">✓</span>
-                      {feature}
+                    <li key={idx} className="text-sm text-brand-gray-600 flex items-start group/item">
+                      <span className="text-brand-green mr-2 font-bold group-hover/item:text-brand-red transition-colors">✓</span>
+                      <span className="group-hover/item:text-brand-gray-800 transition-colors">{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -223,77 +231,93 @@ export default function ServicesPage() {
           ))}
         </div>
 
-        <div className="bg-brand-green text-white rounded-lg p-8 md:p-12 text-center">
-          <h2 className="font-heading font-bold text-3xl md:text-4xl mb-4">
-            Ready to Make Your Event Special?
-          </h2>
-          <p className="text-lg mb-8 text-white/90 max-w-2xl mx-auto">
-            Contact us to discuss your needs. We offer consultations and custom quotes for all our
-            services.
-          </p>
-          <div className="flex flex-row gap-3 md:gap-4 justify-center">
-            <Link href="/contact" className="btn-primary bg-white text-brand-green hover:bg-brand-gray-100 inline-block text-sm md:text-base px-4 md:px-6 py-2 md:py-3">
-              Contact Us
-            </Link>
-            <Link href="/collections" className="btn-outline bg-transparent border-white text-white hover:bg-white/10 inline-block text-sm md:text-base px-4 md:px-6 py-2 md:py-3">
-              Browse Collections
-            </Link>
+        <div className="bg-gradient-to-r from-brand-green via-brand-red to-brand-green text-white rounded-2xl p-8 md:p-12 text-center relative overflow-hidden shadow-2xl">
+          <div className="absolute inset-0 bg-black/10" />
+          <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
+          <div className="relative">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full mb-6 border border-white/30">
+              <span className="text-2xl">🎊</span>
+            </div>
+            <h2 className="font-heading font-bold text-3xl md:text-4xl mb-4">
+              Ready to Make Your Event Special?
+            </h2>
+            <p className="text-lg mb-8 text-white/90 max-w-2xl mx-auto leading-relaxed">
+              Contact us to discuss your needs. We offer consultations and custom quotes for all our
+              services.
+            </p>
+            <div className="flex flex-row gap-4 justify-center">
+              <Link href="/contact" className="inline-flex items-center gap-2 bg-white text-brand-green hover:bg-brand-gray-100 hover:text-brand-red px-6 py-3 rounded-full font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg">
+                <span>💬</span>
+                Contact Us
+              </Link>
+              <Link href="/collections" className="inline-flex items-center gap-2 bg-transparent border-2 border-white text-white hover:bg-white hover:text-brand-green px-6 py-3 rounded-full font-semibold transition-all duration-200 transform hover:scale-105">
+                <span>🌸</span>
+                Browse Collections
+              </Link>
+            </div>
           </div>
         </div>
 
-        <div className="mt-12 grid grid-cols-2 gap-3 md:gap-8">
-          <div className="card p-3 md:p-6">
-            <h3 className="font-heading font-bold text-sm md:text-xl text-brand-gray-900 mb-2 md:mb-4">
-              Delivery Information
-            </h3>
-            <ul className="space-y-1 md:space-y-2 text-xs md:text-base text-brand-gray-700 mb-4">
-              <li>
-                <span className="font-semibold">Nairobi CBD:</span> Complimentary same-day delivery - your gifts arrive fresh and on time
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="bg-white/60 backdrop-blur-md rounded-2xl p-6 md:p-8 shadow-xl border border-white/50 hover:shadow-2xl transition-all duration-300">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 bg-gradient-to-br from-brand-green/20 to-brand-red/20 rounded-full flex items-center justify-center">
+                <span className="text-xl">🚚</span>
+              </div>
+              <h3 className="font-heading font-bold text-xl text-brand-gray-900">
+                Delivery Information
+              </h3>
+            </div>
+            <ul className="space-y-3 text-brand-gray-700 mb-6">
+              <li className="bg-brand-green/10 p-3 rounded-lg border border-brand-green/20">
+                <span className="font-semibold text-brand-green">Nairobi CBD:</span> Complimentary same-day delivery - your gifts arrive fresh and on time
               </li>
-              <li>
-                <span className="font-semibold">Outside Nairobi:</span> Swift next-day delivery with transparent, location-based pricing
+              <li className="bg-brand-red/10 p-3 rounded-lg border border-brand-red/20">
+                <span className="font-semibold text-brand-red">Outside Nairobi:</span> Swift next-day delivery with transparent, location-based pricing
               </li>
-              <li>
+              <li className="bg-brand-gray-100 p-3 rounded-lg border border-brand-gray-200">
                 <span className="font-semibold">Nationwide:</span> Reliable 24-hour delivery service across Kenya, bringing joy everywhere
               </li>
-              <li>
-                <span className="font-semibold">Rush Orders:</span> Express delivery available - we&apos;ll make it happen when you need it most
+              <li className="bg-yellow-50 p-3 rounded-lg border border-yellow-200">
+                <span className="font-semibold text-yellow-700">Rush Orders:</span> Express delivery available - we&apos;ll make it happen when you need it most
               </li>
             </ul>
-            <div className="mt-4 pt-4 border-t border-brand-gray-200">
-              <p className="text-xs md:text-sm text-brand-gray-600 italic">
+            <div className="mt-6 pt-6 border-t border-brand-gray-200 bg-gradient-to-r from-brand-green/5 to-brand-red/5 p-4 rounded-lg">
+              <p className="text-sm text-brand-gray-700 leading-relaxed">
                 <span className="font-semibold text-brand-green">💡 Pro Tip:</span> During checkout, review your cart to see location-specific delivery fees and estimated arrival times tailored to your delivery address.
               </p>
             </div>
           </div>
 
-          <div className="card p-3 md:p-6">
-            <h3 className="font-heading font-bold text-sm md:text-xl text-brand-gray-900 mb-2 md:mb-4">
-              Payment Options
-            </h3>
-            <ul className="space-y-1 md:space-y-2 text-xs md:text-base text-brand-gray-700">
-              <li>
-                <span className="font-semibold">M-Pesa:</span> Pay via STK Push on checkout
+          <div className="bg-white/60 backdrop-blur-md rounded-2xl p-6 md:p-8 shadow-xl border border-white/50 hover:shadow-2xl transition-all duration-300">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 bg-gradient-to-br from-brand-green/20 to-brand-red/20 rounded-full flex items-center justify-center">
+                <span className="text-xl">💳</span>
+              </div>
+              <h3 className="font-heading font-bold text-xl text-brand-gray-900">
+                Payment Options
+              </h3>
+            </div>
+            <ul className="space-y-3 text-brand-gray-700">
+              <li className="bg-brand-green/10 p-3 rounded-lg border border-brand-green/20">
+                <span className="font-semibold text-brand-green">M-Pesa:</span> Pay via STK Push on checkout
               </li>
-              <li>
-                <span className="font-semibold">Till Number:</span>{" "}
-                <span className="font-mono font-semibold text-brand-green">{SHOP_INFO.mpesa.till}</span>
+              <li className="bg-brand-red/10 p-3 rounded-lg border border-brand-red/20">
+                <span className="font-semibold text-brand-red">Till Number:</span>{" "}
+                <span className="font-mono font-bold text-brand-green bg-white px-2 py-1 rounded">{SHOP_INFO.mpesa.till}</span>
               </li>
-              <li>
-                <span className="font-semibold">PayBill:</span>{" "}
-                <span className="font-mono font-semibold text-brand-green">{SHOP_INFO.mpesa.paybill}</span>
+              <li className="bg-brand-red/10 p-3 rounded-lg border border-brand-red/20">
+                <span className="font-semibold text-brand-red">PayBill:</span>{" "}
+                <span className="font-mono font-bold text-brand-green bg-white px-2 py-1 rounded">{SHOP_INFO.mpesa.paybill}</span>
               </li>
-              <li>
-                <span className="font-semibold">WhatsApp:</span> Order and arrange payment via
-                WhatsApp
+              <li className="bg-brand-gray-100 p-3 rounded-lg border border-brand-gray-200">
+                <span className="font-semibold">WhatsApp:</span> Order and arrange payment via WhatsApp
               </li>
-              <li>
-                <span className="font-semibold">Corporate:</span> Credit terms available for bulk
-                orders
+              <li className="bg-brand-gray-100 p-3 rounded-lg border border-brand-gray-200">
+                <span className="font-semibold">Corporate:</span> Credit terms available for bulk orders
               </li>
-              <li>
-                <span className="font-semibold">Cash on Delivery:</span> Available for Nairobi
-                orders
+              <li className="bg-yellow-50 p-3 rounded-lg border border-yellow-200">
+                <span className="font-semibold text-yellow-700">Cash on Delivery:</span> Available for Nairobi orders
               </li>
             </ul>
           </div>

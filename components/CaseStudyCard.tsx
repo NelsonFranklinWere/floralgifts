@@ -16,10 +16,10 @@ const categoryLabel: Record<CaseStudy["category"], string> = {
 };
 
 const categoryBadgeClasses: Record<CaseStudy["category"], string> = {
-  wedding: "bg-pink-50 text-rose-800",
-  birthday: "bg-orange-50 text-amber-800",
-  event: "bg-emerald-50 text-green-800",
-  corporate: "bg-slate-50 text-slate-800",
+  wedding: "bg-gradient-to-r from-pink-100 to-rose-100 text-rose-800 border border-rose-200",
+  birthday: "bg-gradient-to-r from-orange-100 to-amber-100 text-amber-800 border border-amber-200",
+  event: "bg-gradient-to-r from-emerald-100 to-green-100 text-green-800 border border-green-200",
+  corporate: "bg-gradient-to-r from-slate-100 to-gray-100 text-slate-800 border border-slate-200",
 };
 
 export default function CaseStudyCard({ caseStudy }: Props) {
@@ -48,7 +48,7 @@ export default function CaseStudyCard({ caseStudy }: Props) {
   return (
     <Link
       href={`/case-studies/${slug}`}
-      className="group block rounded-2xl overflow-hidden bg-white border border-[#F0E8E8] shadow-sm hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5"
+      className="group block rounded-2xl overflow-hidden bg-white border border-brand-gray-200 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02]"
     >
       <div className="relative aspect-[4/3] overflow-hidden">
         {hero_image_url && (
@@ -56,35 +56,36 @@ export default function CaseStudyCard({ caseStudy }: Props) {
             src={hero_image_url}
             alt={title}
             fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            className="object-cover transition-transform duration-500 group-hover:scale-110"
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-black/5 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-transparent" />
         <div
-          className={`absolute top-3 left-3 inline-flex items-center rounded-full px-3 py-1 text-xs font-medium shadow-sm ${categoryBadgeClasses[category]}`}
+          className={`absolute top-3 left-3 inline-flex items-center rounded-full px-3 py-1.5 text-xs font-semibold shadow-lg backdrop-blur-sm ${categoryBadgeClasses[category]}`}
         >
           {categoryLabel[category]}
         </div>
       </div>
 
-      <div className="bg-white px-5 py-4 rounded-b-2xl">
-        <h3 className="font-heading text-lg font-semibold text-[#2C2C2C] mb-1 line-clamp-2">
+      <div className="bg-gradient-to-br from-white to-brand-gray-50 px-5 py-4 rounded-b-2xl border-t border-brand-gray-100">
+        <h3 className="font-heading text-lg font-bold bg-gradient-to-r from-brand-gray-900 to-brand-gray-700 bg-clip-text text-transparent mb-2 line-clamp-2">
           {title}
         </h3>
         {clientLine && (
-          <p className="text-xs text-gray-500 italic mb-3">
+          <p className="text-xs text-brand-gray-600 italic mb-4 bg-brand-gray-100/50 px-3 py-2 rounded-lg">
             {clientLine}
           </p>
         )}
 
         {palette.length > 0 && (
           <div className="mb-4">
-            <div className="flex gap-2 mb-1">
+            <p className="text-xs text-brand-gray-500 mb-2 font-medium">Color Palette</p>
+            <div className="flex gap-2">
               {palette.slice(0, 5).map((colour) => (
                 <span
                   key={`${colour.name}-${colour.hex}`}
-                  className="w-4 h-4 rounded-full border border-white shadow-sm"
+                  className="w-5 h-5 rounded-full border-2 border-white shadow-md hover:scale-110 transition-transform duration-200"
                   style={{ backgroundColor: colour.hex }}
                   aria-hidden="true"
                 />
@@ -93,9 +94,9 @@ export default function CaseStudyCard({ caseStudy }: Props) {
           </div>
         )}
 
-        <span className="inline-flex items-center text-sm font-medium text-[#D4617A] group-hover:underline">
+        <span className="inline-flex items-center text-sm font-bold bg-gradient-to-r from-brand-red to-brand-green bg-clip-text text-transparent group-hover:underline decoration-2 underline-offset-2">
           Read the story
-          <span className="ml-1 group-hover:translate-x-0.5 transition-transform duration-150">
+          <span className="ml-2 group-hover:translate-x-1 transition-transform duration-200 text-lg">
             →
           </span>
         </span>
