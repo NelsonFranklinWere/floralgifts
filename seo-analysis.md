@@ -10,6 +10,18 @@
 - "gift hampers Nairobi" ✅
 - "same-day flower delivery Nairobi" ✅
 
+**NEW High-Intent Buyer Keywords (IMMEDIATE PRIORITY):**
+- "where to buy flowers in Nairobi" 🔴
+- "how to send flowers Nairobi" 🔴
+- "urgent flower delivery Nairobi" 🔴
+- "last minute flowers Nairobi" 🔴
+- "best florist Nairobi reviews" 🔴
+- "flower delivery price Nairobi" 🔴
+- "same day delivery cost Nairobi" 🔴
+- "reliable flower delivery Nairobi" 🔴
+- "flower delivery near me Nairobi" 🔴
+- "order flowers online Nairobi" 🔴
+
 ### 🤖 AI Search Optimization Keywords (Add These)
 
 #### Conversational/Question-Based Keywords:
@@ -178,3 +190,5 @@
 - Include semantic search terms (+1 point)
 - Optimize for voice search (+0.5 points)
 - Enhance local micro-targeting (+0.5 points)
+- **Add buyer-intent keywords (+1.5 points)**
+- **Implement trust signals (+1 point)**

@@ -24,6 +24,7 @@ const nextConfig = {
     unoptimized: false,
     loader: 'default',
     formats: ['image/webp', 'image/avif'], // Prefer modern formats for better compression
+    qualities: [70, 75], // Support both quality levels
   },
   // Performance optimizations
   compress: true,

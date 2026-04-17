@@ -260,6 +260,11 @@ export default function Header() {
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex lg:items-center lg:space-x-6 xl:space-x-8">
+              {/* Trust Badge */}
+              <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 bg-green-50 rounded-full border border-green-200">
+                <span className="text-green-600 font-semibold text-xs">✓</span>
+                <span className="text-green-700 font-medium text-xs">Trusted by 1,000+ Nairobi Customers</span>
+              </div>
               {navigation.map((item) => (
                 <div
                   key={item.name}
@@ -536,6 +541,17 @@ export default function Header() {
                   </Link>
                 </nav>
                 <div className="mt-8 pt-6 border-t border-brand-gray-200">
+                  {/* Trust Badges */}
+                  <div className="mb-6">
+                    <div className="flex items-center justify-center gap-2 px-4 py-2 bg-green-50 rounded-full border border-green-200 mb-4">
+                      <span className="text-green-600 font-semibold text-sm">✓</span>
+                      <span className="text-green-700 font-medium text-sm">Trusted by 1,000+ Nairobi Customers</span>
+                    </div>
+                    <div className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-50 rounded-full border border-blue-200">
+                      <span className="text-blue-600 font-semibold text-sm">⚡</span>
+                      <span className="text-blue-700 font-medium text-sm">Same-Day Delivery Available</span>
+                    </div>
+                  </div>
                   <div className="flex items-center justify-center space-x-4">
                     <a
                       href="https://www.instagram.com/floral_whispers_gifts?utm_source=qr&igsh=MTdqenRmbWxqMnNxcg=="

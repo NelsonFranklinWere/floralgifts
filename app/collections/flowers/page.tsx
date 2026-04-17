@@ -6,9 +6,9 @@ import { DEEP_FLOWER_ROSE_KEYWORDS } from "@/lib/seo-keywords";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Flowers Nairobi — Fresh Bouquets & Roses Delivered Same Day | Floral Whispers",
+  title: "Fresh Flowers Nairobi - Urgent Same-Day Delivery | All Varieties | Floral Whispers",
   description:
-    "Fresh flower bouquets and roses delivered anywhere in Nairobi, same day. Red roses, mixed bouquets, sunflowers. Order now on WhatsApp — Floral Whispers Gifts Nairobi.",
+    "Order fresh flowers online Nairobi with urgent delivery. Roses, lilies, mixed bouquets. Same-day service available. M-Pesa accepted. Best prices.",
   keywords: [
     "flowers Nairobi",
     "flower delivery Nairobi",
@@ -22,17 +22,17 @@ export const metadata: Metadata = {
     canonical: `${baseUrl}/collections/flowers`,
   },
   openGraph: {
-    title: "Flowers Nairobi — Fresh Bouquets & Roses Delivered Same Day | Floral Whispers",
+    title: "Fresh Flowers Nairobi - Urgent Same-Day Delivery | All Varieties | Floral Whispers",
     description:
-      "Fresh flower bouquets and roses delivered anywhere in Nairobi, same day. Red roses, mixed bouquets, sunflowers. Order now on WhatsApp — Floral Whispers Gifts Nairobi.",
+      "Order fresh flowers online Nairobi with urgent delivery. Roses, lilies, mixed bouquets. Same-day service available. M-Pesa accepted.",
     url: `${baseUrl}/collections/flowers`,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Flowers Nairobi — Fresh Bouquets & Roses Delivered Same Day | Floral Whispers",
+    title: "Fresh Flowers Nairobi - Urgent Same-Day Delivery | All Varieties | Floral Whispers",
     description:
-      "Fresh flower bouquets and roses delivered anywhere in Nairobi, same day. Red roses, mixed bouquets, sunflowers. Order now on WhatsApp — Floral Whispers Gifts Nairobi.",
+      "Order fresh flowers online Nairobi with urgent delivery. Roses, lilies, mixed bouquets. Same-day service available. M-Pesa accepted.",
   },
 };
 

@@ -6,9 +6,9 @@ import { HAMPER_PRODUCTS } from "@/lib/predefinedProducts";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Gift Hampers Nairobi — Luxury Hampers Delivered | Floral Whispers Gifts",
+  title: "Gift Hampers Nairobi - Same-Day Delivery | Corporate & Personal | Floral Whispers Gifts",
   description:
-    "Luxury gift hampers delivered in Nairobi. Chocolate hampers, birthday hampers, women's day gifts. Same-day delivery available. Floral Whispers Gifts Nairobi.",
+    "Order gift hampers Nairobi with urgent delivery. Corporate gifts, birthday hampers, romantic sets. M-Pesa payment. Fast Nairobi delivery. Best prices.",
   keywords: [
     // Valentine's Gift Hampers Core Keywords
     "valentine's gift hampers Nairobi",
@@ -82,15 +82,15 @@ export const metadata: Metadata = {
     canonical: `${baseUrl}/collections/gift-hampers`,
   },
   openGraph: {
-    title: "Valentine's Gift Hampers Nairobi | Luxury Romantic Hampers for Wife, Husband, Girlfriend | Chocolate, Wine, Flowers",
-    description: "Best Valentine's gift hampers Nairobi: luxury romantic hampers with flowers, chocolates, wine, teddy bears for your wife, husband, girlfriend. Pre-Valentine's orders, surprise hampers, same-day delivery.",
+    title: "Gift Hampers Nairobi - Same-Day Delivery | Corporate & Personal | Floral Whispers Gifts",
+    description: "Order gift hampers Nairobi with urgent delivery. Corporate gifts, birthday hampers, romantic sets. M-Pesa payment. Fast Nairobi delivery.",
     url: `${baseUrl}/collections/gift-hampers`,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Valentine's Gift Hampers Nairobi | Luxury Romantic Hampers",
-    description: "Best Valentine's gift hampers Nairobi: luxury romantic hampers with flowers, chocolates, wine, teddy bears for your wife, husband, girlfriend. Pre-Valentine's orders, surprise hampers.",
+    title: "Gift Hampers Nairobi - Same-Day Delivery | Corporate & Personal",
+    description: "Order gift hampers Nairobi with urgent delivery. Corporate gifts, birthday hampers, romantic sets. M-Pesa payment. Fast Nairobi delivery.",
   },
 };
 

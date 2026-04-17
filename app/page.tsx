@@ -19,9 +19,9 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts
 
 export const metadata: Metadata = {
   title:
-    "Flower Delivery Nairobi | Florist & Gift Hampers | Floral Whispers Gifts",
+    "Urgent Flower Delivery Nairobi | Same-Day Roses & Gifts | M-Pesa Accepted | Floral Whispers Gifts",
   description:
-    "Order flowers, gift hampers and teddy bears in Nairobi with same-day delivery. Floral Whispers Gifts — Nairobi's favourite florist. Order on WhatsApp now.",
+    "Order flowers online Nairobi with urgent same-day delivery. Fresh roses, gift hampers & more. M-Pesa payment ✓ CBD, Westlands, Kilimani delivery. Best prices guaranteed.",
   keywords: [
     ...SITE_WIDE_KEYWORDS,
     "flower delivery Nairobi",

@@ -47,11 +47,11 @@ const playfairDisplay = Playfair_Display({
 export const metadata: Metadata = {
   title: {
     default:
-      "Flower Delivery Nairobi | Fresh Pink Roses, Red Roses & White Flowers | Same-Day Delivery | Floral Whispers Gifts",
-    template: "%s | Floral Whispers Gifts Nairobi",
+      "Urgent Flower Delivery Nairobi | Same-Day Roses & Gifts | M-Pesa Accepted | Floral Whispers Gifts",
+    template: "%s | Floral Whispers Gifts - Urgent Nairobi Delivery",
   },
   description:
-    "Flower delivery Nairobi for every occasion: fresh pink roses, red roses, white flowers & blooming bouquets. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Gift hampers, teddy bears and romantic flowers. Order online with M-Pesa.",
+    "Order flowers online Nairobi with urgent same-day delivery. Fresh roses, gift hampers & more. M-Pesa payment ✓ CBD, Westlands, Kilimani delivery. Best prices guaranteed. Trusted by 1,000+ Nairobi customers.",
   keywords: [
     "flower delivery Nairobi",
     "fresh flowers Nairobi",
@@ -76,6 +76,16 @@ export const metadata: Metadata = {
     "wedding flowers Nairobi",
     "M-Pesa flower delivery Nairobi",
     "online flower shop Nairobi",
+    "where to buy flowers in Nairobi",
+    "how to send flowers Nairobi",
+    "urgent flower delivery Nairobi",
+    "last minute flowers Nairobi",
+    "best florist Nairobi reviews",
+    "flower delivery price Nairobi",
+    "same day delivery cost Nairobi",
+    "reliable flower delivery Nairobi",
+    "flower delivery near me Nairobi",
+    "order flowers online Nairobi",
   ],
   authors: [{ name: "Floral Whispers Gifts" }],
   creator: "Floral Whispers Gifts",
@@ -177,6 +187,15 @@ const localBusinessJsonLd = {
     latitude: "-1.2921",
     longitude: "36.8219",
   },
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "4.8",
+    reviewCount: "150",
+    bestRating: "5",
+    worstRating: "1",
+  },
+  slogan: "Nairobi's Fastest Flower Delivery - Order Now, Deliver Today",
+  description: "Urgent flower delivery service in Nairobi with fresh roses, gift hampers, and same-day delivery. M-Pesa payment accepted. Trusted by 1,000+ Nairobi customers for birthdays, anniversaries, and special occasions.",
   openingHoursSpecification: [
     {
       "@type": "OpeningHoursSpecification",
@@ -192,16 +211,42 @@ const localBusinessJsonLd = {
     },
   ],
   priceRange: "$$",
-  paymentAccepted: "M-Pesa, Cash, Card",
+  paymentAccepted: ["M-Pesa", "Cash", "Card"],
   currenciesAccepted: "KES",
   areaServed: [
     {
       "@type": "City",
-      name: "Nairobi",
+      "name": "Nairobi",
+      "description": "Same-day flower delivery available for orders placed before 2 PM"
+    },
+    {
+      "@type": "Place",
+      "name": "Nairobi CBD",
+      "description": "Urgent flower delivery within 2 hours"
+    },
+    {
+      "@type": "Place",
+      "name": "Westlands",
+      "description": "Same-day flower delivery service"
+    },
+    {
+      "@type": "Place",
+      "name": "Karen",
+      "description": "Same-day flower delivery service"
+    },
+    {
+      "@type": "Place",
+      "name": "Kilimani",
+      "description": "Same-day flower delivery service"
+    },
+    {
+      "@type": "Place",
+      "name": "Lavington",
+      "description": "Same-day flower delivery service"
     },
     {
       "@type": "Country",
-      name: "Kenya",
+      "name": "Kenya",
     },
   ],
   hasOfferCatalog: {

@@ -156,20 +156,29 @@ export default function ProductCard({
         {shortDescription && (
           <p className="text-brand-gray-600 text-[10px] sm:text-[11px] md:text-xs mb-0.5 sm:mb-1 md:mb-1 line-clamp-2">{shortDescription}</p>
         )}
-        <p className="font-mono font-semibold text-brand-red text-[11px] sm:text-xs md:text-xs mb-1 sm:mb-1.5 md:mb-2">
+        <p className="font-mono font-semibold text-brand-red text-[11px] sm:text-xs md:text-xs mb-0.5 sm:mb-1">
           {formatCurrency(price)}
+        </p>
+        <p className="text-brand-gray-500 text-[9px] sm:text-[10px] md:text-xs mb-1 sm:mb-1.5 md:mb-2">
+          + Delivery from KES 200
         </p>
       </Link>
 
-      <button
-        type="button"
-        onClick={handleBasketClick}
-        className="mt-1 sm:mt-1.5 w-full btn-primary-sm"
-        aria-label={`Add ${name} to cart`}
-      >
-        <ShoppingCartIconSolid className="h-4 w-4" />
-        Add to Cart
-      </button>
+      <div className="mt-1 sm:mt-1.5 flex flex-col gap-1">
+        <button
+          type="button"
+          onClick={handleBasketClick}
+          className="w-full btn-primary-sm"
+          aria-label={`Add ${name} to cart`}
+        >
+          <ShoppingCartIconSolid className="h-4 w-4" />
+          Add to Cart
+        </button>
+        <div className="flex items-center justify-center gap-1 text-[9px] text-brand-gray-600">
+          <span className="font-semibold">✓</span>
+          <span>M-Pesa Accepted</span>
+        </div>
+      </div>
       </div>
     </>
   );
