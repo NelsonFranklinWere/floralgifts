@@ -1,3 +1,6 @@
+/** Google Analytics 4 measurement ID (gtag.js) */
+export const GA_MEASUREMENT_ID = "G-DTDMCDNB9F" as const;
+
 export const BRAND_COLORS = {
   green: "#10b981",
   pink: "#ec4899",

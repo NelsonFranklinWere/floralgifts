@@ -7,9 +7,8 @@ import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
-import GoogleAnalytics from "@/components/GoogleAnalytics";
 import VisitorPing from "@/components/VisitorPing";
-import { SHOP_INFO } from "@/lib/constants";
+import { GA_MEASUREMENT_ID, SHOP_INFO } from "@/lib/constants";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -447,7 +446,23 @@ export default function RootLayout({
         />
       </head>
       <body className={`${lato.className} flex flex-col min-h-screen bg-green-100`}>
-        <GoogleAnalytics />
+        <Script
+          strategy="afterInteractive"
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+        />
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            var path = (typeof window !== 'undefined' && window.location && window.location.pathname) ? window.location.pathname : '/';
+            gtag('config', '${GA_MEASUREMENT_ID}', { page_path: path });
+          `,
+          }}
+        />
         <VisitorPing />
         {/* Tawk.to live chat - left side so it doesn't block WhatsApp */}
         <Script id="tawk-to" strategy="afterInteractive">

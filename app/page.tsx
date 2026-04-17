@@ -13,7 +13,7 @@ import { SITE_WIDE_KEYWORDS } from "@/lib/seo-keywords";
 import { SHOP_INFO } from "@/lib/constants";
 import { getFeaturedCaseStudies } from "@/lib/case-studies";
 import CaseStudyCard from "@/components/CaseStudyCard";
-import StaticReviewsSection from "@/components/reviews/StaticReviewsSection";
+import HomeReviewsSection from "@/components/reviews/HomeReviewsSection";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
@@ -1099,8 +1099,8 @@ export default async function HomePage() {
         {/* Blog Section */}
         <BlogSection />
 
-        {/* Hard-coded Google-style Reviews Section (10 reviews, auto-scrolling) */}
-        <StaticReviewsSection />
+        {/* Google (API) → Supabase curated → static fallback */}
+        <HomeReviewsSection />
 
         {/* Our Work - Case Studies Preview */}
         {featuredCaseStudies.length > 0 && (

@@ -3,8 +3,7 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { Analytics } from "@/lib/analytics";
-
-const GA_MEASUREMENT_ID = "G-DTDMCDNB9F";
+import { GA_MEASUREMENT_ID } from "@/lib/constants";
 
 export default function AnalyticsProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
