@@ -1,7 +1,4 @@
 import { getReviews } from "@/lib/reviews";
-<<<<<<< Updated upstream
-import ReviewsShowcase from "./ReviewsShowcase";
-=======
 import ReviewsCarousel from "./ReviewsCarousel";
 import config from "@/config";
 
@@ -32,7 +29,6 @@ function GoogleLogo({ className }: { className?: string }) {
     </svg>
   );
 }
->>>>>>> Stashed changes
 
 export default async function ReviewsSection() {
   const reviews = await getReviews();
@@ -50,13 +46,6 @@ export default async function ReviewsSection() {
         ).toFixed(1);
 
   return (
-<<<<<<< Updated upstream
-    <ReviewsShowcase
-      reviews={reviews}
-      averageRating={avg}
-      countLabel={`· ${reviews.length} Google Reviews`}
-    />
-=======
     <section className="py-16 bg-[#FAF7F2]">
       <div className="max-w-6xl mx-auto px-4">
         {/* HEADER */}
@@ -113,7 +102,6 @@ export default async function ReviewsSection() {
         </p>
       </div>
     </section>
->>>>>>> Stashed changes
   );
 }
 
