@@ -5,7 +5,7 @@
 
 PHONE="254743869564"
 AMOUNT=10000  # 100 KES in cents
-BASE_URL="https://floralwhispersgifts.co.ke"
+BASE_URL="https://www.floralwhispersgifts.co.ke"
 
 echo "=========================================="
 echo "Testing Co-op Bank STK Push"
@@ -27,7 +27,7 @@ echo ""
 echo "Sending STK Push request..."
 echo ""
 
-RESPONSE=$(curl -s -X POST "$BASE_URL/api/coopbank/stkpush" \
+RESPONSE=$(curl -sS --max-time 30 -X POST "$BASE_URL/api/coopbank/stkpush" \
   -H "Content-Type: application/json" \
   -d "{
     \"MobileNumber\": \"$PHONE\",
