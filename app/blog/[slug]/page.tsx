@@ -6,8 +6,9 @@ import { format } from "date-fns";
 import { getBlogPost, getBlogPosts } from "@/lib/blogData";
 import { markdownToHtml } from "@/lib/markdown";
 import JsonLd from "@/components/JsonLd";
+import { SHOP_INFO } from "@/lib/constants";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -178,6 +179,32 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             dangerouslySetInnerHTML={{ __html: markdownToHtml(post.content) }}
           />
 
+          {/* Conversion CTA from blog reader to buyer */}
+          <div className="mt-10 rounded-2xl border border-[#F0E8E8] bg-[#FAF7F2] p-6 md:p-8">
+            <h3 className="font-heading text-xl md:text-2xl text-[#2C2C2C] mb-2">
+              Ready to send this gift in Nairobi?
+            </h3>
+            <p className="text-sm md:text-base text-gray-600 mb-5">
+              Order on WhatsApp for same-day delivery of flowers, hampers, teddy bears and wine gifts.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href={`https://wa.me/${SHOP_INFO.whatsapp}?text=${encodeURIComponent(`Hello Floral Whispers Gifts, I want to order a gift from this article: ${post.title}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-full bg-[#25D366] text-white text-sm font-semibold px-5 py-2.5 hover:opacity-90 transition-opacity"
+              >
+                Order on WhatsApp
+              </Link>
+              <Link
+                href="/collections/gift-hampers"
+                className="inline-flex items-center justify-center rounded-full border border-gray-300 bg-white text-gray-700 text-sm font-semibold px-5 py-2.5 hover:shadow-md transition-all"
+              >
+                Shop Gift Hampers
+              </Link>
+            </div>
+          </div>
+
           {/* Tags */}
           {post.tags.length > 0 && (
             <div className="mt-12 pt-8 border-t border-brand-gray-200">
@@ -197,6 +224,28 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               </div>
             </div>
           )}
+
+          <div className="mt-10 rounded-xl border border-brand-gray-200 bg-brand-gray-50 p-5">
+            <h3 className="font-heading text-lg md:text-xl text-brand-gray-900 mb-3">
+              Related guides
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { href: "/blog", label: "All Nairobi gift guides" },
+                { href: "/flower-hamper-wine-nairobi", label: "Flower Hamper + Wine Nairobi" },
+                { href: "/collections/gift-hampers", label: "Shop Gift Hampers" },
+                { href: "/collections/flowers", label: "Shop Flowers" },
+              ].map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="px-3 py-1.5 rounded-full bg-white border border-brand-gray-200 text-sm text-brand-gray-700 hover:text-brand-green hover:border-brand-green transition-colors"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
 
           {/* Back to Blog */}
           <div className="mt-12 pt-8 border-t border-brand-gray-200">

@@ -5,6 +5,7 @@ import ProductCard from "@/components/ProductCard";
 import type { Product } from "@/lib/db";
 import { getCategoryFallbackImage } from "@/lib/utils";
 import { Analytics } from "@/lib/analytics";
+import Link from "next/link";
 
 interface HamperProduct {
   image: string;
@@ -65,6 +66,14 @@ export default function GiftHampersPageClient({ products, allHamperImages = [], 
           <p className="text-brand-gray-500 text-xs md:text-sm mt-1">
             Showing {allDisplayItems.length} {allDisplayItems.length === 1 ? 'product' : 'products'}
           </p>
+          <div className="flex flex-wrap gap-2 mt-3">
+            <Link href="/flower-hamper-wine-nairobi" className="text-xs md:text-sm text-brand-red hover:underline">
+              Looking for flower hamper + wine packages?
+            </Link>
+            <Link href="/collections/wines" className="text-xs md:text-sm text-brand-green hover:underline">
+              Add a wine pairing
+            </Link>
+          </div>
         </div>
 
         {allDisplayItems.length === 0 ? (

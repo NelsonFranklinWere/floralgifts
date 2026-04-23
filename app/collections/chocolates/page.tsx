@@ -3,7 +3,7 @@ import ChocolatesPageClient from "./ChocolatesPageClient";
 import { getProducts } from "@/lib/db";
 import { CHOCOLATE_PRODUCTS, getPredefinedProducts } from "@/lib/predefinedProducts";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
   title: "Valentine's Chocolates Nairobi | Premium Ferrero Rocher Chocolate Hampers & Romantic Gifts for Wife, Girlfriend | Same-Day Delivery",

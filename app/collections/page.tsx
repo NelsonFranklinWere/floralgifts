@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import JsonLd from "@/components/JsonLd";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
   title: "Flower Delivery Nairobi | Pink Roses, Red Roses, White Flowers | Collections - Floral Whispers Gifts",
@@ -76,6 +76,17 @@ export default function CollectionsPage() {
           <p className="text-brand-gray-600 text-lg">
             Explore our beautiful range of flowers, teddy bears, gift hampers, wines, chocolates, cards, and cakes
           </p>
+          <div className="flex flex-wrap justify-center gap-2 mt-4">
+            <Link href="/flower-hamper-wine-nairobi" className="text-sm text-brand-red hover:underline">
+              Flower Hamper + Wine Nairobi
+            </Link>
+            <Link href="/corporate-gift-hampers-nairobi" className="text-sm text-brand-green hover:underline">
+              Corporate Gift Hampers
+            </Link>
+            <Link href="/send-gifts-to-kenya" className="text-sm text-brand-gray-700 hover:underline">
+              Send Gifts to Kenya
+            </Link>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">

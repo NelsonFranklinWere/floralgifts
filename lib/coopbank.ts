@@ -75,7 +75,7 @@ export async function initiateCoopBankSTKPush(
   params: CoopBankSTKPushParams
 ): Promise<CoopBankSTKPushResponse> {
   const token = await getCoopBankToken();
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
 
   const response = await fetch(`${COOP_BANK_BASE_URL}/FT/stk/1.0.0`, {
     method: "POST",
@@ -115,7 +115,7 @@ export async function checkCoopBankSTKStatus(
   params: CoopBankStatusParams
 ): Promise<CoopBankStatusResponse> {
   const token = await getCoopBankToken();
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
 
   const response = await fetch(`${COOP_BANK_BASE_URL}/Enquiry/STK/1.0.0/`, {
     method: "POST",

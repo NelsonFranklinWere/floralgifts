@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import CardsPageClient from "./CardsPageClient";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
   title: "Valentine's Cards Nairobi | Romantic Love Messages, Personalized Valentine's Cards & Gift Cards | Same-Day Delivery",

@@ -13,7 +13,8 @@ export const SHOP_INFO = {
   phone: "254721554393",
   whatsapp: "254721554393",
   email: "whispersfloral@gmail.com",
-  address: "Delta House, University Way",
+  address:
+    "UNIVERSITY WAY-OPP. CENTRAL POLICE STATION, DELTA HOTEL 5TH FLOOR ROOM 512, NAIROBI, Kenya",
   instagram: "@floralwhispersgifts",
   facebook: "FloralWhispersGifts",
   twitter: "@FloralWhispers",

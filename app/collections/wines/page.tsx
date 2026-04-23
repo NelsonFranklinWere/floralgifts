@@ -3,7 +3,7 @@ import WinesPageClient from "./WinesPageClient";
 import { getProducts } from "@/lib/db";
 import { WINE_PRODUCTS, getPredefinedProducts } from "@/lib/predefinedProducts";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
   title: "Valentine's Wine Gifts Nairobi | Premium Wine Hampers & Romantic Celebration Wines for Wife, Husband | Same-Day Delivery",

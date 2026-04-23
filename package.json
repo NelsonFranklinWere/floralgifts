@@ -9,7 +9,9 @@
     "start": "next start",
     "lint": "next lint",
     "preview": "next start -p 3001",
-    "export-sitemap": "node scripts/generate-sitemap.js"
+    "export-sitemap": "node scripts/generate-sitemap.js",
+    "deps:update": "npm update",
+    "deps:check": "npm outdated"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.18",

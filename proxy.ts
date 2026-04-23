@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const response = NextResponse.next();
 
-  // Add CORS headers for Chrome compatibility (only for API routes)
+  // Add CORS headers for API routes
   if (request.nextUrl.pathname.startsWith("/api/")) {
     response.headers.set("Access-Control-Allow-Origin", "*");
     response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
@@ -17,13 +17,10 @@ export function middleware(request: NextRequest) {
     request.nextUrl.pathname.startsWith("/images/") ||
     request.nextUrl.pathname.match(/\.(jpg|jpeg|png|gif|webp|svg|ico|woff|woff2|ttf|eot)$/i)
   ) {
-    response.headers.set(
-      "Cache-Control",
-      "public, max-age=31536000, immutable"
-    );
+    response.headers.set("Cache-Control", "public, max-age=31536000, immutable");
   }
 
-  // Cache API responses for products (short cache)
+  // Cache products API responses for a short time
   if (request.nextUrl.pathname.startsWith("/api/products")) {
     response.headers.set("Cache-Control", "public, s-maxage=60, stale-while-revalidate=300");
   }
@@ -37,4 +34,3 @@ export const config = {
     "/((?!_next/static|_next/image|favicon.ico).*)",
   ],
 };
-

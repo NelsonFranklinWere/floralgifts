@@ -26,7 +26,7 @@ export async function generateMetadata({
   if (!cs) return {};
 
   const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
+    process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
 
   return {
     title: cs.seo_title ?? `${cs.title} | Floral Whispers Nairobi`,
@@ -82,7 +82,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
   const related = await getRelatedCaseStudies(cs.category, cs.slug, 3);
 
   const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
+    process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
 
   const clientLineParts = [
     cs.client_first_name || null,

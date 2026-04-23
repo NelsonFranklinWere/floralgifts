@@ -401,7 +401,7 @@ export default function CheckoutPage() {
         // Initiate Pesapal payment
         const callbackUrl = typeof window !== 'undefined'
           ? `${window.location.origin}/api/pesapal/callback`
-          : "https://floralwhispersgifts.co.ke/api/pesapal/callback";
+          : "https://www.floralwhispersgifts.co.ke/api/pesapal/callback";
 
         const pesapalResponse = await axios.post("/api/pesapal/payment", {
           orderId: orderId,

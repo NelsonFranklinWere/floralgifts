@@ -5,10 +5,10 @@ import { getBlogPosts, getBlogTags } from "@/lib/blogData";
 import JsonLd from "@/components/JsonLd";
 import { format } from "date-fns";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Gift Ideas & Flower Guides Nairobi | Floral Whispers Gifts Blog",
+  title: "Nairobi Gift Ideas, Flower Delivery Tips & Occasion Guides | Floral Whispers Blog",
   description:
     "Gift ideas and flower guides for Nairobi — discover how to choose bouquets, hampers and teddy bears for every occasion. Floral Whispers Gifts Blog sharing delivery tips, gifting advice and Nairobi florist insights.",
   keywords: [
@@ -61,8 +61,8 @@ export const metadata: Metadata = {
     canonical: `${baseUrl}/blog`,
   },
   openGraph: {
-    title: "Valentine's Gift Guide Nairobi | Romantic Flowers, Chocolates & Gift Ideas | Floral Whispers Blog",
-    description: "Complete Valentine's Day gift guide for Nairobi: romantic flowers, chocolates, wine, teddy bears & surprise hampers for your wife, husband, girlfriend. Pre-Valentine's planning tips & delivery guides.",
+    title: "Nairobi Gift Ideas, Flower Delivery Tips & Occasion Guides | Floral Whispers Blog",
+    description: "Nairobi gifting hub: flower hamper + wine ideas, period care gifts, proposal setups, birthday flowers and same-day delivery guides.",
     url: `${baseUrl}/blog`,
     siteName: "Floral Whispers Gifts",
     images: [
@@ -81,8 +81,8 @@ export const metadata: Metadata = {
 const blogJsonLd = {
   "@context": "https://schema.org",
   "@type": "Blog",
-  name: "Valentine's Gift Guide Nairobi - Floral Whispers Gifts Blog",
-  description: "Complete Valentine's Day gift guide: romantic flowers, chocolates, wine, teddy bears & surprise hampers for Nairobi. Pre-Valentine's planning tips, delivery guides, and relationship gift ideas.",
+  name: "Nairobi Gift Ideas & Flower Delivery Blog - Floral Whispers Gifts",
+  description: "Nairobi-focused gifting guides: flower hampers, wine pairings, period care packages, proposal ideas and same-day delivery tips.",
   url: `${baseUrl}/blog`,
   publisher: {
     "@type": "Organization",
@@ -106,9 +106,37 @@ export default async function BlogPage() {
               Blog
             </h1>
             <p className="text-lg md:text-xl text-brand-gray-600 max-w-3xl">
-              Flower care tips, gift ideas, and delivery guides for Nairobi and all of Kenya. 
-              Serving Nairobi, Mombasa, Kisumu, Nakuru, and beyond with same-day delivery.
+              Nairobi gifting guides for flower hampers, wine pairings, period care packages,
+              proposal setups, birthdays and same-day delivery. Use this hub to find ideas
+              and order quickly on WhatsApp.
             </p>
+          </div>
+        </div>
+
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8">
+          <div className="rounded-2xl border border-[#F0E8E8] bg-[#FAF7F2] p-5 md:p-6">
+            <h2 className="font-heading text-xl md:text-2xl text-[#2C2C2C] mb-3">
+              Featured high-intent guides
+            </h2>
+            <div className="flex flex-wrap gap-2 md:gap-3">
+              {[
+                { href: "/flower-hamper-wine-nairobi", label: "Flower Hamper + Wine Nairobi" },
+                { href: "/corporate-gift-hampers-nairobi", label: "Corporate Gift Hampers Nairobi" },
+                { href: "/period-care-package-kenya", label: "Period Care Package Kenya" },
+                { href: "/send-gifts-to-kenya", label: "Send Gifts to Kenya" },
+                { href: "/same-day-delivery-nairobi", label: "Same-Day Delivery Nairobi" },
+                { href: "/collections/gift-hampers", label: "Gift Hampers Nairobi" },
+                { href: "/collections/flowers", label: "Flower Delivery Nairobi" },
+              ].map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="inline-flex items-center rounded-full bg-white border border-gray-200 text-gray-700 text-sm font-medium px-4 py-2 hover:shadow-md transition-all"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
 

@@ -15,13 +15,13 @@ import { getFeaturedCaseStudies } from "@/lib/case-studies";
 import CaseStudyCard from "@/components/CaseStudyCard";
 import HomeReviewsSection from "@/components/reviews/HomeReviewsSection";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
   title:
-    "Flower Delivery Nairobi | Florist & Gift Hampers | Floral Whispers Gifts",
+    "Nairobi Flower Hamper & Wine Same-Day Delivery | Floral Whispers Gifts",
   description:
-    "Order flowers, gift hampers and teddy bears in Nairobi with same-day delivery. Floral Whispers Gifts — Nairobi's favourite florist. Order on WhatsApp now.",
+    "Nairobi's premium flower hampers, wine gifts, roses and teddy bears with same-day delivery across CBD, Westlands, Karen and Kilimani. Order on WhatsApp with Floral Whispers Gifts.",
   keywords: [
     ...SITE_WIDE_KEYWORDS,
     "flower delivery Nairobi",
@@ -37,9 +37,9 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title:
-      "Flower Delivery Nairobi | Florist & Gift Hampers | Floral Whispers Gifts",
+      "Nairobi Flower Hamper & Wine Same-Day Delivery | Floral Whispers Gifts",
     description:
-      "Order flowers, gift hampers and teddy bears in Nairobi with same-day delivery. Floral Whispers Gifts — Nairobi's favourite florist.",
+      "Order flower hampers, wine gifts, fresh roses and teddy bears with same-day delivery across Nairobi.",
     url: baseUrl,
     siteName: "Floral Whispers Gifts",
     images: [
@@ -56,9 +56,9 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title:
-      "Flower Delivery Nairobi | Florist & Gift Hampers | Floral Whispers Gifts",
+      "Nairobi Flower Hamper & Wine Same-Day Delivery | Floral Whispers Gifts",
     description:
-      "Order flowers, gift hampers and teddy bears in Nairobi with same-day delivery. Floral Whispers Gifts — Nairobi's favourite florist.",
+      "Nairobi flower hamper + wine same-day delivery, roses and romantic gifts. Order with Floral Whispers Gifts.",
     images: ["/images/logo/FloralLogo.jpg"],
   },
 };
@@ -679,6 +679,26 @@ export default async function HomePage() {
           <h2 className="font-heading font-semibold text-base sm:text-lg md:text-xl text-brand-gray-800 mb-4">
             Gift Hampers, Teddy Bears & Roses — Delivered by Floral Whispers
           </h2>
+          <p className="text-sm text-brand-gray-700 mb-4">
+            Trusted by Nairobi customers for same-day surprise gifts.
+            <Link href="#google-reviews" className="ml-2 text-brand-red hover:underline">
+              See our Google reviews
+            </Link>
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <Link
+              href="/flower-hamper-wine-nairobi"
+              className="inline-flex items-center rounded-full bg-brand-red text-white text-sm font-semibold px-4 py-2 hover:opacity-90 transition-opacity"
+            >
+              Flower Hamper + Wine in Nairobi
+            </Link>
+            <Link
+              href="/collections/gift-hampers"
+              className="inline-flex items-center rounded-full bg-white border border-brand-gray-300 text-brand-gray-700 text-sm font-semibold px-4 py-2 hover:shadow-md transition-all"
+            >
+              Shop Hampers
+            </Link>
+          </div>
         </section>
         <HeroCarousel />
 
@@ -931,11 +951,11 @@ export default async function HomePage() {
               </p>
             </div>
             
-            <div className="flex sm:grid flex-nowrap sm:flex-wrap overflow-x-auto sm:overflow-visible gap-2 sm:gap-4 md:gap-6 lg:gap-8 pb-3 sm:pb-0 -mx-4 sm:mx-0 px-4 sm:px-0 scrollbar-thin scrollbar-thumb-brand-gray-300 scrollbar-track-transparent">
+            <div className="flex flex-nowrap overflow-x-auto gap-2 sm:gap-4 md:gap-6 lg:gap-8 pb-3 -mx-4 sm:mx-0 px-4 sm:px-0 scrollbar-thin scrollbar-thumb-brand-gray-300 scrollbar-track-transparent">
               {/* Gift Hampers Card */}
               <Link 
                 href="/collections/gift-hampers"
-                className="group relative bg-white rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2 flex-shrink-0 w-[260px] xs:w-[280px] sm:w-auto"
+                className="group relative bg-white rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2 flex-shrink-0 w-[260px] xs:w-[280px] sm:w-[320px] lg:w-[360px]"
               >
                 <div className="relative h-32 sm:h-48 md:h-64 lg:h-72 overflow-hidden">
                   <Image
@@ -967,7 +987,7 @@ export default async function HomePage() {
               {/* Flowers Card */}
               <Link 
                 href="/collections/flowers"
-                className="group relative bg-white rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2 flex-shrink-0 w-[260px] xs:w-[280px] sm:w-auto"
+                className="group relative bg-white rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2 flex-shrink-0 w-[260px] xs:w-[280px] sm:w-[320px] lg:w-[360px]"
               >
                 <div className="relative h-32 sm:h-48 md:h-64 lg:h-72 overflow-hidden">
                   <Image
@@ -999,7 +1019,7 @@ export default async function HomePage() {
               {/* Teddy Bears Card */}
               <Link 
                 href="/collections/teddy-bears"
-                className="group relative bg-white rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2 flex-shrink-0 w-[260px] xs:w-[280px] sm:w-auto"
+                className="group relative bg-white rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2 flex-shrink-0 w-[260px] xs:w-[280px] sm:w-[320px] lg:w-[360px]"
               >
                 <div className="relative h-32 sm:h-48 md:h-64 lg:h-72 overflow-hidden">
                   <Image
@@ -1118,9 +1138,11 @@ export default async function HomePage() {
                   brought our clients&apos; visions to life across Nairobi.
                 </p>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-6">
+              <div className="flex md:grid md:grid-cols-3 flex-nowrap md:flex-wrap overflow-x-auto md:overflow-visible gap-4 md:gap-8 mb-6 -mx-4 md:mx-0 px-4 md:px-0 scrollbar-thin scrollbar-thumb-brand-gray-300 scrollbar-track-transparent">
                 {featuredCaseStudies.map((cs) => (
-                  <CaseStudyCard key={cs.id} caseStudy={cs} />
+                  <div key={cs.id} className="flex-shrink-0 w-[280px] sm:w-[340px] md:w-auto">
+                    <CaseStudyCard caseStudy={cs} />
+                  </div>
                 ))}
               </div>
               <div className="text-center">

@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
           if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
             return imagePath;
           }
-          return `https://floralwhispersgifts.co.ke${imagePath.startsWith('/') ? imagePath : `/${imagePath}`}`;
+          return `https://www.floralwhispersgifts.co.ke${imagePath.startsWith('/') ? imagePath : `/${imagePath}`}`;
         };
 
         const emailSubject = `✅ Payment Confirmed - Order #${orderId.slice(0, 8)}`;

@@ -5,6 +5,7 @@ import ProductCard from "@/components/ProductCard";
 import type { Product } from "@/lib/db";
 import { getCategoryFallbackImage } from "@/lib/utils";
 import { Analytics } from "@/lib/analytics";
+import Link from "next/link";
 
 interface WineProduct {
   image: string;
@@ -68,6 +69,11 @@ export default function WinesPageClient({ products, allWineImages = [], wineProd
             <span className="bg-brand-gray-100 px-3 py-1 rounded-full">✨ Same-Day Delivery</span>
             <span className="bg-brand-gray-100 px-3 py-1 rounded-full">🎁 Gift Wrapped</span>
             <span className="bg-brand-gray-100 px-3 py-1 rounded-full">🍷 Premium Selection</span>
+          </div>
+          <div className="mt-4">
+            <Link href="/flower-hamper-wine-nairobi" className="text-sm text-brand-red hover:underline">
+              See flower hamper + wine gift combinations
+            </Link>
           </div>
         </div>
 

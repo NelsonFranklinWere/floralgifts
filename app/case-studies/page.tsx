@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description:
     "Real wedding, birthday, event and corporate flower designs by Floral Whispers — Nairobi's premium florist. Every arrangement is a story.",
   alternates: {
-    canonical: "https://floralwhispersgifts.co.ke/case-studies",
+    canonical: "https://www.floralwhispersgifts.co.ke/case-studies",
   },
 };
 

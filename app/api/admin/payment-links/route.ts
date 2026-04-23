@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
           currency: "KES",
           amount: amountNum,
           description: description || `Payment for ${customerName} - ${orderNotes || 'Manual order'}`,
-          callback_url: `${process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke"}/api/pesapal/callback`,
+          callback_url: `${process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke"}/api/pesapal/callback`,
           notification_id: process.env.PESAPAL_IPN_ID || "",
           billing_address: {
             email_address: customerEmail || "",
@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
 
         const stkParams: CoopBankSTKPushParams = {
           MessageReference: `AD-${Date.now().toString().slice(-8)}`,
-          CallBackUrl: `${process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke"}/api/mpesa/callback`,
+          CallBackUrl: `${process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke"}/api/mpesa/callback`,
           OperatorCode: process.env.COOP_BANK_OPERATOR_CODE || "FLORAL",
           TransactionCurrency: "KES",
           MobileNumber: phoneFormatted,

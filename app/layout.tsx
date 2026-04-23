@@ -80,14 +80,14 @@ export const metadata: Metadata = {
   authors: [{ name: "Floral Whispers Gifts" }],
   creator: "Floral Whispers Gifts",
   publisher: "Floral Whispers Gifts",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke"),
   alternates: {
-    canonical: process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke",
+    canonical: process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke",
   },
   openGraph: {
     type: "website",
     locale: "en_KE",
-    url: process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke",
+    url: process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke",
     siteName: "Floral Whispers Gifts Nairobi",
     title:
       "Flower Delivery Nairobi | Fresh Pink Roses, Red Roses & White Flowers | Same-Day Delivery",
@@ -134,7 +134,7 @@ export const viewport: Viewport = {
   themeColor: "#ffffff",
 };
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
 
 const organizationJsonLd = {
   "@context": "https://schema.org",
@@ -153,6 +153,7 @@ const organizationJsonLd = {
     `https://www.instagram.com/${SHOP_INFO.instagram.replace("@", "")}`,
     `https://www.facebook.com/${SHOP_INFO.facebook}`,
     `https://twitter.com/${SHOP_INFO.twitter.replace("@", "")}`,
+    `https://www.tiktok.com/${SHOP_INFO.tiktok.replace("@", "@")}`,
   ],
 };
 
