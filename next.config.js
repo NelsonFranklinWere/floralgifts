@@ -4,56 +4,85 @@ const path = require('path');
 const nextConfig = {
   images: {
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**.supabase.co',
-      },
-      {
-        protocol: 'https',
-        hostname: '**.cloudinary.com',
-      },
-      {
-        protocol: 'http',
-        hostname: 'localhost',
-      },
+      { protocol: 'https', hostname: '**.supabase.co' },
+      { protocol: 'https', hostname: '**.cloudinary.com' },
+      { protocol: 'http', hostname: 'localhost' },
     ],
-    deviceSizes: [640, 750, 828, 1080, 1200], // Reduced max size for faster loading
-    imageSizes: [16, 32, 48, 64, 96, 128, 256], // Reduced sizes
-    minimumCacheTTL: 60 * 60 * 24 * 365, // 1 year cache
+    deviceSizes: [390, 640, 750, 828, 1080, 1200],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
+    minimumCacheTTL: 60 * 60 * 24 * 365,
     dangerouslyAllowSVG: false,
     unoptimized: false,
-    loader: 'default',
-    formats: ['image/webp', 'image/avif'], // Prefer modern formats for better compression
-    qualities: [70, 75, 80],
+    formats: ['image/avif', 'image/webp'],
+    qualities: [60, 70, 75, 80],
   },
-  // Performance optimizations
+
+  compiler: {
+    removeConsole:
+      process.env.NODE_ENV === 'production' ? { exclude: ['error'] } : false,
+  },
   compress: true,
   poweredByHeader: false,
+  productionBrowserSourceMaps: false,
+
+  async headers() {
+    return [
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        source: '/images/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=604800, stale-while-revalidate=86400',
+          },
+        ],
+      },
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()',
+          },
+        ],
+      },
+    ];
+  },
+
   async redirects() {
     return [
       {
         source: '/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'floralwhispersgifts.co.ke',
-          },
-        ],
+        has: [{ type: 'host', value: 'floralwhispersgifts.co.ke' }],
         destination: 'https://www.floralwhispersgifts.co.ke/:path*',
         permanent: true,
       },
     ];
   },
-  // Webpack configuration for path aliases
-  webpack: (config) => {
-    // Ensure @/ alias resolves correctly
+
+  webpack: (config, { isServer }) => {
     config.resolve.alias = {
       ...config.resolve.alias,
       '@': path.resolve(__dirname),
     };
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      };
+    }
     return config;
   },
-}
+};
 
-module.exports = nextConfig
-
+module.exports = nextConfig;

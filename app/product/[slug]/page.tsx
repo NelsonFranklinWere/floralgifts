@@ -10,6 +10,8 @@ import { formatCurrency } from "@/lib/utils";
 import { DEEP_FLOWER_ROSE_KEYWORDS } from "@/lib/seo-keywords";
 import { supabaseAdmin } from "@/lib/supabase";
 
+export const revalidate = 300;
+
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
 }

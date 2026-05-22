@@ -8,6 +8,7 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
 import VisitorPing from "@/components/VisitorPing";
+import WebVitalsReporter from "@/components/WebVitalsReporter";
 import { GA_MEASUREMENT_ID, SHOP_INFO } from "@/lib/constants";
 
 const montserrat = Montserrat({
@@ -465,8 +466,9 @@ export default function RootLayout({
           }}
         />
         <VisitorPing />
+        <WebVitalsReporter />
         {/* Tawk.to live chat - left side so it doesn't block WhatsApp */}
-        <Script id="tawk-to" strategy="afterInteractive">
+        <Script id="tawk-to" strategy="lazyOnload">
           {`var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
 Tawk_API.customStyle={visibility:{desktop:{position:'bl',xOffset:24,yOffset:24},mobile:{position:'bl',xOffset:16,yOffset:16}}};
 (function(){

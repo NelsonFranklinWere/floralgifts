@@ -4,6 +4,8 @@ import Link from "next/link";
 const baseUrl =
   process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
 
+export const revalidate = 600;
+
 export const metadata: Metadata = {
   title: "Corporate Gift Hampers Nairobi | Bulk Orders for Teams & Clients",
   description:

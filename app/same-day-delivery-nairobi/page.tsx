@@ -3,6 +3,8 @@ import Link from "next/link";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
 
+export const revalidate = 600;
+
 export const metadata: Metadata = {
   title: "Same Day Delivery Nairobi — Flowers, Hampers & Teddy Bears | Floral Whispers Gifts",
   description:

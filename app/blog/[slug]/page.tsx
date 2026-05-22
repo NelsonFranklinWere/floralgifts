@@ -10,6 +10,8 @@ import { SHOP_INFO } from "@/lib/constants";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
 
+export const revalidate = 300;
+
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
 }

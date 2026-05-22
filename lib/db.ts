@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { supabase, supabaseAdmin } from "./supabase";
 
 export interface Product {
@@ -50,7 +51,8 @@ export interface Order {
   updated_at: string;
 }
 
-export async function getProducts(filters?: {
+// Deduplicate identical Supabase queries within a single server render.
+export const getProducts = cache(async function getProducts(filters?: {
   category?: string;
   subcategory?: string;
   tags?: string[];
@@ -109,9 +111,11 @@ export async function getProducts(filters?: {
     }
     return [];
   }
-}
+});
 
-export async function getProductBySlug(slug: string): Promise<Product | null> {
+export const getProductBySlug = cache(async function getProductBySlug(
+  slug: string
+): Promise<Product | null> {
   try {
     const { data, error } = await (supabaseAdmin
       .from("products") as any)
@@ -148,7 +152,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
     console.error("Error fetching product:", error);
     return null;
   }
-}
+});
 
 export async function getProductById(id: string): Promise<Product | null> {
   try {

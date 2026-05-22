@@ -9,7 +9,7 @@ export default function ElfsightGoogleReviews() {
     <section id="google-reviews" className="py-16 bg-[#FAF7F2] border-t border-[#F0E8E8]">
       <Script
         src="https://elfsightcdn.com/platform.js"
-        strategy="afterInteractive"
+        strategy="lazyOnload"
         async
       />
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">

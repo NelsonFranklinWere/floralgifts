@@ -131,9 +131,10 @@ export default function HeroCarousel() {
             alt={slide.title}
             fill
             className="object-cover"
-            priority={index <= 1}
+            priority={index === 0}
+            fetchPriority={index === 0 ? "high" : "low"}
             sizes="100vw"
-            quality={80}
+            quality={index === 0 ? 80 : 70}
           />
           <div className="absolute inset-0 bg-black/40 flex items-center">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 w-full">
@@ -148,7 +149,11 @@ export default function HeroCarousel() {
                       {slide.subtitle}
                     </p>
                   )}
-                  <Link href={slide.ctaLink} className="btn-primary inline-block text-xs md:text-sm lg:text-base px-4 md:px-6 lg:px-8 py-2 md:py-3 lg:py-4">
+                  <Link
+                    href={slide.ctaLink}
+                    prefetch={true}
+                    className="btn-primary inline-block text-xs md:text-sm lg:text-base px-4 md:px-6 lg:px-8 py-2 md:py-3 lg:py-4"
+                  >
                     {slide.ctaText}
                   </Link>
                 </div>
@@ -164,7 +169,7 @@ export default function HeroCarousel() {
                         fill
                         className="object-cover"
                         sizes="(max-width: 768px) 128px, (max-width: 1024px) 160px, 192px"
-                        quality={75}
+                        quality={60}
                         loading="lazy"
                       />
                     </div>
@@ -176,7 +181,7 @@ export default function HeroCarousel() {
                         fill
                         className="object-cover"
                         sizes="(max-width: 768px) 128px, (max-width: 1024px) 160px, 192px"
-                        quality={75}
+                        quality={60}
                         loading="lazy"
                       />
                     </div>

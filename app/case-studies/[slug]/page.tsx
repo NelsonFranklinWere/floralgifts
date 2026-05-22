@@ -9,6 +9,8 @@ import {
 import CaseStudyCard from "@/components/CaseStudyCard";
 import CaseStudyGallery from "./Gallery";
 
+export const revalidate = 300;
+
 type PageProps = {
   params: Promise<{ slug: string }>;
 };

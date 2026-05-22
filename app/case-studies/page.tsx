@@ -3,6 +3,8 @@ import Link from "next/link";
 import { getAllCaseStudies } from "@/lib/case-studies";
 import CaseStudyCard from "@/components/CaseStudyCard";
 
+export const revalidate = 300;
+
 export const metadata: Metadata = {
   title: "Our Work — Floral Case Studies | Floral Whispers Nairobi",
   description:

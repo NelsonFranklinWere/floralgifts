@@ -3,6 +3,8 @@ import CardsPageClient from "./CardsPageClient";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
 
+export const revalidate = 600;
+
 export const metadata: Metadata = {
   title: "Valentine's Cards Nairobi | Romantic Love Messages, Personalized Valentine's Cards & Gift Cards | Same-Day Delivery",
   description: "Best Valentine's cards Nairobi: romantic love messages, personalized Valentine's cards, gift cards for your wife, husband, girlfriend. Pre-Valentine's orders, same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",

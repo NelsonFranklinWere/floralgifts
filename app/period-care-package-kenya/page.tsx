@@ -4,6 +4,8 @@ import Link from "next/link";
 const baseUrl =
   process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
 
+export const revalidate = 600;
+
 export const metadata: Metadata = {
   title: "Period Care Package Kenya | Thoughtful Gifts in Nairobi",
   description:

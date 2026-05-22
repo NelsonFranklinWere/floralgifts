@@ -6,6 +6,8 @@ import { SHOP_INFO } from "@/lib/constants";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
 
+export const revalidate = 600;
+
 export const metadata: Metadata = {
   title: "Valentine's Delivery Services Nairobi | Same-Day Romantic Flowers, Chocolates & Gift Hampers | Floral Whispers Gifts",
   description:
