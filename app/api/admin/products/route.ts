@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { getProducts } from "@/lib/db";
 import { supabaseAdmin } from "@/lib/supabase";
-import { revalidatePath, revalidateTag } from "next/cache";
-import { CACHE_TAG_PRODUCTS } from "@/lib/cache-tags";
+import { revalidatePath } from "next/cache";
+import { CACHE_TAG_PRODUCTS, revalidateContentTag } from "@/lib/cache-tags";
 
 export const dynamic = 'force-dynamic';
 
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: error.message }, { status: 400 });
     }
 
-    revalidateTag(CACHE_TAG_PRODUCTS);
+    revalidateContentTag(CACHE_TAG_PRODUCTS);
     revalidatePath("/");
     revalidatePath("/collections");
     revalidatePath("/collections/flowers");

@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { getProductById } from "@/lib/db";
 import { supabaseAdmin } from "@/lib/supabase";
-import { revalidatePath, revalidateTag } from "next/cache";
-import { CACHE_TAG_PRODUCTS } from "@/lib/cache-tags";
+import { revalidatePath } from "next/cache";
+import { CACHE_TAG_PRODUCTS, revalidateContentTag } from "@/lib/cache-tags";
 
 export const dynamic = 'force-dynamic';
 
@@ -71,7 +71,7 @@ export async function PUT(
     const oldProduct = await getProductById(id);
     
     // Revalidate product pages
-    revalidateTag(CACHE_TAG_PRODUCTS);
+    revalidateContentTag(CACHE_TAG_PRODUCTS);
     revalidatePath("/");
     revalidatePath("/collections");
     revalidatePath("/collections/flowers");
@@ -117,7 +117,7 @@ export async function DELETE(
     }
 
     if (product) {
-      revalidateTag(CACHE_TAG_PRODUCTS);
+      revalidateContentTag(CACHE_TAG_PRODUCTS);
       revalidatePath("/");
       revalidatePath("/collections");
       revalidatePath("/collections/flowers");

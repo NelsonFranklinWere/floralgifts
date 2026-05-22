@@ -59,13 +59,23 @@ export interface Order {
 
 function normalizeProductRow(row: Record<string, unknown>): Product {
   return {
-    ...(row as Product),
+    id: row.id as string,
+    slug: row.slug as string,
+    title: row.title as string,
     description: (row.description as string) ?? "",
+    short_description: (row.short_description as string) ?? "",
+    price: row.price as number,
+    category: row.category as Product["category"],
+    subcategory: (row.subcategory as string) || null,
     tags: (row.tags as string[]) || [],
+    teddy_size: (row.teddy_size as number) ?? null,
+    teddy_color: (row.teddy_color as string) ?? null,
     images: (row.images as string[]) || [],
     included_items: (row.included_items as Product["included_items"]) || null,
     upsells: (row.upsells as string[]) || null,
-    subcategory: (row.subcategory as string) || null,
+    stock: (row.stock as number) ?? null,
+    created_at: row.created_at as string,
+    updated_at: row.updated_at as string,
   };
 }
 

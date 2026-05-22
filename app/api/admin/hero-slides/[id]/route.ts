@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidateTag } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
-import { CACHE_TAG_HERO_SLIDES } from "@/lib/cache-tags";
+import { CACHE_TAG_HERO_SLIDES, revalidateContentTag } from "@/lib/cache-tags";
 import { supabaseAdmin } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
@@ -43,7 +42,7 @@ export async function PUT(
       return NextResponse.json({ message: "Failed to update hero slide" }, { status: 500 });
     }
 
-    revalidateTag(CACHE_TAG_HERO_SLIDES);
+    revalidateContentTag(CACHE_TAG_HERO_SLIDES);
     return NextResponse.json(data);
   } catch (error) {
     console.error("Unexpected error updating hero slide:", error);
@@ -76,7 +75,7 @@ export async function DELETE(
       return NextResponse.json({ message: "Failed to delete hero slide" }, { status: 500 });
     }
 
-    revalidateTag(CACHE_TAG_HERO_SLIDES);
+    revalidateContentTag(CACHE_TAG_HERO_SLIDES);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Unexpected error deleting hero slide:", error);
