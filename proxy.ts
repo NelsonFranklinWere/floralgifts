@@ -2,6 +2,13 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function proxy(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
+  // Skip heavy header work for high-frequency background pings
+  if (pathname === "/api/analytics" || pathname === "/api/visitor-ping") {
+    return NextResponse.next();
+  }
+
   const response = NextResponse.next();
 
   // Add CORS headers for API routes

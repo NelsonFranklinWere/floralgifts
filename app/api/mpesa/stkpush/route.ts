@@ -56,13 +56,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const callbackUrl = process.env.MPESA_CALLBACK_URL || "";
-    if (!callbackUrl) {
-      return NextResponse.json(
-        { message: "MPESA_CALLBACK_URL not configured" },
-        { status: 500 }
-      );
-    }
+    const baseUrl =
+      process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
+    const callbackUrl =
+      process.env.MPESA_CALLBACK_URL || `${baseUrl}/api/mpesa/callback`;
 
     const result = await initiateSTKPush({
       phone,

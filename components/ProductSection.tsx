@@ -63,7 +63,7 @@ export default function ProductSection({
                   shortDescription={product.short_description}
                   category={product.category}
                   homePage={true}
-                  priority={index < 3}
+                  priority={index < 2}
                 />
               </div>
             ))}

@@ -245,7 +245,7 @@ export async function getProductById(id: string): Promise<Product | null> {
 
 export async function createOrder(order: Omit<Order, "id" | "created_at" | "updated_at">): Promise<Order | null> {
   try {
-    const insertData: any = {
+    const baseRow: Record<string, unknown> = {
       items: order.items,
       total_amount: order.total_amount || order.total || 0,
       customer_name: order.customer_name,
@@ -258,30 +258,47 @@ export async function createOrder(order: Omit<Order, "id" | "created_at" | "upda
       mpesa_checkout_request_id: order.mpesa_checkout_request_id || null,
       notes: order.notes || null,
     };
-    
-    // Use delivery_address - the database column has been renamed
-    insertData.delivery_address = order.delivery_address;
 
-    const { data, error } = await (supabaseAdmin
-      .from("orders") as any)
-      .insert(insertData)
-      .select()
-      .single();
+    const address = order.delivery_address || "To be confirmed";
 
-    if (data) {
-      // Add total alias for backward compatibility
-      (data as any).total = data.total_amount;
+    // Try delivery_address first (post-migration), then legacy `address` column
+    const attempts: Record<string, unknown>[] = [
+      { ...baseRow, delivery_address: address },
+      { ...baseRow, address },
+    ];
+
+    let lastError: { message?: string; code?: string; details?: string } | null = null;
+
+    for (const row of attempts) {
+      const { data, error } = await (supabaseAdmin.from("orders") as any)
+        .insert(row)
+        .select()
+        .single();
+
+      if (!error && data) {
+        (data as { total?: number }).total = data.total_amount;
+        if (!data.delivery_address && data.address) {
+          data.delivery_address = data.address;
+        }
+        return data as Order;
+      }
+
+      lastError = error;
+      const msg = error?.message || "";
+      // Only retry when the column name is wrong; stop on auth/RLS/constraint errors
+      if (
+        !/delivery_address|address|column|schema cache/i.test(msg) ||
+        row === attempts[attempts.length - 1]
+      ) {
+        break;
+      }
     }
 
-    if (error) {
-      console.error("Error creating order:", error);
-      return null;
-    }
-
-    return data as Order;
+    console.error("Error creating order:", lastError);
+    throw new Error(lastError?.message || "Database rejected the order");
   } catch (error) {
     console.error("Error creating order:", error);
-    return null;
+    throw error;
   }
 }
 

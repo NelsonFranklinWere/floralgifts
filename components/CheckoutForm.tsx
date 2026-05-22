@@ -396,7 +396,7 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
       total: total,
     };
     
-    sessionStorage.setItem("pendingOrder", JSON.stringify(orderData));
+    sessionStorage.setItem("checkoutDraft", JSON.stringify(orderData));
     
     // Redirect to checkout page
     router.push("/checkout");

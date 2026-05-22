@@ -41,15 +41,13 @@ npm install
    - Run the SQL from `supabase/migrations/001_initial_schema.sql`
    - This creates tables and sample data
 
-4. Configure environment variables:
-```bash
-cp .env.example .env.local
-```
+4. Configure environment variables in **`.env`** at the project root (Next.js loads it automatically).
 
-Fill in your Supabase credentials:
-- `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Your Supabase anon/public key
-- `SUPABASE_SERVICE_ROLE_KEY` - Your Supabase service role key (keep secret!)
+Required keys:
+- `NEXT_PUBLIC_SUPABASE_URL` — Supabase project URL (must resolve; check Dashboard)
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` — anon key (`eyJ...` or `sb_publishable_...`)
+- `SUPABASE_SERVICE_ROLE_KEY` — service role key (`eyJ...` or `sb_secret_...`) — **required to place orders**
+- `PESAPAL_*` — for M-Pesa/card checkout locally
 
 5. Run the development server:
 ```bash

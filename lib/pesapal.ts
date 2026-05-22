@@ -114,6 +114,7 @@ export async function initiatePesapalPayment(params: PesapalPaymentParams): Prom
     amount: params.amount,
     description: params.description,
     callback_url: params.callback_url,
+    redirect_mode: "PARENT_WINDOW",
     notification_id: params.notification_id || "",
     billing_address: params.billing_address || null,
   };

@@ -1,19 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Analytics endpoint - stores user data
+/** Lightweight analytics sink — batched client events; must stay fast. */
 export async function POST(request: NextRequest) {
   try {
-    const data = await request.json();
+    const body = await request.json();
+    const events = Array.isArray(body?.events) ? body.events : [body];
 
-    // Log analytics data (in production, store in database or analytics service)
-    console.log("[Analytics]", JSON.stringify(data, null, 2));
+    if (process.env.ANALYTICS_DEBUG === "1") {
+      for (const event of events) {
+        console.log("[Analytics]", event?.event ?? "unknown", event);
+      }
+    }
 
-    // You can store this in Supabase, send to Google Analytics, etc.
-    // For now, just acknowledge receipt
-    return NextResponse.json({ success: true }, { status: 200 });
-  } catch (error) {
-    // Silently fail - analytics should not break the app
-    return NextResponse.json({ success: false }, { status: 200 });
+    // Store in Supabase / GA when wired; acknowledge immediately
+    return new NextResponse(null, { status: 204 });
+  } catch {
+    return new NextResponse(null, { status: 204 });
   }
 }
 

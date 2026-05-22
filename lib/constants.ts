@@ -100,7 +100,6 @@ export const DELIVERY_LOCATIONS = [
   { name: "James Gicheru Road", fee: 400 },
   { name: "Uthiru", fee: 400 },
   { name: "Corner", fee: 400 },
-  { name: "Donholm", fee: 500 }, // updated below in 500 section for clarity
 
   // 500
   { name: "Langata", fee: 500 },

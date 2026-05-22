@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { formatCurrency } from "@/lib/utils";
 import { useCartStore } from "@/lib/store/cart";
 import { ShoppingCartIcon as ShoppingCartIconSolid } from "@heroicons/react/24/solid";
 import { Analytics } from "@/lib/analytics";
+import { IMAGE_BLUR_DATA_URL } from "@/lib/image-blur";
 
 interface ProductCardProps {
   id: string;
@@ -36,12 +37,37 @@ export default function ProductCard({
 
   const { addItem } = useCartStore();
   const [imageError, setImageError] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Track product view when card is visible
-    if (id && name && category) {
-      Analytics.trackProductView(id, name, category, price);
+    if (!id || !name || !category) return;
+
+    const seenKey = `fw_pv_${id}`;
+    try {
+      if (sessionStorage.getItem(seenKey)) return;
+    } catch {
+      /* private mode */
     }
+
+    const node = cardRef.current;
+    if (!node || typeof IntersectionObserver === "undefined") return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries[0]?.isIntersecting) return;
+        try {
+          sessionStorage.setItem(seenKey, "1");
+        } catch {
+          /* ignore */
+        }
+        Analytics.trackProductView(id, name, category, price);
+        observer.disconnect();
+      },
+      { threshold: 0.15, rootMargin: "50px" }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
   }, [id, name, category, price]);
 
   const handleAddToCart = () => {
@@ -95,7 +121,7 @@ export default function ProductCard({
 
   return (
     <>
-      <div className="card p-2 sm:p-3 md:p-4 group">
+      <div ref={cardRef} className="card p-2 sm:p-3 md:p-4 group">
         <div className="mb-1.5 sm:mb-2 md:mb-3">
           <Link
             href={`/product/${slug}`}
@@ -109,11 +135,13 @@ export default function ProductCard({
                   alt={getAltText()}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                  sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 280px"
                   loading={priority ? "eager" : "lazy"}
                   priority={priority}
-                  quality={70}
-                  fetchPriority={priority ? "high" : "auto"}
+                  quality={priority ? 68 : 62}
+                  placeholder="blur"
+                  blurDataURL={IMAGE_BLUR_DATA_URL}
+                  fetchPriority={priority ? "high" : "low"}
                   onError={(e) => {
                     console.error("[ProductCard] Image failed to load:", image);
                     console.error("[ProductCard] Error:", e);
@@ -139,11 +167,13 @@ export default function ProductCard({
                 alt={getAltText()}
                 fill
                 className="object-cover opacity-60 group-hover:scale-105 transition-transform duration-300"
-                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 280px"
                 loading={priority ? "eager" : "lazy"}
                 priority={priority}
-                quality={60}
-                fetchPriority={priority ? "high" : "auto"}
+                quality={62}
+                placeholder="blur"
+                blurDataURL={IMAGE_BLUR_DATA_URL}
+                fetchPriority={priority ? "high" : "low"}
               />
             )}
           </Link>

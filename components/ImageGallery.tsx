@@ -56,7 +56,7 @@ export default function ImageGallery({ images, productName, category }: ImageGal
           className="object-cover group-hover:scale-105 transition-transform duration-300"
           priority={selectedIndex === 0}
           fetchPriority={selectedIndex === 0 ? "high" : "auto"}
-          quality={75}
+          quality={72}
           sizes="(max-width: 768px) 100vw, 50vw"
           loading={selectedIndex === 0 ? "eager" : "lazy"}
         />
@@ -88,7 +88,7 @@ export default function ImageGallery({ images, productName, category }: ImageGal
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 25vw, 12vw"
-                quality={60}
+                quality={55}
                 loading="lazy"
               />
             </button>

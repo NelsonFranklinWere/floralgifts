@@ -13,6 +13,10 @@ export async function POST(request: NextRequest) {
       deliveryAddress: body.delivery_address
     });
 
+    if (!body.items?.length) {
+      return NextResponse.json({ message: "Order must include at least one item" }, { status: 400 });
+    }
+
     const order = await createOrder({
       items: body.items,
       total_amount: body.total || body.total_amount,
@@ -28,11 +32,6 @@ export async function POST(request: NextRequest) {
       notes: body.notes || null,
     } as any);
 
-    if (!order) {
-      console.error("❌ Failed to create order in database");
-      return NextResponse.json({ message: "Failed to create order" }, { status: 500 });
-    }
-
     console.log("✅ Order created successfully:", {
       orderId: order.id,
       status: order.status,
@@ -42,8 +41,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(order);
   } catch (error: any) {
     console.error("❌ Create order error:", error);
+    const message = error.message || "Failed to create order";
+    const hint =
+      /Invalid API key|JWT|service role|permission denied|row-level security/i.test(message)
+        ? "Check SUPABASE_SERVICE_ROLE_KEY in .env.local (JWT from Supabase Dashboard → Settings → API)."
+        : undefined;
     return NextResponse.json(
-      { message: error.message || "Failed to create order" },
+      { message, ...(hint ? { hint } : {}), ...(process.env.NODE_ENV === "development" ? { debug: message } : {}) },
       { status: 500 }
     );
   }

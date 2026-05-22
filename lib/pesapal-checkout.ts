@@ -25,10 +25,11 @@ export type PesapalCheckoutResult =
 export async function startPesapalCheckout(
   params: PesapalCheckoutParams
 ): Promise<PesapalCheckoutResult> {
-  const callbackUrl =
+  const base =
     typeof window !== "undefined"
-      ? `${window.location.origin}/api/pesapal/callback`
-      : "https://www.floralwhispersgifts.co.ke/api/pesapal/callback";
+      ? window.location.origin
+      : process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
+  const callbackUrl = `${base}/checkout/pesapal-complete`;
 
   const [firstName, ...lastNameParts] = params.customerName.trim().split(/\s+/);
   const lastName = lastNameParts.join(" ") || "Customer";

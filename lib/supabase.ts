@@ -21,10 +21,23 @@ const getSupabaseAnonKey = () => {
 const supabaseUrl = getSupabaseUrl();
 const supabaseAnonKey = getSupabaseAnonKey();
 
+function isAdminKey(key: string | undefined): boolean {
+  return !!key && (key.startsWith("eyJ") || key.startsWith("sb_secret_"));
+}
+
+const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const hasValidServiceRole = isAdminKey(serviceRoleKey);
+
 if (!process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your_") || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY.includes("your_")) {
   if (typeof window === "undefined") {
-    console.warn("⚠️  Supabase credentials not configured. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in .env.local");
+    console.warn("⚠️  Supabase credentials not configured. Copy env_template.txt to .env.local and restart npm run dev.");
   }
+}
+
+if (typeof window === "undefined" && serviceRoleKey && !hasValidServiceRole) {
+  console.warn(
+    "⚠️  SUPABASE_SERVICE_ROLE_KEY must be the service_role key (JWT eyJ... or sb_secret_...) from Supabase Dashboard → Settings → API."
+  );
 }
 
 // Only create client if we have valid URLs
@@ -35,8 +48,8 @@ try {
   supabase = createClient(supabaseUrl, supabaseAnonKey);
   supabaseAdmin = createClient(
     supabaseUrl,
-    process.env.SUPABASE_SERVICE_ROLE_KEY && !process.env.SUPABASE_SERVICE_ROLE_KEY.includes("your_") 
-      ? process.env.SUPABASE_SERVICE_ROLE_KEY 
+    hasValidServiceRole && serviceRoleKey && !serviceRoleKey.includes("your_")
+      ? serviceRoleKey
       : supabaseAnonKey,
     {
       auth: {

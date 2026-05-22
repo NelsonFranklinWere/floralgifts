@@ -12,6 +12,7 @@ import axios from "axios";
 import { CreditCardIcon, DevicePhoneMobileIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 import { Analytics } from "@/lib/analytics";
 import { startPesapalCheckout } from "@/lib/pesapal-checkout";
+import PesapalPaymentModal from "@/components/PesapalPaymentModal";
 
 interface OrderData {
   customer: {
@@ -78,6 +79,11 @@ export default function CheckoutPage() {
   const [phoneError, setPhoneError] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState("");
+  const [pesapalPayment, setPesapalPayment] = useState<{
+    url: string;
+    orderId: string;
+    trackingId?: string;
+  } | null>(null);
 
   useEffect(() => {
     // If cart is empty, redirect to cart
@@ -86,22 +92,32 @@ export default function CheckoutPage() {
       return;
     }
 
-    // Check if there's saved order data in sessionStorage
-    const savedOrder = sessionStorage.getItem("pendingOrder");
-    if (savedOrder) {
+    // Cart form saves draft here; pendingOrder is only set after payment starts
+    const savedDraft = sessionStorage.getItem("checkoutDraft");
+    if (savedDraft) {
       try {
-        const data = JSON.parse(savedOrder);
+        const data = JSON.parse(savedDraft);
+        if (!Array.isArray(data.items) || data.items.length === 0) {
+          throw new Error("Invalid checkout draft");
+        }
         setOrderData(data);
         setPhone(data.customer?.phone?.replace(/^\+/, "") || "");
         setEmail(data.customer?.email || "");
-        if (data.recipient?.name) {
-          const nameParts = data.recipient.name.split(" ");
+        const displayName =
+          data.customer?.name ||
+          data.recipient?.name ||
+          "";
+        if (displayName) {
+          const nameParts = displayName.split(" ");
           setFirstName(nameParts[0] || "");
           setLastName(nameParts.slice(1).join(" ") || "");
         }
         setAddress(data.delivery?.address || "");
         setCity(data.delivery?.location || "Nairobi");
         setPhoneNumber(data.recipient?.phone?.replace(/^\+/, "") || "");
+        setStkPhone(
+          (data.customer?.phone || data.recipient?.phone || "").replace(/^\+/, "")
+        );
       } catch (error) {
         console.error("Error parsing saved order:", error);
         // Initialize from cart
@@ -193,11 +209,9 @@ export default function CheckoutPage() {
         return;
       }
       
-      // M-Pesa / card: Pesapal hosted checkout (M-Pesa, Visa, etc.)
+      // M-Pesa or card via Pesapal (embedded on this page — no redirect to pesapal.com)
       if (paymentMethod === "stk" || paymentMethod === "pesapal") {
-        const payPhone = formatPhone(
-          stkPhone || phoneNumber || phone
-        );
+        const payPhone = formatPhone(stkPhone || phoneNumber || phone);
         if (!payPhone || !validatePhone(payPhone)) {
           setStkError(
             "Please enter a valid phone number (format: 2547XXXXXXXX)"
@@ -229,8 +243,8 @@ export default function CheckoutPage() {
           payment_method: paymentMethod === "pesapal" ? "card" : "mpesa",
           notes:
             paymentMethod === "pesapal"
-              ? "Card payment via Pesapal"
-              : `M-Pesa payment via Pesapal. Phone: ${payPhone}`,
+              ? "Card via Pesapal (embedded checkout)"
+              : `M-Pesa via Pesapal (embedded checkout). Phone: ${payPhone}`,
         });
 
         const orderId = orderResponse.data.id;
@@ -263,13 +277,12 @@ export default function CheckoutPage() {
           })
         );
 
-        Analytics.trackPurchase(
+        setPesapalPayment({
+          url: pesapalResult.redirectUrl,
           orderId,
-          total,
-          paymentMethod === "pesapal" ? "card" : "mpesa"
-        );
-
-        window.location.href = pesapalResult.redirectUrl;
+          trackingId: pesapalResult.orderTrackingId,
+        });
+        setIsProcessing(false);
         return;
       }
 
@@ -345,7 +358,7 @@ export default function CheckoutPage() {
         setStkError(
           err.response?.data?.message ||
             err.message ||
-            "Failed to start Pesapal payment. Please try again."
+            "Failed to open secure payment. Please try again."
         );
       } else {
         setError(
@@ -361,8 +374,28 @@ export default function CheckoutPage() {
     }
   };
 
+  const handlePesapalComplete = (orderId: string, trackingId: string) => {
+    setPesapalPayment(null);
+    Analytics.trackPurchase(
+      orderId,
+      total,
+      paymentMethod === "pesapal" ? "card" : "mpesa"
+    );
+    router.push(
+      `/order/success?id=${orderId}&pending=true${trackingId ? `&pesapal_tracking_id=${trackingId}` : ""}`
+    );
+  };
+
   return (
     <div className="min-h-screen bg-white">
+      {pesapalPayment && (
+        <PesapalPaymentModal
+          paymentUrl={pesapalPayment.url}
+          orderId={pesapalPayment.orderId}
+          onClose={() => setPesapalPayment(null)}
+          onComplete={handlePesapalComplete}
+        />
+      )}
       <div className="max-w-6xl mx-auto px-4 py-6">
         {/* Logo */}
         <div className="text-center mb-6">
@@ -503,7 +536,7 @@ export default function CheckoutPage() {
                       </div>
                       <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
                         <p className="text-xs text-green-800">
-                          <strong>How it works:</strong> You&apos;ll go to Pesapal&apos;s secure checkout. Choose M-Pesa and enter your PIN on your phone to complete payment.
+                          <strong>How it works:</strong> A secure payment window opens on this page. Choose M-Pesa, enter your PIN on your phone — you never leave our site.
                         </p>
                       </div>
                     </div>
@@ -526,10 +559,17 @@ export default function CheckoutPage() {
                         <div className="w-6 h-5 bg-white border border-gray-300 rounded flex items-center justify-center px-1">
                           <span className="text-[#1434CB] font-bold text-[10px]">VISA</span>
                         </div>
-                        <span className="font-medium text-sm text-brand-gray-900">Card (Pesapal)</span>
+                        <span className="font-medium text-sm text-brand-gray-900">Card (Visa / Mastercard)</span>
                       </div>
                     </div>
                   </label>
+                  {paymentMethod === "pesapal" && (
+                    <div className="mt-3 ml-7 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                      <p className="text-xs text-blue-800">
+                        <strong>How it works:</strong> A secure payment window opens on this page for card entry. Phone number above is used for billing.
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 {/* Till Number */}

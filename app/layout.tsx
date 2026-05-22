@@ -8,7 +8,11 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
 import DeferredClientWidgets from "@/components/layout/DeferredClientWidgets";
+import TawkToChat from "@/components/TawkToChat";
 import { GA_MEASUREMENT_ID, SHOP_INFO } from "@/lib/constants";
+import { getSupabaseOrigin } from "@/lib/supabase-origin";
+
+const supabaseOrigin = getSupabaseOrigin();
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -422,11 +426,16 @@ export default function RootLayout({
       <head>
         <meta name="mobile-web-app-capable" content="yes" />
         <link rel="icon" href="/images/logo/FloralLogo.jpg" type="image/jpeg" />
-        {/* Preconnect to Supabase CDN for faster image loading */}
-        <link rel="preconnect" href="https://supabase.co" />
-        <link rel="dns-prefetch" href="https://supabase.co" />
+        {supabaseOrigin ? (
+          <>
+            <link rel="preconnect" href={supabaseOrigin} crossOrigin="anonymous" />
+            <link rel="dns-prefetch" href={supabaseOrigin} />
+          </>
+        ) : null}
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <link rel="dns-prefetch" href="https://embed.tawk.to" />
+        {process.env.NEXT_PUBLIC_TAWK_ENABLED === "true" ? (
+          <link rel="dns-prefetch" href="https://embed.tawk.to" />
+        ) : null}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
@@ -454,12 +463,12 @@ export default function RootLayout({
       </head>
       <body className={`${lato.className} flex flex-col min-h-screen bg-green-100`}>
         <Script
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
         />
         <Script
           id="google-analytics"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           dangerouslySetInnerHTML={{
             __html: `
             window.dataLayer = window.dataLayer || [];
@@ -471,19 +480,7 @@ export default function RootLayout({
           }}
         />
         <DeferredClientWidgets />
-        {/* Tawk.to live chat - left side so it doesn't block WhatsApp */}
-        <Script id="tawk-to" strategy="lazyOnload">
-          {`var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-Tawk_API.customStyle={visibility:{desktop:{position:'bl',xOffset:24,yOffset:24},mobile:{position:'bl',xOffset:16,yOffset:16}}};
-(function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/69a8288364380e1c36b31457/default';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
-})();`}
-        </Script>
+        {process.env.NEXT_PUBLIC_TAWK_ENABLED === "true" ? <TawkToChat /> : null}
         <ErrorBoundary>
           <AnalyticsProvider>
             <a href="#main-content" className="skip-link">

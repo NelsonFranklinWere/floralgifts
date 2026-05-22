@@ -139,25 +139,57 @@ export class Analytics {
     this.sendToServer(data);
   }
 
-  // Send data to server (non-blocking)
-  private static sendToServer(data: any) {
+  private static queue: Record<string, unknown>[] = [];
+  private static flushTimer: ReturnType<typeof setTimeout> | null = null;
+  private static readonly MAX_BATCH = 12;
+  private static readonly FLUSH_MS = 5000;
+
+  /** Batched, non-blocking — avoids dozens of parallel /api/analytics calls per page. */
+  private static sendToServer(data: Record<string, unknown>) {
     if (typeof window === "undefined") return;
 
-    // Use sendBeacon for reliable, non-blocking delivery
-    const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
-    navigator.sendBeacon("/api/analytics", blob);
-
-    // Fallback to fetch if sendBeacon not available
-    if (!navigator.sendBeacon) {
-      fetch("/api/analytics", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-        keepalive: true,
-      }).catch(() => {
-        // Silently fail - analytics should not break the app
-      });
+    this.queue.push(data);
+    if (this.queue.length >= this.MAX_BATCH) {
+      this.flushQueue();
+      return;
+    }
+    if (!this.flushTimer) {
+      this.flushTimer = setTimeout(() => this.flushQueue(), this.FLUSH_MS);
     }
   }
+
+  /** Flush batched events (e.g. when user leaves the tab). */
+  static flushPending() {
+    this.flushQueue();
+  }
+
+  private static flushQueue() {
+    if (this.flushTimer) {
+      clearTimeout(this.flushTimer);
+      this.flushTimer = null;
+    }
+    const events = this.queue.splice(0);
+    if (!events.length) return;
+
+    const payload = JSON.stringify({ events });
+    const blob = new Blob([payload], { type: "application/json" });
+
+    if (navigator.sendBeacon?.("/api/analytics", blob)) return;
+
+    fetch("/api/analytics", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: payload,
+      keepalive: true,
+    }).catch(() => {});
+  }
+}
+
+if (typeof window !== "undefined") {
+  window.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+      Analytics.flushPending();
+    }
+  });
 }
 
