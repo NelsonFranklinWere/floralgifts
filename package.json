@@ -37,7 +37,7 @@
     "react-hook-form": "^7.50.1",
     "resend": "^6.5.2",
     "sharp": "^0.34.5",
-    "tailwindcss": "^3.4.1",
+    "tailwindcss": "^4.3.0",
     "uuid": "^13.0.0",
     "yup": "^1.4.0",
     "zustand": "^4.5.0"
