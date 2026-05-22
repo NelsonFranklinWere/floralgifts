@@ -153,45 +153,37 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
 
       const orderId = orderResponse.data.id;
 
-      // Initiate direct Co-op Bank STK Push (no Pesapal redirect)
-      const stkResponse = await axios.post("/api/coopbank/stkpush", {
-        MobileNumber: phoneToUse,
-        Amount: total, // Amount in cents (API will convert to KES)
-        MessageReference: `FL-${orderId.slice(0, 8)}`,
-        Narration: `Floral Whispers Order #${orderId.slice(0, 8)}`,
-        OrderId: orderId, // So callback can find order and payment is recorded on dashboard
+      const { startPesapalCheckout } = await import("@/lib/pesapal-checkout");
+      const pesapalResult = await startPesapalCheckout({
+        orderId,
+        totalCents: total,
+        customerName: data.name,
+        phone: formatPhone(phoneToUse),
+        address: `${deliveryLocation}, ${deliveryAddress}`,
+        city: deliveryLocation,
       });
 
-      const isStkSuccess = stkResponse.data?.success && (stkResponse.data?.data?.ResponseCode === "00" || !stkResponse.data?.data?.ResponseCode);
-      if (isStkSuccess) {
-        // Store order ID in session for callback handling
-        sessionStorage.setItem("pendingOrder", JSON.stringify({
-          id: orderId,
-          total: total,
-          paymentMethod: "mpesa",
-          messageReference: stkResponse.data.data.MessageReference,
-        }));
-
-        // Track the purchase attempt
-        Analytics.trackPurchase(orderId, total, "mpesa");
-
-        // Redirect to success page with pending status
-        // The success page will poll for payment confirmation
-        window.location.href = `/order/success?id=${orderId}&pending=true`;
-      } else {
-        setStkError(
-          stkResponse.data.data?.ResponseDescription || 
-          stkResponse.data.message || 
-          "Failed to initiate STK push. Please try again."
+      if (pesapalResult.ok) {
+        sessionStorage.setItem(
+          "pendingOrder",
+          JSON.stringify({
+            id: orderId,
+            total,
+            paymentMethod: "pesapal",
+            orderTrackingId: pesapalResult.orderTrackingId,
+          })
         );
+        Analytics.trackPurchase(orderId, total, "mpesa");
+        window.location.href = pesapalResult.redirectUrl;
+      } else {
+        setStkError(pesapalResult.message);
       }
     } catch (error: any) {
-      console.error("Co-op Bank STK Push payment error:", error);
+      console.error("Pesapal payment error:", error);
       setStkError(
-        error.response?.data?.data?.ResponseDescription ||
         error.response?.data?.message ||
-        error.message ||
-        "Failed to initiate STK push. Please try again or use another payment method."
+          error.message ||
+          "Failed to start payment. Please try again or use another payment method."
       );
     } finally {
       setIsProcessingStk(false);

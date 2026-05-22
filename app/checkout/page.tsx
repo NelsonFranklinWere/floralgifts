@@ -11,6 +11,7 @@ import { generateWhatsAppLink } from "@/lib/whatsapp";
 import axios from "axios";
 import { CreditCardIcon, DevicePhoneMobileIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 import { Analytics } from "@/lib/analytics";
+import { startPesapalCheckout } from "@/lib/pesapal-checkout";
 
 interface OrderData {
   customer: {
@@ -48,7 +49,7 @@ export default function CheckoutPage() {
   const router = useRouter();
   const { items, getTotal, clearCart } = useCartStore();
   const [orderData, setOrderData] = useState<OrderData | null>(null);
-  const [paymentMethod, setPaymentMethod] = useState<"stk" | "coopbank" | "till" | "paybill" | "pesapal" | null>("stk");
+  const [paymentMethod, setPaymentMethod] = useState<"stk" | "till" | "paybill" | "pesapal" | null>("stk");
   const [stkPhone, setStkPhone] = useState("");
   const [stkError, setStkError] = useState("");
   const [phone, setPhone] = useState("");
@@ -177,7 +178,6 @@ export default function CheckoutPage() {
     console.log("Payment method check:", {
       paymentMethod,
       isSTK: paymentMethod === "stk",
-      isCoopBank: paymentMethod === "coopbank",
       isPesapal: paymentMethod === "pesapal",
       stkPhone: stkPhone ? "provided" : "missing"
     });
@@ -193,16 +193,24 @@ export default function CheckoutPage() {
         return;
       }
       
-      // STK Push: Handle both M-Pesa STK and Co-op Bank options
-      if (paymentMethod === "stk" || paymentMethod === "coopbank") {
-        console.log(`${paymentMethod === "coopbank" ? "Co-op Bank" : "M-Pesa"} STK Push selected - using Co-op Bank API`);
-        if (!stkPhone || !validatePhone(stkPhone)) {
-          setStkError("Please enter a valid M-Pesa phone number (format: 2547XXXXXXXX)");
+      // M-Pesa / card: Pesapal hosted checkout (M-Pesa, Visa, etc.)
+      if (paymentMethod === "stk" || paymentMethod === "pesapal") {
+        const payPhone = formatPhone(
+          stkPhone || phoneNumber || phone
+        );
+        if (!payPhone || !validatePhone(payPhone)) {
+          setStkError(
+            "Please enter a valid phone number (format: 2547XXXXXXXX)"
+          );
           setIsProcessing(false);
           return;
         }
 
-        // Create order in database
+        const customerName =
+          firstName && lastName
+            ? `${firstName} ${lastName}`.trim()
+            : "Customer";
+
         const orderResponse = await axios.post("/api/orders", {
           items: (orderData?.items || items).map((item) => ({
             productId: item.id,
@@ -212,88 +220,56 @@ export default function CheckoutPage() {
             options: item.options,
           })),
           total: total,
-          customer_name: firstName && lastName ? `${firstName} ${lastName}`.trim() : "Customer",
-          phone: formatPhone(stkPhone),
+          customer_name: customerName,
+          phone: payPhone,
           email: email || null,
           delivery_address: address || "To be confirmed",
           delivery_city: city || "Nairobi",
           delivery_date: new Date().toISOString(),
-          payment_method: "mpesa",
-          notes: `M-Pesa STK Push payment initiated. Phone: ${stkPhone}`,
+          payment_method: paymentMethod === "pesapal" ? "card" : "mpesa",
+          notes:
+            paymentMethod === "pesapal"
+              ? "Card payment via Pesapal"
+              : `M-Pesa payment via Pesapal. Phone: ${payPhone}`,
         });
 
         const orderId = orderResponse.data.id;
 
-        // Co-op Bank STK Push only - no Pesapal, no redirect to PayPal
-        console.log("💳 Checkout: Initiating Co-op Bank STK Push:", {
+        const pesapalResult = await startPesapalCheckout({
           orderId,
-          phone: stkPhone,
-          amount: total
+          totalCents: total,
+          customerName,
+          phone: payPhone,
+          email: email || null,
+          address: address || "To be confirmed",
+          apartment,
+          city: city || "Nairobi",
+          postalCode,
         });
 
-        const stkResponse = await axios.post("/api/coopbank/stkpush", {
-          MobileNumber: stkPhone,
-          Amount: total, // Amount in cents (API will convert to KES)
-          MessageReference: `FL-${orderId.slice(0, 8)}`,
-          Narration: `Floral Whispers Order #${orderId.slice(0, 8)}`,
-          OrderId: orderId, // So callback can find order and we record payment on dashboard
-        });
-
-        console.log("💳 Checkout: Co-op Bank STK Push response:", {
-          success: stkResponse.data?.success,
-          responseCode: stkResponse.data?.data?.ResponseCode,
-          responseDescription: stkResponse.data?.data?.ResponseDescription,
-          fullResponse: stkResponse.data
-        });
-
-        // Co-op Bank success: ResponseCode "00" typically means success
-        // Also accept if success is true and ResponseCode is missing (API might return success without ResponseCode)
-        // NEVER redirect to Pesapal/PayPal for STK push
-        const isSuccess = stkResponse.data?.success && 
-          (stkResponse.data?.data?.ResponseCode === "00" || 
-           !stkResponse.data?.data?.ResponseCode); // Accept if no ResponseCode but success is true
-        
-        if (isSuccess) {
-          console.log("✅ Checkout: Co-op Bank STK Push initiated successfully:", {
-            orderId,
-            messageReference: stkResponse.data.data.MessageReference,
-            responseDescription: stkResponse.data.data.ResponseDescription
-          });
-          
-          // Store order ID in session for callback handling
-          sessionStorage.setItem("pendingOrder", JSON.stringify({
-            id: orderId,
-            total: total,
-            paymentMethod: "mpesa",
-            messageReference: stkResponse.data.data.MessageReference,
-          }));
-
-          // Track the purchase attempt
-          Analytics.trackPurchase(orderId, total, "mpesa");
-
-          // Redirect to success page with pending status
-          // The success page will poll for payment confirmation
-          router.push(`/order/success?id=${orderId}&pending=true`);
-          return;
-        } else {
-          console.error("❌ Checkout: Co-op Bank STK Push failed or unexpected response:", {
-            success: stkResponse.data?.success,
-            responseCode: stkResponse.data?.data?.ResponseCode,
-            responseDescription: stkResponse.data?.data?.ResponseDescription,
-            message: stkResponse.data?.message,
-            fullResponse: stkResponse.data
-          });
-          
-          // Show error but NEVER redirect to Pesapal/PayPal
-          setStkError(
-            stkResponse.data?.data?.ResponseDescription || 
-            stkResponse.data?.message || 
-            "Failed to initiate M-Pesa STK push. Please try again."
-          );
+        if (!pesapalResult.ok) {
+          setStkError(pesapalResult.message);
           setIsProcessing(false);
-          return; // CRITICAL: Return here to prevent any fallthrough
+          return;
         }
-        // STK block ends - never fall through to Pesapal
+
+        sessionStorage.setItem(
+          "pendingOrder",
+          JSON.stringify({
+            id: orderId,
+            total,
+            paymentMethod: "pesapal",
+            orderTrackingId: pesapalResult.orderTrackingId,
+          })
+        );
+
+        Analytics.trackPurchase(
+          orderId,
+          total,
+          paymentMethod === "pesapal" ? "card" : "mpesa"
+        );
+
+        window.location.href = pesapalResult.redirectUrl;
         return;
       }
 
@@ -353,99 +329,7 @@ export default function CheckoutPage() {
         return;
       }
 
-      // Card payment only: Pesapal/PayPal redirect (STK never reaches here)
-      // CRITICAL GUARD: Only execute if paymentMethod is explicitly "pesapal"
-      if (paymentMethod === "pesapal") {
-        console.log("💳 Checkout: Initiating Pesapal card payment (NOT STK):", {
-          paymentMethod,
-          total
-        });
-        // Create order in database
-        const orderResponse = await axios.post("/api/orders", {
-          items: (orderData?.items || items).map((item) => ({
-            productId: item.id,
-            name: item.name,
-            quantity: item.quantity,
-            price: item.price,
-            options: item.options,
-          })),
-          total: total,
-          customer_name: firstName && lastName ? `${firstName} ${lastName}`.trim() : "Customer",
-          phone: formatPhone(phoneNumber || phone),
-          email: email || null,
-          delivery_address: address || "To be confirmed",
-          delivery_city: city || "Nairobi",
-          delivery_date: new Date().toISOString(),
-          payment_method: "card",
-          notes: `Card payment initiated via Pesapal`,
-        });
-
-        const orderId = orderResponse.data.id;
-
-        // Prepare billing address for Pesapal
-        const billingAddress = {
-          email_address: email || "",
-          phone_number: formatPhone(phoneNumber || phone),
-          country_code: "KE",
-          first_name: firstName || "Customer",
-          middle_name: "",
-          last_name: lastName || "",
-          line_1: address || "To be confirmed",
-          line_2: apartment || "",
-          city: city || "Nairobi",
-          state: city || "Nairobi",
-          postal_code: postalCode || "",
-          zip_code: postalCode || "",
-        };
-
-        // Initiate Pesapal payment
-        const callbackUrl = typeof window !== 'undefined'
-          ? `${window.location.origin}/api/pesapal/callback`
-          : "https://www.floralwhispersgifts.co.ke/api/pesapal/callback";
-
-        const pesapalResponse = await axios.post("/api/pesapal/payment", {
-          orderId: orderId,
-          amount: total / 100, // Convert cents to KES
-          currency: "KES",
-          description: `Floral Whispers Gifts Order #${orderId.slice(0, 8)}`,
-          callbackUrl: callbackUrl,
-          customerEmail: email || null,
-          customerPhone: formatPhone(phoneNumber || phone),
-          customerName: firstName && lastName ? `${firstName} ${lastName}`.trim() : "Customer",
-          billingAddress: billingAddress,
-        });
-
-        if (pesapalResponse.data.success && pesapalResponse.data.data?.redirect_url) {
-          // HARD GUARD: Never redirect to PayPal/Pesapal if user chose STK
-          const redirectUrl = pesapalResponse.data.data.redirect_url;
-          if (paymentMethod !== "pesapal") {
-            console.error("BLOCKED: Attempted Pesapal redirect but paymentMethod is", paymentMethod);
-            setError("Payment method mismatch. Please try again.");
-            setIsProcessing(false);
-            return;
-          }
-          // Store order ID in session for callback handling
-          sessionStorage.setItem("pendingOrder", JSON.stringify({
-            id: orderId,
-            total: total,
-            paymentMethod: "pesapal",
-            orderTrackingId: pesapalResponse.data.data.order_tracking_id,
-          }));
-
-          // Track the purchase attempt
-          Analytics.trackPurchase(orderId, total, "card");
-
-          // Redirect to Pesapal payment page (card only)
-          window.location.href = redirectUrl;
-          return;
-        } else {
-          setError(pesapalResponse.data.message || "Failed to initiate card payment. Please try again.");
-          setIsProcessing(false);
-          return;
-        }
-      }
-
-      // Should not reach here: stk/till/paybill return above; only pesapal uses redirect
+      // Should not reach here: stk/pesapal/till/paybill return above
       setError("Please select a payment method.");
       setIsProcessing(false);
     } catch (err: any) {
@@ -457,19 +341,19 @@ export default function CheckoutPage() {
         stack: err.stack
       });
       
-      // For STK push errors, show specific error message
-      if (paymentMethod === "stk") {
+      if (paymentMethod === "stk" || paymentMethod === "pesapal") {
         setStkError(
-          err.response?.data?.data?.ResponseDescription ||
           err.response?.data?.message ||
-          err.message ||
-          "Failed to initiate M-Pesa STK push. Please try again."
+            err.message ||
+            "Failed to start Pesapal payment. Please try again."
         );
       } else {
-        setError(err.response?.data?.message || err.message || "An error occurred. Please try again.");
+        setError(
+          err.response?.data?.message ||
+            err.message ||
+            "An error occurred. Please try again."
+        );
       }
-      
-      // CRITICAL: Never redirect to Pesapal/PayPal on error
       setIsProcessing(false);
       return;
     } finally {
@@ -587,7 +471,7 @@ export default function CheckoutPage() {
                         <div className="w-6 h-5 bg-[#007C42] rounded flex items-center justify-center">
                           <span className="text-white font-bold text-[10px]">M-PESA</span>
                         </div>
-                        <span className="font-medium text-sm text-brand-gray-900">M-Pesa STK Push</span>
+                        <span className="font-medium text-sm text-brand-gray-900">M-Pesa (Pesapal)</span>
                       </div>
                     </div>
                   </label>
@@ -619,70 +503,14 @@ export default function CheckoutPage() {
                       </div>
                       <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
                         <p className="text-xs text-green-800">
-                          <strong>How it works:</strong> Enter your M-Pesa phone number and you&apos;ll receive a payment prompt on your phone. Complete the payment on your phone to finish your order.
+                          <strong>How it works:</strong> You&apos;ll go to Pesapal&apos;s secure checkout. Choose M-Pesa and enter your PIN on your phone to complete payment.
                         </p>
                       </div>
                     </div>
                   )}
                 </div>
 
-                {/* Co-op Bank STK Push */}
-                <div>
-                  <label className="flex items-start gap-3 p-4 border border-brand-gray-200 rounded-md cursor-pointer hover:bg-brand-gray-50">
-                    <input
-                      type="radio"
-                      name="payment"
-                      value="coopbank"
-                      checked={paymentMethod === "coopbank"}
-                      onChange={() => setPaymentMethod("coopbank")}
-                      className="w-4 h-4 mt-1 text-brand-green focus:ring-brand-green"
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-5 bg-gradient-to-br from-green-600 to-green-800 rounded flex items-center justify-center">
-                          <span className="text-white font-bold text-[8px]">COOP</span>
-                        </div>
-                        <span className="font-medium text-sm text-brand-gray-900">Co-op Bank STK Push</span>
-                        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Direct Bank</span>
-                      </div>
-                    </div>
-                  </label>
-                  {paymentMethod === "coopbank" && (
-                    <div className="mt-3 ml-7 space-y-3">
-                      <div className="p-3 bg-brand-gray-50 rounded-lg border border-brand-gray-200">
-                        <p className="text-xs text-brand-gray-700 mb-3">
-                          Enter your M-Pesa phone number for Co-op Bank payment:
-                        </p>
-                        <div>
-                          <label htmlFor="coopbank-phone-checkout" className="block text-xs font-medium text-brand-gray-900 mb-1.5">
-                            M-Pesa Phone Number <span className="text-brand-red">*</span>
-                          </label>
-                          <input
-                            id="coopbank-phone-checkout"
-                            type="tel"
-                            value={stkPhone}
-                            onChange={(e) => {
-                              setStkPhone(e.target.value);
-                              setStkError("");
-                            }}
-                            placeholder="2547XXXXXXXX"
-                            className="w-full px-3 py-2 border border-brand-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent"
-                          />
-                          {stkError && (
-                            <p className="mt-1 text-xs text-brand-red">{stkError}</p>
-                          )}
-                        </div>
-                      </div>
-                      <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-                        <p className="text-xs text-green-800">
-                          <strong>How it works:</strong> Co-op Bank will send you an M-Pesa payment prompt. Complete the payment on your phone to finish your order. This is a direct bank payment method.
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Card Payments (Disabled) */}
+                {/* Card via Pesapal */}
                 <div>
                   <label className="flex items-start gap-3 p-4 border border-brand-gray-200 rounded-md cursor-pointer hover:bg-brand-gray-50">
                     <input
@@ -698,7 +526,7 @@ export default function CheckoutPage() {
                         <div className="w-6 h-5 bg-white border border-gray-300 rounded flex items-center justify-center px-1">
                           <span className="text-[#1434CB] font-bold text-[10px]">VISA</span>
                         </div>
-                        <span className="font-medium text-sm text-brand-gray-900">Credit/Debit Card</span>
+                        <span className="font-medium text-sm text-brand-gray-900">Card (Pesapal)</span>
                       </div>
                     </div>
                   </label>
@@ -796,17 +624,21 @@ export default function CheckoutPage() {
                 <button
                   type="button"
                   onClick={handleSTKPush}
-                  disabled={isProcessing || ((paymentMethod === "stk" || paymentMethod === "coopbank") && !stkPhone)}
+                  disabled={
+                    isProcessing ||
+                    ((paymentMethod === "stk" || paymentMethod === "pesapal") &&
+                      !stkPhone &&
+                      !phoneNumber &&
+                      !phone)
+                  }
                   className="w-full mt-4 bg-brand-green text-white px-6 py-3 rounded-md font-semibold hover:bg-brand-green/90 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isProcessing
                     ? "Processing..."
                     : paymentMethod === "stk"
                       ? `Pay with M-Pesa - ${formatCurrency(total)}`
-                      : paymentMethod === "coopbank"
-                        ? `Pay with Co-op Bank - ${formatCurrency(total)}`
-                        : paymentMethod === "pesapal"
-                          ? `Pay with Card - ${formatCurrency(total)}`
+                      : paymentMethod === "pesapal"
+                        ? `Pay with Card - ${formatCurrency(total)}`
                           : paymentMethod === "till" || paymentMethod === "paybill"
                             ? `Complete Order - ${formatCurrency(total)}`
                           : "Complete Payment"}

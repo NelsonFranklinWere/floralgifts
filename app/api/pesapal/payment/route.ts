@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { initiatePesapalPayment, PesapalPaymentParams } from "@/lib/pesapal";
+import { updateOrder } from "@/lib/db";
 
 export async function POST(request: NextRequest) {
   try {
@@ -78,6 +79,12 @@ export async function POST(request: NextRequest) {
     };
 
     const result = await initiatePesapalPayment(params);
+
+    if (result.order_tracking_id) {
+      await updateOrder(orderId, {
+        pesapal_order_tracking_id: result.order_tracking_id,
+      });
+    }
 
     return NextResponse.json({
       success: true,
