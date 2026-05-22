@@ -183,7 +183,54 @@ export function convertBlogPost(dbPost: BlogPostDB): BlogPost {
 }
 
 // Server-side functions (for use in server components)
+import { cache } from "react";
+import { unstable_cache } from "next/cache";
+import { CACHE_TAG_BLOG } from "./cache-tags";
 import { supabase } from "./supabase";
+
+const BLOG_LIST_SELECT =
+  "id,slug,title,excerpt,content,author,published_at,image,category,tags,read_time,featured";
+
+const loadBlogPosts = unstable_cache(
+  async (): Promise<BlogPost[]> => {
+    try {
+      const { data, error } = await supabase
+        .from("blog_posts")
+        .select(BLOG_LIST_SELECT)
+        .order("published_at", { ascending: false });
+
+      if (error || !data) return FALLBACK_BLOG_POSTS;
+
+      const dbPosts = data.map((post) => convertBlogPost(post as BlogPostDB));
+      const dbSlugs = new Set(dbPosts.map((p) => p.slug));
+      const missingFallback = FALLBACK_BLOG_POSTS.filter((p) => !dbSlugs.has(p.slug));
+      return [...dbPosts, ...missingFallback];
+    } catch (error) {
+      console.error("Error fetching blog posts:", error);
+      return FALLBACK_BLOG_POSTS;
+    }
+  },
+  ["blog-posts"],
+  { revalidate: 600, tags: [CACHE_TAG_BLOG] }
+);
+
+export const getBlogPosts = cache(async function getBlogPosts(filters?: {
+  category?: string;
+  tag?: string;
+  featured?: boolean;
+}): Promise<BlogPost[]> {
+  let posts = await loadBlogPosts();
+  if (filters?.category) {
+    posts = posts.filter((p) => p.category === filters.category);
+  }
+  if (filters?.tag) {
+    posts = posts.filter((p) => p.tags?.includes(filters.tag!));
+  }
+  if (filters?.featured !== undefined) {
+    posts = posts.filter((p) => p.featured === filters.featured);
+  }
+  return posts;
+});
 
 export async function getBlogPost(slug: string): Promise<BlogPost | undefined> {
   try {
@@ -200,43 +247,6 @@ export async function getBlogPost(slug: string): Promise<BlogPost | undefined> {
   } catch (error) {
     console.error("Error fetching blog post:", error);
     return FALLBACK_BLOG_POSTS.find((post) => post.slug === slug);
-  }
-}
-
-export async function getBlogPosts(filters?: {
-  category?: string;
-  tag?: string;
-  featured?: boolean;
-}): Promise<BlogPost[]> {
-  try {
-    let query = supabase
-      .from("blog_posts")
-      .select("*")
-      .order("published_at", { ascending: false });
-
-    if (filters?.category) {
-      query = query.eq("category", filters.category);
-    }
-
-    if (filters?.tag) {
-      query = query.contains("tags", [filters.tag]);
-    }
-
-    if (filters?.featured !== undefined) {
-      query = query.eq("featured", filters.featured);
-    }
-
-    const { data, error } = await query;
-
-    if (error || !data) return FALLBACK_BLOG_POSTS;
-
-    const dbPosts = data.map((post) => convertBlogPost(post as BlogPostDB));
-    const dbSlugs = new Set(dbPosts.map((p) => p.slug));
-    const missingFallback = FALLBACK_BLOG_POSTS.filter((p) => !dbSlugs.has(p.slug));
-    return [...dbPosts, ...missingFallback];
-  } catch (error) {
-    console.error("Error fetching blog posts:", error);
-    return FALLBACK_BLOG_POSTS;
   }
 }
 

@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { getProductById } from "@/lib/db";
 import { supabaseAdmin } from "@/lib/supabase";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { CACHE_TAG_PRODUCTS } from "@/lib/cache-tags";
 
 export const dynamic = 'force-dynamic';
 
@@ -70,6 +71,7 @@ export async function PUT(
     const oldProduct = await getProductById(id);
     
     // Revalidate product pages
+    revalidateTag(CACHE_TAG_PRODUCTS);
     revalidatePath("/");
     revalidatePath("/collections");
     revalidatePath("/collections/flowers");
@@ -114,8 +116,8 @@ export async function DELETE(
       return NextResponse.json({ message: error.message }, { status: 400 });
     }
 
-    // Revalidate product pages
     if (product) {
+      revalidateTag(CACHE_TAG_PRODUCTS);
       revalidatePath("/");
       revalidatePath("/collections");
       revalidatePath("/collections/flowers");

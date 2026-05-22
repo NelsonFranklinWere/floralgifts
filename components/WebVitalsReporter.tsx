@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 
 /**
- * Collects Core Web Vitals (LCP, CLS, FCP, TTFB) and reports them to Google Analytics.
+ * Collects Core Web Vitals (LCP, CLS, FCP, TTFB, INP) and reports them to Google Analytics.
  */
 export default function WebVitalsReporter() {
   useEffect(() => {
@@ -93,6 +93,32 @@ export default function WebVitalsReporter() {
           ttfb <= 800 ? "good" : ttfb <= 1800 ? "needs-improvement" : "poor"
         );
       }
+    } catch {
+      /* unsupported */
+    }
+
+    // INP — Interaction to Next Paint (critical on mobile Kenya traffic)
+    try {
+      let worstInp = 0;
+      const inpObs = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          const e = entry as PerformanceEventTiming;
+          const duration = e.duration ?? 0;
+          if (duration > worstInp) worstInp = duration;
+        }
+        if (worstInp > 0) {
+          reportMetric(
+            "INP",
+            worstInp,
+            worstInp <= 200
+              ? "good"
+              : worstInp <= 500
+                ? "needs-improvement"
+                : "poor"
+          );
+        }
+      });
+      inpObs.observe({ type: "event", buffered: true, durationThreshold: 40 } as PerformanceObserverInit);
     } catch {
       /* unsupported */
     }

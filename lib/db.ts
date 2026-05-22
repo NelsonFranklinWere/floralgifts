@@ -1,5 +1,11 @@
 import { cache } from "react";
+import { unstable_cache } from "next/cache";
+import { CACHE_TAG_PRODUCTS } from "./cache-tags";
 import { supabase, supabaseAdmin } from "./supabase";
+
+/** Listing columns only — avoids shipping full descriptions on catalog pages. */
+const PRODUCT_CATALOG_SELECT =
+  "id,slug,title,short_description,price,category,subcategory,tags,teddy_size,teddy_color,images,included_items,upsells,stock,created_at,updated_at";
 
 export interface Product {
   id: string;
@@ -51,7 +57,92 @@ export interface Order {
   updated_at: string;
 }
 
-// Deduplicate identical Supabase queries within a single server render.
+function normalizeProductRow(row: Record<string, unknown>): Product {
+  return {
+    ...(row as Product),
+    description: (row.description as string) ?? "",
+    tags: (row.tags as string[]) || [],
+    images: (row.images as string[]) || [],
+    included_items: (row.included_items as Product["included_items"]) || null,
+    upsells: (row.upsells as string[]) || null,
+    subcategory: (row.subcategory as string) || null,
+  };
+}
+
+function applyProductFilters(
+  products: Product[],
+  filters?: {
+    category?: string;
+    subcategory?: string;
+    tags?: string[];
+    teddy_size?: number[];
+    teddy_color?: string[];
+  }
+): Product[] {
+  let result = products;
+  if (filters?.category) {
+    result = result.filter((p) => p.category === filters.category);
+  }
+  if (filters?.subcategory) {
+    result = result.filter((p) => p.subcategory === filters.subcategory);
+  }
+  if (filters?.tags && filters.tags.length > 0) {
+    result = result.filter(
+      (p) =>
+        p.tags &&
+        filters.tags!.some((tag) =>
+          p.tags.some((t) => t.toLowerCase().includes(tag.toLowerCase()))
+        )
+    );
+  }
+  if (filters?.teddy_size && filters.teddy_size.length > 0) {
+    result = result.filter(
+      (p) => p.teddy_size != null && filters.teddy_size!.includes(p.teddy_size)
+    );
+  }
+  if (filters?.teddy_color && filters.teddy_color.length > 0) {
+    result = result.filter(
+      (p) => p.teddy_color != null && filters.teddy_color!.includes(p.teddy_color)
+    );
+  }
+  return result;
+}
+
+/** One cached DB round-trip per deploy window; filtered in memory per request. */
+const loadProductsCatalog = unstable_cache(
+  async (): Promise<Product[]> => {
+    try {
+      const { data, error } = await (supabaseAdmin.from("products") as any)
+        .select(PRODUCT_CATALOG_SELECT)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        const err = error as { message?: string; code?: string };
+        if (typeof window === "undefined") {
+          console.warn("[getProducts] Supabase error:", err.message || err.code || "Unknown");
+        }
+        return [];
+      }
+
+      return (data || []).map((row: Record<string, unknown>) =>
+        normalizeProductRow(row)
+      );
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      if (typeof window === "undefined") {
+        console.warn("[getProducts] Failed:", msg);
+      }
+      return [];
+    }
+  },
+  ["products-catalog"],
+  { revalidate: 300, tags: [CACHE_TAG_PRODUCTS] }
+);
+
+export const getAllProductsCatalog = cache(async (): Promise<Product[]> => {
+  return loadProductsCatalog();
+});
+
 export const getProducts = cache(async function getProducts(filters?: {
   category?: string;
   subcategory?: string;
@@ -59,58 +150,8 @@ export const getProducts = cache(async function getProducts(filters?: {
   teddy_size?: number[];
   teddy_color?: string[];
 }): Promise<Product[]> {
-  try {
-    // Use admin client on the server so product listing is not blocked by RLS
-    let query = (supabaseAdmin.from("products") as any)
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    if (filters?.category) {
-      query = query.eq("category", filters.category);
-    }
-
-    if (filters?.subcategory) {
-      query = query.eq("subcategory", filters.subcategory);
-    }
-
-    if (filters?.tags && filters.tags.length > 0) {
-      query = query.contains("tags", filters.tags);
-    }
-
-    if (filters?.teddy_size && filters.teddy_size.length > 0) {
-      query = query.in("teddy_size", filters.teddy_size);
-    }
-
-    if (filters?.teddy_color && filters.teddy_color.length > 0) {
-      query = query.in("teddy_color", filters.teddy_color);
-    }
-
-    const { data, error } = await query;
-
-    if (error) {
-      const err = error as any;
-      const msg = err?.message ?? err?.error_description ?? String(error);
-      if (typeof window === "undefined") {
-        console.warn("[getProducts] Supabase error:", msg || err?.code || "Unknown");
-      }
-      return [];
-    }
-
-    return (data || []).map((row: any) => ({
-      ...row,
-      tags: row.tags || [],
-      images: row.images || [],
-      included_items: row.included_items || null,
-      upsells: row.upsells || null,
-      subcategory: row.subcategory || null,
-    })) as Product[];
-  } catch (err: any) {
-    const msg = err?.message ?? err?.cause?.message ?? String(err);
-    if (typeof window === "undefined") {
-      console.warn("[getProducts] Failed (using fallbacks):", msg || "Network/connection error");
-    }
-    return [];
-  }
+  const catalog = await getAllProductsCatalog();
+  return applyProductFilters(catalog, filters);
 });
 
 export const getProductBySlug = cache(async function getProductBySlug(

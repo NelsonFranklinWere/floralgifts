@@ -7,22 +7,23 @@ import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
-import VisitorPing from "@/components/VisitorPing";
-import WebVitalsReporter from "@/components/WebVitalsReporter";
+import DeferredClientWidgets from "@/components/layout/DeferredClientWidgets";
 import { GA_MEASUREMENT_ID, SHOP_INFO } from "@/lib/constants";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "600", "700"],
   variable: "--font-heading",
   display: "swap",
+  preload: true,
 });
 
 const lato = Lato({
   subsets: ["latin"],
-  weight: ["300", "400", "700", "900"],
+  weight: ["400", "700"],
   variable: "--font-body",
   display: "swap",
+  preload: true,
 });
 
 const robotoMono = Roboto_Mono({
@@ -33,16 +34,18 @@ const robotoMono = Roboto_Mono({
 
 const dancingScript = Dancing_Script({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "700"],
   variable: "--font-dancing",
   display: "swap",
+  preload: false,
 });
 
 const playfairDisplay = Playfair_Display({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: ["400", "600", "700"],
   variable: "--font-playfair",
   display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -422,6 +425,8 @@ export default function RootLayout({
         {/* Preconnect to Supabase CDN for faster image loading */}
         <link rel="preconnect" href="https://supabase.co" />
         <link rel="dns-prefetch" href="https://supabase.co" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://embed.tawk.to" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
@@ -465,8 +470,7 @@ export default function RootLayout({
           `,
           }}
         />
-        <VisitorPing />
-        <WebVitalsReporter />
+        <DeferredClientWidgets />
         {/* Tawk.to live chat - left side so it doesn't block WhatsApp */}
         <Script id="tawk-to" strategy="lazyOnload">
           {`var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();

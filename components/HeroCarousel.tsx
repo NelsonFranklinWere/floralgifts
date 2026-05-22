@@ -3,99 +3,24 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { DEFAULT_HERO_SLIDES, type HeroSlide } from "@/lib/heroSlides";
 
-type HeroSlide = {
-  id: string | number;
-  image: string;
-  title: string;
-  subtitle?: string;
-  ctaText: string;
-  ctaLink: string;
+type HeroCarouselProps = {
+  /** Server-provided slides — avoids client API fetch and improves LCP/TTFB. */
+  initialSlides?: HeroSlide[];
 };
 
-// Default slides used as a fallback if the API/database is empty or fails
-const defaultHeroSlides: HeroSlide[] = [
-  {
-    id: 1,
-    image: "/images/products/flowers/BouquetFlowers1.jpg",
-    title: "Flower Delivery Nairobi | Red, Pink & White Roses",
-    subtitle:
-      "Send red roses, pink roses and white bouquets across Nairobi — same-day delivery to CBD, Westlands, Karen, Lavington and more.",
-    ctaText: "Shop Flowers",
-    ctaLink: "/collections/flowers",
-  },
-  {
-    id: 2,
-    image: "/images/products/hampers/giftamper.jpg",
-    title: "Gift Hampers Nairobi | Flowers, Chocolates & Wine",
-    subtitle:
-      "Luxury gift hampers with roses, chocolates and wine — perfect for birthdays, anniversaries and thank-you gifts in Nairobi.",
-    ctaText: "Shop Gift Hampers",
-    ctaLink: "/collections/gift-hampers",
-  },
-  {
-    id: 3,
-    image: "/images/products/teddies/Teddybear1.jpg",
-    title: "Teddy Bears Nairobi | Cuddly Gifts in Red, Pink & White",
-    subtitle:
-      "Soft teddy bears from 25cm–200cm in romantic red, pink, white and brown. Pair with flowers for unforgettable Nairobi surprises.",
-    ctaText: "Shop Teddy Bears",
-    ctaLink: "/collections/teddy-bears",
-  },
-  {
-    id: 4,
-    image: "/images/products/Chocolates/Chocolates1.jpg",
-    title: "Chocolates & Sweet Gifts Nairobi",
-    subtitle:
-      "Ferrero Rocher and premium chocolates that match your red roses, pink and white bouquets and hampers — delivered same day in Nairobi.",
-    ctaText: "Shop Chocolates",
-    ctaLink: "/collections/chocolates",
-  },
-];
-
-export default function HeroCarousel() {
+export default function HeroCarousel({ initialSlides }: HeroCarouselProps) {
+  const slides =
+    initialSlides && initialSlides.length > 0 ? initialSlides : DEFAULT_HERO_SLIDES;
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [slides, setSlides] = useState<HeroSlide[]>(defaultHeroSlides);
 
   useEffect(() => {
-    // Fetch dynamic slides from API, but always keep a safe fallback
-    async function fetchSlides() {
-      try {
-        const response = await fetch("/api/admin/hero-slides", {
-          cache: "no-store",
-        });
-        if (!response.ok) return;
-        const data = await response.json();
-
-        if (Array.isArray(data) && data.length > 0) {
-          const mapped: HeroSlide[] = data
-            .map((item: any, index: number) => ({
-              id: item.id ?? index,
-              image: item.image,
-              title: item.title,
-              subtitle: item.subtitle,
-              ctaText: item.cta_text,
-              ctaLink: item.cta_link,
-            }))
-            .filter((s) => s.image && s.title && s.ctaText && s.ctaLink);
-
-          if (mapped.length > 0) {
-            setSlides(mapped);
-            setCurrentSlide(0);
-          }
-        }
-      } catch (error) {
-        console.error("Failed to load hero slides, using defaults:", error);
-      }
-    }
-
-    fetchSlides();
-
     const timer = setInterval(() => {
       setCurrentSlide((prev) =>
         slides.length > 0 ? (prev + 1) % slides.length : prev
       );
-    }, 5000); // Change slide every 5 seconds
+    }, 5000);
 
     return () => clearInterval(timer);
   }, [slides.length]);
@@ -104,21 +29,8 @@ export default function HeroCarousel() {
     setCurrentSlide(index);
   };
 
-  const goToPrevious = () => {
-    setCurrentSlide((prev) =>
-      slides.length > 0 ? (prev - 1 + slides.length) % slides.length : prev
-    );
-  };
-
-  const goToNext = () => {
-    setCurrentSlide((prev) =>
-      slides.length > 0 ? (prev + 1) % slides.length : prev
-    );
-  };
-
   return (
     <section className="relative h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px] overflow-hidden">
-      {/* Slides */}
       {slides.map((slide, index) => (
         <div
           key={slide.id}
@@ -139,7 +51,6 @@ export default function HeroCarousel() {
           <div className="absolute inset-0 bg-black/40 flex items-center">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 w-full">
               <div className="flex items-center justify-between gap-4 md:gap-8">
-                {/* Left side - Text content */}
                 <div className="text-left text-white max-w-2xl flex-1">
                   <h2 className="font-heading font-bold text-2xl md:text-3xl lg:text-4xl xl:text-5xl mb-2 md:mb-3 lg:mb-4">
                     {slide.title}
@@ -151,18 +62,19 @@ export default function HeroCarousel() {
                   )}
                   <Link
                     href={slide.ctaLink}
-                    prefetch={true}
+                    prefetch={index === currentSlide}
                     className="btn-primary inline-block text-xs md:text-sm lg:text-base px-4 md:px-6 lg:px-8 py-2 md:py-3 lg:py-4"
                   >
                     {slide.ctaText}
                   </Link>
                 </div>
-                
-                {/* Right side - Two overlapping images */}
+
                 <div className="hidden md:flex items-center justify-end flex-shrink-0 relative">
-                    <div className="relative w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48">
-                    {/* First image - behind, positioned at top-left, bottom-right corner overlaps second image's top-left by 68px */}
-                    <div className="absolute top-0 left-0 w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-lg overflow-hidden shadow-lg border-2 border-white/20 z-10" style={{ transform: 'translate(68px, 68px)' }}>
+                  <div className="relative w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48">
+                    <div
+                      className="absolute top-0 left-0 w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-lg overflow-hidden shadow-lg border-2 border-white/20 z-10"
+                      style={{ transform: "translate(68px, 68px)" }}
+                    >
                       <Image
                         src={slides[(index + 1) % slides.length].image}
                         alt={slides[(index + 1) % slides.length].title}
@@ -173,8 +85,10 @@ export default function HeroCarousel() {
                         loading="lazy"
                       />
                     </div>
-                    {/* Second image - in front, positioned so its top-left corner overlaps first image's bottom-right corner by 68px */}
-                    <div className="absolute bottom-0 right-0 w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-lg overflow-hidden shadow-lg border-2 border-white/20 z-20" style={{ transform: 'translate(-68px, -68px)' }}>
+                    <div
+                      className="absolute bottom-0 right-0 w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-lg overflow-hidden shadow-lg border-2 border-white/20 z-20"
+                      style={{ transform: "translate(-68px, -68px)" }}
+                    >
                       <Image
                         src={slides[(index + 2) % slides.length].image}
                         alt={slides[(index + 2) % slides.length].title}
@@ -193,11 +107,11 @@ export default function HeroCarousel() {
         </div>
       ))}
 
-      {/* Dots Indicator */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
         {slides.map((_, index) => (
           <button
             key={index}
+            type="button"
             onClick={() => goToSlide(index)}
             className={`w-3 h-3 rounded-full transition-all ${
               index === currentSlide
@@ -211,4 +125,3 @@ export default function HeroCarousel() {
     </section>
   );
 }
-

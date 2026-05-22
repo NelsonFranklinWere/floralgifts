@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
+import { CACHE_TAG_HERO_SLIDES } from "@/lib/cache-tags";
 import { supabaseAdmin } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
@@ -67,6 +69,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Failed to create hero slide" }, { status: 500 });
     }
 
+    revalidateTag(CACHE_TAG_HERO_SLIDES);
     return NextResponse.json(data, { status: 201 });
   } catch (error) {
     console.error("Unexpected error creating hero slide:", error);

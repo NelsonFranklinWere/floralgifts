@@ -1,11 +1,14 @@
 import { Metadata } from "next";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import Image from "next/image";
+import { Suspense } from "react";
+import { preload } from "react-dom";
 import JsonLd from "@/components/JsonLd";
 import HeroCarousel from "@/components/HeroCarousel";
 import ProductCard from "@/components/ProductCard";
-import RotatingProductSection from "@/components/RotatingProductSection";
-import { getProducts } from "@/lib/db";
+import ProductSectionSkeleton from "@/components/ProductSectionSkeleton";
+import { getAllProductsCatalog } from "@/lib/db";
 import { getPredefinedProducts } from "@/lib/predefinedProducts";
 import { getBlogPosts } from "@/lib/blogData";
 import { format } from "date-fns";
@@ -13,7 +16,23 @@ import { SITE_WIDE_KEYWORDS } from "@/lib/seo-keywords";
 import { SHOP_INFO } from "@/lib/constants";
 import { getFeaturedCaseStudies } from "@/lib/case-studies";
 import CaseStudyCard from "@/components/CaseStudyCard";
-import HomeReviewsSection from "@/components/reviews/HomeReviewsSection";
+import { getHeroSlides } from "@/lib/heroSlides";
+
+const RotatingProductSection = dynamic(
+  () => import("@/components/RotatingProductSection"),
+  { loading: () => <ProductSectionSkeleton /> }
+);
+
+const HomeReviewsSection = dynamic(
+  () => import("@/components/reviews/HomeReviewsSection"),
+  {
+    loading: () => (
+      <section className="py-16 bg-[#FAF7F2] border-t border-[#F0E8E8]" aria-hidden>
+        <div className="max-w-6xl mx-auto px-4 h-48 bg-gray-100 rounded-xl animate-pulse" />
+      </section>
+    ),
+  }
+);
 
 export const revalidate = 300;
 
@@ -395,17 +414,23 @@ Whether you're celebrating a university graduation, high school completion, or a
 }
 
 export default async function HomePage() {
-  // Fetch all products
-  const [dbFlowers, dbHampers, dbTeddy, dbWines, dbChocolates, dbCards, dbCakes, featuredCaseStudies] = await Promise.all([
-    getProducts({ category: "flowers" }),
-    getProducts({ category: "hampers" }),
-    getProducts({ category: "teddy" }),
-    getProducts({ category: "wines" }),
-    getProducts({ category: "chocolates" }),
-    getProducts({ category: "cards" }),
-    getProducts({ category: "cakes" }),
+  const [catalog, featuredCaseStudies, heroSlides] = await Promise.all([
+    getAllProductsCatalog(),
     getFeaturedCaseStudies(),
+    getHeroSlides(),
   ]);
+
+  if (heroSlides[0]?.image) {
+    preload(heroSlides[0].image, { as: "image", fetchPriority: "high" });
+  }
+
+  const dbFlowers = catalog.filter((p) => p.category === "flowers");
+  const dbHampers = catalog.filter((p) => p.category === "hampers");
+  const dbTeddy = catalog.filter((p) => p.category === "teddy");
+  const dbWines = catalog.filter((p) => p.category === "wines");
+  const dbChocolates = catalog.filter((p) => p.category === "chocolates");
+  const dbCards = catalog.filter((p) => p.category === "cards");
+  const dbCakes = catalog.filter((p) => p.category === "cakes");
 
   // Include predefined products for flowers
   const predefinedFlowers = getPredefinedProducts("flowers");
@@ -702,7 +727,7 @@ export default async function HomePage() {
             </Link>
           </div>
         </section>
-        <HeroCarousel />
+        <HeroCarousel initialSlides={heroSlides} />
 
         {/* Nairobi Gift Hampers */}
         <RotatingProductSection
@@ -1119,7 +1144,9 @@ export default async function HomePage() {
         </section>
 
         {/* Blog Section */}
-        <BlogSection />
+        <Suspense fallback={<ProductSectionSkeleton />}>
+          <BlogSection />
+        </Suspense>
 
         {/* Google (API) → Supabase curated → static fallback */}
         <HomeReviewsSection />

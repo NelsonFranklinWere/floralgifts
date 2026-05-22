@@ -1,4 +1,10 @@
+import { cache } from "react";
+import { unstable_cache } from "next/cache";
+import { CACHE_TAG_CASE_STUDIES } from "./cache-tags";
 import { createClient } from "@/utils/supabase/server";
+
+const CASE_STUDY_CARD_SELECT =
+  "id,title,slug,category,client_first_name,event_type,location,hero_image_url,colour_palette,featured,sort_order,published";
 
 export type CaseStudyColour = {
   name: string;
@@ -74,20 +80,28 @@ export async function getCaseStudyBySlug(
   return (data ?? null) as CaseStudy | null;
 }
 
-// Featured case studies for homepage (max 3)
-export async function getFeaturedCaseStudies(): Promise<CaseStudy[]> {
-  const supabase = createClient();
-  const { data, error } = await supabase
-    .from("case_studies")
-    .select("*")
-    .eq("published", true)
-    .eq("featured", true)
-    .order("sort_order", { ascending: true })
-    .limit(3);
+const loadFeaturedCaseStudies = unstable_cache(
+  async (): Promise<CaseStudy[]> => {
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from("case_studies")
+      .select(CASE_STUDY_CARD_SELECT)
+      .eq("published", true)
+      .eq("featured", true)
+      .order("sort_order", { ascending: true })
+      .limit(3);
 
-  if (error) return [];
-  return (data ?? []) as CaseStudy[];
-}
+    if (error) return [];
+    return (data ?? []) as CaseStudy[];
+  },
+  ["featured-case-studies"],
+  { revalidate: 300, tags: [CACHE_TAG_CASE_STUDIES] }
+);
+
+// Featured case studies for homepage (max 3)
+export const getFeaturedCaseStudies = cache(async (): Promise<CaseStudy[]> => {
+  return loadFeaturedCaseStudies();
+});
 
 // Related case studies (same category, exclude current)
 export async function getRelatedCaseStudies(
