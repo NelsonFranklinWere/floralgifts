@@ -19,7 +19,7 @@ SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhY
 # ============================================
 # For custom domain: https://floralwhispersgifts.co.ke
 # For Vercel default: https://your-app.vercel.app
-NEXT_PUBLIC_BASE_URL=https://floralwhispersgifts.co.ke
+NEXT_PUBLIC_BASE_URL=https://www.floralwhispersgifts.co.ke
 
 # ============================================
 # CO-OP BANK API CONFIGURATION (STK Push - Primary Payment)
@@ -63,7 +63,7 @@ PESAPAL_CONSUMER_SECRET=a/POk+ULP7dJurds2FZkf06isn8=
 PESAPAL_ENV=production
 PESAPAL_IPN_ID=a6b958a3-a851-4521-b148-dadbd540ea64
 # UPDATE THIS AFTER VERCEL DEPLOYMENT to match your domain
-PESAPAL_CALLBACK_URL=https://floralwhispersgifts.co.ke/api/pesapal/callback
+PESAPAL_CALLBACK_URL=https://www.floralwhispersgifts.co.ke/api/pesapal/callback
 
 # ============================================
 # GOOGLE SEARCH CONSOLE (Optional - SEO)
