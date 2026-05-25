@@ -1,8 +1,25 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+const PUBLIC_STAFF_PATHS = ["/staff/login", "/staff/forgot-password", "/staff/reset-password"];
+
 export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+
+  // Staff portal: require session cookie (JWT verified in API routes / StaffShell)
+  if (
+    pathname.startsWith("/staff") &&
+    !PUBLIC_STAFF_PATHS.some((p) => pathname.startsWith(p))
+  ) {
+    const token =
+      request.cookies.get("staff_token")?.value ||
+      request.cookies.get("admin_token")?.value;
+    if (!token) {
+      const loginUrl = new URL("/staff/login", request.url);
+      loginUrl.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+  }
 
   // Skip heavy header work for high-frequency background pings
   if (pathname === "/api/analytics" || pathname === "/api/visitor-ping") {

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createOrder, getOrders } from "@/lib/db";
+import { supabaseAdmin } from "@/lib/supabase";
 
 export async function POST(request: NextRequest) {
   try {
@@ -32,11 +33,28 @@ export async function POST(request: NextRequest) {
       notes: body.notes || null,
     } as any);
 
+    if (!order) {
+      return NextResponse.json({ message: "Failed to create order" }, { status: 500 });
+    }
+
     console.log("✅ Order created successfully:", {
       orderId: order.id,
       status: order.status,
       paymentMethod: order.payment_method
     });
+
+    if (body.payment_method === "whatsapp" || !body.payment_method) {
+      try {
+        await (supabaseAdmin.from("whatsapp_logs") as ReturnType<typeof supabaseAdmin.from>).insert({
+          order_id: order.id,
+          phone: body.phone,
+          message: `New order ${order.id} — ${body.customer_name} — KES ${((body.total || body.total_amount) / 100).toFixed(0)}`,
+          status: "pending",
+        });
+      } catch {
+        /* table may not exist until migration */
+      }
+    }
 
     return NextResponse.json(order);
   } catch (error: any) {

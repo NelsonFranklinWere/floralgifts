@@ -81,6 +81,13 @@ const nextConfig = {
         destination: 'https://www.floralwhispersgifts.co.ke/:path*',
         permanent: true,
       },
+      { source: '/admin/login', destination: '/staff/login', permanent: false },
+      { source: '/admin/products/new', destination: '/staff/products/new', permanent: false },
+      { source: '/admin/products/:id', destination: '/staff/products/:id', permanent: false },
+      { source: '/admin/products', destination: '/staff/products', permanent: false },
+      { source: '/admin/orders/:id', destination: '/staff/orders/:id', permanent: false },
+      { source: '/admin/orders', destination: '/staff/orders', permanent: false },
+      { source: '/admin', destination: '/staff', permanent: false },
     ];
   },
 

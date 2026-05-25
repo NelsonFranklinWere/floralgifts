@@ -56,6 +56,12 @@ export default function ContactPage() {
       const emailMessage = `New Contact Form Submission\n\nName: ${sanitizedData.name}\nEmail: ${sanitizedData.email}\nPhone: ${sanitizedData.phone}\nSubject: ${sanitizedData.subject}\n\nMessage:\n${sanitizedData.message}`;
 
       try {
+        await axios.post("/api/contact/submit", sanitizedData);
+      } catch {
+        /* continue if DB save fails */
+      }
+
+      try {
         await axios.post("/api/email", {
           type: "contact",
           subject: emailSubject,

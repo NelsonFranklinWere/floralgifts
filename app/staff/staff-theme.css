@@ -1,0 +1,128 @@
+/* Staff admin — matches Floral Whispers homepage */
+
+.staff-app {
+  @apply text-brand-gray-900 font-body antialiased;
+}
+
+.staff-app .staff-card {
+  @apply card;
+}
+
+.staff-app .staff-card-header {
+  @apply px-5 py-4 border-b border-brand-gray-200 flex items-center justify-between gap-3 bg-white rounded-t-lg;
+}
+
+.staff-app .staff-card-header h3 {
+  @apply font-heading text-base font-semibold text-brand-gray-900;
+}
+
+.staff-app .staff-card-body {
+  @apply p-5 bg-white rounded-b-lg;
+}
+
+.staff-app .staff-table-wrap {
+  @apply overflow-x-auto rounded-lg border border-brand-gray-200 bg-white shadow-card;
+}
+
+.staff-app .staff-table-wrap table {
+  @apply w-full text-sm;
+}
+
+.staff-app .staff-table-wrap thead {
+  @apply bg-brand-gray-50;
+}
+
+.staff-app .staff-table-wrap th {
+  @apply px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-brand-gray-800;
+}
+
+.staff-app .staff-table-wrap td {
+  @apply px-4 py-3 text-brand-gray-800 border-t border-brand-gray-100;
+}
+
+.staff-app .staff-table-wrap tbody tr {
+  @apply transition-colors hover:bg-brand-red/[0.03];
+}
+
+.staff-app .staff-input {
+  @apply input-field h-10 text-sm py-2;
+}
+
+.staff-app .staff-select {
+  @apply h-10 w-full rounded-lg border border-brand-gray-200 bg-white px-3 text-sm text-brand-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent;
+}
+
+.staff-app .staff-btn-primary {
+  @apply btn-primary inline-flex items-center justify-center gap-2 h-10 px-4 text-sm;
+}
+
+.staff-app .staff-btn-secondary {
+  @apply btn-outline inline-flex items-center justify-center gap-2 h-10 px-4 text-sm;
+}
+
+.staff-app .staff-link {
+  @apply text-brand-red font-medium hover:text-brand-green hover:underline transition-colors;
+}
+
+.staff-app .staff-pill-success {
+  @apply inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium bg-brand-green/10 text-brand-green;
+}
+
+.staff-app .staff-pill-warning {
+  @apply inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium bg-amber-50 text-amber-800;
+}
+
+.staff-app .staff-pill-neutral {
+  @apply inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium bg-brand-gray-100 text-brand-gray-800;
+}
+
+.staff-app .staff-pill-danger {
+  @apply inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium bg-brand-red/10 text-brand-red;
+}
+
+.staff-skeleton {
+  @apply rounded-lg bg-brand-gray-100 animate-pulse;
+}
+
+.staff-auth-panel {
+  @apply hidden lg:flex lg:w-1/2 flex-col justify-between p-12 text-white relative overflow-hidden;
+  background: linear-gradient(135deg, #10b981 0%, #ec4899 45%, #ef4444 100%);
+}
+
+.staff-auth-panel::before {
+  content: "";
+  @apply absolute inset-0 opacity-15;
+  background: url("/images/patterns/diagonal-lines.svg") repeat;
+}
+
+.staff-auth-shell {
+  @apply min-h-screen flex bg-white;
+}
+
+.staff-app .text-slate-900,
+.staff-app .text-slate-800 {
+  @apply text-brand-gray-900;
+}
+
+.staff-app .text-slate-700,
+.staff-app .text-slate-600,
+.staff-app .text-slate-500 {
+  @apply text-brand-gray-800;
+}
+
+.staff-app .text-slate-400 {
+  @apply text-brand-gray-800/70;
+}
+
+.staff-app .border-slate-100,
+.staff-app .border-slate-200 {
+  @apply border-brand-gray-200;
+}
+
+.staff-app .bg-slate-50 {
+  @apply bg-brand-gray-50;
+}
+
+.staff-app .bg-slate-900\/40 {
+  @apply bg-black/40;
+}

@@ -12,7 +12,10 @@ export interface AdminTokenPayload {
 export function verifyAdminToken(request: NextRequest): AdminTokenPayload | null {
   try {
     const authHeader = request.headers.get("authorization");
-    const token = authHeader?.replace("Bearer ", "") || request.cookies.get("admin_token")?.value;
+    const token =
+      authHeader?.replace("Bearer ", "") ||
+      request.cookies.get("staff_token")?.value ||
+      request.cookies.get("admin_token")?.value;
 
     if (!token) {
       console.log("[Auth] No token found in request");

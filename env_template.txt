@@ -43,9 +43,12 @@ MPESA_PASSKEY=your_passkey_from_safaricom_portal
 MPESA_CALLBACK_URL=https://floralwhispersgifts.co.ke/api/mpesa/callback
 
 # ============================================
+# STAFF PORTAL (/staff) — uses same JWT_SECRET and admins table
+# Roles: super_admin | staff (see supabase/migrations/011_staff_admin_panel.sql)
+# ============================================
 # ADMIN AUTHENTICATION (JWT)
 # ============================================
-JWT_SECRET=TG1aEiPGPqvwtdqEJtKFHy2nc740e9izlxE2amhFQFI=
+JWT_SECRET=your_jwt_secret_min_32_chars
 ADMIN_EMAIL=admin@floralwhispersgifts.co.ke
 ADMIN_PASSWORD=CHANGE_THIS_TO_STRONG_PASSWORD
 

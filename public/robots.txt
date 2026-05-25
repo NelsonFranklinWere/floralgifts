@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /admin/
+Disallow: /staff/
 Disallow: /cart
 Disallow: /order/
 Disallow: /_next/

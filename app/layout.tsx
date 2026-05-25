@@ -2,9 +2,7 @@ import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Montserrat, Lato, Roboto_Mono, Dancing_Script, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
+import SiteChrome from "@/components/layout/SiteChrome";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
 import DeferredClientWidgets from "@/components/layout/DeferredClientWidgets";
@@ -486,10 +484,7 @@ export default function RootLayout({
             <a href="#main-content" className="skip-link">
               Skip to main content
             </a>
-            <Header />
-            <main id="main-content" className="flex-1 w-full min-w-0 max-w-full overflow-x-hidden">{children}</main>
-            <Footer />
-            <WhatsAppButton />
+            <SiteChrome>{children}</SiteChrome>
           </AnalyticsProvider>
         </ErrorBoundary>
       </body>

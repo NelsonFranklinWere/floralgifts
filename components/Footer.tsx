@@ -330,7 +330,10 @@ export default function Footer() {
               </a>
               .
             </p>
-            <div className="flex items-center gap-6 text-sm">
+            <div className="flex items-center gap-6 text-sm flex-wrap justify-center md:justify-end">
+              <Link href="/staff/login" className="text-brand-gray-400 hover:text-brand-pink transition-colors">
+                Staff
+              </Link>
               <Link href="/privacy" className="text-brand-gray-400 hover:text-brand-red transition-colors">
                 Privacy Policy
               </Link>
