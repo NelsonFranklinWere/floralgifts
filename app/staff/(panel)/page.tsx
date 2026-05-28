@@ -1,15 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { staffFetch } from "@/lib/staff-client";
-import { useStaffRealtimeRefresh } from "@/components/staff/StaffRealtimeProvider";
+import DashboardChart from "@/components/staff/DashboardChart";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
 import StaffPageHeader from "@/components/staff/StaffPageHeader";
 import StatCard from "@/components/staff/StatCard";
-import StaffLoading from "@/components/staff/StaffLoading";
-import DashboardActivityFeed from "@/components/staff/DashboardActivityFeed";
+import DashboardRecentActivity from "@/components/staff/DashboardRecentActivity";
+import { RefreshCw } from "lucide-react";
+import { EMPTY_STAFF_DASHBOARD } from "@/lib/staff-dashboard-defaults";
 import {
   Package,
   ShoppingCart,
@@ -21,13 +21,9 @@ import {
   ArrowUpRight,
   MessageSquare,
   Truck,
+  Radio,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const DashboardChart = dynamic(() => import("@/components/staff/DashboardChart"), {
-  ssr: false,
-  loading: () => <div className="h-80 staff-skeleton" />,
-});
 
 interface DashboardData {
   stats: {
@@ -40,6 +36,7 @@ interface DashboardData {
     newCustomers: number;
     unreadMessages: number;
     activeDeliveries: number;
+    liveVisitors: number;
   };
   chartData: { date: string; revenue: number; orders: number }[];
   recentOrders: {
@@ -70,32 +67,56 @@ function trendSublabel(today: number, yesterday: number, isMoney = false) {
 }
 
 export default function StaffDashboardPage() {
-  const [data, setData] = useState<DashboardData | null>(null);
+  const [data, setData] = useState<DashboardData>(EMPTY_STAFF_DASHBOARD);
   const [period, setPeriod] = useState("daily");
+  const [syncing, setSyncing] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
-  const load = () => {
-    staffFetch<DashboardData>(`/api/staff/dashboard?period=${period}`).then(setData).catch(console.error);
-  };
-
-  useEffect(() => {
-    load();
+  const load = useCallback(async (silent = false) => {
+    setSyncing(true);
+    setLoadError(null);
+    try {
+      const d = await staffFetch<DashboardData>(`/api/staff/dashboard?period=${period}`);
+      setData(d);
+    } catch (err) {
+      setLoadError(err instanceof Error ? err.message : "Could not load dashboard");
+    } finally {
+      setSyncing(false);
+    }
   }, [period]);
 
-  useStaffRealtimeRefresh(load, [period]);
+  useEffect(() => {
+    load(false);
+  }, [load]);
 
-  if (!data) return <StaffLoading label="Loading dashboard..." />;
+  const dashboard = data;
 
-  const { stats } = data;
+  const { stats } = dashboard;
   const revenueTrend = stats.revenueToday >= stats.revenueYesterday ? "up" : "down";
   const ordersTrend = stats.ordersToday >= stats.ordersYesterday ? "up" : "down";
 
   return (
     <div className="space-y-6">
+      {loadError && (
+        <div className="rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 text-sm text-amber-900">
+          {loadError}. Showing partial data — try Refresh.
+        </div>
+      )}
+
       <StaffPageHeader
         title="Dashboard"
         description="Today’s orders, revenue, and store overview."
         actions={
           <>
+            <button
+              type="button"
+              onClick={() => load(true)}
+              disabled={syncing}
+              className="staff-btn-secondary"
+            >
+              <RefreshCw className={`h-4 w-4 ${syncing ? "animate-spin" : ""}`} />
+              Refresh
+            </button>
             <Link href="/staff/products/new" className="staff-btn-primary">
               <Plus className="h-4 w-4" />
               Add product
@@ -154,6 +175,14 @@ export default function StaffDashboardPage() {
           sublabel={stats.lowStock > 0 ? "Restock soon" : "Stock OK"}
           trend={stats.lowStock > 0 ? "down" : "neutral"}
         />
+        <StatCard
+          label="Live on site"
+          value={stats.liveVisitors}
+          icon={Radio}
+          href="/staff/live-visitors"
+          sublabel={stats.liveVisitors > 0 ? "Browsing now" : "No active visitors"}
+          trend={stats.liveVisitors > 0 ? "up" : "neutral"}
+        />
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
@@ -176,12 +205,12 @@ export default function StaffDashboardPage() {
               ))}
             </div>
           </div>
-          <div className="staff-card-body">
-            <DashboardChart data={data.chartData} />
+          <div className="staff-card-body min-h-[320px]">
+            <DashboardChart data={dashboard.chartData} />
           </div>
         </div>
 
-        <DashboardActivityFeed />
+        <DashboardRecentActivity orders={dashboard.recentOrders} />
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
@@ -205,7 +234,7 @@ export default function StaffDashboardPage() {
                 </tr>
               </thead>
               <tbody>
-                {data.recentOrders.map((o) => (
+                {dashboard.recentOrders.map((o) => (
                   <tr key={o.id}>
                     <td>
                       <Link href={`/staff/orders/${o.id}`} className="staff-link font-mono text-xs">
@@ -223,7 +252,7 @@ export default function StaffDashboardPage() {
                 ))}
               </tbody>
             </table>
-            {data.recentOrders.length === 0 && (
+            {dashboard.recentOrders.length === 0 && (
               <p className="text-center py-8 text-sm text-slate-500">No orders yet.</p>
             )}
           </div>

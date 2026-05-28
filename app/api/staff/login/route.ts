@@ -30,9 +30,11 @@ export async function POST(request: NextRequest) {
     const { admin, token } = result;
     const adminRow = admin as Record<string, unknown>;
 
-    await (supabaseAdmin.from("admins") as ReturnType<typeof supabaseAdmin.from>)
-      .update({ last_login_at: new Date().toISOString(), last_login_ip: ip })
-      .eq("id", adminRow.id);
+    if (adminRow.id) {
+      await (supabaseAdmin.from("admins") as ReturnType<typeof supabaseAdmin.from>)
+        .update({ last_login_at: new Date().toISOString(), last_login_ip: ip })
+        .eq("id", adminRow.id);
+    }
 
     await logStaffLogin({
       email: adminRow.email as string,
@@ -66,7 +68,7 @@ export async function POST(request: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 30 * 60,
+      maxAge: 8 * 60 * 60,
       path: "/",
     });
     return response;

@@ -40,16 +40,22 @@ if (typeof window === "undefined" && serviceRoleKey && !hasValidServiceRole) {
   );
 }
 
-// Only create client if we have valid URLs
-let supabase: ReturnType<typeof createClient>;
-let supabaseAdmin: ReturnType<typeof createClient>;
+type SupabaseClient = ReturnType<typeof createClient>;
 
-try {
-  supabase = createClient(supabaseUrl, supabaseAnonKey);
-  supabaseAdmin = createClient(
+const globalForSupabase = globalThis as typeof globalThis & {
+  __floralSupabase?: SupabaseClient;
+  __floralSupabaseAdmin?: SupabaseClient;
+};
+
+function createAnonClient(): SupabaseClient {
+  return createClient(supabaseUrl, supabaseAnonKey);
+}
+
+function createAdminClient(): SupabaseClient {
+  return createClient(
     supabaseUrl,
     hasValidServiceRole && serviceRoleKey && !serviceRoleKey.includes("your_")
-      ? serviceRoleKey
+      ? serviceRoleKey!
       : supabaseAnonKey,
     {
       auth: {
@@ -58,11 +64,28 @@ try {
       },
     }
   );
+}
+
+let supabase: SupabaseClient;
+let supabaseAdmin: SupabaseClient;
+
+try {
+  // Singleton — avoids GoTrue "Multiple instances" warnings during HMR.
+  supabase = globalForSupabase.__floralSupabase ?? createAnonClient();
+  globalForSupabase.__floralSupabase = supabase;
+
+  // Service role client must never run in the browser bundle.
+  if (typeof window === "undefined") {
+    supabaseAdmin = globalForSupabase.__floralSupabaseAdmin ?? createAdminClient();
+    globalForSupabase.__floralSupabaseAdmin = supabaseAdmin;
+  } else {
+    supabaseAdmin = supabase;
+  }
 } catch (error) {
   console.error("Failed to initialize Supabase client:", error);
-  // Create a dummy client that will fail gracefully
-  supabase = createClient("https://placeholder.supabase.co", "placeholder-key");
-  supabaseAdmin = createClient("https://placeholder.supabase.co", "placeholder-key");
+  const placeholder = createClient("https://placeholder.supabase.co", "placeholder-key");
+  supabase = placeholder;
+  supabaseAdmin = placeholder;
 }
 
 export { supabase, supabaseAdmin };

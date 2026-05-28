@@ -8,14 +8,16 @@ import { formatCurrency } from "@/lib/utils";
 import StaffPageHeader from "@/components/staff/StaffPageHeader";
 import StaffCard from "@/components/staff/StaffCard";
 import StatCard from "@/components/staff/StatCard";
-import StaffLoading from "@/components/staff/StaffLoading";
+import { StaffInlineSpinner } from "@/components/staff/StaffInlineLoaders";
+import { EMPTY_FINANCIALS } from "@/lib/staff-page-defaults";
 import { Banknote, ShoppingCart, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function FinancialsPage() {
   const router = useRouter();
   const [role, setRole] = useState<StaffRole | null>(null);
-  const [data, setData] = useState<Record<string, unknown> | null>(null);
+  const [data, setData] = useState<Record<string, unknown>>(EMPTY_FINANCIALS);
+  const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState("monthly");
 
   useEffect(() => {
@@ -26,14 +28,17 @@ export default function FinancialsPage() {
   }, [router]);
 
   useEffect(() => {
-    if (role === "super_admin") {
-      staffFetch<Record<string, unknown>>(`/api/staff/financials?period=${period}`)
-        .then(setData)
-        .catch(console.error);
+    if (role === null) return;
+    if (role !== "super_admin") {
+      setLoading(false);
+      return;
     }
+    setLoading(true);
+    staffFetch<Record<string, unknown>>(`/api/staff/financials?period=${period}`)
+      .then(setData)
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, [role, period]);
-
-  if (!data) return <StaffLoading label="Loading financials..." />;
 
   const byPayment = data.byPayment as Record<string, number>;
   const byCategory = data.byCategory as Record<string, number>;
@@ -43,7 +48,7 @@ export default function FinancialsPage() {
     <div className="space-y-6">
       <StaffPageHeader
         title="Financials"
-        description="Revenue breakdown — super admin only."
+        description={loading ? "Loading financials…" : "Revenue breakdown — admin only."}
         actions={
           <div className="inline-flex rounded-lg border border-brand-gray-200 p-0.5 bg-brand-gray-50">
             {(["daily", "weekly", "monthly"] as const).map((p) => (
@@ -62,6 +67,12 @@ export default function FinancialsPage() {
           </div>
         }
       />
+
+      {loading && (
+        <div className="flex justify-center py-4">
+          <StaffInlineSpinner label="Updating numbers…" />
+        </div>
+      )}
 
       <div className="grid md:grid-cols-3 gap-4">
         <StatCard label="Total revenue" value={formatCurrency(data.totalRevenue as number)} icon={Banknote} />

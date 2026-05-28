@@ -319,7 +319,7 @@ export default function Footer() {
         <div className="border-t border-white/10 mt-4 pt-3">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
             <p className="text-brand-gray-400 text-xs">
-              &copy; {new Date().getFullYear()} Floral Whispers Gifts. All rights reserved. Designed by{" "}
+              &copy; <span suppressHydrationWarning>{new Date().getFullYear()}</span> Floral Whispers Gifts. All rights reserved. Designed by{" "}
               <a
                 href="https://cresdynamics.com"
                 target="_blank"
@@ -331,7 +331,7 @@ export default function Footer() {
               .
             </p>
             <div className="flex items-center gap-6 text-sm flex-wrap justify-center md:justify-end">
-              <Link href="/staff/login" className="text-brand-gray-400 hover:text-brand-pink transition-colors">
+              <Link href="/staff/login" className="text-brand-gray-400 hover:text-brand-red transition-colors">
                 Staff
               </Link>
               <Link href="/privacy" className="text-brand-gray-400 hover:text-brand-red transition-colors">

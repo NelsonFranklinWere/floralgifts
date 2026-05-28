@@ -64,7 +64,6 @@ export function useStaffRealtime() {
       es.addEventListener("ping", () => setConnected(true));
       es.addEventListener("sync", () => {
         setConnected(true);
-        emitStaffRealtime("sync", {});
       });
 
       es.addEventListener("order_new", (e) => {

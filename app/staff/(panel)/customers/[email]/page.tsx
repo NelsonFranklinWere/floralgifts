@@ -7,16 +7,24 @@ import { staffFetch } from "@/lib/staff-client";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
 import StaffPageHeader from "@/components/staff/StaffPageHeader";
 import StaffCard from "@/components/staff/StaffCard";
-import StaffLoading from "@/components/staff/StaffLoading";
+import { StaffCardLoading } from "@/components/staff/StaffInlineLoaders";
 import type { Order } from "@/lib/db";
 
 export default function CustomerDetailPage() {
   const { email } = useParams();
   const key = decodeURIComponent(email as string);
-  const [data, setData] = useState<{ orders: Order[]; notes: { note: string; created_at: string }[]; blocked: boolean } | null>(null);
+  const [data, setData] = useState<{
+    orders: Order[];
+    notes: { note: string; created_at: string }[];
+    blocked: boolean;
+  } | null>(null);
+  const [loading, setLoading] = useState(true);
   const [note, setNote] = useState("");
 
-  const load = () => staffFetch<typeof data>(`/api/staff/customers/${encodeURIComponent(key)}`).then(setData);
+  const load = () =>
+    staffFetch<NonNullable<typeof data>>(`/api/staff/customers/${encodeURIComponent(key)}`)
+      .then(setData)
+      .finally(() => setLoading(false));
 
   useEffect(() => {
     load();
@@ -39,13 +47,13 @@ export default function CustomerDetailPage() {
     load();
   };
 
-  if (!data) return <StaffLoading label="Loading customer..." />;
-
   return (
     <div className="space-y-6 max-w-3xl">
       <StaffPageHeader
         title={key}
+        description={loading ? "Loading customer…" : undefined}
         actions={
+          data ? (
           <button
             type="button"
             onClick={toggleBlock}
@@ -57,8 +65,17 @@ export default function CustomerDetailPage() {
           >
             {data.blocked ? "Unblock customer" : "Block customer"}
           </button>
+          ) : undefined
         }
       />
+
+      {loading && !data && <StaffCardLoading label="Loading customer…" />}
+      {!loading && !data && (
+        <p className="text-sm text-brand-gray-800">Could not load customer.</p>
+      )}
+
+      {data && (
+      <>
 
       <StaffCard title={`Order history (${data.orders.length})`}>
         <div className="space-y-3 text-sm">
@@ -95,6 +112,8 @@ export default function CustomerDetailPage() {
       <Link href="/staff/customers" className="staff-link text-sm">
         ← All customers
       </Link>
+      </>
+      )}
     </div>
   );
 }

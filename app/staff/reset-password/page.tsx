@@ -3,8 +3,7 @@
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
-import "../staff-theme.css";
+import StaffAuthLayout from "@/components/staff/StaffAuthLayout";
 
 function ResetForm() {
   const router = useRouter();
@@ -30,59 +29,59 @@ function ResetForm() {
   };
 
   return (
-    <div className="staff-app staff-auth-shell min-h-screen flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-6">
-          <Image src="/images/logo/FloralLogo.jpg" alt="" width={56} height={56} className="rounded-lg mx-auto mb-3 shadow-card" />
-          <h1 className="font-heading text-xl font-bold text-brand-gray-900">Set new password</h1>
-        </div>
-
-        <div className="staff-card p-8">
-          {message && (
-            <p
-              className={`text-sm rounded-lg px-3 py-2 mb-4 ${
-                message.toLowerCase().includes("success")
-                  ? "text-brand-green bg-brand-green/10 border border-brand-green/20"
-                  : "text-brand-red bg-brand-red/10 border border-brand-red/20"
-              }`}
-            >
-              {message}
-            </p>
-          )}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-brand-gray-900 mb-1">
-                New password
-              </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="staff-input"
-                minLength={6}
-                required
-              />
-            </div>
-            <button type="submit" disabled={loading} className="staff-btn-primary w-full">
-              {loading ? "Updating…" : "Update password"}
-            </button>
-          </form>
-        </div>
-
-        <p className="text-center mt-6 text-sm">
-          <Link href="/staff/login" className="text-brand-green hover:text-brand-pink font-medium">
-            ← Back to sign in
-          </Link>
+    <StaffAuthLayout title="Set new password" subtitle="Choose a strong password for your account">
+      {message && (
+        <p
+          className={`text-sm rounded-lg px-3 py-2 mb-4 ${
+            message.toLowerCase().includes("success")
+              ? "text-brand-green bg-brand-green/10 border border-brand-green/20"
+              : "text-brand-red bg-brand-red/10 border border-brand-red/20"
+          }`}
+        >
+          {message}
         </p>
-      </div>
-    </div>
+      )}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label htmlFor="password" className="block text-sm font-medium text-brand-gray-900 mb-1.5">
+            New password
+          </label>
+          <input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="input-field h-11 text-sm"
+            minLength={6}
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          disabled={loading}
+          className="btn-primary w-full h-11 text-sm disabled:opacity-60"
+        >
+          {loading ? "Updating…" : "Update password"}
+        </button>
+      </form>
+      <p className="text-center mt-4 text-sm">
+        <Link href="/staff/login" className="text-brand-green font-medium hover:text-brand-red">
+          ← Back to sign in
+        </Link>
+      </p>
+    </StaffAuthLayout>
   );
 }
 
 export default function ResetPasswordPage() {
   return (
-    <Suspense fallback={<div className="staff-app min-h-screen flex items-center justify-center">Loading…</div>}>
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-[#FAF7F2] text-brand-gray-800">
+          Loading…
+        </div>
+      }
+    >
       <ResetForm />
     </Suspense>
   );

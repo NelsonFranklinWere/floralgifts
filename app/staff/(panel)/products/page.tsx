@@ -15,8 +15,7 @@ type StaffProduct = {
 import type { StaffRole } from "@/lib/staff-auth";
 import { formatCurrency } from "@/lib/utils";
 import StaffPageHeader from "@/components/staff/StaffPageHeader";
-import StaffLoading from "@/components/staff/StaffLoading";
-import { useStaffRealtimeRefresh } from "@/components/staff/StaffRealtimeProvider";
+import { StaffTableLoadingRow } from "@/components/staff/StaffInlineLoaders";
 import { Plus, Search, Trash2 } from "lucide-react";
 
 const CATEGORIES = [
@@ -59,7 +58,6 @@ export default function StaffProductsPage() {
     return () => clearTimeout(t);
   }, [category, q]);
 
-  useStaffRealtimeRefresh(() => load(), [category, q], ["sync"]);
 
   const toggle = (id: string) => {
     const next = new Set(selected);
@@ -77,13 +75,11 @@ export default function StaffProductsPage() {
     load();
   };
 
-  if (loading && products.length === 0) return <StaffLoading />;
-
   return (
     <div className="space-y-6">
       <StaffPageHeader
         title="Products"
-        description="Manage your catalogue — flowers, teddies, hampers, wines, and more."
+        description={loading ? "Loading products…" : "Manage your catalogue — flowers, teddies, hampers, wines, and more."}
         actions={
           <Link href="/staff/products/new" className="staff-btn-primary">
             <Plus className="h-4 w-4" />
@@ -141,6 +137,9 @@ export default function StaffProductsPage() {
             </tr>
           </thead>
           <tbody>
+            {loading && products.length === 0 ? (
+              <StaffTableLoadingRow colSpan={7} label="Loading products…" />
+            ) : null}
             {products.map((p) => (
               <tr key={p.id}>
                 <td>
@@ -168,7 +167,7 @@ export default function StaffProductsPage() {
             ))}
           </tbody>
         </table>
-        {products.length === 0 && (
+        {!loading && products.length === 0 && (
           <p className="text-center py-12 text-slate-500 text-sm">No products found.</p>
         )}
       </div>

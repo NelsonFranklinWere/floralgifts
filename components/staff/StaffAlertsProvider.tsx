@@ -1,8 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, useCallback, useRef } from "react";
-import { staffFetch } from "@/lib/staff-client";
-import { emitStaffRealtime, onStaffRealtime } from "@/lib/hooks/useStaffRealtime";
+import { getStaffToken, staffFetch } from "@/lib/staff-client";
 
 interface StaffAlerts {
   pendingOrders: number;
@@ -22,15 +21,6 @@ export function StaffAlertsProvider({ children }: { children: React.ReactNode })
   const refresh = useCallback(() => {
     staffFetch<StaffAlerts>("/api/staff/alerts")
       .then((next) => {
-        const prev = prevRef.current;
-        if (next.pendingOrders > prev.pendingOrders) {
-          emitStaffRealtime("order_new", { source: "poll" });
-        } else if (next.pendingOrders !== prev.pendingOrders) {
-          emitStaffRealtime("order_updated", { source: "poll" });
-        }
-        if (next.unreadMessages > prev.unreadMessages) {
-          emitStaffRealtime("message_new", { source: "poll" });
-        }
         prevRef.current = next;
         setAlerts(next);
       })
@@ -38,17 +28,11 @@ export function StaffAlertsProvider({ children }: { children: React.ReactNode })
   }, []);
 
   useEffect(() => {
+    if (!getStaffToken()) return;
+
     refresh();
-    const interval = setInterval(refresh, 8000);
-    const unsub = onStaffRealtime((event) => {
-      if (event === "order_new" || event === "order_updated" || event === "message_new" || event === "sync") {
-        refresh();
-      }
-    });
-    return () => {
-      clearInterval(interval);
-      unsub();
-    };
+    const interval = setInterval(refresh, 120_000);
+    return () => clearInterval(interval);
   }, [refresh]);
 
   return <StaffAlertsContext.Provider value={alerts}>{children}</StaffAlertsContext.Provider>;

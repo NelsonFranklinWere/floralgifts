@@ -9,7 +9,7 @@ import type { Product } from "@/lib/db";
 import ProductImageManager from "@/components/staff/ProductImageManager";
 import StaffPageHeader from "@/components/staff/StaffPageHeader";
 import StaffCard from "@/components/staff/StaffCard";
-import StaffLoading from "@/components/staff/StaffLoading";
+import { StaffCardLoading } from "@/components/staff/StaffInlineLoaders";
 
 const CATEGORIES = ["flowers", "teddy", "hampers", "chocolates", "wines", "cakes", "cards"];
 
@@ -49,23 +49,24 @@ export default function EditProductPage() {
     staffFetch<{ role: StaffRole }>("/api/staff/me").then((u) => setRole(u.role));
     staffFetch<Product & { sale_price?: number; visibility?: string; sku?: string; low_stock_threshold?: number }>(
       `/api/staff/products/${id}`
-    ).then((p) => {
-      setForm({
-        title: p.title,
-        slug: p.slug,
-        description: p.description || "",
-        short_description: p.short_description || "",
-        price: p.price / 100,
-        sale_price: (p.sale_price || 0) / 100,
-        stock: p.stock ?? 0,
-        sku: p.sku || "",
-        category: p.category,
-        visibility: p.visibility || "published",
-        low_stock_threshold: p.low_stock_threshold ?? 5,
-      });
-      setImages(p.images || []);
-      setLoading(false);
-    });
+    )
+      .then((p) => {
+        setForm({
+          title: p.title,
+          slug: p.slug,
+          description: p.description || "",
+          short_description: p.short_description || "",
+          price: p.price / 100,
+          sale_price: (p.sale_price || 0) / 100,
+          stock: p.stock ?? 0,
+          sku: p.sku || "",
+          category: p.category,
+          visibility: p.visibility || "published",
+          low_stock_threshold: p.low_stock_threshold ?? 5,
+        });
+        setImages(p.images || []);
+      })
+      .finally(() => setLoading(false));
     staffFetch<{ id: string; size: string; color: string; price: number; stock: number }[]>(
       `/api/staff/products/${id}/variants`
     )
@@ -119,13 +120,11 @@ export default function EditProductPage() {
     router.push("/staff/products");
   };
 
-  if (loading) return <StaffLoading label="Loading product..." />;
-
   return (
     <div className="max-w-3xl space-y-6">
       <StaffPageHeader
         title="Edit product"
-        description={form.title}
+        description={loading ? "Loading product…" : form.title || "Product details"}
         actions={
           <Link href="/staff/products" className="staff-btn-secondary text-sm">
             ← Products
@@ -133,6 +132,10 @@ export default function EditProductPage() {
         }
       />
 
+      {loading && <StaffCardLoading label="Loading product…" />}
+
+      {!loading && (
+      <>
       <StaffCard title="Images">
         <ProductImageManager
           images={images}
@@ -235,6 +238,8 @@ export default function EditProductPage() {
           )}
         </div>
       </StaffCard>
+      </>
+      )}
     </div>
   );
 }

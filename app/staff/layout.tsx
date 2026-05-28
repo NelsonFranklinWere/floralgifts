@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import "./staff-theme.css";
 
 export const metadata: Metadata = {
   title: "Staff Portal | Floral Whispers Gifts",
@@ -6,5 +7,9 @@ export const metadata: Metadata = {
 };
 
 export default function StaffRootLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return (
+    <div className="staff-app min-h-screen bg-white text-brand-gray-900 antialiased">
+      {children}
+    </div>
+  );
 }

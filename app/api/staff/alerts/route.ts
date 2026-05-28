@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireStaff } from "@/lib/staff-auth";
+import { requireStaff, staffRouteErrorResponse } from "@/lib/staff-auth";
 import { supabaseAdmin } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
       pendingOrders: pendingRes.count ?? 0,
       unreadMessages: unreadRes.count ?? 0,
     });
-  } catch {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  } catch (error) {
+    return staffRouteErrorResponse(error, "staff/alerts");
   }
 }

@@ -2,10 +2,8 @@ import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Montserrat, Lato, Roboto_Mono, Dancing_Script, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import SiteChrome from "@/components/layout/SiteChrome";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
-import DeferredClientWidgets from "@/components/layout/DeferredClientWidgets";
 import TawkToChat from "@/components/TawkToChat";
 import { GA_MEASUREMENT_ID, SHOP_INFO } from "@/lib/constants";
 import { getSupabaseOrigin } from "@/lib/supabase-origin";
@@ -477,15 +475,9 @@ export default function RootLayout({
           `,
           }}
         />
-        <DeferredClientWidgets />
         {process.env.NEXT_PUBLIC_TAWK_ENABLED === "true" ? <TawkToChat /> : null}
         <ErrorBoundary>
-          <AnalyticsProvider>
-            <a href="#main-content" className="skip-link">
-              Skip to main content
-            </a>
-            <SiteChrome>{children}</SiteChrome>
-          </AnalyticsProvider>
+          <AnalyticsProvider>{children}</AnalyticsProvider>
         </ErrorBoundary>
       </body>
     </html>

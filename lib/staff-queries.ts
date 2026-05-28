@@ -1,11 +1,17 @@
 import { supabaseAdmin } from "./supabase";
+import { getVisitorStats } from "./visitor-store";
 import { startOfDay, subDays, format, eachDayOfInterval } from "date-fns";
 
+/** Core columns only — order_status is optional (migration 011); mapped from status when absent. */
 const ORDER_LIST_SELECT =
-  "id, customer_name, phone, email, total_amount, payment_method, status, order_status, delivery_address, delivery_date, created_at";
+  "id, customer_name, phone, email, total_amount, payment_method, status, delivery_address, delivery_date, created_at";
 
 const PRODUCT_LIST_SELECT =
   "id, slug, title, price, category, stock, visibility, low_stock_threshold, created_at";
+
+function sumPaidAmount(rows: { total_amount?: number | null }[]) {
+  return rows.reduce((s, o) => s + (o.total_amount || 0), 0);
+}
 
 export async function fetchStaffDashboard(period: string) {
   const today = startOfDay(new Date());
@@ -18,75 +24,80 @@ export async function fetchStaffDashboard(period: string) {
   const yesterdayIso = yesterday.toISOString();
   const yesterdayEnd = today.toISOString();
 
-  const [
-    recentRes,
-    rangeOrdersRes,
-    todayOrdersRes,
-    yesterdayOrdersRes,
-    pendingRes,
-    lowStockRes,
-    unreadMsgRes,
-    deliveryRes,
-  ] = await Promise.all([
-    (supabaseAdmin.from("orders") as ReturnType<typeof supabaseAdmin.from>)
-      .select(ORDER_LIST_SELECT)
-      .order("created_at", { ascending: false })
-      .limit(10),
-    (supabaseAdmin.from("orders") as ReturnType<typeof supabaseAdmin.from>)
+  const chartLimit = period === "monthly" ? 400 : 200;
+  const orders = supabaseAdmin.from("orders") as ReturnType<typeof supabaseAdmin.from>;
+  const products = supabaseAdmin.from("products") as ReturnType<typeof supabaseAdmin.from>;
+  const messages = supabaseAdmin.from("contact_messages") as ReturnType<typeof supabaseAdmin.from>;
+
+  const settled = await Promise.allSettled([
+    orders.select(ORDER_LIST_SELECT).order("created_at", { ascending: false }).limit(10),
+    orders.select("id", { count: "exact", head: true }).gte("created_at", todayIso),
+    orders
+      .select("total_amount")
+      .gte("created_at", todayIso)
+      .in("status", ["paid", "shipped"])
+      .limit(150),
+    orders.select("email").gte("created_at", todayIso).not("email", "is", null).limit(80),
+    orders
+      .select("id", { count: "exact", head: true })
+      .gte("created_at", yesterdayIso)
+      .lt("created_at", yesterdayEnd),
+    orders
+      .select("total_amount")
+      .gte("created_at", yesterdayIso)
+      .lt("created_at", yesterdayEnd)
+      .in("status", ["paid", "shipped"])
+      .limit(150),
+    orders
       .select("id, total_amount, status, created_at")
       .gte("created_at", rangeStartIso)
       .order("created_at", { ascending: false })
-      .limit(2000),
-    (supabaseAdmin.from("orders") as ReturnType<typeof supabaseAdmin.from>)
-      .select("id, email, total_amount, status, created_at")
-      .gte("created_at", todayIso)
-      .limit(500),
-    (supabaseAdmin.from("orders") as ReturnType<typeof supabaseAdmin.from>)
-      .select("id, total_amount, status, created_at")
-      .gte("created_at", yesterdayIso)
-      .lt("created_at", yesterdayEnd)
-      .limit(500),
-    (supabaseAdmin.from("orders") as ReturnType<typeof supabaseAdmin.from>)
-      .select("id", { count: "exact", head: true })
-      .eq("status", "pending"),
-    (supabaseAdmin.from("products") as ReturnType<typeof supabaseAdmin.from>)
-      .select("id, stock, low_stock_threshold")
-      .not("stock", "is", null)
-      .lte("stock", 20)
-      .limit(200),
-    (supabaseAdmin.from("contact_messages") as ReturnType<typeof supabaseAdmin.from>)
-      .select("id", { count: "exact", head: true })
-      .eq("status", "unread"),
-    (supabaseAdmin.from("orders") as ReturnType<typeof supabaseAdmin.from>)
-      .select("id", { count: "exact", head: true })
-      .in("order_status", ["confirmed", "packed", "out_for_delivery"]),
+      .limit(chartLimit),
+    orders.select("id", { count: "exact", head: true }).eq("status", "pending"),
+    orders.select("id", { count: "exact", head: true }).eq("status", "shipped"),
+    products.select("id, stock, low_stock_threshold").not("stock", "is", null).lte("stock", 20).limit(80),
+    messages.select("id", { count: "exact", head: true }).eq("status", "unread"),
   ]);
+
+  const val = <T,>(i: number, fallback: T): T => {
+    const r = settled[i];
+    if (r.status === "fulfilled" && !(r.value as { error?: unknown }).error) {
+      return r.value as T;
+    }
+    return fallback;
+  };
+
+  const recentRes = val(0, { data: [] });
+  const todayCountRes = val(1, { count: 0 });
+  const todayPaidRes = val(2, { data: [] });
+  const todayEmailsRes = val(3, { data: [] });
+  const yesterdayCountRes = val(4, { count: 0 });
+  const yesterdayPaidRes = val(5, { data: [] });
+  const rangeOrdersRes = val(6, { data: [] });
+  const pendingRes = val(7, { count: 0 });
+  const shippedRes = val(8, { count: 0 });
+  const lowStockRes = val(9, { data: [] });
+  const unreadMsgRes = val(10, { count: 0 });
 
   const recentOrders = (recentRes.data || []).map((o: Record<string, unknown>) => ({
     id: o.id as string,
     customer_name: o.customer_name as string,
     total: (o.total_amount as number) || 0,
-    status: (o.order_status as string) || (o.status as string),
+    status: (o.status as string) || "pending",
     payment_method: o.payment_method as string,
     created_at: o.created_at as string,
   }));
 
   const rangeOrders = rangeOrdersRes.data || [];
-  const todayOrders = todayOrdersRes.data || [];
-
-  const ordersToday = todayOrders.length;
-  const revenueToday = todayOrders
-    .filter((o: { status: string }) => o.status === "paid" || o.status === "shipped")
-    .reduce((s: number, o: { total_amount: number }) => s + (o.total_amount || 0), 0);
-
-  const yesterdayOrders = yesterdayOrdersRes.data || [];
-  const ordersYesterday = yesterdayOrders.length;
-  const revenueYesterday = yesterdayOrders
-    .filter((o: { status: string }) => o.status === "paid" || o.status === "shipped")
-    .reduce((s: number, o: { total_amount: number }) => s + (o.total_amount || 0), 0);
+  const ordersToday = todayCountRes.count ?? 0;
+  const revenueToday = sumPaidAmount(todayPaidRes.data || []);
+  const ordersYesterday = yesterdayCountRes.count ?? 0;
+  const revenueYesterday = sumPaidAmount(yesterdayPaidRes.data || []);
 
   const customerEmails = new Set(
-    todayOrders.map((o: { email?: string }) => o.email).filter(Boolean)
+    (todayEmailsRes.data || [])
+      .map((o: { email?: string }) => o.email?.trim().toLowerCase())
+      .filter(Boolean)
   );
 
   const lowStock = (lowStockRes.data || []).filter((p: { stock: number; low_stock_threshold?: number }) => {
@@ -109,6 +120,8 @@ export async function fetchStaffDashboard(period: string) {
     };
   });
 
+  const liveVisits = getVisitorStats();
+
   return {
     stats: {
       ordersToday,
@@ -119,10 +132,29 @@ export async function fetchStaffDashboard(period: string) {
       lowStock,
       newCustomers: customerEmails.size,
       unreadMessages: unreadMsgRes.count ?? 0,
-      activeDeliveries: deliveryRes.count ?? 0,
+      activeDeliveries: shippedRes.count ?? 0,
+      liveVisitors: liveVisits.activeNow,
     },
     chartData,
     recentOrders,
+  };
+}
+
+function mapOrderRow(o: Record<string, unknown>) {
+  const status = (o.status as string) || "pending";
+  return {
+    id: o.id as string,
+    customer_name: o.customer_name as string,
+    phone: o.phone as string,
+    email: o.email as string | null,
+    items: o.items,
+    total_amount: o.total_amount as number,
+    payment_method: o.payment_method as string,
+    status,
+    order_status: (o.order_status as string) || status,
+    delivery_date: o.delivery_date as string,
+    delivery_address: o.delivery_address as string,
+    created_at: o.created_at as string,
   };
 }
 
@@ -138,21 +170,11 @@ export async function fetchStaffOrdersList(options?: { status?: string; limit?: 
   }
 
   const { data, error } = await query;
-  if (error) throw error;
-  return (data || []).map((o: Record<string, unknown>) => ({
-    id: o.id as string,
-    customer_name: o.customer_name as string,
-    phone: o.phone as string,
-    email: o.email as string | null,
-    items: o.items,
-    total_amount: o.total_amount as number,
-    payment_method: o.payment_method as string,
-    status: o.status as string,
-    order_status: (o.order_status as string) || (o.status as string),
-    delivery_date: o.delivery_date as string,
-    delivery_address: o.delivery_address as string,
-    created_at: o.created_at as string,
-  }));
+  if (error) {
+    console.error("[fetchStaffOrdersList]", error.message);
+    throw new Error(error.message || "Failed to load orders");
+  }
+  return (data || []).map((o) => mapOrderRow(o as Record<string, unknown>));
 }
 
 export async function fetchStaffProductsList(options?: { category?: string; q?: string; limit?: number }) {

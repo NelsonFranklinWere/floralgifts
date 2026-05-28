@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireStaff } from "@/lib/staff-auth";
+import { requireStaff, staffRouteErrorResponse } from "@/lib/staff-auth";
 import { supabaseAdmin } from "@/lib/supabase";
 import { Resend } from "resend";
 
@@ -8,19 +8,30 @@ export const dynamic = "force-dynamic";
 export async function GET(request: NextRequest) {
   try {
     requireStaff(request);
+
     const { data, error } = await (supabaseAdmin.from("contact_messages") as ReturnType<typeof supabaseAdmin.from>)
       .select("*")
       .order("created_at", { ascending: false });
-    if (error) throw error;
 
-    const { data: waLogs } = await (supabaseAdmin.from("whatsapp_logs") as ReturnType<typeof supabaseAdmin.from>)
+    if (error) {
+      console.error("[staff/messages] contact_messages:", error.message);
+      return NextResponse.json({ messages: [], whatsappLogs: [] });
+    }
+
+    const { data: waLogs, error: waError } = await (supabaseAdmin.from("whatsapp_logs") as ReturnType<
+      typeof supabaseAdmin.from
+    >)
       .select("*")
       .order("created_at", { ascending: false })
       .limit(50);
 
+    if (waError) {
+      console.error("[staff/messages] whatsapp_logs:", waError.message);
+    }
+
     return NextResponse.json({ messages: data || [], whatsappLogs: waLogs || [] });
-  } catch {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  } catch (error) {
+    return staffRouteErrorResponse(error, "staff/messages");
   }
 }
 
@@ -56,7 +67,6 @@ export async function PATCH(request: NextRequest) {
     if (error) throw error;
     return NextResponse.json(data);
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Failed";
-    return NextResponse.json({ message }, { status: 500 });
+    return staffRouteErrorResponse(error, "staff/messages");
   }
 }

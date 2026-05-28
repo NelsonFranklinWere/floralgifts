@@ -1,32 +1,48 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { verifyStaffToken } from "@/lib/staff-jwt";
 
 const PUBLIC_STAFF_PATHS = ["/staff/login", "/staff/forgot-password", "/staff/reset-password"];
+
+function forwardPathname(request: NextRequest, response: NextResponse) {
+  response.headers.set("x-pathname", request.nextUrl.pathname);
+  return response;
+}
+
+function nextWithPathname(request: NextRequest) {
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-pathname", request.nextUrl.pathname);
+  return NextResponse.next({ request: { headers: requestHeaders } });
+}
+
+function staffLoginRedirect(request: NextRequest, pathname: string) {
+  const loginUrl = new URL("/staff/login", request.url);
+  loginUrl.searchParams.set("redirect", pathname);
+  const res = NextResponse.redirect(loginUrl);
+  res.cookies.set("staff_token", "", { httpOnly: true, path: "/", maxAge: 0 });
+  res.cookies.set("admin_token", "", { httpOnly: true, path: "/", maxAge: 0 });
+  return forwardPathname(request, res);
+}
 
 export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // Staff portal: require session cookie (JWT verified in API routes / StaffShell)
+  // Staff portal: valid JWT required (not just a stale cookie string)
   if (
     pathname.startsWith("/staff") &&
     !PUBLIC_STAFF_PATHS.some((p) => pathname.startsWith(p))
   ) {
-    const token =
-      request.cookies.get("staff_token")?.value ||
-      request.cookies.get("admin_token")?.value;
-    if (!token) {
-      const loginUrl = new URL("/staff/login", request.url);
-      loginUrl.searchParams.set("redirect", pathname);
-      return NextResponse.redirect(loginUrl);
+    if (!verifyStaffToken(request)) {
+      return staffLoginRedirect(request, pathname);
     }
   }
 
   // Skip heavy header work for high-frequency background pings
   if (pathname === "/api/analytics" || pathname === "/api/visitor-ping") {
-    return NextResponse.next();
+    return nextWithPathname(request);
   }
 
-  const response = NextResponse.next();
+  const response = nextWithPathname(request);
 
   // Add CORS headers for API routes
   if (request.nextUrl.pathname.startsWith("/api/")) {

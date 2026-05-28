@@ -8,29 +8,31 @@ import type { Order } from "@/lib/db";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
 import StaffPageHeader from "@/components/staff/StaffPageHeader";
 import StaffCard from "@/components/staff/StaffCard";
-import StaffLoading from "@/components/staff/StaffLoading";
-import { useStaffRealtimeRefresh } from "@/components/staff/StaffRealtimeProvider";
+import { StaffCardLoading } from "@/components/staff/StaffInlineLoaders";
 
 const STATUSES = ["pending", "confirmed", "packed", "out_for_delivery", "delivered", "cancelled"];
 
 export default function OrderDetailPage() {
   const { id } = useParams();
   const [order, setOrder] = useState<Order | null>(null);
+  const [loading, setLoading] = useState(true);
   const [orderStatus, setOrderStatus] = useState("");
   const [cancelReason, setCancelReason] = useState("");
   const [refundNotes, setRefundNotes] = useState("");
 
-  const load = () =>
-    staffFetch<Order>(`/api/staff/orders/${id}`).then((o) => {
-      setOrder(o);
-      setOrderStatus((o as { order_status?: string }).order_status || o.status);
-    });
+  const load = () => {
+    setLoading(true);
+    return staffFetch<Order>(`/api/staff/orders/${id}`)
+      .then((o) => {
+        setOrder(o);
+        setOrderStatus((o as { order_status?: string }).order_status || o.status);
+      })
+      .finally(() => setLoading(false));
+  };
 
   useEffect(() => {
     load();
   }, [id]);
-
-  useStaffRealtimeRefresh(load, [String(id)]);
 
   const updateStatus = async () => {
     await staffFetch(`/api/staff/orders/${id}`, {
@@ -56,17 +58,27 @@ export default function OrderDetailPage() {
     load();
   };
 
-  if (!order) return <StaffLoading label="Loading order..." />;
-
-  const history = (order as { status_history?: { status: string; at: string; by: string }[] }).status_history || [];
+  const history = order
+    ? (order as { status_history?: { status: string; at: string; by: string }[] }).status_history || []
+    : [];
 
   return (
     <div className="space-y-6 max-w-4xl">
       <StaffPageHeader
         title={`Order ${id?.toString().slice(0, 12)}…`}
-        description={formatDateTime(order.created_at)}
-        actions={<span className="staff-pill-warning capitalize">{orderStatus}</span>}
+        description={order ? formatDateTime(order.created_at) : loading ? "Loading order…" : "Order not found"}
+        actions={
+          order ? <span className="staff-pill-warning capitalize">{orderStatus}</span> : undefined
+        }
       />
+
+      {loading && !order && <StaffCardLoading label="Loading order…" />}
+      {!loading && !order && (
+        <p className="text-sm text-brand-gray-800">Could not load this order.</p>
+      )}
+
+      {order && (
+      <>
 
       <div className="grid md:grid-cols-2 gap-6">
         <StaffCard title="Customer">
@@ -147,6 +159,8 @@ export default function OrderDetailPage() {
           ← All orders
         </Link>
       </div>
+      </>
+      )}
     </div>
   );
 }

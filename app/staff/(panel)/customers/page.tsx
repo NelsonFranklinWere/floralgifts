@@ -7,6 +7,7 @@ import { formatCurrency } from "@/lib/utils";
 import StaffPageHeader from "@/components/staff/StaffPageHeader";
 import StaffCard from "@/components/staff/StaffCard";
 import { Search, Download } from "lucide-react";
+import { StaffTableLoadingRow } from "@/components/staff/StaffInlineLoaders";
 
 interface Customer {
   email: string;
@@ -21,10 +22,14 @@ interface Customer {
 export default function CustomersPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [q, setQ] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const params = q ? `?q=${encodeURIComponent(q)}` : "";
-    staffFetch<Customer[]>(`/api/staff/customers${params}`).then(setCustomers);
+    setLoading(true);
+    staffFetch<Customer[]>(`/api/staff/customers${params}`)
+      .then(setCustomers)
+      .finally(() => setLoading(false));
   }, [q]);
 
   const exportCsv = () => {
@@ -44,7 +49,7 @@ export default function CustomersPage() {
     <div className="space-y-6">
       <StaffPageHeader
         title="Customers"
-        description="Search shoppers and view order history."
+        description={loading ? "Loading customers…" : "Search shoppers and view order history."}
         actions={
           <button type="button" onClick={exportCsv} className="staff-btn-secondary">
             <Download className="h-4 w-4" />
@@ -76,6 +81,9 @@ export default function CustomersPage() {
               </tr>
             </thead>
             <tbody>
+              {loading && customers.length === 0 ? (
+                <StaffTableLoadingRow colSpan={6} label="Loading customers…" />
+              ) : null}
               {customers.map((c) => (
                 <tr key={c.email || c.phone}>
                   <td className="font-medium">
@@ -95,7 +103,7 @@ export default function CustomersPage() {
               ))}
             </tbody>
           </table>
-          {customers.length === 0 && (
+          {!loading && customers.length === 0 && (
             <p className="text-center py-8 text-sm text-slate-500">No customers found.</p>
           )}
         </div>

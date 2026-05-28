@@ -39,3 +39,16 @@ export function getRecentVisitorPings(since?: number): VisitorPing[] {
 export function getLatestTimestamp(): number {
   return store[0]?.timestamp ?? 0;
 }
+
+/** Visitors with activity in the last `activeWindowMs` (default 2 min). */
+export function getVisitorStats(activeWindowMs = 2 * 60 * 1000, recentWindowMs = 30 * 60 * 1000) {
+  const now = Date.now();
+  const activeCutoff = now - activeWindowMs;
+  const recentCutoff = now - recentWindowMs;
+  const activeNow = store.filter((p) => p.timestamp > activeCutoff).length;
+  const recentTotal = store.filter((p) => p.timestamp > recentCutoff).length;
+  const uniquePages = new Set(
+    store.filter((p) => p.timestamp > activeCutoff).map((p) => p.path)
+  ).size;
+  return { activeNow, recentTotal, uniquePages };
+}

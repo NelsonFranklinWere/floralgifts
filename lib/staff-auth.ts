@@ -1,52 +1,65 @@
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import { supabaseAdmin } from "./supabase";
+import {
+  verifyStaffToken,
+  type StaffRole,
+  type StaffTokenPayload,
+} from "./staff-jwt";
+
+export { verifyStaffToken, type StaffRole, type StaffTokenPayload };
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production";
-export const STAFF_SESSION_MS = 30 * 60 * 1000; // 30 minutes
+export const STAFF_SESSION_MS = 8 * 60 * 60 * 1000; // 8 hours
 export const STAFF_COOKIE = "staff_token";
 
-export type StaffRole = "super_admin" | "staff";
-
-export interface StaffTokenPayload {
-  email: string;
-  role: StaffRole;
-  id?: string;
-  name?: string;
-  iat?: number;
-  exp?: number;
-}
-
 export function signStaffToken(payload: Omit<StaffTokenPayload, "iat" | "exp">): string {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: "30m" });
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: "8h" });
 }
 
-export function verifyStaffToken(request: NextRequest): StaffTokenPayload | null {
-  try {
-    const authHeader = request.headers.get("authorization");
-    const token =
-      authHeader?.replace("Bearer ", "") ||
-      request.cookies.get(STAFF_COOKIE)?.value ||
-      request.cookies.get("admin_token")?.value;
-
-    if (!token) return null;
-
-    const decoded = jwt.verify(token, JWT_SECRET) as StaffTokenPayload;
-    return decoded;
-  } catch {
-    return null;
+export class StaffUnauthorizedError extends Error {
+  constructor() {
+    super("Unauthorized");
+    this.name = "StaffUnauthorizedError";
   }
+}
+
+export class StaffForbiddenError extends Error {
+  constructor() {
+    super("Forbidden");
+    this.name = "StaffForbiddenError";
+  }
+}
+
+export function isStaffUnauthorized(error: unknown): boolean {
+  return error instanceof StaffUnauthorizedError;
+}
+
+export function isStaffForbidden(error: unknown): boolean {
+  return error instanceof StaffForbiddenError;
+}
+
+export function staffRouteErrorResponse(error: unknown, logLabel: string) {
+  if (isStaffUnauthorized(error)) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+  if (isStaffForbidden(error)) {
+    return NextResponse.json({ message: "Forbidden" }, { status: 403 });
+  }
+  console.error(`[${logLabel}]`, error);
+  const message = error instanceof Error ? error.message : "Request failed";
+  return NextResponse.json({ message }, { status: 500 });
 }
 
 export function requireStaff(request: NextRequest): StaffTokenPayload {
   const payload = verifyStaffToken(request);
-  if (!payload) throw new Error("Unauthorized");
+  if (!payload) throw new StaffUnauthorizedError();
   return payload;
 }
 
 export function requireSuperAdmin(request: NextRequest): StaffTokenPayload {
   const payload = requireStaff(request);
-  if (payload.role !== "super_admin") throw new Error("Forbidden");
+  if (payload.role !== "super_admin") throw new StaffForbiddenError();
   return payload;
 }
 
@@ -69,13 +82,15 @@ export function setStaffCookie(response: NextResponse, token: string): void {
 }
 
 export function clearStaffCookie(response: NextResponse): void {
-  response.cookies.set(STAFF_COOKIE, "", {
+  const opts = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    sameSite: "lax" as const,
     maxAge: 0,
     path: "/",
-  });
+  };
+  response.cookies.set(STAFF_COOKIE, "", opts);
+  response.cookies.set("admin_token", "", opts);
 }
 
 export function getClientIp(request: NextRequest): string {

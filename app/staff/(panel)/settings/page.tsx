@@ -5,22 +5,23 @@ import { staffFetch } from "@/lib/staff-client";
 import type { StaffRole } from "@/lib/staff-auth";
 import StaffPageHeader from "@/components/staff/StaffPageHeader";
 import StaffCard from "@/components/staff/StaffCard";
-import StaffLoading from "@/components/staff/StaffLoading";
+import { StaffInlineSpinner } from "@/components/staff/StaffInlineLoaders";
 
 export default function SettingsPage() {
   const [role, setRole] = useState<StaffRole>("staff");
   const [settings, setSettings] = useState<Record<string, string>>({});
   const [staff, setStaff] = useState<{ id: string; email: string; name: string; role: string; is_active: boolean }[]>([]);
   const [newStaff, setNewStaff] = useState({ email: "", password: "", name: "", role: "staff" });
-  const [loaded, setLoaded] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     staffFetch<{ role: StaffRole }>("/api/staff/me").then((u) => setRole(u.role));
-    staffFetch<{ settings: Record<string, string>; staff: typeof staff }>("/api/staff/settings").then((d) => {
-      setSettings(d.settings);
-      setStaff(d.staff);
-      setLoaded(true);
-    });
+    staffFetch<{ settings: Record<string, string>; staff: typeof staff }>("/api/staff/settings")
+      .then((d) => {
+        setSettings(d.settings);
+        setStaff(d.staff);
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const saveSettings = async () => {
@@ -43,12 +44,21 @@ export default function SettingsPage() {
 
   const isSuper = role === "super_admin";
 
-  if (!loaded) return <StaffLoading label="Loading settings..." />;
-
   return (
     <div className="space-y-6 max-w-3xl">
-      <StaffPageHeader title="Settings" description="Store details, payments, and staff accounts." />
+      <StaffPageHeader
+        title="Settings"
+        description={loading ? "Loading settings…" : "Store details, payments, and staff accounts."}
+      />
 
+      {loading && (
+        <div className="flex justify-center py-8">
+          <StaffInlineSpinner label="Loading settings…" />
+        </div>
+      )}
+
+      {!loading && (
+      <>
       <StaffCard title="Store information">
         <div className="space-y-3">
           {[
@@ -108,7 +118,9 @@ export default function SettingsPage() {
             {staff.map((s) => (
               <div key={s.id} className="flex justify-between items-center text-sm border-b border-slate-100 pb-2">
                 <span className="font-medium text-slate-900">{s.name || s.email}</span>
-                <span className="staff-pill-neutral capitalize">{s.role.replace("_", " ")}</span>
+                <span className="staff-pill-neutral">
+                  {s.role === "super_admin" || s.role === "admin" ? "Admin" : "Staff"}
+                </span>
               </div>
             ))}
             <div className="grid gap-2 pt-2 border-t border-slate-100">
@@ -117,7 +129,7 @@ export default function SettingsPage() {
               <input className="staff-input" placeholder="Password" type="password" value={newStaff.password} onChange={(e) => setNewStaff({ ...newStaff, password: e.target.value })} />
               <select className="staff-select" value={newStaff.role} onChange={(e) => setNewStaff({ ...newStaff, role: e.target.value })}>
                 <option value="staff">Staff (limited)</option>
-                <option value="super_admin">Super Admin</option>
+                <option value="super_admin">Admin (full access)</option>
               </select>
               <button type="button" onClick={addStaff} className="staff-btn-primary w-fit">
                 Add staff user
@@ -125,6 +137,8 @@ export default function SettingsPage() {
             </div>
           </div>
         </StaffCard>
+      )}
+      </>
       )}
     </div>
   );

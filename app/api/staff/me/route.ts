@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireStaff } from "@/lib/staff-auth";
+import { requireStaff, staffRouteErrorResponse } from "@/lib/staff-auth";
 import type { StaffRole } from "@/lib/staff-auth";
 
 export const dynamic = "force-dynamic";
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
       name: payload.name,
       id: payload.id,
     });
-  } catch {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  } catch (error) {
+    return staffRouteErrorResponse(error, "staff/me");
   }
 }

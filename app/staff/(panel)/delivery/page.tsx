@@ -6,27 +6,30 @@ import { staffFetch } from "@/lib/staff-client";
 import { formatCurrency } from "@/lib/utils";
 import StaffPageHeader from "@/components/staff/StaffPageHeader";
 import StaffCard from "@/components/staff/StaffCard";
-import StaffLoading from "@/components/staff/StaffLoading";
-import { useStaffRealtimeRefresh } from "@/components/staff/StaffRealtimeProvider";
+import { StaffInlineSpinner } from "@/components/staff/StaffInlineLoaders";
+import { EMPTY_DELIVERY } from "@/lib/staff-page-defaults";
 
 export default function DeliveryPage() {
   const [data, setData] = useState<{
     deliveries: { id: string; customer_name: string; delivery_address: string; order_status?: string }[];
     zones: { id: string; name: string; fee: number }[];
     personnel: { id: string; name: string; phone: string }[];
-  } | null>(null);
+  }>(EMPTY_DELIVERY);
+  const [loading, setLoading] = useState(true);
   const [zoneName, setZoneName] = useState("");
   const [zoneFee, setZoneFee] = useState(500);
   const [personName, setPersonName] = useState("");
   const [personPhone, setPersonPhone] = useState("");
 
-  const load = () => staffFetch<NonNullable<typeof data>>("/api/staff/delivery").then(setData);
+  const load = () =>
+    staffFetch<typeof data>("/api/staff/delivery")
+      .then(setData)
+      .finally(() => setLoading(false));
 
   useEffect(() => {
     load();
   }, []);
 
-  useStaffRealtimeRefresh(load, [], ["order_new", "order_updated", "sync"]);
 
   const addZone = async () => {
     await staffFetch("/api/staff/delivery", { method: "POST", body: JSON.stringify({ type: "zone", name: zoneName, fee: zoneFee }) });
@@ -41,15 +44,17 @@ export default function DeliveryPage() {
     load();
   };
 
-  if (!data) return <StaffLoading label="Loading delivery..." />;
-
   return (
     <div className="space-y-6">
-      <StaffPageHeader title="Delivery" description="Pending orders, Nairobi zones, and drivers." />
+      <StaffPageHeader
+        title="Delivery"
+        description={loading ? "Loading delivery data…" : "Pending orders, Nairobi zones, and drivers."}
+      />
 
       <StaffCard title="Pending deliveries">
         <div className="space-y-2">
-          {data.deliveries.length === 0 && <p className="text-sm text-slate-500">No pending deliveries</p>}
+          {loading && <div className="py-6 flex justify-center"><StaffInlineSpinner label="Loading deliveries…" /></div>}
+          {!loading && data.deliveries.length === 0 && <p className="text-sm text-slate-500">No pending deliveries</p>}
           {data.deliveries.map((d) => (
             <div key={d.id} className="flex justify-between items-center border-b border-slate-100 pb-2 text-sm last:border-0">
               <div>

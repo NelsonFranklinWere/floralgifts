@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireStaff } from "@/lib/staff-auth";
+import { requireStaff, staffRouteErrorResponse } from "@/lib/staff-auth";
 import { fetchStaffCustomersSummary } from "@/lib/staff-queries";
 import { supabaseAdmin } from "@/lib/supabase";
 
@@ -19,8 +19,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       customers.map((c) => ({ ...c, blocked: blockedSet.has(c.email) }))
     );
-  } catch {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  } catch (error) {
+    return staffRouteErrorResponse(error, "staff/customers");
   }
 }
 

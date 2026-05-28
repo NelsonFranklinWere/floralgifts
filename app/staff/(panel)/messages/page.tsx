@@ -5,8 +5,8 @@ import { staffFetch } from "@/lib/staff-client";
 import { formatDateTime } from "@/lib/utils";
 import StaffPageHeader from "@/components/staff/StaffPageHeader";
 import StaffCard from "@/components/staff/StaffCard";
-import { useStaffRealtimeRefresh } from "@/components/staff/StaffRealtimeProvider";
 import { cn } from "@/lib/utils";
+import { StaffInlineSpinner } from "@/components/staff/StaffInlineLoaders";
 
 interface Message {
   id: string;
@@ -23,17 +23,19 @@ export default function MessagesPage() {
   const [waLogs, setWaLogs] = useState<{ order_id: string; phone: string; message: string; created_at: string }[]>([]);
   const [selected, setSelected] = useState<Message | null>(null);
   const [reply, setReply] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const load = () =>
-    staffFetch<{ messages: Message[]; whatsappLogs: typeof waLogs }>("/api/staff/messages").then((d) => {
-      setMessages(d.messages);
-      setWaLogs(d.whatsappLogs);
-    });
+    staffFetch<{ messages: Message[]; whatsappLogs: typeof waLogs }>("/api/staff/messages")
+      .then((d) => {
+        setMessages(d.messages);
+        setWaLogs(d.whatsappLogs);
+      })
+      .finally(() => setLoading(false));
 
   useEffect(() => {
     load();
   }, []);
-  useStaffRealtimeRefresh(load, ["messages"]);
 
   const markRead = async (id: string, status: string) => {
     await staffFetch("/api/staff/messages", { method: "PATCH", body: JSON.stringify({ id, status }) });
@@ -53,11 +55,19 @@ export default function MessagesPage() {
 
   return (
     <div className="space-y-6">
-      <StaffPageHeader title="Messages" description="Contact enquiries and WhatsApp logs — updates live." />
+      <StaffPageHeader
+        title="Messages"
+        description={loading ? "Loading messages…" : "Contact enquiries and WhatsApp logs."}
+      />
 
       <div className="grid lg:grid-cols-2 gap-6">
         <StaffCard title="Contact enquiries">
           <div className="space-y-2 max-h-[500px] overflow-y-auto -mx-1 px-1">
+            {loading && (
+              <div className="py-8 flex justify-center">
+                <StaffInlineSpinner label="Loading messages…" />
+              </div>
+            )}
             {messages.map((m) => (
               <button
                 key={m.id}
@@ -78,7 +88,9 @@ export default function MessagesPage() {
                 <p className="text-xs text-slate-400 mt-1">{formatDateTime(m.created_at)}</p>
               </button>
             ))}
-            {messages.length === 0 && <p className="text-sm text-slate-500 py-4">No messages yet.</p>}
+            {!loading && messages.length === 0 && (
+              <p className="text-sm text-slate-500 py-4">No messages yet.</p>
+            )}
           </div>
         </StaffCard>
 

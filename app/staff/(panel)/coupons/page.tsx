@@ -5,6 +5,7 @@ import { staffFetch } from "@/lib/staff-client";
 import StaffPageHeader from "@/components/staff/StaffPageHeader";
 import StaffCard from "@/components/staff/StaffCard";
 import { Plus, X } from "lucide-react";
+import { StaffTableLoadingRow } from "@/components/staff/StaffInlineLoaders";
 
 interface Coupon {
   id: string;
@@ -19,6 +20,7 @@ interface Coupon {
 
 export default function CouponsPage() {
   const [coupons, setCoupons] = useState<Coupon[]>([]);
+  const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({
     code: "",
@@ -29,7 +31,10 @@ export default function CouponsPage() {
     expires_at: "",
   });
 
-  const load = () => staffFetch<Coupon[]>("/api/staff/coupons").then(setCoupons);
+  const load = () =>
+    staffFetch<Coupon[]>("/api/staff/coupons")
+      .then(setCoupons)
+      .finally(() => setLoading(false));
 
   useEffect(() => {
     load();
@@ -58,7 +63,7 @@ export default function CouponsPage() {
     <div className="space-y-6">
       <StaffPageHeader
         title="Coupons"
-        description="Discount codes for checkout."
+        description={loading ? "Loading coupons…" : "Discount codes for checkout."}
         actions={
           <button type="button" onClick={() => setOpen(true)} className="staff-btn-primary">
             <Plus className="h-4 w-4" />
@@ -111,6 +116,9 @@ export default function CouponsPage() {
             </tr>
           </thead>
           <tbody>
+            {loading && coupons.length === 0 ? (
+              <StaffTableLoadingRow colSpan={5} label="Loading coupons…" />
+            ) : null}
             {coupons.map((c) => (
               <tr key={c.id}>
                 <td className="font-mono font-semibold">{c.code}</td>
@@ -136,6 +144,9 @@ export default function CouponsPage() {
             ))}
           </tbody>
         </table>
+        {!loading && coupons.length === 0 && (
+          <p className="text-center py-8 text-sm text-slate-500">No coupons yet.</p>
+        )}
       </div>
     </div>
   );

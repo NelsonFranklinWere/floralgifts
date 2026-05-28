@@ -5,26 +5,32 @@ import { staffFetch } from "@/lib/staff-client";
 import { formatDateTime } from "@/lib/utils";
 import StaffPageHeader from "@/components/staff/StaffPageHeader";
 import StaffCard from "@/components/staff/StaffCard";
-import StaffLoading from "@/components/staff/StaffLoading";
+import { StaffTableLoadingRow } from "@/components/staff/StaffInlineLoaders";
 
 export default function AuditPage() {
   const [logs, setLogs] = useState<{ staff_email: string; action: string; entity_type: string; created_at: string; ip_address: string }[]>([]);
   const [logins, setLogins] = useState<{ staff_email: string; ip_address: string; success: boolean; created_at: string }[]>([]);
-  const [loaded, setLoaded] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    staffFetch<{ logs: typeof logs; logins: typeof logins }>("/api/staff/audit").then((d) => {
-      setLogs(d.logs);
-      setLogins(d.logins);
-      setLoaded(true);
-    });
+    staffFetch<{ logs: typeof logs; logins: typeof logins }>("/api/staff/audit")
+      .then((d) => {
+        setLogs(d.logs);
+        setLogins(d.logins);
+      })
+      .catch(() => {
+        setLogs([]);
+        setLogins([]);
+      })
+      .finally(() => setLoading(false));
   }, []);
-
-  if (!loaded) return <StaffLoading label="Loading activity..." />;
 
   return (
     <div className="space-y-6">
-      <StaffPageHeader title="Activity" description="Staff actions and login history." />
+      <StaffPageHeader
+        title="Activity"
+        description={loading ? "Loading activity…" : "Staff actions and login history."}
+      />
 
       <StaffCard title="Staff actions" noPadding bodyClassName="p-0">
         <div className="staff-table-wrap border-0 rounded-none shadow-none">
@@ -39,7 +45,8 @@ export default function AuditPage() {
               </tr>
             </thead>
             <tbody>
-              {logs.map((l, i) => (
+              {loading ? <StaffTableLoadingRow colSpan={5} label="Loading activity…" /> : null}
+              {!loading && logs.map((l, i) => (
                 <tr key={i}>
                   <td className="text-xs text-slate-500">{formatDateTime(l.created_at)}</td>
                   <td>{l.staff_email}</td>
@@ -65,7 +72,8 @@ export default function AuditPage() {
               </tr>
             </thead>
             <tbody>
-              {logins.map((l, i) => (
+              {loading ? <StaffTableLoadingRow colSpan={4} label="Loading logins…" /> : null}
+              {!loading && logins.map((l, i) => (
                 <tr key={i}>
                   <td className="text-xs text-slate-500">{formatDateTime(l.created_at)}</td>
                   <td>{l.staff_email}</td>

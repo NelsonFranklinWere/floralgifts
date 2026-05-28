@@ -83,14 +83,23 @@ function ToastStack({
 export function useStaffRealtimeRefresh(
   onRefresh: () => void,
   deps: string[] = [],
-  events: string[] = ["order_new", "order_updated", "message_new", "sync"]
+  events: string[] = ["order_new", "order_updated", "message_new"]
 ) {
   const refreshRef = useRef(onRefresh);
   refreshRef.current = onRefresh;
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    return onStaffRealtime((event) => {
-      if (events.includes(event)) refreshRef.current();
+    const schedule = () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      debounceRef.current = setTimeout(() => refreshRef.current(), 2000);
+    };
+    const unsub = onStaffRealtime((event) => {
+      if (events.includes(event)) schedule();
     });
+    return () => {
+      unsub();
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
   }, deps);
 }

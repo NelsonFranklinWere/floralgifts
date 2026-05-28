@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireStaff } from "@/lib/staff-auth";
+import { requireStaff, staffRouteErrorResponse } from "@/lib/staff-auth";
 import { fetchStaffOrdersList } from "@/lib/staff-queries";
 
 export const dynamic = "force-dynamic";
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     if (to) orders = orders.filter((o) => new Date(o.created_at) <= new Date(to + "T23:59:59"));
 
     return NextResponse.json(orders);
-  } catch {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  } catch (error) {
+    return staffRouteErrorResponse(error, "staff/orders");
   }
 }

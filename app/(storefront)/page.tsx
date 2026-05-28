@@ -17,21 +17,11 @@ import { SHOP_INFO } from "@/lib/constants";
 import { getFeaturedCaseStudies } from "@/lib/case-studies";
 import CaseStudyCard from "@/components/CaseStudyCard";
 import { getHeroSlides } from "@/lib/heroSlides";
+import HomeReviewsSection from "@/components/reviews/HomeReviewsSection";
 
 const RotatingProductSection = dynamic(
   () => import("@/components/RotatingProductSection"),
   { loading: () => <ProductSectionSkeleton /> }
-);
-
-const HomeReviewsSection = dynamic(
-  () => import("@/components/reviews/HomeReviewsSection"),
-  {
-    loading: () => (
-      <section className="py-16 bg-[#FAF7F2] border-t border-[#F0E8E8]" aria-hidden>
-        <div className="max-w-6xl mx-auto px-4 h-48 bg-gray-100 rounded-xl animate-pulse" />
-      </section>
-    ),
-  }
 );
 
 export const revalidate = 300;
@@ -1149,7 +1139,15 @@ export default async function HomePage() {
         </Suspense>
 
         {/* Google (API) → Supabase curated → static fallback */}
-        <HomeReviewsSection />
+        <Suspense
+          fallback={
+            <section className="py-16 bg-[#FAF7F2] border-t border-[#F0E8E8]" aria-hidden>
+              <div className="max-w-6xl mx-auto px-4 h-48 bg-gray-100 rounded-xl animate-pulse" />
+            </section>
+          }
+        >
+          <HomeReviewsSection />
+        </Suspense>
 
         {/* Our Work - Case Studies Preview */}
         {featuredCaseStudies.length > 0 && (

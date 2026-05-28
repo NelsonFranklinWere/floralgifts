@@ -18,6 +18,7 @@ import {
   LogOut,
   ExternalLink,
   X,
+  Radio,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { StaffRole } from "@/lib/staff-auth";
@@ -26,15 +27,16 @@ import { useStaffAlerts } from "./StaffAlertsProvider";
 
 const nav = [
   { href: "/staff", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/staff/live-visitors", label: "Live visitors", icon: Radio, highlight: true },
   { href: "/staff/orders", label: "Orders", icon: ShoppingCart, badge: "orders" },
+  { href: "/staff/messages", label: "Messages", icon: MessageSquare, badge: "messages" },
   { href: "/staff/products", label: "Products", icon: Package },
   { href: "/staff/customers", label: "Customers", icon: Users },
   { href: "/staff/coupons", label: "Coupons", icon: Tag },
   { href: "/staff/delivery", label: "Delivery", icon: Truck },
   { href: "/staff/content", label: "Content", icon: FileText },
   { href: "/staff/financials", label: "Financials", icon: Banknote, superAdminOnly: true },
-  { href: "/staff/messages", label: "Messages", icon: MessageSquare, badge: "messages" },
-  { href: "/staff/audit", label: "Activity", icon: ClipboardList },
+  { href: "/staff/audit", label: "Audit log", icon: ClipboardList },
   { href: "/staff/settings", label: "Settings", icon: Settings },
 ];
 
@@ -104,7 +106,8 @@ export default function StaffSidebar({ role, onLogout, onNavigate, onClose }: St
                 "flex items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                 active
                   ? "bg-brand-red/5 text-brand-red border-l-2 border-brand-red pl-[10px]"
-                  : "text-brand-gray-900 hover:text-brand-red hover:bg-brand-gray-50"
+                  : "text-brand-gray-900 hover:text-brand-red hover:bg-brand-gray-50",
+                "highlight" in item && item.highlight && !active && "ring-1 ring-brand-green/30 bg-brand-green/5"
               )}
             >
               <span className="flex items-center gap-2.5">

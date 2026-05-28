@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { supabaseAdmin } from "@/lib/supabase";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production";
-const POLL_MS = 4000;
+const POLL_MS = 30_000;
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -69,8 +69,9 @@ export async function GET(request: NextRequest) {
 
       const poll = async () => {
         try {
+          let changed = false;
           const { data: newOrders } = await (supabaseAdmin.from("orders") as ReturnType<typeof supabaseAdmin.from>)
-            .select("id, customer_name, status, order_status, total_amount, created_at")
+            .select("id, customer_name, status, total_amount, created_at")
             .gt("created_at", lastOrderAt)
             .order("created_at", { ascending: true })
             .limit(20);
@@ -81,6 +82,7 @@ export async function GET(request: NextRequest) {
             seenOrderIds.add(o.id);
             lastOrderAt = o.created_at;
             send("order_new", row);
+            changed = true;
           }
 
           const { data: newMessages } = await (
@@ -97,9 +99,10 @@ export async function GET(request: NextRequest) {
             seenMessageIds.add(m.id);
             lastMessageAt = m.created_at;
             send("message_new", row);
+            changed = true;
           }
 
-          send("sync", { at: Date.now() });
+          if (changed) send("sync", { at: Date.now() });
         } catch (err) {
           console.warn("[staff/stream] poll error:", err);
         }

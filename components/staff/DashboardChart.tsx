@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -16,6 +17,13 @@ interface DashboardChartProps {
 }
 
 export default function DashboardChart({ data }: DashboardChartProps) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) {
+    return <div className="h-80 min-h-[320px] staff-skeleton rounded-lg" />;
+  }
+
   if (!data?.length) {
     return (
       <div className="h-80 min-h-[320px] flex items-center justify-center text-sm text-brand-gray-800">
