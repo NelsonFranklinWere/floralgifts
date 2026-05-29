@@ -29,10 +29,6 @@ export default function ProductImageManager({
     if (!files?.length || !category) return;
 
     const token = getStaffToken();
-    if (!token) {
-      alert("Please sign in again.");
-      return;
-    }
 
     onUploadingChange(true);
     try {
@@ -43,7 +39,8 @@ export default function ProductImageManager({
           formData.append("category", category);
           const res = await fetch("/api/admin/upload", {
             method: "POST",
-            headers: { Authorization: `Bearer ${token}` },
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+            credentials: "include",
             body: formData,
           });
           const data = await res.json();

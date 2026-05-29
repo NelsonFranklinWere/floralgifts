@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireStaff, requireSuperAdmin } from "@/lib/staff-auth";
+import { requireStaff, requireSuperAdmin, staffRouteErrorResponse } from "@/lib/staff-auth";
 import { supabaseAdmin } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
@@ -27,8 +27,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       .maybeSingle();
 
     return NextResponse.json({ orders: orders || [], notes: notes || [], blocked: !!blocked });
-  } catch {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  } catch (error) {
+    return staffRouteErrorResponse(error, "staff/customers/[email] GET");
   }
 }
 

@@ -44,7 +44,8 @@ export default function CartPage() {
                 const itemKey = `${item.id}-${JSON.stringify(item.options || {})}`;
                 return (
                   <div key={itemKey} className="py-6 border-t border-brand-gray-200 first:border-t-0">
-                    <div className="flex gap-4 sm:gap-6">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:gap-6">
+                      <div className="flex gap-4 flex-1 min-w-0">
                       {/* Product Image */}
                       <Link href={`/product/${item.slug}`} className="flex-shrink-0">
                         <div className="relative w-24 h-24 sm:w-32 sm:h-32 overflow-hidden rounded-md bg-brand-gray-100">
@@ -100,9 +101,10 @@ export default function CartPage() {
                           Remove
                         </button>
                       </div>
+                      </div>
 
                       {/* Price */}
-                      <div className="flex-shrink-0 text-right">
+                      <div className="sm:flex-shrink-0 sm:text-right pl-28 sm:pl-0">
                         <p className="font-medium text-base sm:text-lg text-brand-gray-900">
                           {formatCurrency(item.price * item.quantity)}
                         </p>

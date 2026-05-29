@@ -5,12 +5,10 @@ import { staffFetch } from "@/lib/staff-client";
 import { formatDateTime } from "@/lib/utils";
 import StaffPageHeader from "@/components/staff/StaffPageHeader";
 import StaffCard from "@/components/staff/StaffCard";
-import { StaffTableLoadingRow } from "@/components/staff/StaffInlineLoaders";
 
 export default function AuditPage() {
   const [logs, setLogs] = useState<{ staff_email: string; action: string; entity_type: string; created_at: string; ip_address: string }[]>([]);
   const [logins, setLogins] = useState<{ staff_email: string; ip_address: string; success: boolean; created_at: string }[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     staffFetch<{ logs: typeof logs; logins: typeof logins }>("/api/staff/audit")
@@ -21,15 +19,14 @@ export default function AuditPage() {
       .catch(() => {
         setLogs([]);
         setLogins([]);
-      })
-      .finally(() => setLoading(false));
+      });
   }, []);
 
   return (
     <div className="space-y-6">
       <StaffPageHeader
         title="Activity"
-        description={loading ? "Loading activity…" : "Staff actions and login history."}
+        description="Staff actions and login history."
       />
 
       <StaffCard title="Staff actions" noPadding bodyClassName="p-0">
@@ -45,8 +42,7 @@ export default function AuditPage() {
               </tr>
             </thead>
             <tbody>
-              {loading ? <StaffTableLoadingRow colSpan={5} label="Loading activity…" /> : null}
-              {!loading && logs.map((l, i) => (
+              {logs.map((l, i) => (
                 <tr key={i}>
                   <td className="text-xs text-slate-500">{formatDateTime(l.created_at)}</td>
                   <td>{l.staff_email}</td>
@@ -72,8 +68,7 @@ export default function AuditPage() {
               </tr>
             </thead>
             <tbody>
-              {loading ? <StaffTableLoadingRow colSpan={4} label="Loading logins…" /> : null}
-              {!loading && logins.map((l, i) => (
+              {logins.map((l, i) => (
                 <tr key={i}>
                   <td className="text-xs text-slate-500">{formatDateTime(l.created_at)}</td>
                   <td>{l.staff_email}</td>

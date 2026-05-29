@@ -48,12 +48,9 @@ export default function ProductSection({
         </div>
 
         {products.length > 0 ? (
-          <div className="flex overflow-x-auto gap-3 md:gap-5 lg:gap-6 pb-4 scrollbar-thin scrollbar-thumb-brand-gray-300 scrollbar-track-transparent -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+          <div className="carousel-track scrollbar-thin scrollbar-thumb-brand-gray-300 scrollbar-track-transparent">
             {products.map((product, index) => (
-              <div
-                key={`${product.id}-${index}`}
-                className="flex-shrink-0 w-[calc(100vw-2rem)] min-w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] xs:min-w-[140px] xs:max-w-[140px] sm:min-w-[280px] sm:max-w-[300px] md:w-[320px]"
-              >
+              <div key={`${product.id}-${index}`} className="carousel-slide">
                 <ProductCard
                   id={product.id}
                   name={product.title}

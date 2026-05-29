@@ -10,9 +10,9 @@ export default function Footer() {
       </div>
       
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-4 lg:gap-6">
           {/* Brand Section */}
-          <div className="col-span-2 lg:col-span-1">
+          <div className="sm:col-span-2 lg:col-span-1">
             <Link href="/" className="inline-block mb-3">
               <h3 className="font-heading font-bold text-lg mb-1">
                 <span className="text-brand-red">Floral Whispers</span>

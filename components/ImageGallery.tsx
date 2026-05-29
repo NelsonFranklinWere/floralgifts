@@ -56,7 +56,7 @@ export default function ImageGallery({ images, productName, category }: ImageGal
           className="object-cover group-hover:scale-105 transition-transform duration-300"
           priority={selectedIndex === 0}
           fetchPriority={selectedIndex === 0 ? "high" : "auto"}
-          quality={72}
+          quality={70}
           sizes="(max-width: 768px) 100vw, 50vw"
           loading={selectedIndex === 0 ? "eager" : "lazy"}
         />
@@ -69,7 +69,7 @@ export default function ImageGallery({ images, productName, category }: ImageGal
       </div>
 
       {images.length > 1 && (
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
           {images.map((image, index) => (
             <button
               key={index}

@@ -21,7 +21,8 @@ const nextConfig = {
     dangerouslyAllowSVG: false,
     unoptimized: false,
     formats: ['image/avif', 'image/webp'],
-    qualities: [55, 60, 62, 68, 70, 75, 80],
+    // Every quality used in <Image quality={…} /> must appear here (restart dev after changes).
+    qualities: [55, 60, 62, 68, 70, 72, 75, 80, 85, 90],
   },
 
   compiler: {

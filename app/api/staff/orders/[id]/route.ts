@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireStaff, logStaffAction, getClientIp } from "@/lib/staff-auth";
+import { requireStaff, logStaffAction, getClientIp, staffRouteErrorResponse } from "@/lib/staff-auth";
 import { getOrderById } from "@/lib/db";
 import { supabaseAdmin } from "@/lib/supabase";
 
@@ -14,8 +14,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     const order = await getOrderById(id);
     if (!order) return NextResponse.json({ message: "Not found" }, { status: 404 });
     return NextResponse.json(order);
-  } catch {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  } catch (error) {
+    return staffRouteErrorResponse(error, "staff/orders/[id] GET");
   }
 }
 

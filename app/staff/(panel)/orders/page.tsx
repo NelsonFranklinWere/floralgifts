@@ -6,7 +6,6 @@ import Link from "next/link";
 import { staffFetch } from "@/lib/staff-client";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
 import StaffPageHeader from "@/components/staff/StaffPageHeader";
-import { StaffTableLoadingRow } from "@/components/staff/StaffInlineLoaders";
 
 interface OrderRow {
   id: string;
@@ -31,7 +30,6 @@ function StaffOrdersPage() {
   const searchParams = useSearchParams();
   const [orders, setOrders] = useState<OrderRow[]>([]);
   const [status, setStatus] = useState(searchParams.get("status") || "");
-  const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -39,27 +37,25 @@ function StaffOrdersPage() {
     setStatus(q);
   }, [searchParams]);
 
-  const load = (silent = false) => {
+  const load = () => {
     const params = status ? `?status=${status}` : "";
-    if (!silent) setLoading(true);
     setLoadError(null);
     staffFetch<OrderRow[]>(`/api/staff/orders${params}`)
       .then(setOrders)
       .catch((err: unknown) => {
         setLoadError(err instanceof Error ? err.message : "Failed to load orders");
-      })
-      .finally(() => setLoading(false));
+      });
   };
 
   useEffect(() => {
-    load(false);
+    load();
   }, [status]);
 
   return (
     <div className="space-y-6">
       <StaffPageHeader
         title="Orders"
-        description={loading ? "Loading orders…" : "Order list and payment status."}
+        description="Order list and payment status."
       />
 
       {loadError && (
@@ -91,9 +87,6 @@ function StaffOrdersPage() {
             </tr>
           </thead>
           <tbody>
-            {loading && orders.length === 0 ? (
-              <StaffTableLoadingRow colSpan={7} label="Loading orders…" />
-            ) : null}
             {orders.map((o) => (
               <tr key={o.id}>
                 <td>
@@ -113,7 +106,7 @@ function StaffOrdersPage() {
             ))}
           </tbody>
         </table>
-        {!loading && orders.length === 0 && (
+        {orders.length === 0 && (
           <p className="text-center py-12 text-slate-500 text-sm">No orders found.</p>
         )}
       </div>
@@ -123,7 +116,7 @@ function StaffOrdersPage() {
 
 export default function StaffOrdersPageWrapper() {
   return (
-    <Suspense fallback={<div className="py-12 flex justify-center"><span className="text-sm text-brand-gray-800">Loading…</span></div>}>
+    <Suspense fallback={null}>
       <StaffOrdersPage />
     </Suspense>
   );

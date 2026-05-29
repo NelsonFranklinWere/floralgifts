@@ -5,15 +5,12 @@ import { staffFetch } from "@/lib/staff-client";
 import type { StaffRole } from "@/lib/staff-auth";
 import StaffPageHeader from "@/components/staff/StaffPageHeader";
 import StaffCard from "@/components/staff/StaffCard";
-import { StaffInlineSpinner } from "@/components/staff/StaffInlineLoaders";
 
 export default function SettingsPage() {
   const [role, setRole] = useState<StaffRole>("staff");
   const [settings, setSettings] = useState<Record<string, string>>({});
   const [staff, setStaff] = useState<{ id: string; email: string; name: string; role: string; is_active: boolean }[]>([]);
   const [newStaff, setNewStaff] = useState({ email: "", password: "", name: "", role: "staff" });
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     staffFetch<{ role: StaffRole }>("/api/staff/me").then((u) => setRole(u.role));
     staffFetch<{ settings: Record<string, string>; staff: typeof staff }>("/api/staff/settings")
@@ -21,7 +18,7 @@ export default function SettingsPage() {
         setSettings(d.settings);
         setStaff(d.staff);
       })
-      .finally(() => setLoading(false));
+      .catch(() => {});
   }, []);
 
   const saveSettings = async () => {
@@ -48,17 +45,9 @@ export default function SettingsPage() {
     <div className="space-y-6 max-w-3xl">
       <StaffPageHeader
         title="Settings"
-        description={loading ? "Loading settings…" : "Store details, payments, and staff accounts."}
+        description="Store details, payments, and staff accounts."
       />
 
-      {loading && (
-        <div className="flex justify-center py-8">
-          <StaffInlineSpinner label="Loading settings…" />
-        </div>
-      )}
-
-      {!loading && (
-      <>
       <StaffCard title="Store information">
         <div className="space-y-3">
           {[
@@ -137,8 +126,6 @@ export default function SettingsPage() {
             </div>
           </div>
         </StaffCard>
-      )}
-      </>
       )}
     </div>
   );

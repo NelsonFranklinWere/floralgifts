@@ -5,7 +5,6 @@ import Link from "next/link";
 import { staffFetch } from "@/lib/staff-client";
 import StaffPageHeader from "@/components/staff/StaffPageHeader";
 import StaffCard from "@/components/staff/StaffCard";
-import { StaffInlineSpinner } from "@/components/staff/StaffInlineLoaders";
 import { EMPTY_CONTENT } from "@/lib/staff-page-defaults";
 
 export default function ContentPage() {
@@ -14,29 +13,17 @@ export default function ContentPage() {
     heroSlides: { id: string; title: string; position: number }[];
     homepageSections: { id: string; section_key: string; title: string }[];
   }>(EMPTY_CONTENT);
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
-    staffFetch<typeof data>("/api/staff/content")
-      .then(setData)
-      .finally(() => setLoading(false));
+    staffFetch<typeof data>("/api/staff/content").then(setData).catch(() => {});
   }, []);
 
   return (
     <div className="space-y-6">
       <StaffPageHeader
         title="Content"
-        description={loading ? "Loading content…" : "Blogs, hero banners, and homepage sections."}
+        description="Blogs, hero banners, and homepage sections."
       />
 
-      {loading && (
-        <div className="flex justify-center py-8">
-          <StaffInlineSpinner label="Loading content…" />
-        </div>
-      )}
-
-      {!loading && (
-      <>
       <StaffCard
         title="Blog posts"
         actions={
@@ -87,8 +74,6 @@ export default function ContentPage() {
           </p>
         </div>
       </StaffCard>
-      </>
-      )}
     </div>
   );
 }

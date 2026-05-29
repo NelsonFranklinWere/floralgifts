@@ -69,24 +69,20 @@ function trendSublabel(today: number, yesterday: number, isMoney = false) {
 export default function StaffDashboardPage() {
   const [data, setData] = useState<DashboardData>(EMPTY_STAFF_DASHBOARD);
   const [period, setPeriod] = useState("daily");
-  const [syncing, setSyncing] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
 
-  const load = useCallback(async (silent = false) => {
-    setSyncing(true);
+  const load = useCallback(async () => {
     setLoadError(null);
     try {
       const d = await staffFetch<DashboardData>(`/api/staff/dashboard?period=${period}`);
       setData(d);
     } catch (err) {
       setLoadError(err instanceof Error ? err.message : "Could not load dashboard");
-    } finally {
-      setSyncing(false);
     }
   }, [period]);
 
   useEffect(() => {
-    load(false);
+    load();
   }, [load]);
 
   const dashboard = data;
@@ -110,11 +106,10 @@ export default function StaffDashboardPage() {
           <>
             <button
               type="button"
-              onClick={() => load(true)}
-              disabled={syncing}
+              onClick={() => load()}
               className="staff-btn-secondary"
             >
-              <RefreshCw className={`h-4 w-4 ${syncing ? "animate-spin" : ""}`} />
+              <RefreshCw className="h-4 w-4" />
               Refresh
             </button>
             <Link href="/staff/products/new" className="staff-btn-primary">

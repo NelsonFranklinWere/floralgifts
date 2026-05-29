@@ -350,12 +350,12 @@ Whether you're celebrating a university graduation, high school completion, or a
             View all
           </Link>
         </div>
-        <div className="flex overflow-x-auto gap-3 md:gap-5 lg:gap-6 pb-4 scrollbar-thin scrollbar-thumb-brand-gray-300 scrollbar-track-transparent -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+        <div className="carousel-track scrollbar-thin scrollbar-thumb-brand-gray-300 scrollbar-track-transparent">
           {latestPosts.map((post) => (
             <Link
               key={post.slug}
               href={`/blog/${post.slug}`}
-              className="flex-shrink-0 w-[calc(100vw-2rem)] min-w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] xs:min-w-[140px] xs:max-w-[140px] sm:min-w-[280px] sm:max-w-[300px] md:w-[320px] card overflow-hidden group hover:shadow-cardHover transition-all duration-300"
+              className="carousel-slide card overflow-hidden group hover:shadow-cardHover transition-all duration-300"
             >
               <div className="relative aspect-[4/3] overflow-hidden bg-brand-gray-100">
                 <Image
@@ -968,11 +968,11 @@ export default async function HomePage() {
               </p>
             </div>
             
-            <div className="flex flex-nowrap overflow-x-auto gap-2 sm:gap-4 md:gap-6 lg:gap-8 pb-3 -mx-4 sm:mx-0 px-4 sm:px-0 scrollbar-thin scrollbar-thumb-brand-gray-300 scrollbar-track-transparent">
+            <div className="carousel-track gap-2 sm:gap-4 md:gap-6 lg:gap-8 pb-3 scrollbar-thin scrollbar-thumb-brand-gray-300 scrollbar-track-transparent sm:mx-0 sm:px-0">
               {/* Gift Hampers Card */}
               <Link 
                 href="/collections/gift-hampers"
-                className="group relative bg-white rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2 flex-shrink-0 w-[260px] xs:w-[280px] sm:w-[320px] lg:w-[360px]"
+                className="carousel-slide-promo group relative bg-white rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2"
               >
                 <div className="relative h-32 sm:h-48 md:h-64 lg:h-72 overflow-hidden">
                   <Image
@@ -1004,7 +1004,7 @@ export default async function HomePage() {
               {/* Flowers Card */}
               <Link 
                 href="/collections/flowers"
-                className="group relative bg-white rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2 flex-shrink-0 w-[260px] xs:w-[280px] sm:w-[320px] lg:w-[360px]"
+                className="carousel-slide-promo group relative bg-white rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2"
               >
                 <div className="relative h-32 sm:h-48 md:h-64 lg:h-72 overflow-hidden">
                   <Image
@@ -1036,7 +1036,7 @@ export default async function HomePage() {
               {/* Teddy Bears Card */}
               <Link 
                 href="/collections/teddy-bears"
-                className="group relative bg-white rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2 flex-shrink-0 w-[260px] xs:w-[280px] sm:w-[320px] lg:w-[360px]"
+                className="carousel-slide-promo group relative bg-white rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2"
               >
                 <div className="relative h-32 sm:h-48 md:h-64 lg:h-72 overflow-hidden">
                   <Image

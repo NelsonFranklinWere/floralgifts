@@ -27,7 +27,8 @@ export function verifyStaffToken(request: NextRequest): StaffTokenPayload | null
   const cookieToken =
     request.cookies.get("staff_token")?.value || request.cookies.get("admin_token")?.value;
 
-  for (const token of [bearer, cookieToken]) {
+  // Prefer httpOnly cookie over localStorage Bearer (avoids stale JWT in storage).
+  for (const token of [cookieToken, bearer]) {
     if (!token) continue;
     const payload = verifyTokenString(token);
     if (payload) return payload;

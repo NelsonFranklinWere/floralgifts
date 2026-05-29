@@ -7,7 +7,6 @@ import { staffFetch } from "@/lib/staff-client";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
 import StaffPageHeader from "@/components/staff/StaffPageHeader";
 import StaffCard from "@/components/staff/StaffCard";
-import { StaffCardLoading } from "@/components/staff/StaffInlineLoaders";
 import type { Order } from "@/lib/db";
 
 export default function CustomerDetailPage() {
@@ -18,13 +17,14 @@ export default function CustomerDetailPage() {
     notes: { note: string; created_at: string }[];
     blocked: boolean;
   } | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [ready, setReady] = useState(false);
   const [note, setNote] = useState("");
 
   const load = () =>
     staffFetch<NonNullable<typeof data>>(`/api/staff/customers/${encodeURIComponent(key)}`)
       .then(setData)
-      .finally(() => setLoading(false));
+      .catch(() => setData(null))
+      .finally(() => setReady(true));
 
   useEffect(() => {
     load();
@@ -51,7 +51,6 @@ export default function CustomerDetailPage() {
     <div className="space-y-6 max-w-3xl">
       <StaffPageHeader
         title={key}
-        description={loading ? "Loading customer…" : undefined}
         actions={
           data ? (
           <button
@@ -69,8 +68,7 @@ export default function CustomerDetailPage() {
         }
       />
 
-      {loading && !data && <StaffCardLoading label="Loading customer…" />}
-      {!loading && !data && (
+      {ready && !data && (
         <p className="text-sm text-brand-gray-800">Could not load customer.</p>
       )}
 

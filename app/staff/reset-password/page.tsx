@@ -75,13 +75,7 @@ function ResetForm() {
 
 export default function ResetPasswordPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen flex items-center justify-center bg-[#FAF7F2] text-brand-gray-800">
-          Loading…
-        </div>
-      }
-    >
+    <Suspense fallback={null}>
       <ResetForm />
     </Suspense>
   );

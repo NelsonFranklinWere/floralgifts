@@ -76,10 +76,10 @@ export default function StaffSidebar({ role, onLogout, onNavigate, onClose }: St
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-brand-gray-50 text-brand-gray-800 shrink-0"
+            className="p-2.5 rounded-lg border border-brand-gray-200 bg-brand-gray-50 hover:bg-brand-gray-100 text-brand-gray-900 shrink-0"
             aria-label="Close menu"
           >
-            <X className="h-5 w-5" />
+            <X className="h-5 w-5" strokeWidth={2.25} />
           </button>
         )}
       </div>

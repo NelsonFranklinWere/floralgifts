@@ -105,20 +105,20 @@ export default function ContactPage() {
 
         {/* Trust Building Section */}
         <div className="mb-12">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6 mb-8">
-            <div className="card p-3 md:p-6 text-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-8">
+            <div className="card p-4 md:p-6 text-center">
               <div className="text-2xl md:text-4xl mb-2 md:mb-3">🎯</div>
-              <h3 className="font-heading font-bold text-xs md:text-lg text-brand-gray-900 mb-1 md:mb-2">Trusted by Thousands</h3>
+              <h3 className="font-heading font-bold text-sm md:text-lg text-brand-gray-900 mb-1 md:mb-2">Trusted by Thousands</h3>
               <p className="text-brand-gray-600 text-xs md:text-sm">10,000+ happy customers trust us for their special moments</p>
             </div>
-            <div className="card p-3 md:p-6 text-center">
+            <div className="card p-4 md:p-6 text-center">
               <div className="text-2xl md:text-4xl mb-2 md:mb-3">⚡</div>
-              <h3 className="font-heading font-bold text-xs md:text-lg text-brand-gray-900 mb-1 md:mb-2">Fast & Reliable</h3>
+              <h3 className="font-heading font-bold text-sm md:text-lg text-brand-gray-900 mb-1 md:mb-2">Fast & Reliable</h3>
               <p className="text-brand-gray-600 text-xs md:text-sm">Free same-day delivery in CBD. Your gifts arrive fresh and on time</p>
             </div>
-            <div className="card p-3 md:p-6 text-center col-span-2 md:col-span-1">
+            <div className="card p-4 md:p-6 text-center sm:col-span-2 md:col-span-1">
               <div className="text-2xl md:text-4xl mb-2 md:mb-3">💎</div>
-              <h3 className="font-heading font-bold text-xs md:text-lg text-brand-gray-900 mb-1 md:mb-2">Premium Quality</h3>
+              <h3 className="font-heading font-bold text-sm md:text-lg text-brand-gray-900 mb-1 md:mb-2">Premium Quality</h3>
               <p className="text-brand-gray-600 text-xs md:text-sm">Only the finest flowers and carefully curated gift hampers</p>
             </div>
           </div>

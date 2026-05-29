@@ -331,7 +331,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="py-12 bg-white">
+      <div className="py-6 sm:py-12 bg-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-6">
             <BackButton
@@ -353,7 +353,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             />
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-12">
             <div>
               <ImageGallery images={product.images} productName={product.title} category={product.category} />
             </div>
@@ -376,10 +376,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
               {product.description && (
                 <div className="mb-6">
                   <h2 className="font-heading font-semibold text-xl mb-3">Description</h2>
-                  <div
-                    className="text-brand-gray-700 prose prose-sm max-w-none"
-                    dangerouslySetInnerHTML={{ __html: product.description.replace(/\n/g, "<br />") }}
-                  />
+                  <div className="overflow-x-auto max-w-full">
+                    <div
+                      className="text-brand-gray-700 prose prose-sm max-w-none"
+                      dangerouslySetInnerHTML={{ __html: product.description.replace(/\n/g, "<br />") }}
+                    />
+                  </div>
                 </div>
               )}
 

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireStaff, requireSuperAdmin, logStaffAction, getClientIp } from "@/lib/staff-auth";
+import { requireStaff, requireSuperAdmin, logStaffAction, getClientIp, staffRouteErrorResponse } from "@/lib/staff-auth";
 import { getProductById } from "@/lib/db";
 import { supabaseAdmin } from "@/lib/supabase";
 import { revalidateContentTag, CACHE_TAG_PRODUCTS } from "@/lib/cache-tags";
@@ -18,8 +18,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       .eq("product_id", id);
 
     return NextResponse.json({ ...product, variants: variants || [] });
-  } catch {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  } catch (error) {
+    return staffRouteErrorResponse(error, "staff/products/[id] GET");
   }
 }
 

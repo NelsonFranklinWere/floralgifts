@@ -6,7 +6,6 @@ import { staffFetch } from "@/lib/staff-client";
 import { formatCurrency } from "@/lib/utils";
 import StaffPageHeader from "@/components/staff/StaffPageHeader";
 import StaffCard from "@/components/staff/StaffCard";
-import { StaffInlineSpinner } from "@/components/staff/StaffInlineLoaders";
 import { EMPTY_DELIVERY } from "@/lib/staff-page-defaults";
 
 export default function DeliveryPage() {
@@ -15,16 +14,12 @@ export default function DeliveryPage() {
     zones: { id: string; name: string; fee: number }[];
     personnel: { id: string; name: string; phone: string }[];
   }>(EMPTY_DELIVERY);
-  const [loading, setLoading] = useState(true);
   const [zoneName, setZoneName] = useState("");
   const [zoneFee, setZoneFee] = useState(500);
   const [personName, setPersonName] = useState("");
   const [personPhone, setPersonPhone] = useState("");
 
-  const load = () =>
-    staffFetch<typeof data>("/api/staff/delivery")
-      .then(setData)
-      .finally(() => setLoading(false));
+  const load = () => staffFetch<typeof data>("/api/staff/delivery").then(setData).catch(() => {});
 
   useEffect(() => {
     load();
@@ -48,20 +43,19 @@ export default function DeliveryPage() {
     <div className="space-y-6">
       <StaffPageHeader
         title="Delivery"
-        description={loading ? "Loading delivery data…" : "Pending orders, Nairobi zones, and drivers."}
+        description="Pending orders, Nairobi zones, and drivers."
       />
 
       <StaffCard title="Pending deliveries">
         <div className="space-y-2">
-          {loading && <div className="py-6 flex justify-center"><StaffInlineSpinner label="Loading deliveries…" /></div>}
-          {!loading && data.deliveries.length === 0 && <p className="text-sm text-slate-500">No pending deliveries</p>}
+          {data.deliveries.length === 0 && <p className="text-sm text-slate-500">No pending deliveries</p>}
           {data.deliveries.map((d) => (
-            <div key={d.id} className="flex justify-between items-center border-b border-slate-100 pb-2 text-sm last:border-0">
-              <div>
+            <div key={d.id} className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center border-b border-slate-100 pb-3 text-sm last:border-0">
+              <div className="min-w-0">
                 <p className="font-medium text-slate-900">{d.customer_name}</p>
-                <p className="text-slate-500 truncate max-w-md">{d.delivery_address}</p>
+                <p className="text-slate-500 break-words">{d.delivery_address}</p>
               </div>
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex items-center gap-2 shrink-0 self-start sm:self-center">
                 <span className="staff-pill-warning capitalize">{d.order_status || "pending"}</span>
                 <Link href={`/staff/orders/${d.id}`} className="staff-link text-xs">
                   View →

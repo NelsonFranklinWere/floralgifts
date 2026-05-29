@@ -681,7 +681,19 @@ Contact us today or order online for the best gifts for children in Nairobi!',
   ARRAY['best gifts for children nairobi', 'teddy bears nairobi', 'gifts for kids nairobi', 'new year gifts for children nairobi'],
   6,
   false
-);
+)
+ON CONFLICT (slug) DO UPDATE SET
+  title = EXCLUDED.title,
+  excerpt = EXCLUDED.excerpt,
+  content = EXCLUDED.content,
+  author = EXCLUDED.author,
+  published_at = EXCLUDED.published_at,
+  image = EXCLUDED.image,
+  category = EXCLUDED.category,
+  tags = EXCLUDED.tags,
+  read_time = EXCLUDED.read_time,
+  featured = EXCLUDED.featured,
+  updated_at = NOW();
 
 -- Update featured status for top 5 posts
 UPDATE blog_posts SET featured = true WHERE slug IN (

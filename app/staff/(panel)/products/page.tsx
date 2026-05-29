@@ -15,7 +15,6 @@ type StaffProduct = {
 import type { StaffRole } from "@/lib/staff-auth";
 import { formatCurrency } from "@/lib/utils";
 import StaffPageHeader from "@/components/staff/StaffPageHeader";
-import { StaffTableLoadingRow } from "@/components/staff/StaffInlineLoaders";
 import { Plus, Search, Trash2 } from "lucide-react";
 
 const CATEGORIES = [
@@ -35,15 +34,22 @@ export default function StaffProductsPage() {
   const [q, setQ] = useState("");
   const [category, setCategory] = useState("");
   const [role, setRole] = useState<StaffRole>("staff");
-  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const load = () => {
     const params = new URLSearchParams();
     if (category) params.set("category", category);
     if (q) params.set("q", q);
+    setLoadError(null);
     staffFetch<StaffProduct[]>(`/api/staff/products?${params}`)
-      .then(setProducts)
-      .finally(() => setLoading(false));
+      .then((rows) => {
+        setProducts(rows);
+        setLoadError(null);
+      })
+      .catch((err: unknown) => {
+        setProducts([]);
+        setLoadError(err instanceof Error ? err.message : "Failed to load products");
+      });
   };
 
   useEffect(() => {
@@ -51,10 +57,7 @@ export default function StaffProductsPage() {
   }, []);
 
   useEffect(() => {
-    const t = setTimeout(() => {
-      setLoading(true);
-      load();
-    }, q ? 300 : 0);
+    const t = setTimeout(load, q ? 300 : 0);
     return () => clearTimeout(t);
   }, [category, q]);
 
@@ -79,7 +82,7 @@ export default function StaffProductsPage() {
     <div className="space-y-6">
       <StaffPageHeader
         title="Products"
-        description={loading ? "Loading products…" : "Manage your catalogue — flowers, teddies, hampers, wines, and more."}
+        description="Manage your catalogue — flowers, teddies, hampers, wines, and more."
         actions={
           <Link href="/staff/products/new" className="staff-btn-primary">
             <Plus className="h-4 w-4" />
@@ -87,6 +90,19 @@ export default function StaffProductsPage() {
           </Link>
         }
       />
+
+      {loadError && (
+        <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          <p className="font-medium">Could not load products</p>
+          <p className="mt-1">{loadError}</p>
+          <p className="mt-2 text-xs text-amber-800">
+            If the shop shows products but this list is empty, check{" "}
+            <code className="bg-amber-100 px-1 rounded">SUPABASE_SERVICE_ROLE_KEY</code> in{" "}
+            <code className="bg-amber-100 px-1 rounded">.env</code> and run migration{" "}
+            <code className="bg-amber-100 px-1 rounded">011_staff_admin_panel.sql</code> in Supabase.
+          </p>
+        </div>
+      )}
 
       <div className="staff-card p-4">
         <div className="flex flex-col sm:flex-row gap-3">
@@ -137,9 +153,6 @@ export default function StaffProductsPage() {
             </tr>
           </thead>
           <tbody>
-            {loading && products.length === 0 ? (
-              <StaffTableLoadingRow colSpan={7} label="Loading products…" />
-            ) : null}
             {products.map((p) => (
               <tr key={p.id}>
                 <td>
@@ -167,8 +180,14 @@ export default function StaffProductsPage() {
             ))}
           </tbody>
         </table>
-        {!loading && products.length === 0 && (
-          <p className="text-center py-12 text-slate-500 text-sm">No products found.</p>
+        {!loadError && products.length === 0 && (
+          <p className="text-center py-12 text-slate-500 text-sm">
+            No products in the database yet.{" "}
+            <Link href="/staff/products/new" className="staff-link">
+              Add your first product
+            </Link>
+            .
+          </p>
         )}
       </div>
     </div>

@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
+    "dev:clean": "node scripts/dev-clean.mjs",
     "build": "next build --webpack",
     "build:prod": "cross-env NODE_OPTIONS=--max-old-space-size=4096 next build --webpack",
     "build:low-memory": "cross-env NODE_OPTIONS=--max-old-space-size=2048 next build --webpack",

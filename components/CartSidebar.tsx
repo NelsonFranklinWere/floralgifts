@@ -67,56 +67,60 @@ export default function CartSidebar() {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-3">
                       {items.map((item) => {
                         const itemKey = `${item.id}-${JSON.stringify(item.options || {})}`;
                         return (
-                          <div key={itemKey} className="card p-3">
-                            <div className="relative aspect-square overflow-hidden rounded-lg bg-brand-gray-100 mb-2">
+                          <div key={itemKey} className="card p-3 flex gap-3">
+                            <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-brand-gray-100">
                               <Image
                                 src={item.image}
                                 alt={item.name}
                                 fill
                                 className="object-cover"
-                                sizes="(max-width: 768px) 50vw, 25vw"
+                                sizes="80px"
                               />
                             </div>
-                            <h4 className="font-medium text-sm text-brand-gray-900 mb-1 line-clamp-2">{item.name}</h4>
-                            {item.options && (
-                              <p className="text-xs text-brand-gray-600 mb-1">
-                                {Object.entries(item.options).map(([k, v]) => `${k}: ${v}`).join(", ")}
+                            <div className="min-w-0 flex-1">
+                              <h4 className="font-medium text-sm text-brand-gray-900 mb-1 line-clamp-2">{item.name}</h4>
+                              {item.options && (
+                                <p className="text-xs text-brand-gray-600 mb-1 line-clamp-2">
+                                  {Object.entries(item.options).map(([k, v]) => `${k}: ${v}`).join(", ")}
+                                </p>
+                              )}
+                              <p className="text-brand-red font-medium text-sm mb-2">
+                                {formatCurrency(item.price)}
                               </p>
-                            )}
-                            <p className="text-brand-red font-medium text-sm mb-2">
-                              {formatCurrency(item.price)}
-                            </p>
-                            <div className="flex items-center gap-2 mb-2">
-                              <button
-                                type="button"
-                                onClick={() => updateQuantity(item.id, item.quantity - 1, item.options)}
-                                className="p-1 hover:bg-brand-gray-100 rounded transition-colors"
-                                aria-label="Decrease quantity"
-                              >
-                                <MinusIcon className="h-3 w-3" />
-                              </button>
-                              <span className="w-6 text-center font-medium text-sm">{item.quantity}</span>
-                              <button
-                                type="button"
-                                onClick={() => updateQuantity(item.id, item.quantity + 1, item.options)}
-                                className="p-1 hover:bg-brand-gray-100 rounded transition-colors"
-                                aria-label="Increase quantity"
-                              >
-                                <PlusIcon className="h-3 w-3" />
-                              </button>
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <div className="flex items-center gap-2 border border-brand-gray-200 rounded">
+                                  <button
+                                    type="button"
+                                    onClick={() => updateQuantity(item.id, item.quantity - 1, item.options)}
+                                    className="p-2 hover:bg-brand-gray-100 rounded transition-colors"
+                                    aria-label="Decrease quantity"
+                                  >
+                                    <MinusIcon className="h-4 w-4" />
+                                  </button>
+                                  <span className="w-6 text-center font-medium text-sm">{item.quantity}</span>
+                                  <button
+                                    type="button"
+                                    onClick={() => updateQuantity(item.id, item.quantity + 1, item.options)}
+                                    className="p-2 hover:bg-brand-gray-100 rounded transition-colors"
+                                    aria-label="Increase quantity"
+                                  >
+                                    <PlusIcon className="h-4 w-4" />
+                                  </button>
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => removeItem(item.id, item.options)}
+                                  className="text-brand-red text-xs hover:underline"
+                                  aria-label="Remove item"
+                                >
+                                  Remove
+                                </button>
+                              </div>
                             </div>
-                            <button
-                              type="button"
-                              onClick={() => removeItem(item.id, item.options)}
-                              className="text-brand-red text-xs hover:underline w-full"
-                              aria-label="Remove item"
-                            >
-                              Remove
-                            </button>
                           </div>
                         );
                       })}

@@ -25,7 +25,19 @@
 }
 
 .staff-app .staff-table-wrap table {
-  @apply w-full text-sm;
+  @apply w-full text-sm min-w-[640px];
+}
+
+@media (max-width: 640px) {
+  .staff-app .staff-table-wrap th,
+  .staff-app .staff-table-wrap td {
+    @apply px-2 py-2 text-xs;
+  }
+
+  .staff-app .staff-btn-primary,
+  .staff-app .staff-btn-secondary {
+    @apply min-h-[44px];
+  }
 }
 
 .staff-app .staff-table-wrap thead {

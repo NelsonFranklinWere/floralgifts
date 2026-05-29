@@ -138,7 +138,7 @@ export default function ProductCard({
                   sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 280px"
                   loading={priority ? "eager" : "lazy"}
                   priority={priority}
-                  quality={priority ? 68 : 62}
+                  quality={priority ? 75 : 70}
                   placeholder="blur"
                   blurDataURL={IMAGE_BLUR_DATA_URL}
                   fetchPriority={priority ? "high" : "low"}
@@ -170,7 +170,7 @@ export default function ProductCard({
                 sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 280px"
                 loading={priority ? "eager" : "lazy"}
                 priority={priority}
-                quality={62}
+                quality={70}
                 placeholder="blur"
                 blurDataURL={IMAGE_BLUR_DATA_URL}
                 fetchPriority={priority ? "high" : "low"}
@@ -180,13 +180,13 @@ export default function ProductCard({
         </div>
 
       <Link href={`/product/${slug}`} className="block">
-        <h3 className="font-heading font-semibold text-[10px] sm:text-[11px] md:text-xs text-brand-gray-900 mb-0.5 sm:mb-1 group-hover:text-brand-red transition-colors line-clamp-2">
+        <h3 className="font-heading font-semibold text-xs sm:text-sm text-brand-gray-900 mb-0.5 sm:mb-1 group-hover:text-brand-red transition-colors line-clamp-2">
           {name}
         </h3>
         {shortDescription && (
-          <p className="text-brand-gray-600 text-[10px] sm:text-[11px] md:text-xs mb-0.5 sm:mb-1 md:mb-1 line-clamp-2">{shortDescription}</p>
+          <p className="text-brand-gray-600 text-xs sm:text-sm mb-0.5 sm:mb-1 line-clamp-2">{shortDescription}</p>
         )}
-        <p className="font-mono font-semibold text-brand-red text-[11px] sm:text-xs md:text-xs mb-1 sm:mb-1.5 md:mb-2">
+        <p className="font-mono font-semibold text-brand-red text-sm sm:text-base mb-1 sm:mb-1.5 md:mb-2">
           {formatCurrency(price)}
         </p>
       </Link>

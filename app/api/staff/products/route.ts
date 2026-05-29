@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireStaff, requireSuperAdmin, logStaffAction, getClientIp } from "@/lib/staff-auth";
+import { requireStaff, requireSuperAdmin, logStaffAction, getClientIp, staffRouteErrorResponse } from "@/lib/staff-auth";
 import { fetchStaffProductsList } from "@/lib/staff-queries";
+import { getAllProductsCatalog } from "@/lib/db";
 import { supabaseAdmin } from "@/lib/supabase";
 import { revalidateContentTag, CACHE_TAG_PRODUCTS } from "@/lib/cache-tags";
 
@@ -10,13 +11,41 @@ export async function GET(request: NextRequest) {
   try {
     requireStaff(request);
     const { searchParams } = new URL(request.url);
-    const products = await fetchStaffProductsList({
-      category: searchParams.get("category") || undefined,
-      q: searchParams.get("q") || undefined,
-    });
+    const category = searchParams.get("category") || undefined;
+    const q = searchParams.get("q") || undefined;
+
+    let products;
+    try {
+      products = await fetchStaffProductsList({ category, q });
+    } catch (primaryErr) {
+      console.warn("[staff/products GET] primary query failed, using catalog fallback:", primaryErr);
+      const catalog = await getAllProductsCatalog();
+      const term = q?.toLowerCase();
+      products = catalog
+        .filter((p) => !category || p.category === category)
+        .filter((p) => {
+          if (!term) return true;
+          return (
+            p.title.toLowerCase().includes(term) ||
+            p.slug.toLowerCase().includes(term)
+          );
+        })
+        .map((p) => ({
+          id: p.id,
+          slug: p.slug,
+          title: p.title,
+          price: p.price,
+          category: p.category,
+          stock: p.stock ?? null,
+          visibility: "published",
+          low_stock_threshold: 5,
+          created_at: p.created_at,
+        }));
+    }
+
     return NextResponse.json(products);
-  } catch {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  } catch (error) {
+    return staffRouteErrorResponse(error, "staff/products GET");
   }
 }
 

@@ -41,12 +41,31 @@
 }
 
 @layer components {
+  /* Horizontal product/blog carousels — avoid 100vw overflow on small screens */
+  .carousel-track {
+    @apply flex overflow-x-auto gap-3 md:gap-5 lg:gap-6 pb-4 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 snap-x snap-mandatory scroll-smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .carousel-slide {
+    @apply flex-shrink-0 snap-start w-[min(88vw,300px)] sm:w-[300px] md:w-[320px];
+  }
+
+  .carousel-slide-promo {
+    @apply flex-shrink-0 snap-start w-[min(88vw,360px)] sm:w-[320px] lg:w-[360px];
+  }
+
+  .safe-bottom-fab {
+    bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+    right: max(1rem, env(safe-area-inset-right, 0px));
+  }
+
   .btn-primary {
     @apply bg-brand-red text-white px-6 py-3 rounded-lg font-medium hover:bg-opacity-90 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-red focus:ring-offset-2;
   }
   
   .btn-primary-sm {
-    @apply bg-brand-red text-white px-3 py-1.5 rounded-lg font-medium text-xs hover:bg-opacity-90 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-red focus:ring-offset-2 inline-flex items-center justify-center gap-1.5;
+    @apply bg-brand-red text-white px-3 py-2 sm:py-1.5 rounded-lg font-medium text-xs sm:text-xs hover:bg-opacity-90 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-red focus:ring-offset-2 inline-flex items-center justify-center gap-1.5 min-h-[44px] sm:min-h-0;
   }
   
   .btn-secondary {

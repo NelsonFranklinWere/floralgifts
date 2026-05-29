@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireStaff, requireSuperAdmin, logStaffAction, getClientIp } from "@/lib/staff-auth";
+import { requireStaff, requireSuperAdmin, logStaffAction, getClientIp, staffRouteErrorResponse } from "@/lib/staff-auth";
 import { supabaseAdmin } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
@@ -40,8 +40,8 @@ export async function GET(request: NextRequest) {
       .order("sort_order");
 
     return NextResponse.json({ settings: map, staff: staff || [], categories: categories || [] });
-  } catch {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  } catch (error) {
+    return staffRouteErrorResponse(error, "staff/settings GET");
   }
 }
 

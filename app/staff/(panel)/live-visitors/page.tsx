@@ -70,11 +70,9 @@ function shortDevice(ua: string) {
 export default function StaffLiveVisitorsPage() {
   const [visitors, setVisitors] = useState<VisitorPing[]>([]);
   const [stats, setStats] = useState({ activeNow: 0, recentTotal: 0, uniquePages: 0 });
-  const [loading, setLoading] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const lastSeenTimestamp = useRef(0);
-  const [initialLoad, setInitialLoad] = useState(true);
 
   const fetchVisitors = useCallback(async (since?: number) => {
     const q = since != null ? `?since=${since}` : "";
@@ -93,16 +91,11 @@ export default function StaffLiveVisitorsPage() {
         }
       } catch {
         /* staffFetch handles auth redirect */
-      } finally {
-        setLoading(false);
-        setInitialLoad(false);
       }
     })();
   }, [fetchVisitors]);
 
   useEffect(() => {
-    if (loading || initialLoad) return;
-
     const interval = setInterval(async () => {
       try {
         const since = lastSeenTimestamp.current;
@@ -144,7 +137,7 @@ export default function StaffLiveVisitorsPage() {
     }, POLL_MS);
 
     return () => clearInterval(interval);
-  }, [loading, soundEnabled, notificationsEnabled, fetchVisitors]);
+  }, [soundEnabled, notificationsEnabled, fetchVisitors]);
 
   const enableNotifications = async () => {
     if (typeof Notification === "undefined") return;
@@ -217,13 +210,7 @@ export default function StaffLiveVisitorsPage() {
             </tr>
           </thead>
           <tbody>
-            {initialLoad ? (
-              <tr>
-                <td colSpan={4} className="text-center py-10 text-brand-gray-800">
-                  Loading visits…
-                </td>
-              </tr>
-            ) : visitors.length === 0 ? (
+            {visitors.length === 0 ? (
               <tr>
                 <td colSpan={4} className="text-center py-10 text-brand-gray-800">
                   No visits yet. Open the shop in another tab to test — activity appears within a few seconds.

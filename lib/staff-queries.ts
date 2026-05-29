@@ -9,6 +9,32 @@ const ORDER_LIST_SELECT =
 const PRODUCT_LIST_SELECT =
   "id, slug, title, price, category, stock, visibility, low_stock_threshold, created_at";
 
+const PRODUCT_LIST_SELECT_BASE =
+  "id, slug, title, price, category, stock, created_at";
+
+function isMissingColumnError(error: { message?: string; code?: string }): boolean {
+  const msg = (error.message || "").toLowerCase();
+  return (
+    error.code === "PGRST204" ||
+    msg.includes("does not exist") ||
+    (msg.includes("column") && msg.includes("products"))
+  );
+}
+
+function mapStaffProductRow(row: Record<string, unknown>) {
+  return {
+    id: row.id as string,
+    slug: row.slug as string,
+    title: row.title as string,
+    price: row.price as number,
+    category: row.category as string,
+    stock: row.stock as number | null,
+    visibility: (row.visibility as string) || "published",
+    low_stock_threshold: (row.low_stock_threshold as number) ?? 5,
+    created_at: row.created_at as string,
+  };
+}
+
 function sumPaidAmount(rows: { total_amount?: number | null }[]) {
   return rows.reduce((s, o) => s + (o.total_amount || 0), 0);
 }
@@ -177,10 +203,13 @@ export async function fetchStaffOrdersList(options?: { status?: string; limit?: 
   return (data || []).map((o) => mapOrderRow(o as Record<string, unknown>));
 }
 
-export async function fetchStaffProductsList(options?: { category?: string; q?: string; limit?: number }) {
+async function runStaffProductsQuery(
+  select: string,
+  options?: { category?: string; q?: string; limit?: number }
+) {
   const limit = options?.limit ?? 150;
   let query = (supabaseAdmin.from("products") as ReturnType<typeof supabaseAdmin.from>)
-    .select(PRODUCT_LIST_SELECT)
+    .select(select)
     .order("created_at", { ascending: false })
     .limit(limit);
 
@@ -188,12 +217,35 @@ export async function fetchStaffProductsList(options?: { category?: string; q?: 
     query = query.eq("category", options.category);
   }
   if (options?.q) {
-    query = query.or(`title.ilike.%${options.q}%,slug.ilike.%${options.q}%`);
+    const term = options.q.replace(/[%_,]/g, "");
+    if (term) {
+      query = query.or(`title.ilike.%${term}%,slug.ilike.%${term}%`);
+    }
   }
 
-  const { data, error } = await query;
-  if (error) throw error;
-  return data || [];
+  return query;
+}
+
+export async function fetchStaffProductsList(options?: { category?: string; q?: string; limit?: number }) {
+  const full = await runStaffProductsQuery(PRODUCT_LIST_SELECT, options);
+  if (!full.error) {
+    return (full.data || []).map((row) => mapStaffProductRow(row as Record<string, unknown>));
+  }
+
+  if (isMissingColumnError(full.error)) {
+    console.warn(
+      "[fetchStaffProductsList] Optional columns missing — run supabase/migrations/011_staff_admin_panel.sql. Using base product columns."
+    );
+    const base = await runStaffProductsQuery(PRODUCT_LIST_SELECT_BASE, options);
+    if (base.error) {
+      console.error("[fetchStaffProductsList]", base.error.message);
+      throw new Error(base.error.message || "Failed to load products");
+    }
+    return (base.data || []).map((row) => mapStaffProductRow(row as Record<string, unknown>));
+  }
+
+  console.error("[fetchStaffProductsList]", full.error.message);
+  throw new Error(full.error.message || "Failed to load products");
 }
 
 /** Aggregate customers from recent orders only (avoids full table scan). */

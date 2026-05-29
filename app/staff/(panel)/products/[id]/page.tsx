@@ -9,7 +9,6 @@ import type { Product } from "@/lib/db";
 import ProductImageManager from "@/components/staff/ProductImageManager";
 import StaffPageHeader from "@/components/staff/StaffPageHeader";
 import StaffCard from "@/components/staff/StaffCard";
-import { StaffCardLoading } from "@/components/staff/StaffInlineLoaders";
 
 const CATEGORIES = ["flowers", "teddy", "hampers", "chocolates", "wines", "cakes", "cards"];
 
@@ -26,7 +25,6 @@ export default function EditProductPage() {
   const { id } = useParams();
   const router = useRouter();
   const [role, setRole] = useState<StaffRole>("staff");
-  const [loading, setLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
   const [images, setImages] = useState<string[]>([]);
   const [variants, setVariants] = useState<{ id: string; size: string; color: string; price: number; stock: number }[]>([]);
@@ -66,7 +64,7 @@ export default function EditProductPage() {
         });
         setImages(p.images || []);
       })
-      .finally(() => setLoading(false));
+      .catch(() => {});
     staffFetch<{ id: string; size: string; color: string; price: number; stock: number }[]>(
       `/api/staff/products/${id}/variants`
     )
@@ -124,7 +122,7 @@ export default function EditProductPage() {
     <div className="max-w-3xl space-y-6">
       <StaffPageHeader
         title="Edit product"
-        description={loading ? "Loading product…" : form.title || "Product details"}
+        description={form.title || "Product details"}
         actions={
           <Link href="/staff/products" className="staff-btn-secondary text-sm">
             ← Products
@@ -132,10 +130,6 @@ export default function EditProductPage() {
         }
       />
 
-      {loading && <StaffCardLoading label="Loading product…" />}
-
-      {!loading && (
-      <>
       <StaffCard title="Images">
         <ProductImageManager
           images={images}
@@ -238,8 +232,6 @@ export default function EditProductPage() {
           )}
         </div>
       </StaffCard>
-      </>
-      )}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, useCallback, useRef } from "react";
-import { getStaffToken, staffFetch } from "@/lib/staff-client";
+import { staffFetch } from "@/lib/staff-client";
 
 interface StaffAlerts {
   pendingOrders: number;
@@ -28,8 +28,6 @@ export function StaffAlertsProvider({ children }: { children: React.ReactNode })
   }, []);
 
   useEffect(() => {
-    if (!getStaffToken()) return;
-
     refresh();
     const interval = setInterval(refresh, 120_000);
     return () => clearInterval(interval);
