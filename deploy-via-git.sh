@@ -6,7 +6,7 @@
 set -e
 
 SERVER_USER="floral"
-SERVER_IP="157.245.34.218"
+SERVER_IP="157.230.182.11"
 SERVER_PASSWORD="Floral@254Floral"
 APP_DIR="/home/$SERVER_USER/floralgifts"
 

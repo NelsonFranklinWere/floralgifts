@@ -6,7 +6,12 @@ const ELFSIGHT_APP_ID = "a2f24b95-404d-4f9b-b799-879cc5699bbb";
 
 export default function ElfsightGoogleReviews() {
   return (
-    <section id="google-reviews" className="py-16 bg-[#FAF7F2] border-t border-[#F0E8E8]">
+    <section
+      id="google-reviews"
+      dir="ltr"
+      className="py-16 bg-[#FAF7F2] border-t border-[#F0E8E8]"
+      style={{ direction: "ltr" }}
+    >
       <Script
         src="https://elfsightcdn.com/platform.js"
         strategy="afterInteractive"
@@ -22,6 +27,8 @@ export default function ElfsightGoogleReviews() {
           </h2>
         </div>
         <div
+          dir="ltr"
+          style={{ direction: "ltr" }}
           className={`elfsight-app-${ELFSIGHT_APP_ID}`}
           data-elfsight-app-lazy
         />

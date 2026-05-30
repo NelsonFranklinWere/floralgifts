@@ -89,47 +89,6 @@ export default function Footer() {
             <h3 className="font-heading font-bold text-sm mb-3 text-white">Quick Links</h3>
               <ul className="space-y-2">
                 <li>
-                <Link href="/collections/flowers" className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group">
-                  <span className="flex items-center gap-2">
-                    <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
-                    Flowers
-                  </span>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/collections/teddy-bears"
-                  className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
-                  >
-                  <span className="flex items-center gap-2">
-                    <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
-                    Teddy Bears
-                  </span>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/collections/gift-hampers"
-                  className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
-                  >
-                  <span className="flex items-center gap-2">
-                    <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
-                    Gift Hampers
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/blog"
-                  className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
-                >
-                  <span className="flex items-center gap-2">
-                    <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
-                    Blog
-                  </span>
-                  </Link>
-                </li>
-                <li>
                   <Link
                     href="/about"
                   className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
@@ -149,6 +108,17 @@ export default function Footer() {
                     <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
                     Contact
                   </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/admin/login"
+                    className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
+                      Staff
+                    </span>
                   </Link>
                 </li>
               </ul>
