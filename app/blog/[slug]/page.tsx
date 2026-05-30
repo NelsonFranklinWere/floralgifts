@@ -5,10 +5,13 @@ import Image from "next/image";
 import { format } from "date-fns";
 import { getBlogPost, getBlogPosts } from "@/lib/blogData";
 import { markdownToHtml } from "@/lib/markdown";
-import JsonLd from "@/components/JsonLd";
+import { buildPageMetadata } from "@/lib/seo/metadata";
+import JsonLdScript from "@/components/seo/JsonLdScript";
+import BlogInternalLinks from "@/components/seo/BlogInternalLinks";
+import { SEO_BASE_URL } from "@/lib/seo/base";
 import { SHOP_INFO } from "@/lib/constants";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
+const baseUrl = SEO_BASE_URL;
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -24,41 +27,16 @@ export async function generateMetadata({
     return {};
   }
 
-  const title = `${post.title} | Floral Whispers Gifts Nairobi`;
-  const description =
-    post.excerpt ||
-    `${post.title} — gift and flower ideas for Nairobi. Floral Whispers Gifts delivers same day across Nairobi.`;
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical: `${baseUrl}/blog/${slug}`,
-    },
-    openGraph: {
-      title,
-      description,
-      url: `${baseUrl}/blog/${slug}`,
-      siteName: "Floral Whispers Gifts",
-      images: [
-        {
-          url: post.image,
-          width: 1200,
-          height: 630,
-          alt: post.title,
-        },
-      ],
-      locale: "en_KE",
-      type: "article",
-      publishedTime: post.publishedAt,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: [post.image],
-    },
-  };
+  return buildPageMetadata({
+    title: post.title,
+    description:
+      post.excerpt ||
+      `${post.title} — practical gift and flower tips for Nairobi.`,
+    path: `/blog/${slug}`,
+    ogImage: post.image,
+    ogType: "article",
+    publishedTime: post.publishedAt,
+  });
 }
 
 export async function generateStaticParams() {
@@ -130,8 +108,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <>
-      <JsonLd data={articleJsonLd} />
-      <JsonLd data={breadcrumbJsonLd} />
+      <JsonLdScript data={articleJsonLd} />
+      <JsonLdScript data={breadcrumbJsonLd} />
       <article className="min-h-screen bg-white">
         {/* Breadcrumb */}
         <div className="bg-white border-b border-brand-gray-200">
@@ -178,6 +156,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             className="prose prose-lg max-w-none prose-headings:font-heading prose-headings:text-brand-gray-900 prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-p:text-brand-gray-700 prose-p:leading-relaxed prose-p:mb-6 prose-a:text-brand-green prose-a:no-underline hover:prose-a:underline prose-strong:text-brand-gray-900 prose-strong:font-semibold prose-ul:text-brand-gray-700 prose-ol:text-brand-gray-700 prose-li:text-brand-gray-700 prose-li:mb-2 prose-ul:list-disc prose-ol:list-decimal prose-ul:ml-6 prose-ol:ml-6"
             dangerouslySetInnerHTML={{ __html: markdownToHtml(post.content) }}
           />
+
+          <BlogInternalLinks post={post} />
 
           {/* Conversion CTA from blog reader to buyer */}
           <div className="mt-10 rounded-2xl border border-[#F0E8E8] bg-[#FAF7F2] p-6 md:p-8">

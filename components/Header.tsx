@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon, ShoppingCartIcon, MagnifyingGlassIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon, ShoppingCartIcon, MagnifyingGlassIcon, ChevronDownIcon, PhoneIcon } from "@heroicons/react/24/outline";
 import { useCartStore } from "@/lib/store/cart";
 import { useUIStore } from "@/lib/store/ui";
 import CartSidebar from "./CartSidebar";
@@ -322,7 +322,17 @@ export default function Header() {
             </div>
 
             {/* Right Icons */}
-            <div className="flex items-center space-x-3 md:space-x-4">
+            <div className="flex items-center space-x-2 md:space-x-4">
+              {/* Call to Order — prominent on mobile */}
+              <a
+                href={`tel:+${SHOP_INFO.phone}`}
+                className="lg:hidden inline-flex items-center gap-1.5 rounded-full bg-brand-red text-white text-xs font-semibold px-3 py-2 hover:bg-opacity-90 transition-colors"
+                aria-label="Call to order"
+              >
+                <PhoneIcon className="h-4 w-4 shrink-0" />
+                <span className="hidden xs:inline">Call</span>
+              </a>
+
               {/* Search */}
               <button
                 type="button"
@@ -333,11 +343,11 @@ export default function Header() {
                 <MagnifyingGlassIcon className="h-5 w-5 md:h-6 md:w-6" />
               </button>
 
-              {/* Cart */}
+              {/* Cart — sticky conversion target */}
               <button
                 type="button"
                 onClick={() => setCartOpen(true)}
-                className="relative p-2 text-brand-gray-700 hover:text-brand-red transition-colors"
+                className="relative p-2 text-brand-gray-700 hover:text-brand-red transition-colors rounded-full hover:bg-brand-gray-50"
                 aria-label="Open shopping cart"
               >
                 <ShoppingCartIcon className="h-5 w-5 md:h-6 md:w-6" />

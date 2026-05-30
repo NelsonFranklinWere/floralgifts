@@ -9,59 +9,23 @@ import { getProducts } from "@/lib/db";
 import { getPredefinedProducts } from "@/lib/predefinedProducts";
 import { getBlogPosts } from "@/lib/blogData";
 import { format } from "date-fns";
-import { SITE_WIDE_KEYWORDS } from "@/lib/seo-keywords";
-import { SHOP_INFO } from "@/lib/constants";
+import { buildPageMetadata } from "@/lib/seo/metadata";
+import { getSeasonalCopy } from "@/lib/seo/seasonal-config";
+import { canonicalUrl } from "@/lib/seo/base";
+import HeroLcpPreload from "@/components/seo/HeroLcpPreload";
 import { getFeaturedCaseStudies } from "@/lib/case-studies";
 import CaseStudyCard from "@/components/CaseStudyCard";
 import HomeReviewsSection from "@/components/reviews/HomeReviewsSection";
+import { getHeroSlides } from "@/lib/heroSlides";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
+const seasonal = getSeasonalCopy();
 
-export const metadata: Metadata = {
-  title:
-    "Nairobi Flower Hamper & Wine Same-Day Delivery | Floral Whispers Gifts",
-  description:
-    "Nairobi's premium flower hampers, wine gifts, roses and teddy bears with same-day delivery across CBD, Westlands, Karen and Kilimani. Order on WhatsApp with Floral Whispers Gifts.",
-  keywords: [
-    ...SITE_WIDE_KEYWORDS,
-    "flower delivery Nairobi",
-    "flowers Nairobi",
-    "florist Nairobi",
-    "gift hampers Nairobi",
-    "teddy bears Nairobi",
-    "same day delivery Nairobi",
-    "Floral Whispers Gifts",
-  ],
-  alternates: {
-    canonical: baseUrl,
-  },
-  openGraph: {
-    title:
-      "Nairobi Flower Hamper & Wine Same-Day Delivery | Floral Whispers Gifts",
-    description:
-      "Order flower hampers, wine gifts, fresh roses and teddy bears with same-day delivery across Nairobi.",
-    url: baseUrl,
-    siteName: "Floral Whispers Gifts",
-    images: [
-      {
-        url: "/images/logo/FloralLogo.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Floral Whispers Gifts - Flower Delivery Nairobi",
-      },
-    ],
-    locale: "en_KE",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title:
-      "Nairobi Flower Hamper & Wine Same-Day Delivery | Floral Whispers Gifts",
-    description:
-      "Nairobi flower hamper + wine same-day delivery, roses and romantic gifts. Order with Floral Whispers Gifts.",
-    images: ["/images/logo/FloralLogo.jpg"],
-  },
-};
+export const metadata: Metadata = buildPageMetadata({
+  title: seasonal.homeTitle,
+  description: seasonal.homeDescription,
+  path: "/",
+  keywords: seasonal.extraKeywords,
+});
 
 const breadcrumbJsonLd = {
   "@context": "https://schema.org",
@@ -71,7 +35,7 @@ const breadcrumbJsonLd = {
       "@type": "ListItem",
       position: 1,
       name: "Home",
-      item: baseUrl,
+      item: canonicalUrl("/"),
     },
   ],
 };
@@ -393,8 +357,7 @@ Whether you're celebrating a university graduation, high school completion, or a
 }
 
 export default async function HomePage() {
-  // Fetch all products
-  const [dbFlowers, dbHampers, dbTeddy, dbWines, dbChocolates, dbCards, dbCakes, featuredCaseStudies] = await Promise.all([
+  const [dbFlowers, dbHampers, dbTeddy, dbWines, dbChocolates, dbCards, dbCakes, featuredCaseStudies, heroSlides] = await Promise.all([
     getProducts({ category: "flowers" }),
     getProducts({ category: "hampers" }),
     getProducts({ category: "teddy" }),
@@ -403,6 +366,7 @@ export default async function HomePage() {
     getProducts({ category: "cards" }),
     getProducts({ category: "cakes" }),
     getFeaturedCaseStudies(),
+    getHeroSlides(),
   ]);
 
   // Include predefined products for flowers
@@ -668,6 +632,7 @@ export default async function HomePage() {
   return (
     <>
       <JsonLd data={breadcrumbJsonLd} />
+      {heroSlides[0]?.image ? <HeroLcpPreload href={heroSlides[0].image} /> : null}
       <div className="bg-green-100">
         <section className="px-4 sm:px-6 lg:px-8 pt-8 pb-4 max-w-7xl mx-auto hero-rotating-bg rounded-b-2xl">
           <h1 className="font-heading font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-brand-gray-900 mb-3">

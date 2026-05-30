@@ -10,6 +10,10 @@ export interface BlogPost {
   tags: string[];
   readTime: number;
   featured: boolean;
+  /** informational | commercial — defaults to informational */
+  intent?: "informational" | "commercial";
+  /** Optional explicit product slugs for internal linking */
+  relatedProducts?: string[];
 }
 
 // Database interface (matches Supabase schema)

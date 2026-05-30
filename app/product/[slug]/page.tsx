@@ -4,11 +4,18 @@ import ImageGallery from "@/components/ImageGallery";
 import ProductDetailClient from "./ProductDetailClient";
 import ProductCard from "@/components/ProductCard";
 import BackButton from "@/components/BackButton";
+import ProductSchema from "@/components/seo/ProductSchema";
 import { getProductBySlug, getProducts, type Product } from "@/lib/db";
 import { getPredefinedProducts } from "@/lib/predefinedProducts";
 import { formatCurrency } from "@/lib/utils";
-import { DEEP_FLOWER_ROSE_KEYWORDS } from "@/lib/seo-keywords";
 import { supabaseAdmin } from "@/lib/supabase";
+import { buildPageMetadata } from "@/lib/seo/metadata";
+import {
+  buildProductMetaDescription,
+  cleanProductTitle,
+} from "@/lib/seo/product-title";
+import { getCategorySeasonalKeywords } from "@/lib/seo/seasonal-config";
+import { SEO_BASE_URL } from "@/lib/seo/base";
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
@@ -49,118 +56,25 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   const product = await getProductWithFallback(slug);
 
   if (!product) {
-    return {
-      title: "Product Not Found",
-    };
+    return { title: "Product Not Found" };
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
-  const productUrl = `${baseUrl}/product/${slug}`;
-  const categoryKeywords: Record<string, string[]> = {
-    flowers: [
-      // Deep SEO: pink roses, red roses, white flowers, flower delivery Nairobi
-      "flower delivery Nairobi",
-      "pink roses Nairobi",
-      "red roses Nairobi",
-      "white flowers Nairobi",
-      "fresh white flowers",
-      "blooming pink roses",
-      "fresh pink roses Nairobi",
-      "fresh red roses Nairobi",
-      "fresh white flowers Nairobi",
-      "fresh flowers Nairobi",
-      "florist Nairobi",
-      "roses Nairobi",
-      "same day flower delivery Nairobi",
-      ...DEEP_FLOWER_ROSE_KEYWORDS,
-      // Valentine's
-      "valentine's flowers Nairobi",
-      "valentine's roses Nairobi",
-      "valentine's bouquet Nairobi",
-      "valentine's money bouquet Nairobi",
-      "money bouquet Nairobi",
-      "romantic flowers Nairobi",
-      "bouquet Nairobi",
-      "flower delivery Nairobi CBD",
-      "flower delivery Westlands",
-      "flower delivery Karen",
-      "flower delivery Lavington",
-      "flower delivery Kilimani",
-    ],
-    teddy: [
-      // Valentine's Teddy Bears Keywords
-      "valentine's teddy bears Nairobi", "valentine's cuddly teddy bears Nairobi", "romantic valentine's teddy bears Nairobi",
-      "valentine's teddy bear for wife Nairobi", "valentine's teddy bear for girlfriend Nairobi", "valentine's teddy bear for mom Nairobi",
-      "large valentine's teddy bears Nairobi", "big valentine's teddy bears Nairobi", "25cm valentine's teddy bear Nairobi",
-      "pre valentine's teddy bears Nairobi", "valentine's teddy bear delivery Nairobi", "same day valentine's teddy bears Nairobi",
-      // Traditional Keywords
-      "teddy bears Kenya", "teddy bear gift", "teddy bears Nairobi", "best gifts for children Nairobi", "gifts for kids Nairobi"
-    ],
-    hampers: [
-      // Valentine's Gift Hampers Keywords
-      "valentine's gift hampers Nairobi", "valentine's luxury hampers Nairobi", "romantic valentine's hampers Nairobi",
-      "valentine's hamper for wife Nairobi", "valentine's hamper for husband Nairobi", "valentine's hamper for girlfriend Nairobi",
-      "valentine's chocolate hamper Nairobi", "valentine's wine hamper Nairobi", "valentine's flower hamper Nairobi",
-      "pre valentine's hampers Nairobi", "valentine's hamper delivery Nairobi", "same day valentine's hampers Nairobi",
-      // Traditional Keywords
-      "gift hampers Kenya", "luxury gift hampers Nairobi", "corporate gift hampers Nairobi", "best gifts for men Nairobi", "best gifts for women Nairobi", "best gifts for colleagues Nairobi", "gift hampers Nairobi CBD", "gift hampers Westlands"
-    ],
-    wines: [
-      // Valentine's Wine Keywords
-      "valentine's wine gifts Nairobi", "valentine's wine hampers Nairobi", "romantic valentine's wines Nairobi",
-      "valentine's wine for wife Nairobi", "valentine's wine for husband Nairobi", "valentine's wine for girlfriend Nairobi",
-      "valentine's belaire brut Nairobi", "valentine's robertson red wine Nairobi", "valentine's rosso nobile red wine Nairobi",
-      "pre valentine's wine gifts Nairobi", "valentine's wine delivery Nairobi", "same day valentine's wine Nairobi",
-      // Traditional Keywords
-      "wines Nairobi", "wine gift hampers Kenya", "corporate gifts Nairobi", "wines Nairobi CBD", "wines Westlands"
-    ],
-    chocolates: [
-      // Valentine's Chocolates Keywords
-      "valentine's chocolates Nairobi", "valentine's chocolate hampers Nairobi", "romantic valentine's chocolates Nairobi",
-      "valentine's chocolates for wife Nairobi", "valentine's chocolates for girlfriend Nairobi", "valentine's chocolates for mom Nairobi",
-      "valentine's ferrero rocher Nairobi", "premium valentine's chocolates Nairobi", "luxury valentine's chocolates Nairobi",
-      "pre valentine's chocolates Nairobi", "valentine's chocolate delivery Nairobi", "same day valentine's chocolates Nairobi",
-      // Traditional Keywords
-      "chocolates Kenya", "chocolate gift hampers Nairobi", "corporate gifts Nairobi", "chocolates Nairobi CBD", "chocolates Westlands"
-    ],
-  };
+  const cleanName = cleanProductTitle(product.title);
+  const description = buildProductMetaDescription(product);
+  const seasonal = getCategorySeasonalKeywords(product.category);
 
-  const categoryAltDescriptions: Record<string, string> = {
-    flowers: "Flower delivery Nairobi - fresh pink roses, red roses, white flowers. Same-day delivery CBD, Westlands, Karen",
-    teddy: "Teddy bears Kenya, Nairobi gift delivery",
-    hampers: "Gift hampers Kenya, Nairobi CBD delivery",
-    wines: "Premium wines Nairobi, Westlands delivery",
-    chocolates: "Chocolates Kenya, Nairobi gift delivery",
-  };
-
-  const imageAlt = `${product.title} - ${categoryAltDescriptions[product.category] || "Floral Whispers Gifts Nairobi"}`;
-
-  return {
-    title: `${product.title} | ${product.category === "flowers" ? "Flower Delivery Nairobi - Pink Roses, Red Roses, White Flowers" : product.category === "teddy" ? "Teddy Bears Nairobi" : product.category === "hampers" ? "Gift Hampers Nairobi" : product.category === "wines" ? "Wine Gifts Nairobi" : "Chocolates Nairobi"} | Floral Whispers Gifts`,
-    description: `${product.short_description || product.description}${product.category === "flowers" ? " Flower delivery Nairobi: fresh roses, same-day delivery CBD, Westlands, Karen." : " Same-day delivery Nairobi. Order online with M-Pesa."}`,
-    keywords: categoryKeywords[product.category] || [],
-    alternates: {
-      canonical: productUrl,
-    },
-    openGraph: {
-      title: product.title,
-      description: product.short_description || product.description,
-      url: productUrl,
-      images: product.images.length > 0 ? product.images.map(img => ({
-        url: img.startsWith("http") ? img : `${baseUrl}${img}`,
-        width: 676,
-        height: 677,
-        alt: imageAlt,
-      })) : [],
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: product.title,
-      description: product.short_description || product.description,
-      images: product.images.length > 0 ? [product.images[0]] : [],
-    },
-  };
+  return buildPageMetadata({
+    title: cleanName,
+    description,
+    path: `/product/${slug}`,
+    keywords: seasonal,
+    ogImage:
+      product.images[0]?.startsWith("http")
+        ? product.images[0]
+        : product.images[0]
+          ? `${SEO_BASE_URL}${product.images[0]}`
+          : undefined,
+  });
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
@@ -186,179 +100,72 @@ export default async function ProductPage({ params }: ProductPageProps) {
     })
     .slice(0, 8);
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
-  const productUrl = `${baseUrl}/product/${product.slug}`;
-  const categoryMap: Record<string, string> = {
-    flowers: "Florist",
-    teddy: "Toy",
-    hampers: "Gift",
-    wines: "Wine",
-    chocolates: "Food",
-    cards: "GiftCard",
-    cakes: "Food",
-  };
-
-  const breadcrumbJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Home",
-        item: baseUrl,
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Collections",
-        item: `${baseUrl}/collections`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name:
-          product.category === "flowers"
-            ? "Flowers"
-            : product.category === "teddy"
-            ? "Teddy Bears"
-            : product.category === "hampers"
-            ? "Gift Hampers"
-            : product.category === "wines"
-            ? "Wines"
-            : product.category === "chocolates"
-            ? "Chocolates"
-            : product.category === "cards"
-            ? "Gift Cards"
-            : "Cakes",
-        item: `${baseUrl}/collections/${
-          product.category === "flowers"
-            ? "flowers"
-            : product.category === "teddy"
-            ? "teddy-bears"
-            : product.category === "hampers"
-            ? "gift-hampers"
-            : product.category === "wines"
+  const collectionSlug =
+    product.category === "flowers"
+      ? "flowers"
+      : product.category === "teddy"
+        ? "teddy-bears"
+        : product.category === "hampers"
+          ? "gift-hampers"
+          : product.category === "wines"
             ? "wines"
             : product.category === "chocolates"
-            ? "chocolates"
-            : product.category === "cards"
-            ? "cards"
-            : "cakes"
-        }`,
-      },
-      {
-        "@type": "ListItem",
-        position: 4,
-        name: product.title,
-        item: productUrl,
-      },
-    ],
-  };
+              ? "chocolates"
+              : product.category === "cards"
+                ? "cards"
+                : "cakes";
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    "@id": productUrl,
-    name: product.title,
-    description: product.description || product.short_description,
-    image: product.images.map(img => img.startsWith("http") ? img : `${baseUrl}${img}`),
-    category: categoryMap[product.category] || "Product",
-    brand: {
-      "@type": "Brand",
-      name: "Floral Whispers Gifts",
-    },
-    offers: {
-      "@type": "Offer",
-      url: productUrl,
-      priceCurrency: "KES",
-      price: product.price / 100,
-      availability: "https://schema.org/InStock",
-      priceValidUntil: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
-      shippingDetails: {
-        "@type": "OfferShippingDetails",
-        shippingDestination: {
-          "@type": "DefinedRegion",
-          addressCountry: "KE",
-          addressRegion: "Nairobi",
-        },
-        shippingRate: {
-          "@type": "MonetaryAmount",
-          value: 0,
-          currency: "KES",
-        },
-        deliveryTime: {
-          "@type": "ShippingDeliveryTime",
-          handlingTime: {
-            "@type": "QuantitativeValue",
-            minValue: 0,
-            maxValue: 1,
-            unitCode: "DAY",
-          },
-          transitTime: {
-            "@type": "QuantitativeValue",
-            minValue: 0,
-            maxValue: 1,
-            unitCode: "DAY",
-          },
-        },
-      },
-      hasMerchantReturnPolicy: {
-        "@type": "MerchantReturnPolicy",
-        applicableCountry: "KE",
-        returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
-      },
-      seller: {
-        "@type": "Organization",
-        name: "Floral Whispers Gifts",
-      },
-      areaServed: {
-        "@type": "City",
-        name: "Nairobi",
-      },
-    },
-  };
+  const collectionName =
+    product.category === "flowers"
+      ? "Flowers"
+      : product.category === "teddy"
+        ? "Teddy Bears"
+        : product.category === "hampers"
+          ? "Gift Hampers"
+          : product.category === "wines"
+            ? "Wines"
+            : product.category === "chocolates"
+              ? "Chocolates"
+              : product.category === "cards"
+                ? "Gift Cards"
+                : "Cakes";
+
+  const displayTitle = cleanProductTitle(product.title);
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      <ProductSchema
+        slug={product.slug}
+        title={displayTitle}
+        description={product.description}
+        short_description={product.short_description}
+        images={product.images}
+        price={product.price}
+        category={product.category}
+        stock={(product as { stock?: number }).stock}
+        sku={(product as { sku?: string }).sku}
+        id={product.id}
+        collectionPath={`/collections/${collectionSlug}`}
+        collectionName={collectionName}
       />
       <div className="py-12 bg-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-6">
             <BackButton
               label="Back"
-              fallbackHref={`/collections/${
-                product.category === "flowers"
-                  ? "flowers"
-                  : product.category === "teddy"
-                  ? "teddy-bears"
-                  : product.category === "hampers"
-                  ? "gift-hampers"
-                  : product.category === "wines"
-                  ? "wines"
-                  : product.category === "chocolates"
-                  ? "chocolates"
-                  : "cards"
-              }`}
+              fallbackHref={`/collections/${collectionSlug}`}
               className="btn-outline text-xs sm:text-sm py-1.5 px-3"
             />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
-              <ImageGallery images={product.images} productName={product.title} category={product.category} />
+              <ImageGallery images={product.images} productName={displayTitle} category={product.category} />
             </div>
 
             <div>
               <h1 className="font-heading font-bold text-3xl md:text-4xl text-brand-gray-900 mb-4">
-                {product.title}
+                {displayTitle}
               </h1>
 
               <div className="mb-6">

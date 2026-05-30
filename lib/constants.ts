@@ -14,7 +14,14 @@ export const SHOP_INFO = {
   whatsapp: "254721554393",
   email: "whispersfloral@gmail.com",
   address:
-    "UNIVERSITY WAY-OPP. CENTRAL POLICE STATION, DELTA HOTEL 5TH FLOOR ROOM 512, NAIROBI, Kenya",
+    "Delta Hotel, 5th Floor, Room 512, University Way, Nairobi, Kenya",
+  addressSchema: {
+    streetAddress: "Delta Hotel, 5th Floor, Room 512, University Way",
+    addressLocality: "Nairobi",
+    addressRegion: "Nairobi County",
+    postalCode: "00100",
+    addressCountry: "KE",
+  },
   instagram: "@floralwhispersgifts",
   facebook: "FloralWhispersGifts",
   twitter: "@FloralWhispers",
