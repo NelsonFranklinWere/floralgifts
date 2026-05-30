@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import ImageModal from "@/components/ImageModal";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import OptimizedImage from "@/components/OptimizedImage";
 
 interface ImageGalleryProps {
   images: string[];
@@ -45,22 +45,22 @@ export default function ImageGallery({ images, productName, category }: ImageGal
 
   return (
     <div className="space-y-4">
-      <div 
-        className="relative aspect-square overflow-hidden rounded-lg bg-brand-gray-100 cursor-pointer group"
+      <div
+        className="img-product-frame cursor-pointer group"
         onClick={handleImageClick}
       >
-        <Image
+        <OptimizedImage
           src={images[selectedIndex]}
+          variant="detail"
           alt={getAltText(selectedIndex)}
           fill
-          className="object-cover group-hover:scale-105 transition-transform duration-300"
+          className="img-frame-fit"
           priority={selectedIndex === 0}
           fetchPriority={selectedIndex === 0 ? "high" : "auto"}
-          quality={75}
+          quality={72}
           sizes="(max-width: 768px) 100vw, 50vw"
           loading={selectedIndex === 0 ? "eager" : "lazy"}
         />
-        {/* Click indicator overlay */}
         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-opacity duration-300 flex items-center justify-center">
           <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white bg-opacity-80 rounded-full p-2">
             <MagnifyingGlassIcon className="w-6 h-6 text-brand-gray-900" />
@@ -69,25 +69,26 @@ export default function ImageGallery({ images, productName, category }: ImageGal
       </div>
 
       {images.length > 1 && (
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
           {images.map((image, index) => (
             <button
               key={index}
               type="button"
               onClick={() => setSelectedIndex(index)}
-              className={`relative aspect-square overflow-hidden rounded-lg border-2 transition-colors ${
+              className={`img-product-frame border-2 transition-colors ${
                 selectedIndex === index
                   ? "border-brand-green"
                   : "border-brand-gray-200 hover:border-brand-gray-300"
               }`}
               aria-label={`View ${productName} image ${index + 1}`}
             >
-              <Image
+              <OptimizedImage
                 src={image}
+                variant="thumb"
                 alt={`${productName} - thumbnail ${index + 1}${categoryDesc ? ` | ${categoryDesc}` : ""}`}
                 fill
-                className="object-cover"
-                sizes="(max-width: 768px) 25vw, 12vw"
+                className="img-frame-fit"
+                sizes="96px"
                 quality={60}
                 loading="lazy"
               />
@@ -96,7 +97,6 @@ export default function ImageGallery({ images, productName, category }: ImageGal
         </div>
       )}
 
-      {/* Image Modal */}
       {images[selectedIndex] && (
         <ImageModal
           isOpen={isImageModalOpen}
@@ -108,4 +108,3 @@ export default function ImageGallery({ images, productName, category }: ImageGal
     </div>
   );
 }
-

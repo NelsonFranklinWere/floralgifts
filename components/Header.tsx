@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import OptimizedImage from "@/components/OptimizedImage";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Dialog, Transition } from "@headlessui/react";
@@ -410,11 +410,12 @@ export default function Header() {
                         >
                           {product.images && product.images.length > 0 && (
                             <div className="relative w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden bg-brand-gray-100">
-                              <Image
+                              <OptimizedImage
                                 src={product.images[0]}
+                                variant="thumb"
                                 alt={product.title}
                                 fill
-                                className="object-cover group-hover:scale-105 transition-transform"
+                                className="img-frame-fit"
                                 sizes="64px"
                               />
                             </div>

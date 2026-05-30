@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
+import OptimizedImage from "@/components/OptimizedImage";
 import Link from "next/link";
 
 type HeroSlide = {
@@ -126,12 +126,14 @@ export default function HeroCarousel() {
             index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
           }`}
         >
-          <Image
+          <OptimizedImage
             src={slide.image}
+            variant="hero"
+            fit="cover"
             alt={slide.title}
             fill
-            className="object-cover"
             priority={index <= 1}
+            fetchPriority={index === 0 ? "high" : "auto"}
             sizes="100vw"
             quality={80}
           />
@@ -158,11 +160,12 @@ export default function HeroCarousel() {
                     <div className="relative w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48">
                     {/* First image - behind, positioned at top-left, bottom-right corner overlaps second image's top-left by 68px */}
                     <div className="absolute top-0 left-0 w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-lg overflow-hidden shadow-lg border-2 border-white/20 z-10" style={{ transform: 'translate(68px, 68px)' }}>
-                      <Image
+                      <OptimizedImage
                         src={slides[(index + 1) % slides.length].image}
+                        variant="card"
+                        fit="cover"
                         alt={slides[(index + 1) % slides.length].title}
                         fill
-                        className="object-cover"
                         sizes="(max-width: 768px) 128px, (max-width: 1024px) 160px, 192px"
                         quality={75}
                         loading="lazy"
@@ -170,11 +173,12 @@ export default function HeroCarousel() {
                     </div>
                     {/* Second image - in front, positioned so its top-left corner overlaps first image's bottom-right corner by 68px */}
                     <div className="absolute bottom-0 right-0 w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-lg overflow-hidden shadow-lg border-2 border-white/20 z-20" style={{ transform: 'translate(-68px, -68px)' }}>
-                      <Image
+                      <OptimizedImage
                         src={slides[(index + 2) % slides.length].image}
+                        variant="card"
+                        fit="cover"
                         alt={slides[(index + 2) % slides.length].title}
                         fill
-                        className="object-cover"
                         sizes="(max-width: 768px) 128px, (max-width: 1024px) 160px, 192px"
                         quality={75}
                         loading="lazy"

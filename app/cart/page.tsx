@@ -2,7 +2,7 @@
 
 import { useCartStore } from "@/lib/store/cart";
 import CheckoutForm from "@/components/CheckoutForm";
-import Image from "next/image";
+import OptimizedImage from "@/components/OptimizedImage";
 import Link from "next/link";
 import { formatCurrency } from "@/lib/utils";
 import { MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
@@ -48,11 +48,12 @@ export default function CartPage() {
                       {/* Product Image */}
                       <Link href={`/product/${item.slug}`} className="flex-shrink-0">
                         <div className="relative w-24 h-24 sm:w-32 sm:h-32 overflow-hidden rounded-md bg-brand-gray-100">
-                          <Image
+                          <OptimizedImage
                             src={item.image}
+                            variant="cart"
                             alt={item.name}
                             fill
-                            className="object-cover"
+                            className="img-frame-fit"
                             sizes="(max-width: 640px) 96px, 128px"
                           />
                         </div>

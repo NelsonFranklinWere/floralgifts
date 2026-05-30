@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --webpack",
     "build": "NODE_OPTIONS='--max-old-space-size=4096' next build --webpack",
+    "build:prod": "NODE_OPTIONS='--max-old-space-size=4096' next build --webpack",
     "build:low-memory": "NODE_OPTIONS='--max-old-space-size=2048' next build --webpack",
     "start": "next start",
     "lint": "next lint",

@@ -300,7 +300,13 @@ export default function Footer() {
               </a>
               .
             </p>
-            <div className="flex items-center gap-6 text-sm">
+            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-sm">
+              <Link
+                href="/admin/login"
+                className="text-brand-gray-300 hover:text-brand-red transition-colors font-medium"
+              >
+                Staff
+              </Link>
               <Link href="/privacy" className="text-brand-gray-400 hover:text-brand-red transition-colors">
                 Privacy Policy
               </Link>

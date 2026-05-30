@@ -6,91 +6,50 @@ import ReviewCard from "./ReviewCard";
 
 type Props = {
   reviews: Review[];
+  /** Full loop duration in ms — higher = slower, smoother scroll */
   durationMs?: number;
 };
 
-export default function ReviewsCarousel({ reviews, durationMs = 40000 }: Props) {
+export default function ReviewsCarousel({ reviews, durationMs = 55000 }: Props) {
   const trackRef = useRef<HTMLDivElement | null>(null);
   const [paused, setPaused] = useState(false);
-  const [touching, setTouching] = useState(false);
-  const [styleReady, setStyleReady] = useState(false);
+  const resumeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Two identical halves so -50% translate loops seamlessly (right → left)
   const duplicated = [...reviews, ...reviews];
 
   useEffect(() => {
-    // Avoid mismatch between SSR and client
-    setStyleReady(true);
+    return () => {
+      if (resumeRef.current) clearTimeout(resumeRef.current);
+    };
   }, []);
 
-  const handleMouseEnter = () => setPaused(true);
-  const handleMouseLeave = () => !touching && setPaused(false);
+  const pause = () => setPaused(true);
 
-  let resumeTimeout: NodeJS.Timeout | null = null;
-
-  const clearResumeTimeout = () => {
-    if (resumeTimeout) clearTimeout(resumeTimeout);
-  };
-
-  const handleTouchStart = () => {
-    setTouching(true);
-    setPaused(true);
-    clearResumeTimeout();
-  };
-
-  const handleTouchEnd = () => {
-    setTouching(false);
-    clearResumeTimeout();
-    resumeTimeout = setTimeout(() => {
-      setPaused(false);
-    }, 3000);
+  const scheduleResume = () => {
+    if (resumeRef.current) clearTimeout(resumeRef.current);
+    resumeRef.current = setTimeout(() => setPaused(false), 2500);
   };
 
   const animationDurationSec = durationMs / 1000;
 
   return (
-    <section className="bg-[#FAF7F2]">
-      {styleReady && (
-        <style jsx global>{`
-          @keyframes reviews-scroll-left {
-            0% {
-              transform: translateX(0);
-            }
-            100% {
-              transform: translateX(-50%);
-            }
-          }
-        `}</style>
-      )}
-      <div className="overflow-hidden">
-        <div
-          ref={trackRef}
-          className="flex gap-5 py-3"
-          style={
-            styleReady
-              ? {
-                  width: "max-content",
-                  animationName: "reviews-scroll-left",
-                  animationDuration: `${animationDurationSec}s`,
-                  animationTimingFunction: "linear",
-                  animationIterationCount: "infinite",
-                  animationPlayState: paused ? "paused" : "running",
-                }
-              : undefined
-          }
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-        >
-          {duplicated.map((review, index) => (
-            <ReviewCard
-              key={`${review.id}-${index}`}
-              review={review}
-            />
-          ))}
-        </div>
+    <div className="overflow-hidden" aria-label="Google reviews carousel">
+      <div
+        ref={trackRef}
+        className={`reviews-marquee-track py-3 pl-4${paused ? " reviews-marquee-paused" : ""}`}
+        style={{ animationDuration: `${animationDurationSec}s` }}
+        onMouseEnter={pause}
+        onMouseLeave={() => setPaused(false)}
+        onTouchStart={pause}
+        onTouchEnd={scheduleResume}
+        onFocus={pause}
+        onBlur={() => setPaused(false)}
+      >
+        {duplicated.map((review, index) => (
+          <ReviewCard key={`${review.id}-${index}`} review={review} />
+        ))}
       </div>
-    </section>
+    </div>
   );
 }
-

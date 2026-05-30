@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import OptimizedImage from "@/components/OptimizedImage";
 import Link from "next/link";
 import { useCartStore } from "@/lib/store/cart";
 import { formatCurrency, formatPhone, validatePhone } from "@/lib/utils";
@@ -512,11 +512,12 @@ export default function CheckoutPage() {
                     {(orderData?.items || items).map((item, index) => (
                       <div key={index} className="flex items-center gap-3">
                         <div className="relative w-16 h-16 overflow-hidden rounded-md bg-brand-gray-100 flex-shrink-0">
-                          <Image
+                          <OptimizedImage
                             src={item.image}
+                            variant="cart"
                             alt={item.name}
                             fill
-                            className="object-cover"
+                            className="img-frame-fit"
                             sizes="64px"
                           />
                         </div>

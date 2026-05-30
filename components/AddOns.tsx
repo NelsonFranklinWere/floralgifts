@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
+import OptimizedImage from "@/components/OptimizedImage";
+import { getOptimizedProductImageUrl } from "@/lib/product-image-url";
 import { formatCurrency } from "@/lib/utils";
 import { useCartStore } from "@/lib/store/cart";
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
@@ -165,7 +166,10 @@ export default function AddOns({ excludeProductIds = [], onOpenChange }: AddOnsP
                       id: product.id,
                       name: product.title,
                       price: product.price,
-                      image: product.images[0] || "/images/products/flowers/BouquetFlowers1.jpg",
+                      image: getOptimizedProductImageUrl(
+                        product.images[0] || "/images/products/flowers/BouquetFlowers1.jpg",
+                        "cart"
+                      ),
                       slug: product.slug,
                     });
                   };
@@ -173,11 +177,12 @@ export default function AddOns({ excludeProductIds = [], onOpenChange }: AddOnsP
                   return (
                     <div key={product.id} className="card p-3">
                       <div className="relative aspect-square overflow-hidden rounded-lg bg-brand-gray-100 mb-2">
-                        <Image
+                        <OptimizedImage
                           src={product.images[0] || "/images/products/flowers/BouquetFlowers1.jpg"}
+                          variant="card"
                           alt={product.title}
                           fill
-                          className="object-cover"
+                          className="img-frame-fit"
                           sizes="(max-width: 768px) 50vw, 25vw"
                         />
                       </div>

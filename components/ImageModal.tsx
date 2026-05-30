@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
+import OptimizedImage from "@/components/OptimizedImage";
 import { XMarkIcon, MagnifyingGlassPlusIcon, MagnifyingGlassMinusIcon } from "@heroicons/react/24/outline";
 
 interface ImageModalProps {
@@ -204,8 +204,9 @@ export default function ImageModal({ isOpen, onClose, imageUrl, alt }: ImageModa
             }}
             className="relative max-w-full max-h-full"
           >
-            <Image
+            <OptimizedImage
               src={imageUrl}
+              variant="zoom"
               alt={alt}
               width={1200}
               height={1200}

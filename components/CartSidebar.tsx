@@ -6,7 +6,7 @@ import { XMarkIcon, MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { useCartStore } from "@/lib/store/cart";
 import { useUIStore } from "@/lib/store/ui";
 import { formatCurrency } from "@/lib/utils";
-import Image from "next/image";
+import OptimizedImage from "@/components/OptimizedImage";
 import Link from "next/link";
 import AddOns from "@/components/AddOns";
 
@@ -73,12 +73,13 @@ export default function CartSidebar() {
                         return (
                           <div key={itemKey} className="card p-3">
                             <div className="relative aspect-square overflow-hidden rounded-lg bg-brand-gray-100 mb-2">
-                              <Image
+                              <OptimizedImage
                                 src={item.image}
+                                variant="cart"
                                 alt={item.name}
                                 fill
-                                className="object-cover"
-                                sizes="(max-width: 768px) 50vw, 25vw"
+                                className="img-frame-fit"
+                                sizes="80px"
                               />
                             </div>
                             <h4 className="font-medium text-sm text-brand-gray-900 mb-1 line-clamp-2">{item.name}</h4>
