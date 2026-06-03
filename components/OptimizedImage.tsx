@@ -18,7 +18,13 @@ function mergeFitClass(
   fill?: boolean,
   fit: "contain" | "cover" = "contain"
 ): string | undefined {
-  if (!fill || className?.includes("object-")) return className;
+  if (
+    !fill ||
+    className?.includes("object-") ||
+    className?.includes("img-frame-fit")
+  ) {
+    return className;
+  }
   const fitClass = fit === "cover" ? "object-cover object-center" : "img-frame-fit";
   return className ? `${fitClass} ${className}` : fitClass;
 }
@@ -27,7 +33,7 @@ function mergeFitClass(
 export default function OptimizedImage({
   src,
   variant = "card",
-  fit = "contain",
+  fit = "cover",
   unoptimized,
   className,
   fill,

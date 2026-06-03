@@ -54,7 +54,7 @@ export default function ImageGallery({ images, productName, category }: ImageGal
           variant="detail"
           alt={getAltText(selectedIndex)}
           fill
-          className="img-frame-fit"
+          className="img-frame-fit group-hover:scale-105 transition-transform duration-300"
           priority={selectedIndex === 0}
           fetchPriority={selectedIndex === 0 ? "high" : "auto"}
           quality={72}

@@ -70,12 +70,12 @@
   }
 
   .img-product-frame {
-    @apply relative aspect-square overflow-hidden rounded-lg bg-white border border-brand-gray-100 flex items-center justify-center p-2 sm:p-2.5;
+    @apply relative aspect-square overflow-hidden rounded-lg bg-brand-gray-100;
   }
 
-  /* Product/catalog images: show full photo inside frame without cropping */
+  /* Product/catalog images: fill frame (matches local crop) */
   .img-frame-fit {
-    @apply object-contain object-center w-full h-full max-w-full max-h-full;
+    @apply object-cover object-center;
   }
 }
 

@@ -143,7 +143,7 @@ export default function ProductCard({
                 alt={getAltText()}
                 fill
                 unoptimized
-                className="img-frame-fit"
+                className="img-frame-fit group-hover:scale-105 transition-transform duration-300"
                 sizes="(max-width: 640px) 42vw, (max-width: 1024px) 28vw, 360px"
                 loading={priority ? "eager" : "lazy"}
                 priority={priority}
@@ -157,7 +157,7 @@ export default function ProductCard({
                 variant="card"
                 alt={getAltText()}
                 fill
-                className="img-frame-fit"
+                className="img-frame-fit group-hover:scale-105 transition-transform duration-300"
                 sizes="(max-width: 640px) 42vw, (max-width: 1024px) 28vw, 360px"
                 loading={priority ? "eager" : "lazy"}
                 priority={priority}
