@@ -53,8 +53,16 @@ export type GooglePlaceReviewsResult = {
  * Requires GOOGLE_PLACES_API_KEY and GOOGLE_PLACE_ID in env (server-only).
  * Google returns at most ~5 review objects per request; user_ratings_total is the full count.
  */
+function googlePlacesApiKey(): string | undefined {
+  return (
+    process.env.GOOGLE_PLACES_API_KEY ||
+    process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ||
+    undefined
+  );
+}
+
 export async function fetchGooglePlaceReviewsForStore(): Promise<GooglePlaceReviewsResult | null> {
-  const key = process.env.GOOGLE_PLACES_API_KEY;
+  const key = googlePlacesApiKey();
   const placeId = process.env.GOOGLE_PLACE_ID;
   if (!key || !placeId) return null;
 

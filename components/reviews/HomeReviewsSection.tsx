@@ -4,24 +4,26 @@ import { FALLBACK_GOOGLE_REVIEWS } from "@/lib/reviews-fallback";
 import ReviewsShowcase from "./ReviewsShowcase";
 
 export default async function HomeReviewsSection() {
-  let reviews = await getReviews();
+  let reviews: Awaited<ReturnType<typeof getReviews>> = [];
   let averageRating = "5.0";
-  let countLabel = `· ${reviews.length} Google Reviews`;
+  let countLabel = "· Google Reviews";
 
-  if (reviews.length === 0) {
-    const google = await fetchGooglePlaceReviewsForStore();
-    if (google?.reviews.length) {
-      reviews = google.reviews;
-      averageRating =
-        google.placeRating != null ? google.placeRating.toFixed(1) : "5.0";
-      countLabel = google.userRatingsTotal
-        ? `· ${google.userRatingsTotal} Google Reviews`
-        : `· ${reviews.length} Google Reviews`;
-    }
+  const google = await fetchGooglePlaceReviewsForStore();
+  if (google?.reviews.length) {
+    reviews = google.reviews;
+    averageRating =
+      google.placeRating != null ? google.placeRating.toFixed(1) : "5.0";
+    countLabel = google.userRatingsTotal
+      ? `· ${google.userRatingsTotal} Google Reviews`
+      : `· ${reviews.length} Google Reviews`;
   } else {
-    averageRating = (
-      reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
-    ).toFixed(1);
+    reviews = await getReviews();
+    if (reviews.length > 0) {
+      averageRating = (
+        reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+      ).toFixed(1);
+      countLabel = `· ${reviews.length} Google Reviews`;
+    }
   }
 
   if (reviews.length === 0) {
