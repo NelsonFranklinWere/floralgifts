@@ -13,10 +13,10 @@ const VARIANT_PRESETS: Record<
   ProductImageVariant,
   { width: number; height?: number; quality: number; resize: "contain" | "cover" }
 > = {
-  thumb: { width: 96, height: 96, quality: 58, resize: "contain" },
-  cart: { width: 128, height: 128, quality: 60, resize: "contain" },
-  card: { width: 360, height: 360, quality: 65, resize: "contain" },
-  detail: { width: 800, quality: 72, resize: "contain" },
+  thumb: { width: 96, height: 96, quality: 58, resize: "cover" },
+  cart: { width: 128, height: 128, quality: 60, resize: "cover" },
+  card: { width: 360, height: 360, quality: 65, resize: "cover" },
+  detail: { width: 800, quality: 72, resize: "cover" },
   zoom: { width: 1200, quality: 78, resize: "contain" },
   hero: { width: 1200, quality: 75, resize: "cover" },
 };

@@ -3,8 +3,8 @@ module.exports = {
   apps: [
     {
       name: 'floralgifts',
-      script: 'npm',
-      args: 'start',
+      script: 'server.js',
+      interpreter: 'node',
       cwd: '/home/floral/floralgifts',
       instances: 1,
       exec_mode: 'fork',

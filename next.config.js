@@ -2,7 +2,9 @@ const path = require('path');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -21,7 +23,6 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256], // Reduced sizes
     minimumCacheTTL: 60 * 60 * 24 * 365, // 1 year cache
     dangerouslyAllowSVG: false,
-    unoptimized: false,
     loader: 'default',
     formats: ['image/webp', 'image/avif'], // Prefer modern formats for better compression
     qualities: [70, 75, 80],

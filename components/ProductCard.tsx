@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { formatCurrency, getCategoryFallbackImage } from "@/lib/utils";
 import { useCartStore } from "@/lib/store/cart";
 import { ShoppingCartIcon as ShoppingCartIconSolid } from "@heroicons/react/24/solid";
@@ -137,12 +136,11 @@ export default function ProductCard({
         >
           {displaySrc && !imageError ? (
             useObjectUrl && isSupabaseStorageUrl(image) ? (
-              <Image
+              <OptimizedImage
                 key="object-fallback"
                 src={toSupabaseObjectUrl(image)}
                 alt={getAltText()}
                 fill
-                unoptimized
                 className="img-frame-fit group-hover:scale-105 transition-transform duration-300"
                 sizes="(max-width: 640px) 42vw, (max-width: 1024px) 28vw, 360px"
                 loading={priority ? "eager" : "lazy"}
