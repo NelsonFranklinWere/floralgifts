@@ -11,6 +11,7 @@ module.exports = {
       env: {
         NODE_ENV: 'production',
         PORT: 3000,
+        HOSTNAME: '127.0.0.1',
         NODE_OPTIONS: '--max-old-space-size=2048', // 2GB for runtime
       },
       error_file: '/home/floral/floralgifts/logs/pm2-error.log',

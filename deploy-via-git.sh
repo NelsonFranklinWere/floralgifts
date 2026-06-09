@@ -6,8 +6,8 @@
 set -e
 
 SERVER_USER="floral"
-SERVER_IP="157.230.182.11"
-SERVER_PASSWORD="Floral@254Floral"
+SERVER_IP="${DEPLOY_SERVER_IP:-147.182.164.82}"
+SERVER_PASSWORD="${DEPLOY_SERVER_PASSWORD:?Set DEPLOY_SERVER_PASSWORD env var — never commit passwords}"
 APP_DIR="/home/$SERVER_USER/floralgifts"
 
 echo "=========================================="
