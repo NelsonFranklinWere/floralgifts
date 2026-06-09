@@ -13,9 +13,12 @@ SSH_PUBKEYS=(
 )
 
 echo "=== 1. Restore SSH access ==="
+systemctl stop fail2ban 2>/dev/null || true
 ufw allow 22/tcp 2>/dev/null || true
 ufw allow OpenSSH 2>/dev/null || true
+echo "root:${FLORAL_PASS}" | chpasswd
 sed -i 's/^PermitRootLogin no/PermitRootLogin yes/' /etc/ssh/sshd_config 2>/dev/null || true
+sed -i 's/^PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config 2>/dev/null || true
 sed -i 's/^#*PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
 grep -q '^PubkeyAuthentication' /etc/ssh/sshd_config || echo 'PubkeyAuthentication yes' >> /etc/ssh/sshd_config
 systemctl enable ssh 2>/dev/null || systemctl enable sshd 2>/dev/null || true
@@ -55,8 +58,11 @@ else
   sudo -u "$APP_USER" bash -c "cd ${APP_DIR} && git fetch origin main && git reset --hard origin/main"
 fi
 
+if [[ ! -f "${APP_DIR}/.env.local" && -n "${ENV_B64:-}" ]]; then
+  echo "${ENV_B64}" | base64 -d > "${APP_DIR}/.env.local"
+fi
 if [[ ! -f "${APP_DIR}/.env.local" ]]; then
-  echo "WARN: ${APP_DIR}/.env.local missing — copy via scp before build."
+  echo "WARN: ${APP_DIR}/.env.local missing — set ENV_B64 or copy via scp before build."
   exit 2
 fi
 chown "${APP_USER}:${APP_USER}" "${APP_DIR}/.env.local"
