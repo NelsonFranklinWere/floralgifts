@@ -53,37 +53,47 @@ export type GooglePlaceReviewsResult = {
  * Requires GOOGLE_PLACES_API_KEY and GOOGLE_PLACE_ID in env (server-only).
  * Google returns at most ~5 review objects per request; user_ratings_total is the full count.
  */
-function googlePlacesApiKey(): string | undefined {
-  return (
-    process.env.GOOGLE_PLACES_API_KEY ||
-    process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ||
-    undefined
-  );
+function googlePlacesApiKeys(): string[] {
+  const keys = [
+    process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+    process.env.GOOGLE_PLACES_API_KEY,
+  ].filter((k): k is string => Boolean(k));
+  return [...new Set(keys)];
+}
+
+async function fetchPlaceDetails(
+  placeId: string,
+  key: string
+): Promise<PlaceDetailsResponse | null> {
+  const fields = encodeURIComponent("reviews,rating,user_ratings_total");
+  const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${encodeURIComponent(placeId)}&fields=${fields}&key=${encodeURIComponent(key)}`;
+  const res = await fetch(url, { next: { revalidate: 3600 } });
+  if (!res.ok) return null;
+  return (await res.json()) as PlaceDetailsResponse;
 }
 
 export async function fetchGooglePlaceReviewsForStore(): Promise<GooglePlaceReviewsResult | null> {
-  const key = googlePlacesApiKey();
+  const keys = googlePlacesApiKeys();
   const placeId = process.env.GOOGLE_PLACE_ID;
-  if (!key || !placeId) return null;
-
-  const fields = encodeURIComponent("reviews,rating,user_ratings_total");
-  const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${encodeURIComponent(placeId)}&fields=${fields}&key=${encodeURIComponent(key)}`;
+  if (!keys.length || !placeId) return null;
 
   try {
-    const res = await fetch(url, { next: { revalidate: 3600 } });
-    if (!res.ok) return null;
-
-    const data = (await res.json()) as PlaceDetailsResponse;
-    if (data.status !== "OK" || !data.result) {
-      if (process.env.NODE_ENV === "development") {
+    let data: PlaceDetailsResponse | null = null;
+    for (const key of keys) {
+      const attempt = await fetchPlaceDetails(placeId, key);
+      if (attempt?.status === "OK" && attempt.result) {
+        data = attempt;
+        break;
+      }
+      if (process.env.NODE_ENV === "development" && attempt) {
         console.warn(
           "[google-reviews] Place Details:",
-          data.status,
-          data.error_message ?? ""
+          attempt.status,
+          attempt.error_message ?? ""
         );
       }
-      return null;
     }
+    if (!data?.result) return null;
 
     const raw = data.result.reviews ?? [];
     const reviews: Review[] = raw.map((r, index) => {
