@@ -28,9 +28,6 @@ export async function getPesapalToken(): Promise<string> {
     ? "https://pay.pesapal.com/v3"
     : "https://cybqa.pesapal.com/pesapalv3";
 
-  console.log(`Attempting to get Pesapal token from: ${baseUrl}/api/Auth/RequestToken`);
-  console.log(`Using credentials: ${consumerKey}:${consumerSecret.substring(0, 4)}...`);
-
   // Pesapal v3 uses POST with JSON body containing consumer_key and consumer_secret
   const response = await fetch(`${baseUrl}/api/Auth/RequestToken`, {
     method: "POST",
@@ -44,16 +41,13 @@ export async function getPesapalToken(): Promise<string> {
     }),
   });
 
-  console.log(`Pesapal token response status: ${response.status}`);
-
   if (!response.ok) {
     const errorText = await response.text();
-    console.error(`Pesapal token error response:`, errorText);
+    console.error(`Pesapal token error: HTTP ${response.status}`);
     throw new Error(`Failed to fetch Pesapal token: HTTP ${response.status} - ${errorText}`);
   }
 
   const data = await response.json();
-  console.log(`Pesapal token response:`, data);
 
   if (!data.token) {
     throw new Error("Invalid token response from Pesapal - no token field");

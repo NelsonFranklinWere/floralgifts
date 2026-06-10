@@ -25,4 +25,13 @@ if (!fs.existsSync(standalone)) {
 
 copyDir(path.join(root, "public"), path.join(standalone, "public"));
 copyDir(path.join(root, ".next", "static"), path.join(standaloneNext, "static"));
+
+for (const envFile of [".env.local", ".env.production.local", ".env.production"]) {
+  const src = path.join(root, envFile);
+  if (fs.existsSync(src)) {
+    fs.copyFileSync(src, path.join(standalone, envFile));
+    console.log(`[prepare-standalone] copied ${envFile} into standalone bundle.`);
+  }
+}
+
 console.log("[prepare-standalone] public + static copied into standalone bundle.");

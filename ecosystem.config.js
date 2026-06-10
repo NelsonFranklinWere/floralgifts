@@ -8,6 +8,7 @@ module.exports = {
       cwd: '/home/floral/floralgifts',
       instances: 1,
       exec_mode: 'fork',
+      env_file: '/home/floral/floralgifts/.env.local',
       env: {
         NODE_ENV: 'production',
         PORT: 3000,

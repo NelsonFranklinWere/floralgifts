@@ -39,8 +39,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Use default callback URL if not provided
-    const defaultCallbackUrl = `${process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke"}/api/pesapal/callback`;
+    const baseUrl =
+      process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
+    const defaultCallbackUrl =
+      process.env.PESAPAL_CALLBACK_URL || `${baseUrl}/api/pesapal/callback`;
 
     // Prepare billing address
     let billingAddressObj = null;
