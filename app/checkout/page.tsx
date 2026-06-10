@@ -48,7 +48,7 @@ export default function CheckoutPage() {
   const router = useRouter();
   const { items, getTotal, clearCart } = useCartStore();
   const [orderData, setOrderData] = useState<OrderData | null>(null);
-  const [paymentMethod, setPaymentMethod] = useState<"stk" | "coopbank" | "till" | "paybill" | "pesapal" | null>("till");
+  const [paymentMethod, setPaymentMethod] = useState<"stk" | "coopbank" | "till" | "paybill" | "pesapal" | null>("pesapal");
   const [stkPhone, setStkPhone] = useState("");
   const [stkError, setStkError] = useState("");
   const [phone, setPhone] = useState("");
@@ -578,7 +578,7 @@ export default function CheckoutPage() {
                 <div>...</div>
                 */}
 
-                {/* Card Payments */}
+                {/* Pesapal: M-Pesa or Card */}
                 <div>
                   <label className="flex items-start gap-3 p-4 border border-brand-gray-200 rounded-md cursor-pointer hover:bg-brand-gray-50">
                     <input
@@ -591,10 +591,13 @@ export default function CheckoutPage() {
                     />
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
-                        <div className="w-6 h-5 bg-white border border-gray-300 rounded flex items-center justify-center px-1">
-                          <span className="text-[#1434CB] font-bold text-[10px]">VISA</span>
+                        <div className="w-6 h-5 bg-[#007C42] rounded flex items-center justify-center">
+                          <span className="text-white font-bold text-[10px]">M-PESA</span>
                         </div>
-                        <span className="font-medium text-sm text-brand-gray-900">Credit/Debit Card</span>
+                        <div className="w-6 h-5 bg-white border border-gray-300 rounded flex items-center justify-center px-1">
+                          <span className="text-[#1434CB] font-bold text-[10px]">CARD</span>
+                        </div>
+                        <span className="font-medium text-sm text-brand-gray-900">Pay with Mpesa or Card</span>
                       </div>
                     </div>
                   </label>
@@ -698,7 +701,7 @@ export default function CheckoutPage() {
                   {isProcessing
                     ? "Processing..."
                     : paymentMethod === "pesapal"
-                      ? `Pay with Card - ${formatCurrency(total)}`
+                      ? `Pay with Mpesa or Card - ${formatCurrency(total)}`
                       : paymentMethod === "till" || paymentMethod === "paybill"
                         ? `Pay with M-Pesa - ${formatCurrency(total)}`
                         : "Complete Payment"}
