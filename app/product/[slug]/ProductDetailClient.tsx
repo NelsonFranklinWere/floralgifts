@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCartStore } from "@/lib/store/cart";
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 import type { Product } from "@/lib/db";
+import { Analytics } from "@/lib/analytics";
 
 interface ProductDetailClientProps {
   product: Product;
@@ -12,6 +13,15 @@ interface ProductDetailClientProps {
 export default function ProductDetailClient({ product }: ProductDetailClientProps) {
   const [quantity, setQuantity] = useState(1);
   const { addItem } = useCartStore();
+
+  useEffect(() => {
+    Analytics.trackProductView(
+      product.id,
+      product.title,
+      product.category,
+      product.price
+    );
+  }, [product.id, product.title, product.category, product.price]);
 
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) {
@@ -23,6 +33,12 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
         slug: product.slug,
       });
     }
+    Analytics.trackAddToCart(
+      product.id,
+      product.title,
+      product.price,
+      quantity
+    );
   };
 
   return (
@@ -66,4 +82,3 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
     </div>
   );
 }
-

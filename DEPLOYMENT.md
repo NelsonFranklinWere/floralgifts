@@ -194,8 +194,7 @@ If you have database migrations to run:
 # Run migrations (if you have a migration script)
 npm run migrate
 
-# Or manually via Supabase dashboard
-# Go to: https://supabase.com/dashboard
+# The database is PostgreSQL running on the app server (localhost:5432)
 ```
 
 ---

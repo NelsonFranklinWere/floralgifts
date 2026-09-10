@@ -234,8 +234,8 @@ export async function getBlogPosts(filters?: {
 
     if (error || !data) return FALLBACK_BLOG_POSTS;
 
-    const dbPosts = data.map((post) => convertBlogPost(post as BlogPostDB));
-    const dbSlugs = new Set(dbPosts.map((p) => p.slug));
+    const dbPosts = data.map((post: any) => convertBlogPost(post as BlogPostDB));
+    const dbSlugs = new Set(dbPosts.map((p: any) => p.slug));
     const missingFallback = FALLBACK_BLOG_POSTS.filter((p) => !dbSlugs.has(p.slug));
     return [...dbPosts, ...missingFallback];
   } catch (error) {

@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { formatCurrency, getCategoryFallbackImage } from "@/lib/utils";
 import { useCartStore } from "@/lib/store/cart";
-import { ShoppingCartIcon as ShoppingCartIconSolid } from "@heroicons/react/24/solid";
 import { Analytics } from "@/lib/analytics";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/image-blur";
 import {
@@ -33,13 +32,13 @@ export default function ProductCard({
   price,
   image,
   slug,
-  shortDescription,
   category,
   priority = false,
 }: ProductCardProps) {
   const { addItem } = useCartStore();
   const [imageError, setImageError] = useState(false);
   const [useObjectUrl, setUseObjectUrl] = useState(false);
+  const [added, setAdded] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
   const fallbackImage = getCategoryFallbackImage(category || "");
@@ -98,15 +97,13 @@ export default function ProductCard({
       ? getOptimizedProductImageUrl(image, "cart")
       : fallbackImage;
 
-  const handleAddToCart = () => {
-    addItem({ id, name, price, image: cartImageUrl, slug });
-    Analytics.trackAddToCart(id, name, price, 1);
-  };
-
-  const handleBasketClick = (e: React.MouseEvent) => {
+  const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    handleAddToCart();
+    addItem({ id, name, price, image: cartImageUrl, slug });
+    Analytics.trackAddToCart(id, name, price, 1);
+    setAdded(true);
+    window.setTimeout(() => setAdded(false), 1500);
   };
 
   const getAltText = () => {
@@ -127,81 +124,85 @@ export default function ProductCard({
   };
 
   return (
-    <div ref={cardRef} className="card p-2 sm:p-3 md:p-4 group">
-      <div className="mb-1.5 sm:mb-2 md:mb-3">
-        <Link
-          href={`/product/${slug}`}
-          className="img-product-frame block cursor-pointer"
-          aria-label={`View ${name} details`}
-        >
-          {displaySrc && !imageError ? (
-            useObjectUrl && isSupabaseStorageUrl(image) ? (
-              <OptimizedImage
-                key="object-fallback"
-                src={toSupabaseObjectUrl(image)}
-                alt={getAltText()}
-                fill
-                className="img-frame-fit group-hover:scale-105 transition-transform duration-300"
-                sizes="(max-width: 640px) 42vw, (max-width: 1024px) 28vw, 360px"
-                loading={priority ? "eager" : "lazy"}
-                priority={priority}
-                fetchPriority={priority ? "high" : "auto"}
-                onError={() => setImageError(true)}
-              />
-            ) : (
-              <OptimizedImage
-                key={displaySrc}
-                src={displaySrc}
-                variant="card"
-                alt={getAltText()}
-                fill
-                className="img-frame-fit group-hover:scale-105 transition-transform duration-300"
-                sizes="(max-width: 640px) 42vw, (max-width: 1024px) 28vw, 360px"
-                loading={priority ? "eager" : "lazy"}
-                priority={priority}
-                fetchPriority={priority ? "high" : "auto"}
-                onError={handleImageError}
-                {...(priority
-                  ? { placeholder: "blur" as const, blurDataURL: IMAGE_BLUR_DATA_URL }
-                  : {})}
-              />
-            )
-          ) : (
+    <div ref={cardRef} className="group flex flex-col h-full">
+      {/* Image */}
+      <Link
+        href={`/product/${slug}`}
+        className="relative aspect-[4/5] sm:aspect-square w-full overflow-hidden bg-brand-gray-50 mb-3"
+        aria-label={`View ${name} details`}
+      >
+        {displaySrc && !imageError ? (
+          useObjectUrl && isSupabaseStorageUrl(image) ? (
             <OptimizedImage
-              src={fallbackImage}
+              key="object-fallback"
+              src={toSupabaseObjectUrl(image)}
               alt={getAltText()}
               fill
-              className="img-frame-fit opacity-60"
-              sizes="(max-width: 640px) 42vw, (max-width: 1024px) 28vw, 360px"
+              className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px"
               loading={priority ? "eager" : "lazy"}
               priority={priority}
               fetchPriority={priority ? "high" : "auto"}
+              onError={() => setImageError(true)}
             />
-          )}
-        </Link>
-      </div>
-
-      <Link href={`/product/${slug}`} className="block">
-        <h3 className="font-heading font-semibold text-xs sm:text-sm text-brand-gray-900 mb-0.5 sm:mb-1 group-hover:text-brand-red transition-colors line-clamp-2">
-          {name}
-        </h3>
-        {shortDescription && (
-          <p className="text-brand-gray-600 text-xs sm:text-sm mb-0.5 sm:mb-1 line-clamp-2">{shortDescription}</p>
+          ) : (
+            <OptimizedImage
+              key={displaySrc}
+              src={displaySrc}
+              variant="card"
+              alt={getAltText()}
+              fill
+              className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px"
+              loading={priority ? "eager" : "lazy"}
+              priority={priority}
+              fetchPriority={priority ? "high" : "auto"}
+              onError={handleImageError}
+              {...(priority
+                ? { placeholder: "blur" as const, blurDataURL: IMAGE_BLUR_DATA_URL }
+                : {})}
+            />
+          )
+        ) : (
+          <OptimizedImage
+            src={fallbackImage}
+            alt={getAltText()}
+            fill
+            className="object-cover object-center opacity-60"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px"
+            loading={priority ? "eager" : "lazy"}
+            priority={priority}
+            fetchPriority={priority ? "high" : "auto"}
+          />
         )}
-        <p className="font-mono font-semibold text-brand-red text-sm sm:text-base mb-1 sm:mb-1.5 md:mb-2">
-          {formatCurrency(price)}
-        </p>
       </Link>
 
-      <button
-        type="button"
-        onClick={handleBasketClick}
-        className="mt-1 sm:mt-1.5 w-full btn-primary-sm"
-        aria-label={`Add ${name} to cart`}
-      >
-        <ShoppingCartIconSolid className="h-4 w-4" />
-        Add to Cart
-      </button>
+      {/* Name · Price + Add to Cart on one row */}
+      <div className="flex flex-col flex-1 px-0.5 min-w-0">
+        <Link href={`/product/${slug}`} className="block mb-1.5 sm:mb-2 min-w-0">
+          <h3 className="font-heading font-bold text-[11px] sm:text-[13px] md:text-sm text-brand-gray-900 leading-snug line-clamp-2 group-hover:opacity-70 transition-opacity">
+            {name}
+          </h3>
+        </Link>
+
+        <div className="mt-auto flex items-center justify-between gap-1 sm:gap-2 min-w-0">
+          <p className="font-body font-semibold text-[11px] sm:text-[13px] md:text-sm text-brand-gray-900 shrink-0 tabular-nums">
+            {formatCurrency(price)}
+          </p>
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            className={`shrink-0 border border-brand-gray-900 py-1 px-1.5 sm:py-1.5 sm:px-2.5 md:px-3 text-[9px] sm:text-[10px] md:text-[11px] font-medium uppercase tracking-[0.04em] sm:tracking-[0.08em] transition-colors focus:outline-none focus:ring-2 focus:ring-brand-gray-900 focus:ring-offset-1 whitespace-nowrap ${
+              added
+                ? "bg-brand-gray-900 text-white"
+                : "bg-white text-brand-gray-900 hover:bg-brand-gray-900 hover:text-white"
+            }`}
+            aria-label={`Add ${name} to cart`}
+          >
+            {added ? "Added" : "Add to Cart"}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

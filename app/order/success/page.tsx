@@ -8,6 +8,7 @@ import { SHOP_INFO } from "@/lib/constants";
 import type { Order } from "@/lib/db";
 import axios from "axios";
 import { useCartStore } from "@/lib/store/cart";
+import { Analytics } from "@/lib/analytics";
 
 function OrderSuccessContent() {
   const searchParams = useSearchParams();
@@ -21,20 +22,109 @@ function OrderSuccessContent() {
   const [paymentTimedOut, setPaymentTimedOut] = useState(false);
   const { clearCart } = useCartStore();
 
+  const openWhatsAppForOrder = (id: string) => {
+    try {
+      if (sessionStorage.getItem(`whatsapp_redirected_${id}`)) return;
+      sessionStorage.setItem(`whatsapp_redirected_${id}`, "true");
+    } catch {
+      /* private mode */
+    }
+    const whatsappMessage = `Hello! I just completed payment for order #${id.slice(0, 8)}. Please confirm receipt and delivery details.`;
+    const whatsappLink = `https://wa.me/${SHOP_INFO.whatsapp}?text=${encodeURIComponent(whatsappMessage)}`;
+    window.location.href = whatsappLink;
+  };
+
+  const scheduleWhatsAppRedirect = (id: string, delayMs = 2000) => {
+    try {
+      if (sessionStorage.getItem(`whatsapp_redirected_${id}`)) return;
+      if (sessionStorage.getItem(`whatsapp_timer_started_${id}`)) return;
+      sessionStorage.setItem(`whatsapp_timer_started_${id}`, "true");
+    } catch {
+      /* private mode */
+    }
+    window.setTimeout(() => {
+      axios
+        .get(`/api/orders/${id}`)
+        .then((response) => {
+          if (response.data?.status === "paid") {
+            openWhatsAppForOrder(id);
+          }
+        })
+        .catch(() => {
+          openWhatsAppForOrder(id);
+        });
+    }, delayMs);
+  };
+
+  // Fire Meta Purchase once when payment is confirmed
+  useEffect(() => {
+    if (!order || order.status !== "paid" || !orderId) return;
+    try {
+      const key = `fw_purchase_tracked_${orderId}`;
+      if (sessionStorage.getItem(key)) return;
+      sessionStorage.setItem(key, "1");
+    } catch {
+      /* private mode */
+    }
+
+    const contentIds = Array.isArray(order.items)
+      ? order.items.map((item) => item.productId).filter(Boolean)
+      : [];
+    const numItems = Array.isArray(order.items)
+      ? order.items.reduce((sum, item) => sum + (item.quantity || 1), 0)
+      : undefined;
+
+    Analytics.trackPurchase(
+      orderId,
+      order.total_amount || order.total || 0,
+      order.payment_method || "unknown",
+      { contentIds, numItems }
+    );
+  }, [order, orderId]);
+
+  // Initial load: fetch order, re-verify Pesapal if needed, start polling while pending
   useEffect(() => {
     if (!orderId) {
       setIsLoading(false);
       return;
     }
 
-    async function fetchOrder() {
+    async function loadAndConfirm() {
       try {
+        // After Pesapal redirect, confirm transaction with Pesapal and mark order paid
+        const trackingId =
+          pesapalTrackingId ||
+          undefined;
+
+        if (trackingId) {
+          try {
+            await axios.post("/api/pesapal/status", {
+              orderId,
+              orderTrackingId: trackingId,
+            });
+          } catch (confirmErr) {
+            console.error("Pesapal confirm on success page failed:", confirmErr);
+          }
+        }
+
         const response = await axios.get(`/api/orders/${orderId}`);
         setOrder(response.data);
-        
-        // If order is pending and has mpesa_checkout_request_id or pesapal_order_tracking_id, start polling
-        if (response.data.status === "pending" &&
-            (response.data.mpesa_checkout_request_id || response.data.pesapal_order_tracking_id)) {
+
+        if (response.data.status === "paid") {
+          clearCart();
+          sessionStorage.removeItem("pendingOrder");
+          setCartCleared(true);
+          scheduleWhatsAppRedirect(orderId!);
+          return;
+        }
+
+        // Still pending — poll DB (and re-check Pesapal when tracking id present)
+        if (
+          response.data.status === "pending" &&
+          (response.data.mpesa_checkout_request_id ||
+            response.data.pesapal_order_tracking_id ||
+            trackingId)
+        ) {
           setIsPolling(true);
         }
       } catch (error) {
@@ -44,121 +134,78 @@ function OrderSuccessContent() {
       }
     }
 
-    fetchOrder();
-  }, [orderId]);
+    loadAndConfirm();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orderId, pesapalTrackingId]);
 
-  // Poll for payment status if order is pending with STK push
+  // Poll while pending — re-verify Pesapal each cycle when tracking id exists
   useEffect(() => {
-    if (!orderId || !isPolling || !order) return;
+    if (!orderId || !isPolling) return;
 
     const pollInterval = setInterval(async () => {
       try {
+        const tracking =
+          pesapalTrackingId ||
+          order?.pesapal_order_tracking_id ||
+          null;
+
+        if (tracking) {
+          try {
+            await axios.post("/api/pesapal/status", {
+              orderId,
+              orderTrackingId: tracking,
+            });
+          } catch {
+            /* keep polling DB */
+          }
+        }
+
         const response = await axios.get(`/api/orders/${orderId}`);
         const updatedOrder = response.data;
         setOrder(updatedOrder);
 
-        // Stop polling if payment is confirmed
         if (updatedOrder.status === "paid") {
           setIsPolling(false);
           clearInterval(pollInterval);
-
-          // Clear cart only when payment is confirmed
-          if (isPaymentPending && !cartCleared) {
+          if (!cartCleared) {
             clearCart();
             sessionStorage.removeItem("pendingOrder");
             setCartCleared(true);
-            console.log("Cart cleared after payment confirmation for order:", orderId);
           }
-          
-          // Wait 15 seconds to ensure payment is fully confirmed and email sent to business, then redirect to WhatsApp
-          const hasRedirected = sessionStorage.getItem(`whatsapp_redirected_${orderId}`);
-          const hasStartedTimer = sessionStorage.getItem(`whatsapp_timer_started_${orderId}`);
-          
-          if (!hasRedirected && !hasStartedTimer) {
-            // Mark timer as started to prevent multiple timers
-            sessionStorage.setItem(`whatsapp_timer_started_${orderId}`, "true");
-            
-            // Wait 15 seconds (email should be sent by callback during this time)
-            setTimeout(() => {
-              // Double-check order status before redirecting
-              axios.get(`/api/orders/${orderId}`).then(response => {
-                const finalOrder = response.data;
-                if (finalOrder.status === "paid") {
-                  const whatsappMessage = `Hello! I just completed payment for order #${orderId.slice(0, 8)}. Please confirm receipt and delivery details.`;
-                  const whatsappLink = `https://wa.me/${SHOP_INFO.whatsapp}?text=${encodeURIComponent(whatsappMessage)}`;
-                  window.open(whatsappLink, "_blank");
-                  sessionStorage.setItem(`whatsapp_redirected_${orderId}`, "true");
-                  console.log("WhatsApp redirect triggered for order:", orderId, "after 15 second confirmation wait");
-                } else {
-                  console.log("Payment status changed during wait, not redirecting to WhatsApp");
-                }
-              }).catch(err => {
-                console.error("Error verifying order status before WhatsApp redirect:", err);
-              });
-            }, 15000); // Wait 15 seconds before opening WhatsApp
-          }
+          scheduleWhatsAppRedirect(orderId);
+        } else if (updatedOrder.status === "failed" || updatedOrder.status === "cancelled") {
+          setIsPolling(false);
+          clearInterval(pollInterval);
         }
       } catch (error) {
         console.error("Error polling order status:", error);
       }
-    }, 3000); // Poll every 3 seconds
+    }, 3000);
 
-    // Stop polling after 2 minutes (40 attempts)
     const timeout = setTimeout(() => {
       setIsPolling(false);
       clearInterval(pollInterval);
-      // If still pending after timeout, mark as timed out for alternative payment suggestions
-      if (order?.status === "pending") {
-        setPaymentTimedOut(true);
-      }
+      setPaymentTimedOut(true);
     }, 120000);
 
     return () => {
       clearInterval(pollInterval);
       clearTimeout(timeout);
     };
-  }, [orderId, isPolling, order]);
+  }, [orderId, isPolling, pesapalTrackingId, order?.pesapal_order_tracking_id, cartCleared, clearCart]);
 
-  // Also check if order is already paid when component loads and redirect to WhatsApp
+  // Paid on load / after state change → WhatsApp
   useEffect(() => {
-    if (order && order.status === "paid" && !isPolling) {
-      // Clear cart if payment was pending and not yet cleared
-      if (isPaymentPending && !cartCleared) {
-        clearCart();
-        sessionStorage.removeItem("pendingOrder");
-        setCartCleared(true);
-        console.log("Cart cleared for already-confirmed payment:", orderId);
-      }
+    if (!order || order.status !== "paid" || !orderId) return;
 
-      // Only redirect once, check if we haven't redirected yet
-      const hasRedirected = sessionStorage.getItem(`whatsapp_redirected_${orderId}`);
-      const hasStartedTimer = sessionStorage.getItem(`whatsapp_timer_started_${orderId}`);
-
-      if (!hasRedirected && !hasStartedTimer) {
-        // Mark timer as started to prevent multiple timers
-        sessionStorage.setItem(`whatsapp_timer_started_${orderId}`, "true");
-
-        // Wait 15 seconds to ensure email has been sent to business, then redirect to WhatsApp
-        setTimeout(() => {
-          // Verify order is still paid before redirecting
-          axios.get(`/api/orders/${orderId}`).then(response => {
-            const finalOrder = response.data;
-            if (finalOrder.status === "paid") {
-              const whatsappMessage = `Hello! I just completed payment for order #${orderId?.slice(0, 8)}. Please confirm receipt and delivery details.`;
-              const whatsappLink = `https://wa.me/${SHOP_INFO.whatsapp}?text=${encodeURIComponent(whatsappMessage)}`;
-              window.open(whatsappLink, "_blank");
-              sessionStorage.setItem(`whatsapp_redirected_${orderId}`, "true");
-              console.log("WhatsApp redirect triggered for already-paid order:", orderId, "after 15 second wait");
-            } else {
-              console.log("Payment status changed during wait, not redirecting to WhatsApp");
-            }
-          }).catch(err => {
-            console.error("Error verifying order status before WhatsApp redirect:", err);
-          });
-        }, 15000); // Wait 15 seconds before opening WhatsApp
-      }
+    if (!cartCleared) {
+      clearCart();
+      sessionStorage.removeItem("pendingOrder");
+      setCartCleared(true);
     }
-  }, [order, orderId, isPolling, isPaymentPending, cartCleared, clearCart]);
+
+    scheduleWhatsAppRedirect(orderId);
+  }, [order?.status, orderId, cartCleared, clearCart]);
 
   if (isLoading) {
     return (
@@ -215,7 +262,7 @@ function OrderSuccessContent() {
               : order.status === "pending" && order.pesapal_order_tracking_id
               ? "Processing your card payment. Please wait while we confirm the transaction..."
               : order.status === "paid"
-              ? "Thank you for your order. We'll process it shortly."
+              ? "Thank you for your order. Redirecting you to WhatsApp to confirm delivery details…"
               : "Your M-Pesa STK Push payment could not be processed. Please try using M-Pesa Till Number or Paybill instead, or contact support."}
           </p>
           {isPolling && (

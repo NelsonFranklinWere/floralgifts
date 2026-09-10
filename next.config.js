@@ -8,10 +8,6 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**.supabase.co',
-      },
-      {
-        protocol: 'https',
         hostname: '**.cloudinary.com',
       },
       {
@@ -37,10 +33,30 @@ const nextConfig = {
         has: [
           {
             type: 'host',
-            value: 'floralwhispersgifts.co.ke',
+            value: 'www.floralwhispersgifts.co.ke',
           },
         ],
-        destination: 'https://www.floralwhispersgifts.co.ke/:path*',
+        destination: 'https://floralwhispersgifts.co.ke/:path*',
+        permanent: true,
+      },
+      {
+        source: '/sell',
+        destination: '/sale',
+        permanent: true,
+      },
+      {
+        source: '/sell.csv',
+        destination: '/feeds/meta.csv',
+        permanent: true,
+      },
+      {
+        source: '/sale.csv',
+        destination: '/feeds/meta.csv',
+        permanent: true,
+      },
+      {
+        source: '/admin/sell-catalog',
+        destination: '/admin/sale-catalog',
         permanent: true,
       },
     ];

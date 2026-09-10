@@ -213,9 +213,7 @@ sudo systemctl restart nginx
 
 After restoring, verify these are set in `.env.local`:
 
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `SUPABASE_SERVICE_ROLE_KEY`
+- `PGHOST` `PGPORT` `PGDATABASE` `PGUSER` `PGPASSWORD` (or `DATABASE_URL`)
 - `PESAPAL_CONSUMER_KEY`
 - `PESAPAL_CONSUMER_SECRET`
 - `PESAPAL_IPN_ID`

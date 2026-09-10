@@ -634,37 +634,6 @@ export default async function HomePage() {
       <JsonLd data={breadcrumbJsonLd} />
       {heroSlides[0]?.image ? <HeroLcpPreload href={heroSlides[0].image} /> : null}
       <div className="bg-green-100">
-        <section className="px-4 sm:px-6 lg:px-8 pt-8 pb-4 max-w-7xl mx-auto hero-rotating-bg rounded-b-2xl">
-          <h1 className="font-heading font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-brand-gray-900 mb-3">
-            Flower Delivery in Nairobi — Bouquets, Hampers & Teddy Bears
-          </h1>
-          <h2 className="font-heading font-semibold text-base sm:text-lg md:text-xl text-brand-gray-800 mb-2">
-            Same Day Flower Delivery Across Nairobi
-          </h2>
-          <h2 className="font-heading font-semibold text-base sm:text-lg md:text-xl text-brand-gray-800 mb-4">
-            Gift Hampers, Teddy Bears & Roses — Delivered by Floral Whispers
-          </h2>
-          <p className="text-sm text-brand-gray-700 mb-4">
-            Trusted by Nairobi customers for same-day surprise gifts.
-            <Link href="#google-reviews" className="ml-2 text-brand-red hover:underline">
-              See our Google reviews
-            </Link>
-          </p>
-          <div className="flex flex-wrap gap-3">
-            <Link
-              href="/flower-hamper-wine-nairobi"
-              className="inline-flex items-center rounded-full bg-brand-red text-white text-sm font-semibold px-4 py-2 hover:opacity-90 transition-opacity"
-            >
-              Flower Hamper + Wine in Nairobi
-            </Link>
-            <Link
-              href="/collections/gift-hampers"
-              className="inline-flex items-center rounded-full bg-white border border-brand-gray-300 text-brand-gray-700 text-sm font-semibold px-4 py-2 hover:shadow-md transition-all"
-            >
-              Shop Hampers
-            </Link>
-          </div>
-        </section>
         <HeroCarousel />
 
         {/* Nairobi Gift Hampers */}
@@ -695,43 +664,6 @@ export default async function HomePage() {
           linkHref="/collections/flowers"
         />
 
-        {/* Quick category links */}
-        <section className="py-8 md:py-10 bg-green-100">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-center gap-6 sm:gap-10">
-              <Link href="/collections/flowers" className="group text-center">
-                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white shadow-md border border-brand-gray-200 flex items-center justify-center overflow-hidden group-hover:shadow-lg transition-shadow">
-                  <Image
-                    src="/images/products/flowers/BouquetFlowers2.jpg"
-                    alt="Shop Flowers"
-                    width={112}
-                    height={112}
-                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="mt-2 text-xs sm:text-sm font-semibold text-brand-gray-900 group-hover:text-brand-red transition-colors">
-                  Flowers
-                </div>
-              </Link>
-
-              <Link href="/collections/wines" className="group text-center">
-                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white shadow-md border border-brand-gray-200 flex items-center justify-center overflow-hidden group-hover:shadow-lg transition-shadow">
-                  <Image
-                    src="/images/products/wines/Wines1.jpg"
-                    alt="Shop Wines"
-                    width={112}
-                    height={112}
-                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="mt-2 text-xs sm:text-sm font-semibold text-brand-gray-900 group-hover:text-brand-red transition-colors">
-                  Wines
-                </div>
-              </Link>
-            </div>
-          </div>
-        </section>
-
         {/* Holiday Surprise Gifts For Families */}
         <RotatingProductSection
           title="Holiday Surprise Gifts For Families"
@@ -758,43 +690,6 @@ export default async function HomePage() {
           linkHref="/collections/gift-hampers"
         />
 
-        {/* Quick category links */}
-        <section className="py-8 md:py-10 bg-green-100">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-center gap-6 sm:gap-10">
-              <Link href="/collections/gift-hampers" className="group text-center">
-                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white shadow-md border border-brand-gray-200 flex items-center justify-center overflow-hidden group-hover:shadow-lg transition-shadow">
-                  <Image
-                    src="/images/products/hampers/giftamper.jpg"
-                    alt="Shop Gift Hampers"
-                    width={112}
-                    height={112}
-                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="mt-2 text-xs sm:text-sm font-semibold text-brand-gray-900 group-hover:text-brand-red transition-colors">
-                  Gift Hampers
-                </div>
-              </Link>
-
-              <Link href="/collections/teddy-bears" className="group text-center">
-                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white shadow-md border border-brand-gray-200 flex items-center justify-center overflow-hidden group-hover:shadow-lg transition-shadow">
-                  <Image
-                    src="/images/products/teddies/Teddybear1.jpg"
-                    alt="Shop Teddy Bears"
-                    width={112}
-                    height={112}
-                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="mt-2 text-xs sm:text-sm font-semibold text-brand-gray-900 group-hover:text-brand-red transition-colors">
-                  Teddy Bears
-                </div>
-              </Link>
-            </div>
-          </div>
-        </section>
-
         {/* Anniversary & Special Occasion Gifts */}
         <RotatingProductSection
           title="Celebration Gifts — Flowers, Hampers & Teddy Bears"
@@ -820,43 +715,6 @@ export default async function HomePage() {
           bgColor="bg-gradient-to-br from-green-100 via-green-50 to-green-100"
           linkHref="/collections/flowers"
         />
-
-        {/* Quick category links */}
-        <section className="py-8 md:py-10 bg-green-100">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-center gap-6 sm:gap-10">
-              <Link href="/collections/cards" className="group text-center">
-                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white shadow-md border border-brand-gray-200 flex items-center justify-center overflow-hidden group-hover:shadow-lg transition-shadow">
-                  <Image
-                    src="/images/giftcards/card1.png"
-                    alt="Shop Cards"
-                    width={112}
-                    height={112}
-                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="mt-2 text-xs sm:text-sm font-semibold text-brand-gray-900 group-hover:text-brand-red transition-colors">
-                  Cards
-                </div>
-              </Link>
-
-              <Link href="/collections/cakes" className="group text-center">
-                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white shadow-md border border-brand-gray-200 flex items-center justify-center overflow-hidden group-hover:shadow-lg transition-shadow">
-                  <Image
-                    src="/images/products/cakes.webp"
-                    alt="Shop Cakes"
-                    width={112}
-                    height={112}
-                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="mt-2 text-xs sm:text-sm font-semibold text-brand-gray-900 group-hover:text-brand-red transition-colors">
-                  Cakes
-                </div>
-              </Link>
-            </div>
-          </div>
-        </section>
 
         {/* Gift Hampers */}
         <RotatingProductSection

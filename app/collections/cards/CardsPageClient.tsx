@@ -46,7 +46,7 @@ export default function CardsPageClient() {
             <p className="mt-4 text-brand-gray-600">Loading gift cards...</p>
           </div>
         ) : products.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
             {products.map((product) => (
               <Link key={product.id} href={`/product/${product.slug}`} className="card overflow-hidden group">
                 <div className="relative aspect-square overflow-hidden bg-brand-gray-100">

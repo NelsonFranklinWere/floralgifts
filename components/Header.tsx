@@ -4,13 +4,13 @@ import Link from "next/link";
 import OptimizedImage from "@/components/OptimizedImage";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon, ShoppingCartIcon, MagnifyingGlassIcon, ChevronDownIcon, PhoneIcon } from "@heroicons/react/24/outline";
+import { Dialog } from "@headlessui/react";
+import { Bars3Icon, XMarkIcon, ShoppingCartIcon, MagnifyingGlassIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import { useCartStore } from "@/lib/store/cart";
 import { useUIStore } from "@/lib/store/ui";
+import { Analytics } from "@/lib/analytics";
 import CartSidebar from "./CartSidebar";
 import Logo from "./Logo";
-import { SHOP_INFO } from "@/lib/constants";
 import { formatCurrency } from "@/lib/utils";
 import type { Product } from "@/lib/db";
 
@@ -25,7 +25,7 @@ interface NavItem {
 
 const navigation: NavItem[] = [
   {
-    name: "Flower Bouquets",
+    name: "Flowers",
     href: "/collections/flowers",
     children: [
       {
@@ -100,35 +100,36 @@ const navigation: NavItem[] = [
     ],
   },
   {
-    name: "Cards",
-    href: "/collections/cards",
-    children: [
-      {
-        title: "Occasions",
-        items: [
-          { name: "View all", href: "/collections/cards" },
-          { name: "Birthdays", href: "/collections/cards" },
-          { name: "Graduations", href: "/collections/cards" },
-          { name: "Anniversaries", href: "/collections/cards" },
-        ],
-      },
-      {
-        title: "Sentiment",
-        items: [
-          { name: "Congrats", href: "/collections/cards" },
-          { name: "Sympathy", href: "/collections/cards" },
-          { name: "Good Luck", href: "/collections/cards" },
-        ],
-      },
-    ],
+    name: "Men",
+    href: "/collections/mens",
   },
   {
-    name: "Cakes",
-    href: "/collections/cakes",
+    name: "Women",
+    href: "/collections/womens",
   },
   {
-    name: "Contact",
-    href: "/contact",
+    name: "Kids",
+    href: "/collections/kids",
+  },
+  {
+    name: "Graduation",
+    href: "/collections/graduation",
+  },
+  {
+    name: "Wedding",
+    href: "/collections/wedding",
+  },
+  {
+    name: "Valentines",
+    href: "/collections/valentines",
+  },
+  {
+    name: "Corporate",
+    href: "/collections/corporate",
+  },
+  {
+    name: "New Arrivals",
+    href: "/new-arrivals",
   },
 ];
 
@@ -142,15 +143,81 @@ export default function Header() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileExpanded, setMobileExpanded] = useState<{ [key: string]: boolean }>({});
   const [mounted, setMounted] = useState(false);
+  const [menuScrollY, setMenuScrollY] = useState(0);
   const { cartOpen, setCartOpen } = useUIStore();
   const { getItemCount } = useCartStore();
   const itemCount = getItemCount();
   const dropdownRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchResultsRef = useRef<HTMLDivElement>(null);
+  const menuCloseButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  const lockBodyScroll = useCallback(() => {
+    if (typeof window === "undefined") return;
+    const y = window.scrollY || window.pageYOffset || 0;
+    setMenuScrollY(y);
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${y}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.width = "100%";
+    document.body.style.overflow = "hidden";
+  }, []);
+
+  const unlockBodyScroll = useCallback((toTop?: boolean) => {
+    if (typeof document === "undefined") return;
+    const lockedTop = document.body.style.top;
+    const restoreY = toTop
+      ? 0
+      : lockedTop
+        ? Math.abs(parseInt(lockedTop, 10) || 0)
+        : menuScrollY;
+    document.documentElement.style.overflow = "";
+    document.body.style.position = "";
+    document.body.style.top = "";
+    document.body.style.left = "";
+    document.body.style.right = "";
+    document.body.style.width = "";
+    document.body.style.overflow = "";
+    window.scrollTo(0, restoreY);
+  }, [menuScrollY]);
+
+  const openMobileMenu = useCallback(() => {
+    lockBodyScroll();
+    setMobileMenuOpen(true);
+  }, [lockBodyScroll]);
+
+  const closeMobileMenu = useCallback(
+    (opts?: { scrollTop?: boolean }) => {
+      setMobileMenuOpen(false);
+      unlockBodyScroll(!!opts?.scrollTop);
+      if (opts?.scrollTop) {
+        requestAnimationFrame(() => {
+          window.scrollTo(0, 0);
+          document.documentElement.scrollTop = 0;
+          document.body.scrollTop = 0;
+        });
+      }
+    },
+    [unlockBodyScroll]
+  );
+
+  // Safety: unlock body if component unmounts with menu open
+  useEffect(() => {
+    return () => {
+      document.documentElement.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.width = "";
+      document.body.style.overflow = "";
+    };
   }, []);
 
   // Debounced search function
@@ -167,6 +234,12 @@ export default function Header() {
       if (response.ok) {
         const results = await response.json();
         setSearchResults(results);
+        Analytics.trackSearch(
+          query,
+          Array.isArray(results)
+            ? results.slice(0, 10).map((p: Product) => p.id).filter(Boolean)
+            : []
+        );
       } else {
         setSearchResults([]);
       }
@@ -250,31 +323,31 @@ export default function Header() {
     <>
       <header className="bg-white border-b border-brand-gray-200 sticky top-0 z-50">
         <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" aria-label="Top">
-          <div className="flex h-16 md:h-20 items-center justify-between">
+          <div className="flex h-14 md:h-16 items-center justify-between gap-3">
             {/* Logo */}
-            <div className="flex items-center">
-              <Link href="/" className="flex items-center">
-                <Logo className="h-12 md:h-16 w-auto" />
+            <div className="flex items-center min-w-0 shrink">
+              <Link href="/" className="flex items-center min-w-0">
+                <Logo />
               </Link>
             </div>
 
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex lg:items-center lg:space-x-6 xl:space-x-8">
+            {/* Desktop nav: wrap + compact so Men/Women/Kids + occasions fit */}
+            <div className="hidden md:flex md:items-center md:flex-wrap md:justify-center md:gap-x-2 md:gap-y-1 lg:gap-x-2.5 xl:gap-x-3 flex-1 min-w-0 px-1 max-w-4xl xl:max-w-5xl">
               {navigation.map((item) => (
                 <div
                   key={item.name}
-                  className="relative"
+                  className="relative shrink-0"
                   onMouseEnter={() => handleMouseEnter(item.name)}
                   onMouseLeave={() => handleMouseLeave(item.name)}
                 >
                   <Link
                     href={item.href}
-                    className="text-brand-gray-900 hover:text-brand-red transition-colors font-medium text-sm xl:text-base flex items-center gap-1 group"
+                    className="text-brand-gray-900 hover:text-brand-red transition-colors font-medium text-[10px] lg:text-[11px] xl:text-xs flex items-center gap-0.5 group whitespace-nowrap"
                   >
                     {item.name}
                     {item.children && (
                       <ChevronDownIcon
-                        className={`h-4 w-4 transition-transform ${
+                        className={`h-3 w-3 transition-transform ${
                           activeDropdown === item.name ? "rotate-180" : ""
                         }`}
                       />
@@ -287,25 +360,33 @@ export default function Header() {
                       ref={(el) => {
                         dropdownRefs.current[item.name] = el;
                       }}
-                      className="absolute top-full left-0 mt-2 bg-white border border-brand-gray-200 rounded-lg shadow-lg p-6 z-[100]"
+                      className="absolute top-full left-0 mt-2 bg-white border border-brand-gray-200 rounded-lg shadow-lg p-4 z-[100]"
                       style={{
-                        width: item.children.length === 3 ? "900px" : item.children.length === 2 ? "600px" : "400px",
+                        width: item.children.length === 3 ? "720px" : item.children.length === 2 ? "480px" : "320px",
                       }}
                       onMouseEnter={() => setActiveDropdown(item.name)}
                       onMouseLeave={() => setActiveDropdown(null)}
                     >
-                      <div className="grid grid-cols-3 gap-8">
+                      <div
+                        className={`grid gap-6 ${
+                          item.children.length === 3
+                            ? "grid-cols-3"
+                            : item.children.length === 2
+                              ? "grid-cols-2"
+                              : "grid-cols-1"
+                        }`}
+                      >
                         {item.children.map((section, sectionIndex) => (
                           <div key={sectionIndex}>
-                            <h3 className="font-semibold text-brand-gray-900 mb-3 text-sm uppercase tracking-wide">
+                            <h3 className="font-semibold text-brand-gray-900 mb-2 text-xs uppercase tracking-wide">
                               {section.title}
                             </h3>
-                            <ul className="space-y-2">
+                            <ul className="space-y-1">
                               {section.items.map((subItem) => (
                                 <li key={subItem.name}>
                                   <Link
                                     href={subItem.href}
-                                    className="text-brand-gray-700 hover:text-brand-red transition-colors text-sm block py-1"
+                                    className="text-brand-gray-700 hover:text-brand-red transition-colors text-xs block py-0.5"
                                   >
                                     {subItem.name}
                                   </Link>
@@ -323,16 +404,6 @@ export default function Header() {
 
             {/* Right Icons */}
             <div className="flex items-center space-x-2 md:space-x-4">
-              {/* Call to Order — prominent on mobile */}
-              <a
-                href={`tel:+${SHOP_INFO.phone}`}
-                className="lg:hidden inline-flex items-center gap-1.5 rounded-full bg-brand-red text-white text-xs font-semibold px-3 py-2 hover:bg-opacity-90 transition-colors"
-                aria-label="Call to order"
-              >
-                <PhoneIcon className="h-4 w-4 shrink-0" />
-                <span className="hidden xs:inline">Call</span>
-              </a>
-
               {/* Search */}
               <button
                 type="button"
@@ -358,11 +429,11 @@ export default function Header() {
                 )}
               </button>
 
-              {/* Mobile Menu Button */}
+              {/* Mobile Menu Button — phones only; md+ shows full nav */}
               <button
                 type="button"
-                onClick={() => setMobileMenuOpen(true)}
-                className="lg:hidden p-2 text-brand-gray-900"
+                onClick={openMobileMenu}
+                className="md:hidden p-2 text-brand-gray-900"
                 aria-label="Open menu"
               >
                 <Bars3Icon className="h-6 w-6" />
@@ -447,42 +518,32 @@ export default function Header() {
           )}
         </nav>
 
-        {/* Mobile Menu */}
-        <Transition show={mobileMenuOpen}>
-          <Dialog onClose={() => setMobileMenuOpen(false)} className="lg:hidden">
-            <Transition.Child
-              enter="transition-opacity duration-300 ease-out"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="transition-opacity duration-200 ease-in"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" aria-hidden="true" />
-            </Transition.Child>
-            <Transition.Child
-              enter="transition-transform duration-300 ease-out"
-              enterFrom="translate-x-full"
-              enterTo="translate-x-0"
-              leave="transition-transform duration-200 ease-in"
-              leaveFrom="translate-x-0"
-              leaveTo="translate-x-full"
-            >
-              <Dialog.Panel className="fixed inset-y-0 right-0 w-full max-w-sm bg-white shadow-2xl p-6 overflow-y-auto">
-                <div className="flex items-center justify-between mb-8 pb-6 border-b border-brand-gray-200">
-                  <div className="flex items-center">
-                    <Logo className="h-10 w-auto" />
+        {/* Mobile menu — instant open (no enter delay); body scroll locked while open */}
+        {mobileMenuOpen && (
+          <Dialog
+            open
+            onClose={() => closeMobileMenu()}
+            className="relative z-[60] md:hidden"
+            initialFocus={menuCloseButtonRef}
+          >
+            <div className="fixed inset-0 bg-black/40" aria-hidden="true" />
+            <div className="fixed inset-0 flex justify-end">
+              <Dialog.Panel className="relative h-full w-full max-w-sm bg-white shadow-2xl p-6 overflow-y-auto overscroll-contain">
+                <div className="flex items-center justify-between mb-6 pb-4 border-b border-brand-gray-200">
+                  <div className="flex items-center min-w-0">
+                    <Logo />
                   </div>
                   <button
+                    ref={menuCloseButtonRef}
                     type="button"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="p-2 rounded-full hover:bg-brand-gray-100 transition-colors"
+                    onClick={() => closeMobileMenu()}
+                    className="p-2 rounded-full hover:bg-brand-gray-100 transition-colors shrink-0"
                     aria-label="Close menu"
                   >
-                    <XMarkIcon className="h-6 w-6 text-brand-gray-600" />
+                    <XMarkIcon className="h-5 w-5 text-brand-gray-600" />
                   </button>
                 </div>
-                <nav className="flex flex-col space-y-1">
+                <nav className="flex flex-col space-y-0.5">
                   {navigation.map((item) => (
                     <div key={item.name}>
                       {item.children ? (
@@ -495,27 +556,28 @@ export default function Header() {
                                 [item.name]: !mobileExpanded[item.name],
                               })
                             }
-                            className="w-full px-4 py-3 rounded-lg text-brand-gray-900 hover:text-brand-red hover:bg-brand-gray-50 transition-all font-medium flex items-center justify-between"
+                            className="w-full px-3 py-2.5 rounded-lg text-brand-gray-900 hover:text-brand-red hover:bg-brand-gray-50 transition-colors font-medium text-sm flex items-center justify-between"
                           >
                             <span>{item.name}</span>
                             <ChevronDownIcon
-                              className={`h-4 w-4 transition-transform ${mobileExpanded[item.name] ? "rotate-180" : ""}`}
+                              className={`h-3.5 w-3.5 transition-transform ${mobileExpanded[item.name] ? "rotate-180" : ""}`}
                             />
                           </button>
                           {mobileExpanded[item.name] && (
-                            <div className="pl-4 mt-2 space-y-1">
+                            <div className="pl-3 mt-1 space-y-1">
                               {item.children.map((section, sectionIndex) => (
-                                <div key={sectionIndex} className="mb-4">
-                                  <h4 className="font-semibold text-brand-gray-900 mb-2 text-sm uppercase">
+                                <div key={sectionIndex} className="mb-3">
+                                  <h4 className="font-semibold text-brand-gray-900 mb-1.5 text-xs uppercase">
                                     {section.title}
                                   </h4>
-                                  <ul className="space-y-1">
+                                  <ul className="space-y-0.5">
                                     {section.items.map((subItem) => (
                                       <li key={subItem.name}>
                                         <Link
                                           href={subItem.href}
-                                          onClick={() => setMobileMenuOpen(false)}
-                                          className="px-4 py-2 rounded-lg text-brand-gray-700 hover:text-brand-red hover:bg-brand-gray-50 transition-all text-sm block"
+                                          scroll={false}
+                                          onClick={() => closeMobileMenu({ scrollTop: true })}
+                                          className="px-3 py-1.5 rounded-lg text-brand-gray-700 hover:text-brand-red hover:bg-brand-gray-50 transition-colors text-xs block"
                                         >
                                           {subItem.name}
                                         </Link>
@@ -530,52 +592,20 @@ export default function Header() {
                       ) : (
                         <Link
                           href={item.href}
-                          onClick={() => setMobileMenuOpen(false)}
-                          className="px-4 py-3 rounded-lg text-brand-gray-900 hover:text-brand-red hover:bg-brand-gray-50 transition-all font-medium"
+                          scroll={false}
+                          onClick={() => closeMobileMenu({ scrollTop: true })}
+                          className="px-3 py-2.5 rounded-lg text-brand-gray-900 hover:text-brand-red hover:bg-brand-gray-50 transition-colors font-medium text-sm block"
                         >
                           {item.name}
                         </Link>
                       )}
                     </div>
                   ))}
-                  <Link
-                    href="/contact"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="px-4 py-3 rounded-lg text-brand-gray-900 hover:text-brand-red hover:bg-brand-gray-50 transition-all font-medium"
-                  >
-                    Contact
-                  </Link>
                 </nav>
-                <div className="mt-8 pt-6 border-t border-brand-gray-200">
-                  <div className="flex items-center justify-center space-x-4">
-                    <a
-                      href="https://www.instagram.com/floral_whispers_gifts?utm_source=qr&igsh=MTdqenRmbWxqMnNxcg=="
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2 rounded-full bg-brand-gray-100 hover:bg-brand-red hover:text-white transition-all"
-                      aria-label="Instagram"
-                    >
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                      </svg>
-                    </a>
-                    <a
-                      href="https://www.facebook.com/share/1C6Wc4PVDK/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2 rounded-full bg-brand-gray-100 hover:bg-brand-red hover:text-white transition-all"
-                      aria-label="Facebook"
-                    >
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                      </svg>
-                    </a>
-                  </div>
-                </div>
               </Dialog.Panel>
-            </Transition.Child>
+            </div>
           </Dialog>
-        </Transition>
+        )}
       </header>
       <CartSidebar />
     </>

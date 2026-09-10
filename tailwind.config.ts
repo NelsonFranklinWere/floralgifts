@@ -30,6 +30,8 @@ const config: Config = {
         heading: ["var(--font-heading)", "system-ui", "sans-serif"],
         body: ["var(--font-body)", "system-ui", "sans-serif"],
         mono: ["Roboto Mono", "monospace"],
+        playfair: ["var(--font-playfair)", "Georgia", "serif"],
+        dancing: ["var(--font-dancing)", "cursive"],
       },
       boxShadow: {
         card: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",

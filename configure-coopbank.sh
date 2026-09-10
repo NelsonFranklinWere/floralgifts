@@ -23,7 +23,7 @@ cd /home/floral/floralgifts || {
 echo -e "${BLUE}📍 Current directory: $(pwd)${NC}"
 
 # Your provided Consumer Key
-CONSUMER_KEY="gF8Si3TsoRyLl9Pnpv8XYBtn04ca"
+CONSUMER_KEY="<your-coopbank-consumer-key>"
 echo -e "${GREEN}✅ Using Consumer Key: ${CONSUMER_KEY}${NC}"
 
 # Check if .env.local exists

@@ -11,6 +11,13 @@ import { generateWhatsAppLink } from "@/lib/whatsapp";
 import axios from "axios";
 import { CreditCardIcon, DevicePhoneMobileIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 import { Analytics } from "@/lib/analytics";
+import {
+  trackCartSession,
+  trackCheckoutFields,
+  flushCheckoutFields,
+  markCartSessionConverted,
+  getCartSessionId,
+} from "@/lib/cart-session-client";
 
 interface OrderData {
   customer: {
@@ -78,11 +85,75 @@ export default function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState("");
 
+  // Keep cart snapshot on the lead session when user lands on checkout
+  useEffect(() => {
+    if (items.length > 0) {
+      trackCartSession(items, getTotal());
+    }
+  }, [items, getTotal]);
+
+  // Progressive save: every time a checkout field changes, persist immediately (debounced)
+  useEffect(() => {
+    trackCheckoutFields({
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      phone,
+      recipient_phone: phoneNumber,
+      address,
+      apartment,
+      city,
+      postal_code: postalCode,
+      payment_method: paymentMethod || undefined,
+      billing_first_name: billingFirstName,
+      billing_last_name: billingLastName,
+      billing_address: billingAddress,
+      billing_city: billingCity,
+      billing_phone: billingPhone,
+      stk_phone: stkPhone,
+    });
+  }, [
+    firstName,
+    lastName,
+    email,
+    phone,
+    phoneNumber,
+    address,
+    apartment,
+    city,
+    postalCode,
+    paymentMethod,
+    billingFirstName,
+    billingLastName,
+    billingAddress,
+    billingCity,
+    billingPhone,
+    stkPhone,
+  ]);
+
   useEffect(() => {
     // If cart is empty, redirect to cart
     if (items.length === 0) {
       router.push("/cart");
       return;
+    }
+
+    // Meta InitiateCheckout — fire once per checkout session
+    try {
+      if (!sessionStorage.getItem("fw_checkout_tracked")) {
+        sessionStorage.setItem("fw_checkout_tracked", "1");
+        Analytics.trackCheckoutStart(
+          getTotal(),
+          items.reduce((sum, item) => sum + item.quantity, 0),
+          items.map((item) => item.id)
+        );
+      }
+    } catch {
+      Analytics.trackCheckoutStart(
+        getTotal(),
+        items.reduce((sum, item) => sum + item.quantity, 0),
+        items.map((item) => item.id)
+      );
     }
 
     // Check if there's saved order data in sessionStorage
@@ -185,6 +256,7 @@ export default function CheckoutPage() {
     setIsProcessing(true);
     setError("");
     setStkError("");
+    flushCheckoutFields();
 
     try {
       if (paymentMethod === null) {
@@ -192,6 +264,8 @@ export default function CheckoutPage() {
         setIsProcessing(false);
         return;
       }
+
+      const cartSessionId = getCartSessionId();
       
       // STK Push: Handle both M-Pesa STK and Co-op Bank options
       if (paymentMethod === "stk" || paymentMethod === "coopbank") {
@@ -220,9 +294,11 @@ export default function CheckoutPage() {
           delivery_date: new Date().toISOString(),
           payment_method: "mpesa",
           notes: `M-Pesa STK Push payment initiated. Phone: ${stkPhone}`,
+          cart_session_id: cartSessionId || undefined,
         });
 
         const orderId = orderResponse.data.id;
+        markCartSessionConverted(orderId);
 
         // Co-op Bank STK Push only - no Pesapal, no redirect to PayPal
         console.log("💳 Checkout: Initiating Co-op Bank STK Push:", {
@@ -317,9 +393,11 @@ export default function CheckoutPage() {
           delivery_date: new Date().toISOString(),
           payment_method: paymentMethod === "till" ? "mpesa_till" : "mpesa_paybill",
           notes: `Payment via ${paymentMethod === "till" ? "M-Pesa Till Number" : "M-Pesa Paybill"}. Total: ${formatCurrency(total)}`,
+          cart_session_id: cartSessionId || undefined,
         });
 
         const orderId = orderResponse.data.id;
+        markCartSessionConverted(orderId);
 
         // Generate WhatsApp message with order details
         let orderMessage = `*NEW ORDER #${orderId}*\n\n`;
@@ -378,9 +456,11 @@ export default function CheckoutPage() {
           delivery_date: new Date().toISOString(),
           payment_method: "card",
           notes: `Card payment initiated via Pesapal`,
+          cart_session_id: cartSessionId || undefined,
         });
 
         const orderId = orderResponse.data.id;
+        markCartSessionConverted(orderId);
 
         // Prepare billing address for Pesapal
         const billingAddress = {

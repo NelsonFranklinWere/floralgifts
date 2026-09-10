@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createOrder, getOrders } from "@/lib/db";
+import { createOrder, getOrders, upsertCartSession } from "@/lib/db";
 
 export async function POST(request: NextRequest) {
   try {
@@ -31,6 +31,18 @@ export async function POST(request: NextRequest) {
     if (!order) {
       console.error("❌ Failed to create order in database");
       return NextResponse.json({ message: "Failed to create order" }, { status: 500 });
+    }
+
+    if (typeof body.cart_session_id === "string" && body.cart_session_id) {
+      try {
+        await upsertCartSession({
+          sessionId: body.cart_session_id,
+          event: "converted",
+          converted_order_id: order.id,
+        });
+      } catch {
+        // non-blocking
+      }
     }
 
     console.log("✅ Order created successfully:", {

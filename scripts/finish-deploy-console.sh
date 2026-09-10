@@ -18,7 +18,7 @@ fi
 echo "=== .env.local required ==="
 if [[ ! -f "${APP_DIR}/.env.local" ]]; then
   echo "Create ${APP_DIR}/.env.local with your secrets (copy from backup)."
-  echo "Minimum: NEXT_PUBLIC_SUPABASE_*, JWT_SECRET, ADMIN_EMAIL, ADMIN_PASSWORD, payment keys"
+  echo "Minimum: PGHOST/PGDATABASE/PGUSER/PGPASSWORD (or DATABASE_URL), JWT_SECRET, ADMIN_EMAIL, ADMIN_PASSWORD, payment keys"
   exit 1
 fi
 chown "${APP_USER}:${APP_USER}" "${APP_DIR}/.env.local"

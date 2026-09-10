@@ -18,7 +18,7 @@ Modern e-commerce website for Floral Whispers Gifts - premium flowers, gift hamp
 - Next.js 14+ (App Router)
 - TypeScript
 - Tailwind CSS
-- Supabase (Database, Auth, Storage)
+- PostgreSQL (Database)
 - Zustand (State Management)
 - React Hook Form + Yup (Forms)
 - Headless UI (Components)
@@ -31,48 +31,45 @@ Modern e-commerce website for Floral Whispers Gifts - premium flowers, gift hamp
 npm install
 ```
 
-2. Create a Supabase project:
-   - Go to [supabase.com](https://supabase.com)
-   - Create a new project
-   - Note your project URL and API keys
+2. Set up the database (PostgreSQL):
+   - The production database runs on the app server (`localhost:5432`, database `floralwhispersgifts`)
+   - Schema history lives in `supabase/migrations/` (kept for reference)
 
-3. Set up the database:
-   - In Supabase Dashboard, go to SQL Editor
-   - Run the SQL from `supabase/migrations/001_initial_schema.sql`
-   - This creates tables and sample data
-
-4. Configure environment variables:
+3. Configure environment variables:
 ```bash
 cp .env.example .env.local
 ```
 
-Fill in your Supabase credentials:
-- `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Your Supabase anon/public key
-- `SUPABASE_SERVICE_ROLE_KEY` - Your Supabase service role key (keep secret!)
+Fill in your database credentials:
+- `PGHOST` / `PGPORT` / `PGDATABASE` / `PGUSER` / `PGPASSWORD` (or `DATABASE_URL`)
 
-5. Run the development server:
+4. Run the development server:
 ```bash
 npm run dev
 ```
 
-6. Open [http://localhost:3000](http://localhost:3000)
+5. Open [http://localhost:3000](http://localhost:3000)
 
 ## Database Setup
 
-1. In Supabase Dashboard → SQL Editor, run:
-   ```sql
-   -- Copy contents from supabase/migrations/001_initial_schema.sql
-   ```
+The app talks to PostgreSQL through a drop-in adapter in `lib/supabase.ts`
+(same fluent API surface as before, backed by the `pg` package).
 
-2. Or use Supabase CLI:
-   ```bash
-   supabase db push
-   ```
+For local development, tunnel to the production database first:
 
-3. To seed sample data (optional):
-   - The migration includes sample products
-   - Or insert manually via Supabase Dashboard → Table Editor
+```bash
+ssh -N -L 5433:127.0.0.1:5432 root@13.140.33.232
+```
+
+Then set in `.env.local`:
+
+```
+PGHOST=127.0.0.1
+PGPORT=5433
+PGDATABASE=floralwhispersgifts
+PGUSER=floral
+PGPASSWORD=<ask the team lead>
+```
 
 ## MPESA Setup
 

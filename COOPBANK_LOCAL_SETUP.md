@@ -15,7 +15,7 @@ Create or update your `.env.local` file:
 
 ```bash
 # Co-op Bank Configuration
-COOP_BANK_CONSUMER_KEY=gF8Si3TsoRyLl9Pnpv8XYBtn04ca
+COOP_BANK_CONSUMER_KEY=<your-coopbank-consumer-key>
 COOP_BANK_CONSUMER_SECRET=your_consumer_secret_here
 COOP_BANK_OPERATOR_CODE=FLORAL
 COOP_BANK_USER_ID=FLORALWHISPERS
@@ -106,7 +106,7 @@ If you get "Request Rejected":
 ```bash
 # Test token endpoint
 curl -X POST "https://openapi.co-opbank.co.ke/token" \
-  -H "Authorization: Basic $(echo -n "gF8Si3TsoRyLl9Pnpv8XYBtn04ca:YOUR_SECRET" | base64)" \
+  -H "Authorization: Basic $(echo -n "<your-coopbank-consumer-key>:YOUR_SECRET" | base64)" \
   -H "Content-Type: application/x-www-form-urlencoded" \
   -d "grant_type=client_credentials"
 ```

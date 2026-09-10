@@ -137,22 +137,27 @@ export default function HeroCarousel() {
             sizes="100vw"
             quality={80}
           />
-          <div className="absolute inset-0 bg-black/40 flex items-center">
+          <div className="absolute inset-0 bg-black/30 flex items-center">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 w-full">
               <div className="flex items-center justify-between gap-4 md:gap-8">
-                {/* Left side - Text content */}
-                <div className="text-left text-white max-w-2xl flex-1">
-                  <h2 className="font-heading font-bold text-2xl md:text-3xl lg:text-4xl xl:text-5xl mb-2 md:mb-3 lg:mb-4">
-                    {slide.title}
-                  </h2>
-                  {slide.subtitle && (
-                    <p className="text-sm md:text-base lg:text-lg xl:text-xl mb-4 md:mb-6 lg:mb-8 text-white/90">
-                      {slide.subtitle}
-                    </p>
-                  )}
-                  <Link href={slide.ctaLink} className="btn-primary inline-block text-xs md:text-sm lg:text-base px-4 md:px-6 lg:px-8 py-2 md:py-3 lg:py-4">
-                    {slide.ctaText}
-                  </Link>
+                {/* Left side - glass text card */}
+                <div className="max-w-lg md:max-w-xl flex-1">
+                  <div className="rounded-2xl border border-white/15 bg-white/10 backdrop-blur-md shadow-[0_8px_32px_rgba(0,0,0,0.12)] px-4 py-4 sm:px-5 sm:py-5 md:px-6 md:py-6">
+                    <h2 className="font-heading font-semibold text-base sm:text-lg md:text-xl lg:text-2xl text-white leading-snug mb-2 md:mb-2.5">
+                      {slide.title}
+                    </h2>
+                    {slide.subtitle && (
+                      <p className="text-xs sm:text-sm md:text-[15px] text-white/90 leading-relaxed mb-3 md:mb-4 max-w-md">
+                        {slide.subtitle}
+                      </p>
+                    )}
+                    <Link
+                      href={slide.ctaLink}
+                      className="btn-primary inline-block text-xs md:text-sm px-4 md:px-5 py-2 md:py-2.5"
+                    >
+                      {slide.ctaText}
+                    </Link>
+                  </div>
                 </div>
                 
                 {/* Right side - Two overlapping images */}

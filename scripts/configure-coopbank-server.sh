@@ -17,7 +17,7 @@ SERVER_USER="floral"
 SERVER_PASSWORD="Floral@254Floral"
 
 # Co-op Bank credentials from Postman collection
-COOP_BANK_CONSUMER_KEY="gF8Si3TsoRyLl9Pnpv8XYBtn04ca"
+COOP_BANK_CONSUMER_KEY="<your-coopbank-consumer-key>"
 COOP_BANK_CONSUMER_SECRET="ILYevkBdY_gHz0e1FQfzQWZljv4a"
 COOP_BANK_CALLBACK_URL="https://157.245.34.218/api/coopbank/callback"
 COOP_BANK_OPERATOR_CODE="FLORAL"

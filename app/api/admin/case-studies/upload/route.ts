@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
-import { supabaseAdmin } from "@/lib/supabase";
 import sharp from "sharp";
+import { promises as fs } from "fs";
+import path from "path";
 
 export const dynamic = "force-dynamic";
 
@@ -66,39 +67,24 @@ export async function POST(request: NextRequest) {
     }
 
     const timestamp = Date.now();
-    const basePath =
+    const filename =
       kind === "hero"
-        ? `case-studies/${slug}/hero-${timestamp}.jpg`
-        : `case-studies/${slug}/gallery-${timestamp}.jpg`;
+        ? `hero-${timestamp}.jpg`
+        : `gallery-${timestamp}.jpg`;
 
-    const { error: uploadError } = await supabaseAdmin.storage
-      .from("floral-whispers-media")
-      .upload(basePath, processedBuffer, {
-        upsert: true,
-        contentType: "image/jpeg",
-        cacheControl: "public, max-age=31536000, immutable",
-      });
-
-    if (uploadError) {
-      console.error("Supabase upload error (case-studies):", uploadError);
+    try {
+      const absoluteDir = path.join(process.cwd(), "public", "images", "case-studies", slug);
+      await fs.mkdir(absoluteDir, { recursive: true });
+      await fs.writeFile(path.join(absoluteDir, filename), processedBuffer);
+    } catch (writeError: any) {
+      console.error("Local image write error (case-studies):", writeError);
       return NextResponse.json(
         { message: "Failed to upload image. Please try again." },
         { status: 500 },
       );
     }
 
-    const { data: urlData } = supabaseAdmin.storage
-      .from("floral-whispers-media")
-      .getPublicUrl(basePath);
-
-    if (!urlData?.publicUrl) {
-      return NextResponse.json(
-        { message: "Image uploaded but URL is missing. Please try again." },
-        { status: 500 },
-      );
-    }
-
-    return NextResponse.json({ url: urlData.publicUrl });
+    return NextResponse.json({ url: `/images/case-studies/${slug}/${filename}` });
   } catch (error: any) {
     console.error("Unexpected case study upload error:", error);
     return NextResponse.json(
@@ -107,4 +93,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

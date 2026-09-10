@@ -48,29 +48,29 @@ su - floral -c "cd /home/floral && git clone https://github.com/NelsonFranklinWe
 
 # Create .env.local
 cat > /home/floral/floralgifts/.env.local << 'ENVEOF'
-NEXT_PUBLIC_SUPABASE_URL=https://sdculxvqvixpiairzukl.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNkY3VseHZxdml4cGlhaXJ6dWtsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM0MTg4NTUsImV4cCI6MjA3ODk5NDg1NX0.8c2ATXh6692Z3mTG7dsWwivB5uIasrtJeGfj9OLgf98
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNkY3VseHZxdml4cGlhaXJ6dWtsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MzQxODg1NSwiZXhwIjoyMDc4OTk0ODU1fQ.41RcYn4J5jxjlC9TRltgWgX7ZaH23h7ehGCu9knLa2g
+# (Supabase removed — app now uses PostgreSQL)
+# (Supabase removed — app now uses PostgreSQL)
+# (Supabase removed — app now uses PostgreSQL)
 NEXT_PUBLIC_BASE_URL=https://floralwhispersgifts.co.ke
 MPESA_ENV=sandbox
-MPESA_CONSUMER_KEY=gQE0zykwt3dXyXGemkfSdAGS1G6qGjGxjF5bwCBdGAsSHf0S
-MPESA_CONSUMER_SECRET=Hy6TP0ln3i4HoeH84OzVBvtmnRU9bSu0hpfXKQTITXn4uWOvjkL5fTPPkdyLMyMe
+MPESA_CONSUMER_KEY=<your-mpesa-consumer-key>
+MPESA_CONSUMER_SECRET=<your-mpesa-consumer-secret>
 MPESA_SHORTCODE=174379
 MPESA_PASSKEY=your_passkey_from_safaricom_portal
 MPESA_CALLBACK_URL=https://floralwhispersgifts.co.ke/api/mpesa/callback
 JWT_SECRET=your-secret-key-change-in-production-use-strong-random-string
 ADMIN_EMAIL=whispersfloral@gmail.com
 ADMIN_PASSWORD=Admin@2025
-RESEND_API_KEY=re_jE9T351o_6gDh55gy8PHW4LWZJENwXFKR
+RESEND_API_KEY=<your-resend-api-key>
 RESEND_FROM_EMAIL=FloralWebsite@resend.dev
 GOOGLE_VERIFICATION=
-COOP_BANK_CONSUMER_KEY=gF8Si3TsoRyLl9Pnpv8XYBtn04ca
+COOP_BANK_CONSUMER_KEY=<your-coopbank-consumer-key>
 COOP_BANK_CONSUMER_SECRET=YOUR_ACTUAL_SECRET_HERE
 COOP_BANK_CALLBACK_URL=https://floralwhispersgifts.co.ke/api/coopbank/callback
 COOP_BANK_OPERATOR_CODE=FLORAL
 COOP_BANK_USER_ID=FLORALWHISPERS
-PESAPAL_CONSUMER_KEY=zZv8hIaogJH1OP96YfKemq1O5I3TmwSX
-PESAPAL_CONSUMER_SECRET=a/POk+ULP7dJurds2FZkf06isn8=
+PESAPAL_CONSUMER_KEY=<your-pesapal-consumer-key>
+PESAPAL_CONSUMER_SECRET=<your-pesapal-consumer-secret>
 PESAPAL_ENV=production
 PESAPAL_IPN_ID=a6b958a3-a851-4521-b148-dadbd540ea64
 PESAPAL_CALLBACK_URL=https://floralwhispersgifts.co.ke/api/pesapal/callback

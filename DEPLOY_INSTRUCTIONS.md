@@ -49,7 +49,7 @@ chmod +x deploy-stk-fix.sh
 Ensure these are set in `/home/floral/floralgifts/.env.local`:
 
 ```bash
-COOP_BANK_CONSUMER_KEY=gF8Si3TsoRyLl9Pnpv8XYBtn04ca
+COOP_BANK_CONSUMER_KEY=<your-coopbank-consumer-key>
 COOP_BANK_CONSUMER_SECRET=ILYevkBdY_gHz0e1FQfzQWZljv4a
 MPESA_CALLBACK_URL=https://floralwhispersgifts.co.ke/api/mpesa/callback
 COOP_BANK_OPERATOR_CODE=FLORAL

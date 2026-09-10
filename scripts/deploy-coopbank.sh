@@ -9,7 +9,7 @@ SERVER_IP="157.245.34.218"
 SERVER_USER="floral"
 SERVER_PASSWORD="Floral@254Floral"
 
-COOP_BANK_CONSUMER_KEY="gF8Si3TsoRyLl9Pnpv8XYBtn04ca"
+COOP_BANK_CONSUMER_KEY="<your-coopbank-consumer-key>"
 COOP_BANK_CONSUMER_SECRET="ILYevkBdY_gHz0e1FQfzQWZljv4a"
 COOP_BANK_CALLBACK_URL="https://157.245.34.218/api/coopbank/callback"
 COOP_BANK_OPERATOR_CODE="FLORAL"
@@ -60,7 +60,7 @@ sshpass -p "$SERVER_PASSWORD" ssh -o StrictHostKeyChecking=no "$SERVER_USER@$SER
     cat >> .env.local << EOF
 
 # Co-op Bank M-Pesa STK Push Configuration
-COOP_BANK_CONSUMER_KEY=gF8Si3TsoRyLl9Pnpv8XYBtn04ca
+COOP_BANK_CONSUMER_KEY=<your-coopbank-consumer-key>
 COOP_BANK_CONSUMER_SECRET=ILYevkBdY_gHz0e1FQfzQWZljv4a
 COOP_BANK_CALLBACK_URL=https://157.245.34.218/api/coopbank/callback
 COOP_BANK_OPERATOR_CODE=FLORAL

@@ -2,7 +2,7 @@
 # Full remote setup: restore SSH, install keys, deploy app. Run from project root.
 set -euo pipefail
 
-SERVER_IP="${DEPLOY_SERVER_IP:-147.182.164.82}"
+SERVER_IP="${DEPLOY_SERVER_IP:-174.138.37.42}"
 ROOT_PASS="${DEPLOY_SERVER_PASSWORD:-Floral@254Flo0ral}"
 FLORAL_PASS="${FLORAL_USER_PASSWORD:-$ROOT_PASS}"
 APP_USER="floral"

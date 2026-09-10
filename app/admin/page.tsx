@@ -93,6 +93,12 @@ export default function AdminDashboard() {
             Products
           </Link>
           <Link
+            href="/admin/sale-catalog"
+            className="block rounded-md px-3 py-2 text-sm text-brand-gray-700 hover:bg-brand-gray-100"
+          >
+            Sale Catalog
+          </Link>
+          <Link
             href="/admin/reviews"
             className="block rounded-md px-3 py-2 text-sm text-brand-gray-700 hover:bg-brand-gray-100"
           >
@@ -109,6 +115,12 @@ export default function AdminDashboard() {
             className="block rounded-md px-3 py-2 text-sm text-brand-gray-700 hover:bg-brand-gray-100"
           >
             Case Studies
+          </Link>
+          <Link
+            href="/admin/cart-sessions"
+            className="block rounded-md px-3 py-2 text-sm text-brand-gray-700 hover:bg-brand-gray-100"
+          >
+            Cart &amp; Checkout Leads
           </Link>
           <Link
             href="/admin/orders"
@@ -206,6 +218,14 @@ export default function AdminDashboard() {
                 Add, edit, or remove products from your catalog.
               </p>
               <span className="text-brand-green font-medium">Manage products →</span>
+            </Link>
+
+            <Link href="/admin/sale-catalog" className="card p-6 hover:shadow-cardHover transition-shadow block">
+              <h2 className="font-heading font-bold text-xl text-brand-gray-900 mb-2">Sale Catalog</h2>
+              <p className="text-brand-gray-600 mb-4">
+                Choose which products appear on the Sale page and the Meta Catalog feed.
+              </p>
+              <span className="text-brand-green font-medium">Manage sale catalog →</span>
             </Link>
 
             <Link href="/admin/orders" className="card p-6 hover:shadow-cardHover transition-shadow block">

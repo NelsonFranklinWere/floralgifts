@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { initiatePesapalPayment, PesapalPaymentParams } from "@/lib/pesapal";
+import { updateOrder } from "@/lib/db";
 
 export async function POST(request: NextRequest) {
   try {
@@ -28,7 +29,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate amount
-    const amountNum = typeof amount === 'string' ? parseFloat(amount) : amount;
+    const amountNum = typeof amount === "string" ? parseFloat(amount) : amount;
     if (isNaN(amountNum) || amountNum <= 0) {
       return NextResponse.json(
         {
@@ -39,15 +40,37 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const baseUrl =
-      process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
+    // Always use production site URL for callbacks in production so
+    // Pesapal never points to localhost and IPN/redirect reach live.
+    const baseUrl = (
+      process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke"
+    ).replace(/\/$/, "");
     const defaultCallbackUrl =
       process.env.PESAPAL_CALLBACK_URL || `${baseUrl}/api/pesapal/callback`;
+
+    // Prefer server callback; ignore client localhost overwrites in production
+    let resolvedCallback = callbackUrl || defaultCallbackUrl;
+    if (
+      process.env.NODE_ENV === "production" ||
+      (process.env.PESAPAL_ENV || "").toLowerCase() === "production"
+    ) {
+      if (
+        !resolvedCallback ||
+        resolvedCallback.includes("localhost") ||
+        resolvedCallback.includes("127.0.0.1")
+      ) {
+        resolvedCallback = defaultCallbackUrl;
+      }
+    }
 
     // Prepare billing address
     let billingAddressObj = null;
     if (billingAddress || (customerEmail && customerPhone && customerName)) {
-      const [firstName, ...lastNameParts] = (billingAddress?.first_name || customerName || "").split(" ");
+      const [firstName, ...lastNameParts] = (
+        billingAddress?.first_name ||
+        customerName ||
+        ""
+      ).split(" ");
       const lastName = lastNameParts.join(" ") || "Customer";
 
       billingAddressObj = {
@@ -74,12 +97,27 @@ export async function POST(request: NextRequest) {
       currency: currency || "KES",
       amount: amountNum,
       description: description || "Floral Whispers Gifts Order",
-      callback_url: callbackUrl || defaultCallbackUrl,
-      notification_id: ipnId, // Use registered IPN ID
+      callback_url: resolvedCallback,
+      notification_id: ipnId,
       billing_address: billingAddressObj || undefined,
     };
 
     const result = await initiatePesapalPayment(params);
+
+    // Persist tracking ID immediately so we can reconcile if callback never arrives
+    if (result?.order_tracking_id) {
+      try {
+        await updateOrder(orderId, {
+          pesapal_order_tracking_id: result.order_tracking_id,
+          payment_method: "card",
+        } as any);
+      } catch (saveErr: any) {
+        console.error(
+          "Failed to save Pesapal tracking id on order:",
+          saveErr?.message || saveErr
+        );
+      }
+    }
 
     return NextResponse.json({
       success: true,

@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
           `;
 
           const { Resend } = await import("resend");
-          const resend = new Resend(process.env.RESEND_API_KEY || "re_jE9T351o_6gDh55gy8PHW4LWZJENwXFKR");
+          const resend = new Resend(process.env.RESEND_API_KEY || "<your-resend-api-key>");
           const recipientEmail = process.env.ADMIN_EMAIL || "whispersfloral@gmail.com";
           const fromEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev";
           
@@ -204,7 +204,7 @@ export async function POST(request: NextRequest) {
           `;
 
           const { Resend } = await import("resend");
-          const resend = new Resend(process.env.RESEND_API_KEY || "re_jE9T351o_6gDh55gy8PHW4LWZJENwXFKR");
+          const resend = new Resend(process.env.RESEND_API_KEY || "<your-resend-api-key>");
           const recipientEmail = process.env.ADMIN_EMAIL || "whispersfloral@gmail.com";
           const fromEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev";
           

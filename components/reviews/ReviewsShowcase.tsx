@@ -1,7 +1,6 @@
 import ReviewsCarousel from "./ReviewsCarousel";
 import type { Review } from "@/lib/reviews";
-
-const DEFAULT_REVIEW_URL = "https://share.google/SLquYNat2Z1Ag1AO8";
+import { GOOGLE_BUSINESS } from "@/lib/constants";
 
 function GoogleLogo({ className }: { className?: string }) {
   return (
@@ -29,12 +28,10 @@ function GoogleLogo({ className }: { className?: string }) {
 
 export type ReviewsShowcaseProps = {
   reviews: Review[];
-  /** Shown next to the stars (e.g. "4.9" or computed average). */
   averageRating: string;
-  /** Shown after the rating, e.g. "· 128 reviews on Google" */
   countLabel: string;
-  /** Optional line under the header (e.g. Google sampling disclaimer). */
   footnote?: string;
+  reviewUrl?: string;
 };
 
 export default function ReviewsShowcase({
@@ -42,12 +39,10 @@ export default function ReviewsShowcase({
   averageRating,
   countLabel,
   footnote,
+  reviewUrl = GOOGLE_BUSINESS.reviewUrl,
 }: ReviewsShowcaseProps) {
-  const reviewUrl =
-    process.env.NEXT_PUBLIC_GOOGLE_REVIEW_URL || DEFAULT_REVIEW_URL;
-
   return (
-    <section className="py-16 bg-[#FAF7F2]">
+    <section id="google-reviews" className="py-16 bg-[#FAF7F2]">
       <div className="max-w-6xl mx-auto px-4">
         <div className="text-center mb-10">
           <p className="text-sm font-semibold tracking-[0.25em] uppercase text-[#D4617A] mb-2">

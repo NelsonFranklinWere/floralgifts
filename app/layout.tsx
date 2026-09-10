@@ -1,20 +1,20 @@
 import type { Viewport } from "next";
 import Script from "next/script";
+import { Suspense } from "react";
 import { Montserrat, Lato, Roboto_Mono, Dancing_Script, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
+import SocialFloatButtons from "@/components/SocialFloatButtons";
+import ScrollToTop from "@/components/ScrollToTop";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
 import VisitorPing from "@/components/VisitorPing";
+import MetaPixel from "@/components/MetaPixel";
 import { GA_MEASUREMENT_ID } from "@/lib/constants";
-import { getSupabaseOrigin } from "@/lib/supabase-origin";
 import { buildRootMetadata } from "@/lib/seo/metadata";
 import { buildHomepageSchemas } from "@/lib/seo/schema";
 import JsonLdScript from "@/components/seo/JsonLdScript";
-
-const supabaseOrigin = getSupabaseOrigin();
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -75,12 +75,6 @@ export default function RootLayout({
       <head>
         <meta name="mobile-web-app-capable" content="yes" />
         <link rel="icon" href="/images/logo/FloralLogo.jpg" type="image/jpeg" />
-        {supabaseOrigin ? (
-          <>
-            <link rel="preconnect" href={supabaseOrigin} crossOrigin="anonymous" />
-            <link rel="dns-prefetch" href={supabaseOrigin} />
-          </>
-        ) : null}
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://embed.tawk.to" />
         {homepageSchemas.map((schema, i) => (
@@ -106,6 +100,7 @@ export default function RootLayout({
           }}
         />
         <VisitorPing />
+        <MetaPixel />
         {process.env.NODE_ENV === "production" && (
           <Script id="tawk-to" strategy="lazyOnload">
             {`var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
@@ -122,6 +117,9 @@ s0.parentNode.insertBefore(s1,s0);
         )}
         <ErrorBoundary>
           <AnalyticsProvider>
+            <Suspense fallback={null}>
+              <ScrollToTop />
+            </Suspense>
             <a href="#main-content" className="skip-link">
               Skip to main content
             </a>
@@ -130,7 +128,7 @@ s0.parentNode.insertBefore(s1,s0);
               {children}
             </main>
             <Footer />
-            <WhatsAppButton />
+            <SocialFloatButtons />
           </AnalyticsProvider>
         </ErrorBoundary>
       </body>

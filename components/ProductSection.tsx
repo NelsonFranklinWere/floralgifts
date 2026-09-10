@@ -17,8 +17,7 @@ export default function ProductSection({
   linkHref?: string;
 }) {
   return (
-    <section className={`py-10 md:py-14 lg:py-16 ${bgColor} relative overflow-hidden`}>
-      {/* Magazine-style background pattern */}
+    <section className={`py-8 md:py-12 lg:py-14 ${bgColor} relative overflow-hidden`}>
       <div
         className="absolute inset-0 opacity-[0.02] pointer-events-none"
         style={{
@@ -26,13 +25,13 @@ export default function ProductSection({
         }}
       />
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-6 md:mb-8 flex items-center justify-between">
-          <div>
-            <h2 className="font-heading font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl text-brand-gray-900">
+        <div className="mb-5 md:mb-7 flex items-end justify-between gap-4">
+          <div className="min-w-0 max-w-3xl">
+            <h2 className="font-playfair font-semibold text-sm sm:text-base md:text-lg lg:text-xl text-brand-gray-900 tracking-tight leading-snug">
               {title}
             </h2>
             {subtitle && (
-              <p className="text-xs sm:text-sm md:text-base text-brand-gray-600 mt-1 md:mt-2">
+              <p className="font-body font-light text-[11px] sm:text-xs md:text-[13px] text-brand-gray-600 mt-1.5 md:mt-2 leading-relaxed max-w-2xl">
                 {subtitle}
               </p>
             )}
@@ -40,7 +39,7 @@ export default function ProductSection({
           {linkHref && (
             <Link
               href={linkHref}
-              className="text-brand-red hover:text-brand-red/80 font-medium text-base md:text-lg transition-colors"
+              className="shrink-0 font-body text-[11px] sm:text-xs uppercase tracking-[0.14em] text-brand-gray-800 hover:text-brand-red border-b border-brand-gray-400 hover:border-brand-red pb-0.5 transition-colors"
             >
               View all
             </Link>
@@ -48,11 +47,11 @@ export default function ProductSection({
         </div>
 
         {products.length > 0 ? (
-          <div className="flex overflow-x-auto gap-3 md:gap-5 lg:gap-6 pb-4 scrollbar-thin scrollbar-thumb-brand-gray-300 scrollbar-track-transparent -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+          <div className="flex overflow-x-auto gap-2 sm:gap-4 md:gap-5 pb-4 scrollbar-thin scrollbar-thumb-brand-gray-300 scrollbar-track-transparent -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
             {products.map((product, index) => (
               <div
                 key={`${product.id}-${index}`}
-                className="flex-shrink-0 w-[calc(100vw-2rem)] min-w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] xs:min-w-[140px] xs:max-w-[140px] sm:min-w-[280px] sm:max-w-[300px] md:w-[320px]"
+                className="flex-shrink-0 w-[calc(50vw-1.25rem)] min-w-[calc(50vw-1.25rem)] max-w-[calc(50vw-1.25rem)] sm:min-w-[calc(50vw-1.75rem)] sm:max-w-[calc(50vw-1.75rem)] sm:w-[calc(50vw-1.75rem)] md:min-w-[260px] md:max-w-[280px] md:w-[280px] lg:min-w-[300px] lg:max-w-[320px] lg:w-[320px]"
               >
                 <ProductCard
                   id={product.id}
@@ -69,7 +68,7 @@ export default function ProductSection({
             ))}
           </div>
         ) : (
-          <p className="text-brand-gray-600 text-center py-8">
+          <p className="text-brand-gray-600 text-center py-8 text-sm">
             No products available at the moment.
           </p>
         )}
@@ -77,4 +76,3 @@ export default function ProductSection({
     </section>
   );
 }
-

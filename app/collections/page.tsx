@@ -74,7 +74,7 @@ export default function CollectionsPage() {
             Our Collections
           </h1>
           <p className="text-brand-gray-600 text-lg">
-            Explore our beautiful range of flowers, teddy bears, gift hampers, wines, chocolates, cards, and cakes
+            Explore our beautiful range of flowers, teddy bears, gift hampers, wines, chocolates and gifts for men, women and kids
           </p>
           <div className="flex flex-wrap justify-center gap-2 mt-4">
             <Link href="/flower-hamper-wine-nairobi" className="text-sm text-brand-red hover:underline">
@@ -166,13 +166,13 @@ export default function CollectionsPage() {
           </Link>
 
           <Link
-            href="/collections/cards"
+            href="/collections/mens"
             className="card overflow-hidden group block"
           >
             <div className="relative h-48 md:h-80 overflow-hidden">
               <Image
-                src="/images/giftcards/card1.png"
-                alt="Gift cards Kenya - Digital gift cards, physical gift cards Nairobi"
+                src="/images/products/wines/Wines1.jpg"
+                alt="Gifts for men Nairobi - wines, hampers and presents for him"
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-300"
                 sizes="(max-width: 768px) 50vw, 33vw"
@@ -181,12 +181,12 @@ export default function CollectionsPage() {
             </div>
             <div className="p-3 md:p-8">
               <h2 className="font-heading font-bold text-base md:text-3xl text-brand-gray-900 mb-2 md:mb-3 group-hover:text-brand-green transition-colors">
-                Gift Cards
+                Gifts for Men
               </h2>
               <p className="text-brand-gray-600 mb-2 md:mb-4 text-xs md:text-base line-clamp-2 md:line-clamp-none">
-                Perfect gift cards for any occasion - let them choose their favorite flowers and gifts
+                Wines, hampers and curated gifts perfect for dads, husbands, boyfriends and colleagues
               </p>
-              <span className="text-brand-green font-medium text-xs md:text-base">Shop Gift Cards →</span>
+              <span className="text-brand-green font-medium text-xs md:text-base">Shop Men →</span>
             </div>
           </Link>
 
@@ -241,13 +241,13 @@ export default function CollectionsPage() {
           </Link>
 
           <Link
-            href="/collections/cakes"
+            href="/collections/womens"
             className="card overflow-hidden group block"
           >
             <div className="relative h-48 md:h-80 overflow-hidden">
               <Image
-                src="/images/products/hampers/giftamper.jpg"
-                alt="Cakes Nairobi - chocolate cake, red velvet cake, birthday cakes Nairobi delivery"
+                src="/images/products/flowers/BouquetFlowers2.jpg"
+                alt="Gifts for women Nairobi - flowers, teddy bears and hampers for her"
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-300"
                 sizes="(max-width: 768px) 50vw, 33vw"
@@ -256,12 +256,37 @@ export default function CollectionsPage() {
             </div>
             <div className="p-3 md:p-8">
               <h2 className="font-heading font-bold text-base md:text-3xl text-brand-gray-900 mb-2 md:mb-3 group-hover:text-brand-green transition-colors">
-                Cakes
+                Gifts for Women
               </h2>
               <p className="text-brand-gray-600 mb-2 md:mb-4 text-xs md:text-base line-clamp-2 md:line-clamp-none">
-                Cakes for birthdays, anniversaries and celebrations — pair with flowers, wine and chocolates
+                Flowers, hampers and teddy bears for moms, wives, girlfriends and the special women in your life
               </p>
-              <span className="text-brand-green font-medium text-xs md:text-base">Shop Cakes →</span>
+              <span className="text-brand-green font-medium text-xs md:text-base">Shop Women →</span>
+            </div>
+          </Link>
+
+          <Link
+            href="/collections/kids"
+            className="card overflow-hidden group block"
+          >
+            <div className="relative h-48 md:h-80 overflow-hidden">
+              <Image
+                src="/images/products/teddies/Teddybear1.jpg"
+                alt="Gifts for kids Nairobi - teddy bears and kid-friendly gift sets"
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-300"
+                sizes="(max-width: 768px) 50vw, 33vw"
+                loading="lazy"
+              />
+            </div>
+            <div className="p-3 md:p-8">
+              <h2 className="font-heading font-bold text-base md:text-3xl text-brand-gray-900 mb-2 md:mb-3 group-hover:text-brand-green transition-colors">
+                Gifts for Kids
+              </h2>
+              <p className="text-brand-gray-600 mb-2 md:mb-4 text-xs md:text-base line-clamp-2 md:line-clamp-none">
+                Soft toys, sweet treats and celebration gifts kids love — no alcohol, just fun
+              </p>
+              <span className="text-brand-green font-medium text-xs md:text-base">Shop Kids →</span>
             </div>
           </Link>
         </div>

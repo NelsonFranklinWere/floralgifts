@@ -1,6 +1,40 @@
 /** Google Analytics 4 measurement ID (gtag.js) */
 export const GA_MEASUREMENT_ID = "G-DTDMCDNB9F" as const;
 
+/**
+ * Meta (Facebook) Pixel ID.
+ * Override with NEXT_PUBLIC_META_PIXEL_ID in .env if needed.
+ */
+export const META_PIXEL_ID = (
+  process.env.NEXT_PUBLIC_META_PIXEL_ID || "889801210517269"
+).trim();
+
+/**
+ * Google Business Profile — live reviews & write-review link.
+ * Place ID is shared by Places API and the Elfsight Google Reviews source.
+ * Verification / share link: https://share.google/SLquYNat2Z1Ag1AO8
+ */
+export const GOOGLE_BUSINESS = {
+  placeId: (
+    process.env.GOOGLE_PLACE_ID ||
+    process.env.NEXT_PUBLIC_GOOGLE_PLACE_ID ||
+    "ChIJpS8A7q0RLxgRS2pw4LWDutg"
+  ).trim(),
+  /** Official GBP share / leave-a-review link */
+  reviewUrl: (
+    process.env.NEXT_PUBLIC_GOOGLE_REVIEW_URL ||
+    "https://share.google/SLquYNat2Z1Ag1AO8"
+  ).trim(),
+  /** Maps profile (place_id query) */
+  mapsUrl: `https://www.google.com/maps/place/?q=place_id:${(
+    process.env.GOOGLE_PLACE_ID ||
+    process.env.NEXT_PUBLIC_GOOGLE_PLACE_ID ||
+    "ChIJpS8A7q0RLxgRS2pw4LWDutg"
+  ).trim()}`,
+  /** Elfsight widget connected to the same Place ID */
+  elfsightAppId: "a2f24b95-404d-4f9b-b799-879cc5699bbb",
+} as const;
+
 export const BRAND_COLORS = {
   green: "#10b981",
   pink: "#ec4899",

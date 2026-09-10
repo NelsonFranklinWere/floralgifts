@@ -74,7 +74,11 @@ async function fetchPlaceDetails(
 
 export async function fetchGooglePlaceReviewsForStore(): Promise<GooglePlaceReviewsResult | null> {
   const keys = googlePlacesApiKeys();
-  const placeId = process.env.GOOGLE_PLACE_ID;
+  // Prefer env Place ID; fall back to known GBP Place ID (same as Elfsight / review link)
+  const placeId =
+    process.env.GOOGLE_PLACE_ID?.trim() ||
+    process.env.NEXT_PUBLIC_GOOGLE_PLACE_ID?.trim() ||
+    "ChIJpS8A7q0RLxgRS2pw4LWDutg";
   if (!keys.length || !placeId) return null;
 
   try {

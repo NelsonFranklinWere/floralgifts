@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage, StateStorage } from "zustand/middleware";
+import { trackCartSession } from "@/lib/cart-session-client";
 
 export interface CartItem {
   id: string;
@@ -19,6 +20,12 @@ interface CartStore {
   clearCart: () => void;
   getTotal: () => number;
   getItemCount: () => number;
+}
+
+function syncCartSession(items: CartItem[]) {
+  if (typeof window === "undefined") return;
+  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  trackCartSession(items, total);
 }
 
 const noopStorage: StateStorage = {
@@ -69,12 +76,14 @@ export const useCartStore = create<CartStore>()(
             items: [...state.items, { ...item, quantity }],
           }));
         }
+        syncCartSession(get().items);
       },
       removeItem: (id, options) => {
         const key = getItemKey(id, options);
         set((state) => ({
           items: state.items.filter((i) => getItemKey(i.id, i.options) !== key),
         }));
+        syncCartSession(get().items);
       },
       updateQuantity: (id, quantity, options) => {
         if (quantity <= 0) {
@@ -87,8 +96,12 @@ export const useCartStore = create<CartStore>()(
             getItemKey(i.id, i.options) === key ? { ...i, quantity } : i
           ),
         }));
+        syncCartSession(get().items);
       },
-      clearCart: () => set({ items: [] }),
+      clearCart: () => {
+        set({ items: [] });
+        syncCartSession([]);
+      },
       getTotal: () => {
         return get().items.reduce((sum, item) => sum + item.price * item.quantity, 0);
       },

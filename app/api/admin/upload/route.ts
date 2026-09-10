@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
-import { supabaseAdmin } from "@/lib/supabase";
 import sharp from "sharp";
+import { promises as fs } from "fs";
+import path from "path";
 
 export const dynamic = "force-dynamic";
 
@@ -117,83 +118,25 @@ export async function POST(request: NextRequest) {
     const randomStr = Math.random().toString(36).substring(2, 8);
     const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_").replace(/\.[^.]+$/, "") || "image";
     const filename = `${timestamp}-${randomStr}-${safeName}.jpg`;
-    const filePath = `products/${category}/${filename}`;
+    const relativePath = `images/products/${category}/${filename}`;
 
-    let uploadResult;
     try {
-      uploadResult = await supabaseAdmin.storage
-        .from("product-images")
-        .upload(filePath, processedBuffer, {
-          contentType: "image/jpeg", // Always JPEG
-          upsert: false,
-          cacheControl: "public, max-age=31536000, immutable, stale-while-revalidate=86400", // Cache for 1 year with stale-while-revalidate
-        });
-    } catch (uploadError: any) {
-      console.error("Supabase upload error:", uploadError);
-      return NextResponse.json(
-        { message: "Failed to upload image. Please try again." },
-        { 
-          status: 500,
-          headers: { "Content-Type": "application/json" }
-        }
-      );
-    }
-
-    if (uploadResult.error) {
-      console.error("Supabase storage error:", uploadResult.error);
-      if (
-        uploadResult.error.message?.includes("Bucket not found") ||
-        uploadResult.error.message?.includes("The resource was not found")
-      ) {
-        return NextResponse.json(
-          {
-            message: "Storage configuration error. Please contact support.",
-          },
-          { 
-            status: 500,
-            headers: { "Content-Type": "application/json" }
-          }
-        );
-      }
-
+      const absoluteDir = path.join(process.cwd(), "public", "images", "products", category);
+      await fs.mkdir(absoluteDir, { recursive: true });
+      await fs.writeFile(path.join(absoluteDir, filename), processedBuffer);
+    } catch (writeError: any) {
+      console.error("Local image write error:", writeError);
       return NextResponse.json(
         { message: "Failed to save image. Please try again." },
-        { 
+        {
           status: 500,
           headers: { "Content-Type": "application/json" }
         }
       );
     }
 
-    let urlData;
-    try {
-      const urlResult = supabaseAdmin.storage
-        .from("product-images")
-        .getPublicUrl(filePath);
-      urlData = urlResult.data;
-    } catch (urlError: any) {
-      console.error("URL generation error:", urlError);
-      return NextResponse.json(
-        { message: "Image uploaded but failed to get URL. Please try again." },
-        { 
-          status: 500,
-          headers: { "Content-Type": "application/json" }
-        }
-      );
-    }
-
-    if (!urlData?.publicUrl) {
-      return NextResponse.json(
-        { message: "Image uploaded but URL is missing. Please try again." },
-        { 
-          status: 500,
-          headers: { "Content-Type": "application/json" }
-        }
-      );
-    }
-
-    return NextResponse.json({ 
-      url: urlData.publicUrl,
+    return NextResponse.json({
+      url: `/${relativePath}`,
     }, {
       headers: { "Content-Type": "application/json" }
     });

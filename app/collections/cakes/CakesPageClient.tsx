@@ -99,7 +99,7 @@ export default function CakesPageClient({ products, allCakeImages = [], cakeProd
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4 md:gap-6">
             {allDisplayItems.map((item) => {
               const imageUrl =
                 item.images && item.images.length > 0 && item.images[0]
