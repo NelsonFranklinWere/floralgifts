@@ -29,17 +29,6 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        source: '/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'www.floralwhispersgifts.co.ke',
-          },
-        ],
-        destination: 'https://floralwhispersgifts.co.ke/:path*',
-        permanent: true,
-      },
-      {
         source: '/sell',
         destination: '/sale',
         permanent: true,
