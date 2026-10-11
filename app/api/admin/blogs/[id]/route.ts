@@ -80,8 +80,11 @@ export async function PUT(
       .select()
       .single();
 
-    if (error) {
-      return NextResponse.json({ message: error.message }, { status: 400 });
+    if (error || !data) {
+      return NextResponse.json(
+        { message: error?.message || "Blog post not found" },
+        { status: 400 },
+      );
     }
 
     // Revalidate blog pages

@@ -123,7 +123,18 @@ class QueryBuilder implements PromiseLike<PostgrestResult> {
     const sets = keys.map(k => { vals.push(data[k]); return '"' + k + '" = $' + vals.length; });
     const sql = 'UPDATE "' + this.table + '" SET ' + sets.join(', ') + this.buildWhere() + ' RETURNING *';
     const res = await pool.query(sql, vals);
-    return { data: res.rows[0], error: null };
+    if (!res.rows.length) {
+      return {
+        data: null,
+        error: {
+          code: 'PGRST116',
+          message: 'No rows updated',
+          details: 'The result contains 0 rows',
+        },
+      };
+    }
+    if (this.singleMode) return { data: res.rows[0], error: null };
+    return { data: res.rows, error: null };
   }
 
   private async doDelete(): Promise<PostgrestResult> {

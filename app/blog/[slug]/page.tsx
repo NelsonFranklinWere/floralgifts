@@ -133,10 +133,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             {post.title}
           </h1>
 
-          <div className="flex items-center gap-3 text-sm text-brand-gray-600 mb-8">
-            <time dateTime={post.publishedAt}>
-              {format(new Date(post.publishedAt), "MMM d, yyyy")}
-            </time>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-brand-gray-600 mb-8">
+            <span>By {post.author}</span>
+            <span aria-hidden="true">·</span>
+            <span>
+              Published{" "}
+              <time dateTime={post.publishedAt}>
+                {format(new Date(post.publishedAt), "MMM d, yyyy")}
+              </time>
+            </span>
+            <span aria-hidden="true">·</span>
+            <span>{post.readTime} min read</span>
           </div>
 
           {/* Article Image */}

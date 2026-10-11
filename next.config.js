@@ -48,6 +48,16 @@ const nextConfig = {
         destination: '/admin/sale-catalog',
         permanent: true,
       },
+      {
+        source: '/blog/pp2-graduation-kids-gifts-2026-nairobi',
+        destination: '/blog/pp2-graduation-gifts-2026-boys-girls',
+        permanent: true,
+      },
+      {
+        source: '/blog/national-girlfriends-day-2026-nairobi',
+        destination: '/blog/beyond-cash-bouquets-girlfriends-day-2026',
+        permanent: true,
+      },
     ];
   },
   // Webpack configuration for path aliases

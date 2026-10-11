@@ -54,17 +54,6 @@ export default function Footer() {
                   </span>
                   </Link>
                 </li>
-                <li>
-                  <Link
-                    href="/admin/login"
-                    className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
-                  >
-                    <span className="flex items-center gap-2">
-                      <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
-                      Staff
-                    </span>
-                  </Link>
-                </li>
               </ul>
             </div>
 
@@ -245,12 +234,6 @@ export default function Footer() {
               .
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-sm">
-              <Link
-                href="/admin/login"
-                className="text-brand-gray-300 hover:text-brand-red transition-colors font-medium"
-              >
-                Staff
-              </Link>
               <Link href="/privacy" className="text-brand-gray-400 hover:text-brand-red transition-colors">
                 Privacy Policy
               </Link>

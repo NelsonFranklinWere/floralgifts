@@ -783,20 +783,20 @@ export default async function HomePage() {
                 <div className="relative h-32 sm:h-48 md:h-64 lg:h-72 overflow-hidden">
                   <Image
                     src="/images/products/hampers/giftamper.jpg"
-                    alt="Women's Day gift hampers Nairobi"
+                    alt="Christmas gift hamper Nairobi with flowers wine and chocolates"
                     fill
                     className="object-cover group-hover:scale-110 transition-transform duration-500"
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 33vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-4 md:p-6 text-white">
-                    <h3 className="font-heading font-bold text-sm sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Women's Day Gift Hampers</h3>
-                    <p className="text-xs sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Pink-themed surprise hampers for Women's Day</p>
+                    <h3 className="font-heading font-bold text-sm sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Christmas Gift Hampers</h3>
+                    <p className="text-xs sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Festive flowers, wine and chocolate hampers</p>
                   </div>
                 </div>
                 <div className="p-2 sm:p-4 md:p-6">
                   <p className="text-brand-gray-600 mb-2 sm:mb-3 md:mb-4 text-xs sm:text-xs md:text-sm lg:text-base line-clamp-2 sm:line-clamp-none">
-                    Luxury Women's Day hampers with premium chocolates, self-care treats, pink roses and adorable teddy bears. Perfect gifts for wives, girlfriends, mums and female colleagues in Nairobi.
+                    Luxury Christmas hampers with roses, premium chocolates, wine and teddy bears. Perfect festive gifts for family, friends and colleagues in Nairobi — order early for December delivery.
                   </p>
                   <span className="inline-flex items-center text-brand-red font-semibold group-hover:gap-2 gap-1 transition-all duration-300 text-xs sm:text-xs md:text-sm">
                     Explore Hampers
@@ -815,20 +815,20 @@ export default async function HomePage() {
                 <div className="relative h-32 sm:h-48 md:h-64 lg:h-72 overflow-hidden">
                   <Image
                     src="/images/products/flowers/BouquetFlowers1.jpg"
-                    alt="Women's Day flowers Nairobi pink and red roses"
+                    alt="Christmas flowers Nairobi red roses and festive bouquets"
                     fill
                     className="object-cover group-hover:scale-110 transition-transform duration-500"
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 33vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-4 md:p-6 text-white">
-                    <h3 className="font-heading font-bold text-sm sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Women's Day Flowers</h3>
-                    <p className="text-xs sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Pink roses, red roses and white flowers for Women's Day</p>
+                    <h3 className="font-heading font-bold text-sm sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Christmas Flowers</h3>
+                    <p className="text-xs sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Red roses, mixed bouquets and festive arrangements</p>
                   </div>
                 </div>
                 <div className="p-2 sm:p-4 md:p-6">
                   <p className="text-brand-gray-600 mb-2 sm:mb-3 md:mb-4 text-xs sm:text-xs md:text-sm lg:text-base line-clamp-2 sm:line-clamp-none">
-                    Express appreciation with stunning Women's Day roses, mixed pink and red bouquets, and elegant white flowers. Perfect gifts for the amazing women in your life, with same-day delivery in Nairobi.
+                    Send Christmas roses, mixed festive bouquets and elegant arrangements with same-day delivery across Nairobi CBD, Westlands, Karen and Lavington.
                   </p>
                   <span className="inline-flex items-center text-brand-red font-semibold group-hover:gap-2 gap-1 transition-all duration-300 text-xs sm:text-xs md:text-sm">
                     Explore Flowers
@@ -847,20 +847,20 @@ export default async function HomePage() {
                 <div className="relative h-32 sm:h-48 md:h-64 lg:h-72 overflow-hidden">
                   <Image
                     src="/images/products/teddies/Teddybear1.jpg"
-                    alt="Women's Day teddy bears Nairobi in pink red and white"
+                    alt="Christmas teddy bears Nairobi giant and cuddly gift bears"
                     fill
                     className="object-cover group-hover:scale-110 transition-transform duration-500"
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 33vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-4 md:p-6 text-white">
-                    <h3 className="font-heading font-bold text-sm sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Women's Day Teddy Bears</h3>
-                    <p className="text-xs sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Cuddly teddy bears in pink, red, white and brown</p>
+                    <h3 className="font-heading font-bold text-sm sm:text-base md:text-2xl lg:text-3xl mb-0.5 sm:mb-1 md:mb-2">Christmas Teddy Bears</h3>
+                    <p className="text-xs sm:text-xs md:text-sm lg:text-base text-white/90 hidden sm:block">Cuddly teddy bears from 25cm to 200cm</p>
                   </div>
                 </div>
                 <div className="p-2 sm:p-4 md:p-6">
                   <p className="text-brand-gray-600 mb-2 sm:mb-3 md:mb-4 text-xs sm:text-xs md:text-sm lg:text-base line-clamp-2 sm:line-clamp-none">
-                    Celebrate Women's Day with soft and adorable teddy bears (25cm–200cm). Perfect gifts for girlfriends, wives, mums and daughters, available in romantic red, pink, white and more.
+                    Pair Christmas flowers with soft teddy bears (25cm–200cm) in red, pink, white and brown. A favourite festive gift for partners, kids and friends in Nairobi.
                   </p>
                   <span className="inline-flex items-center text-brand-red font-semibold group-hover:gap-2 gap-1 transition-all duration-300 text-xs sm:text-xs md:text-sm">
                     Explore Teddy Bears

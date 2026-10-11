@@ -46,6 +46,38 @@ export function markdownToHtml(markdown: string): string {
       continue;
     }
 
+    // GFM tables
+    if (line.includes('|') && i + 1 < lines.length && /^\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)+\|?$/.test(lines[i + 1].trim())) {
+      flushList();
+      const tableRows: string[] = [];
+      const parseRow = (row: string) =>
+        row
+          .replace(/^\|/, '')
+          .replace(/\|$/, '')
+          .split('|')
+          .map((c) => c.trim());
+      const headers = parseRow(line);
+      tableRows.push('<thead><tr>');
+      headers.forEach((h) => {
+        tableRows.push(`<th class='border border-brand-gray-200 bg-brand-gray-50 px-3 py-2 text-left text-sm font-semibold'>${processInline(h)}</th>`);
+      });
+      tableRows.push('</tr></thead><tbody>');
+      i += 2; // skip header + separator
+      while (i < lines.length && lines[i].trim().includes('|')) {
+        const cells = parseRow(lines[i].trim());
+        tableRows.push('<tr>');
+        cells.forEach((c) => {
+          tableRows.push(`<td class='border border-brand-gray-200 px-3 py-2 text-sm text-brand-gray-700'>${processInline(c)}</td>`);
+        });
+        tableRows.push('</tr>');
+        i++;
+      }
+      i--; // outer loop will ++
+      tableRows.push('</tbody>');
+      processedLines.push(`<div class='overflow-x-auto mb-8'><table class='w-full border-collapse mb-2'>${tableRows.join('')}</table></div>`);
+      continue;
+    }
+
     // Lists
     const bulletMatch = line.match(/^[\*\-] (.*)$/);
     const numberMatch = line.match(/^\d+\. (.*)$/);
