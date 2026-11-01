@@ -4,11 +4,11 @@ import { getAllCaseStudies } from "@/lib/case-studies";
 import CaseStudyCard from "@/components/CaseStudyCard";
 
 export const metadata: Metadata = {
-  title: "Our Work — Floral Case Studies | Floral Whispers Nairobi",
+  title: "Our Work: Floral Case Studies | Floral Whispers",
   description:
     "Real wedding, birthday, event and corporate flower designs by Floral Whispers — Nairobi's premium florist. Every arrangement is a story.",
   alternates: {
-    canonical: "https://www.floralwhispersgifts.co.ke/case-studies",
+    canonical: "https://floralwhispersgifts.co.ke/case-studies",
   },
 };
 

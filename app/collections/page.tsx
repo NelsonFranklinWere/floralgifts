@@ -3,10 +3,10 @@ import Link from "next/link";
 import Image from "next/image";
 import JsonLd from "@/components/JsonLd";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Flower Delivery Nairobi | Pink Roses, Red Roses, White Flowers | Collections - Floral Whispers Gifts",
+  title: "Flower & Gift Collections Nairobi | Floral Whispers",
   description: "Flower delivery Nairobi: fresh pink roses, red roses, white flowers. Browse flowers, teddy bears, gift hampers, wines, chocolates, cards and cakes. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
   keywords: [
     "flower delivery Nairobi",

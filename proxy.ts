@@ -1,7 +1,17 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+const CANONICAL_HOST = "floralwhispersgifts.co.ke";
+
 export function proxy(request: NextRequest) {
+  const host = (request.headers.get("host") || "").split(":")[0].toLowerCase();
+  const { pathname, search } = request.nextUrl;
+
+  // One host for SEO. Payment providers post callbacks to www, so /api stays as it is.
+  if (host === `www.${CANONICAL_HOST}` && !pathname.startsWith("/api/")) {
+    return NextResponse.redirect(`https://${CANONICAL_HOST}${pathname}${search}`, 301);
+  }
+
   const response = NextResponse.next();
 
   // Add CORS headers for API routes

@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 const baseUrl =
-  process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
+  process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Period Care Package Kenya | Thoughtful Gifts in Nairobi",
+  title: "Period Care Package Kenya | Floral Whispers",
   description:
     "Shop thoughtful period care package gifts in Kenya with same-day Nairobi delivery. Add flowers, comfort items, chocolates and caring notes.",
   alternates: { canonical: `${baseUrl}/period-care-package-kenya` },

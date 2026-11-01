@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 const baseUrl =
-  process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
+  process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Corporate Gift Hampers Nairobi | Bulk Orders for Teams & Clients",
+  title: "Corporate Gift Hampers Nairobi | Floral Whispers",
   description:
     "Order corporate gift hampers in Nairobi for client appreciation, team celebrations, and holiday campaigns. Bulk hamper packages with reliable delivery and WhatsApp support.",
   alternates: { canonical: `${baseUrl}/corporate-gift-hampers-nairobi` },

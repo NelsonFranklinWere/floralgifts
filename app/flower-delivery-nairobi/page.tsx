@@ -1,10 +1,10 @@
 import { Metadata } from "next";
 import Link from "next/link";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Flower Delivery Nairobi — Same Day Delivery Across the City | Floral Whispers Gifts",
+  title: "Flower Delivery Nairobi | Same Day | Floral Whispers",
   description:
     "Flower delivery Nairobi with same-day delivery across Westlands, Karen, Kilimani, Lavington, CBD, Eastleigh, South B, Langata, Runda and Muthaiga. Order bouquets, roses and gift hampers via WhatsApp from Floral Whispers Gifts.",
   alternates: {

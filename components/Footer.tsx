@@ -63,6 +63,28 @@ export default function Footer() {
               <ul className="space-y-2">
                 <li>
                   <Link
+                    href="/flower-delivery-nairobi"
+                  className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
+                  >
+                  <span className="flex items-center gap-2">
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
+                    Flower Delivery Nairobi
+                  </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/same-day-delivery-nairobi"
+                  className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
+                  >
+                  <span className="flex items-center gap-2">
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
+                    Same-Day Delivery
+                  </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     href="/services"
                   className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
                   >

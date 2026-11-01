@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 const baseUrl =
-  process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
+  process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Send Gifts to Kenya from Abroad | Nairobi Delivery",
+  title: "Send Gifts to Kenya from Abroad | Floral Whispers",
   description:
     "Send gifts to Kenya from abroad with fast Nairobi delivery. Ideal for diaspora buyers in the US, Canada, Australia, UK and beyond.",
   alternates: { canonical: `${baseUrl}/send-gifts-to-kenya` },

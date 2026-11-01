@@ -3,10 +3,10 @@ import FlowersPageClient from "./FlowersPageClient";
 import { getProducts } from "@/lib/db";
 import { DEEP_FLOWER_ROSE_KEYWORDS } from "@/lib/seo-keywords";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Flowers Nairobi — Fresh Bouquets & Roses Delivered Same Day | Floral Whispers",
+  title: "Fresh Flowers & Bouquets Nairobi | Floral Whispers",
   description:
     "Fresh flower bouquets and roses delivered anywhere in Nairobi, same day. Red roses, mixed bouquets, sunflowers. Order now on WhatsApp — Floral Whispers Gifts Nairobi.",
   keywords: [

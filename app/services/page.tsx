@@ -4,78 +4,25 @@ import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
 import { SHOP_INFO } from "@/lib/constants";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Valentine's Delivery Services Nairobi | Same-Day Romantic Flowers, Chocolates & Gift Hampers | Floral Whispers Gifts",
+  title: "Flower & Gift Services Nairobi | Floral Whispers",
   description:
-    "Valentine's delivery services Nairobi: same-day romantic flowers, chocolates, wine, teddy bears & surprise hampers for your wife, husband, girlfriend. Pre-Valentine's orders, express delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Order Valentine's gifts online with guaranteed delivery.",
-  keywords: [
-    // Valentine's Delivery Services
-    "valentine's delivery services nairobi",
-    "same day valentine's delivery nairobi",
-    "valentine's express delivery nairobi",
-    "valentine's gift delivery nairobi",
-    "pre valentine's delivery nairobi",
-
-    // Valentine's Service Areas
-    "valentine's delivery CBD nairobi",
-    "valentine's flowers westlands delivery",
-    "valentine's gifts karen delivery",
-    "valentine's hampers lavington delivery",
-    "valentine's chocolates kilimani delivery",
-
-    // Valentine's Customization
-    "valentine's custom arrangements nairobi",
-    "personalized valentine's gifts nairobi",
-    "valentine's surprise packages nairobi",
-    "custom valentine's hampers nairobi",
-    "bespoke valentine's flowers nairobi",
-
-    // Valentine's Delivery Timing
-    "valentine's rush delivery nairobi",
-    "last minute valentine's delivery nairobi",
-    "urgent valentine's gifts nairobi",
-    "emergency valentine's delivery nairobi",
-    "guaranteed valentine's delivery nairobi",
-
-    // Valentine's Service Types
-    "valentine's flower styling nairobi",
-    "romantic valentine's arrangements nairobi",
-    "valentine's gift wrapping nairobi",
-    "valentine's hamper assembly nairobi",
-    "valentine's personalization nairobi",
-
-    // Valentine's Long-tail Services
-    "professional valentine's delivery service nairobi",
-    "reliable valentine's gift delivery kenya",
-    "experienced valentine's florist services nairobi",
-    "trusted valentine's delivery partner nairobi",
-
-    // Valentine's Seasonal Services
-    "february valentine's delivery nairobi",
-    "2025 valentine's services nairobi",
-    "love month delivery services kenya",
-
-    // Traditional services keywords
-    "wedding flowers Nairobi",
-    "corporate gifts Nairobi",
-    "surprise gift delivery Nairobi",
-    "romantic flower arrangements Nairobi",
-  ],
+    "Same-day flower and gift delivery in Nairobi: bouquets, hampers, wedding and corporate flowers, and sympathy arrangements from Floral Whispers Gifts.",
   alternates: {
     canonical: `${baseUrl}/services`,
   },
   openGraph: {
-    title: "Valentine's Delivery Services Nairobi | Same-Day Romantic Flowers, Chocolates & Gift Hampers",
-    description: "Valentine's delivery services Nairobi: same-day romantic flowers, chocolates, wine, teddy bears & surprise hampers. Pre-Valentine's orders, express delivery across Nairobi.",
+    title: "Flower & Gift Services Nairobi | Floral Whispers",
+    description: "Same-day flower and gift delivery in Nairobi: bouquets, hampers, wedding and corporate flowers, and sympathy arrangements from Floral Whispers Gifts.",
     url: `${baseUrl}/services`,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Valentine's Delivery Services Nairobi | Same-Day Romantic Gifts",
-    description: "Valentine's delivery services Nairobi: same-day romantic flowers, chocolates, wine, teddy bears & surprise hampers. Pre-Valentine's orders, express delivery across Nairobi.",
+    title: "Flower & Gift Services Nairobi | Floral Whispers",
+    description: "Same-day flower and gift delivery in Nairobi: bouquets, hampers, wedding and corporate flowers, and sympathy arrangements from Floral Whispers Gifts.",
   },
 };
 
@@ -145,8 +92,7 @@ const services = [
   },
   {
     title: "Special Occasions",
-    description:
-      "Birthdays, anniversaries, Valentine&apos;s Day, Mother&apos;s Day, and more. We have the perfect arrangement for every special moment.",
+    description: "Same-day flower and gift delivery in Nairobi: bouquets, hampers, wedding and corporate flowers, and sympathy arrangements from Floral Whispers Gifts.",
     image: "/images/products/flowers/BouquetFlowers6.jpg",
     features: [
       "Birthday bouquets",

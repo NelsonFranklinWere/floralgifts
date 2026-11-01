@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { formatSeoTitle } from "@/lib/seo/base";
 import { notFound } from "next/navigation";
 import {
   getAllCaseStudySlugs,
@@ -26,10 +27,10 @@ export async function generateMetadata({
   if (!cs) return {};
 
   const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
+    process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
   return {
-    title: cs.seo_title ?? `${cs.title} | Floral Whispers Nairobi`,
+    title: formatSeoTitle(cs.seo_title ?? cs.title),
     description: cs.seo_description ?? undefined,
     openGraph: {
       title: cs.seo_title ?? cs.title,
@@ -82,7 +83,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
   const related = await getRelatedCaseStudies(cs.category, cs.slug, 3);
 
   const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
+    process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
   const clientLineParts = [
     cs.client_first_name || null,

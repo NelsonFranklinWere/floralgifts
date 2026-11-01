@@ -6,7 +6,7 @@ const baseUrl =
   process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Shop Our Sale Catalog — Flowers, Hampers & Gifts | Floral Whispers",
+  title: "Sale Catalog: Flowers & Gifts | Floral Whispers",
   description:
     "Browse our curated Sale catalog of flowers, gift hampers, wines, chocolates, cakes and more. Same-day delivery in Nairobi — Floral Whispers Gifts.",
   alternates: {

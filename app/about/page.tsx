@@ -4,77 +4,25 @@ import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
 import { SHOP_INFO } from "@/lib/constants";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "About Floral Whispers Gifts | Nairobi's Top Valentine's Florist | 5+ Years Experience, 25K+ Orders Delivered",
+  title: "About Us | Nairobi Florist | Floral Whispers",
   description:
-    "Nairobi's trusted Valentine's florist: premium romantic flowers, luxury hampers, teddy bears for wife, husband, girlfriend. 5+ years experience, 25K+ Valentine's orders delivered. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
-  keywords: [
-    // Valentine's Florist Reputation
-    "valentine's florist Nairobi",
-    "best valentine's florist Nairobi",
-    "nairobi valentine's flower shop",
-    "premium valentine's florist Kenya",
-    "trusted valentine's florist Nairobi",
-
-    // Valentine's Experience & Reputation
-    "experienced valentine's florist Nairobi",
-    "nairobi florist valentine's day",
-    "valentine's flower delivery expert Nairobi",
-    "professional valentine's florist Kenya",
-    "reliable valentine's gifts Nairobi",
-
-    // Valentine's Customer Base
-    "valentine's florist for wives Nairobi",
-    "valentine's florist for husbands Nairobi",
-    "valentine's florist for girlfriends Nairobi",
-    "romantic florist Nairobi Kenya",
-    "valentine's surprise florist Nairobi",
-
-    // Valentine's Service Areas
-    "valentine's florist CBD Nairobi",
-    "valentine's florist Westlands",
-    "valentine's florist Karen Nairobi",
-    "valentine's florist Lavington",
-    "valentine's florist Kilimani",
-
-    // Valentine's Reputation Keywords
-    "top rated valentine's florist Nairobi",
-    "best valentine's flower delivery Nairobi",
-    "trusted valentine's gift shop Kenya",
-    "experienced valentine's florist Nairobi",
-
-    // Valentine's Long-tail
-    "nairobi's most trusted valentine's florist",
-    "professional valentine's flower arrangements Nairobi",
-    "experienced romantic gifts florist Kenya",
-    "nairobi valentine's day flower experts",
-
-    // Valentine's Seasonal
-    "february valentine's florist Nairobi",
-    "2025 valentine's florist Nairobi",
-    "love month florist Nairobi Kenya",
-
-    // Keeping some traditional keywords
-    "florist Nairobi",
-    "flower shop Nairobi",
-    "about Whispers Floral Gifts",
-    "premium flowers Nairobi",
-  ],
+    "Floral Whispers Gifts is a Nairobi florist on University Way. Fresh roses, gift hampers, teddy bears and wine with same-day delivery across Nairobi.",
   alternates: {
     canonical: `${baseUrl}/about`,
   },
   openGraph: {
-    title: "About Floral Whispers Gifts | Nairobi's Top Valentine's Florist | 5+ Years Experience, 25K+ Orders Delivered",
-    description: "Nairobi's trusted Valentine's florist: premium romantic flowers, luxury hampers, teddy bears for wife, husband, girlfriend. 5+ years experience, 25K+ Valentine's orders delivered.",
+    title: "About Us | Nairobi Florist | Floral Whispers",
+    description: "Floral Whispers Gifts is a Nairobi florist on University Way. Fresh roses, gift hampers, teddy bears and wine with same-day delivery across Nairobi.",
     url: `${baseUrl}/about`,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "About Floral Whispers Gifts | Nairobi's Top Valentine's Florist",
-    description: "Nairobi's trusted Valentine's florist: premium romantic flowers, luxury hampers, teddy bears for wife, husband, girlfriend. 5+ years experience, 25K+ Valentine's orders delivered.",
+    title: "About Us | Nairobi Florist | Floral Whispers",
+    description: "Floral Whispers Gifts is a Nairobi florist on University Way. Fresh roses, gift hampers, teddy bears and wine with same-day delivery across Nairobi.",
   },
 };
 

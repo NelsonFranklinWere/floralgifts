@@ -2,10 +2,10 @@ import { Metadata } from "next";
 import TeddyBearsPageClient from "./TeddyBearsPageClient";
 import { getProducts } from "@/lib/db";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Teddy Bears Nairobi — Delivered Same Day | Floral Whispers Gifts",
+  title: "Teddy Bears Nairobi | Same Day | Floral Whispers",
   description:
     "Teddy bears delivered in Nairobi — same day. Giant bears, soft toys, bear and flower combos. Order on WhatsApp. Floral Whispers Gifts Nairobi.",
   keywords: [

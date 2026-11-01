@@ -3,89 +3,25 @@ import ChocolatesPageClient from "./ChocolatesPageClient";
 import { getProducts } from "@/lib/db";
 import { CHOCOLATE_PRODUCTS, getPredefinedProducts } from "@/lib/predefinedProducts";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Valentine's Chocolates Nairobi | Premium Ferrero Rocher Chocolate Hampers & Romantic Gifts for Wife, Girlfriend | Same-Day Delivery",
+  title: "Chocolates Nairobi | Ferrero Rocher | Floral Whispers",
   description:
-    "Best Valentine's chocolates Nairobi: premium Ferrero Rocher (8, 16, 24 pieces), romantic chocolate hampers for your wife, girlfriend, mom. Pre-Valentine's orders, same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
-  keywords: [
-    // Valentine's Chocolates Core Keywords
-    "valentine's chocolates Nairobi",
-    "valentine's chocolate hampers Nairobi",
-    "romantic valentine's chocolates Nairobi",
-    "valentine's ferrero rocher Nairobi",
-    "premium valentine's chocolates Nairobi",
-
-    // Valentine's Chocolate Gifts
-    "valentine's chocolates for wife Nairobi",
-    "valentine's chocolates for girlfriend Nairobi",
-    "valentine's chocolates for mom Nairobi",
-    "valentine's chocolates for husband Nairobi",
-    "romantic chocolate gifts valentine's Nairobi",
-
-    // Valentine's Chocolate Types
-    "ferrero rocher valentine's Nairobi",
-    "luxury valentine's chocolates Nairobi",
-    "valentine's chocolate boxes Nairobi",
-    "premium chocolate hampers valentine's Nairobi",
-
-    // Valentine's Planning
-    "pre valentine's chocolates Nairobi",
-    "valentine's chocolate delivery Nairobi",
-    "early valentine's chocolate orders Nairobi",
-    "plan valentine's chocolate surprise Nairobi",
-
-    // Valentine's Delivery
-    "same day valentine's chocolates Nairobi",
-    "valentine's chocolates CBD Nairobi",
-    "valentine's chocolates Westlands",
-    "valentine's chocolates Karen Nairobi",
-    "valentine's chocolates Lavington",
-    "valentine's chocolates Kilimani",
-
-    // Valentine's AI Search
-    "where to buy valentine's chocolates Nairobi",
-    "best valentine's chocolate gifts Nairobi",
-    "romantic chocolate hampers near me Nairobi",
-    "how to surprise with valentine's chocolates Nairobi",
-
-    // Valentine's Voice Search
-    "order valentine's chocolates online Nairobi",
-    "find premium chocolates near me Nairobi",
-    "valentine's chocolate delivery near me",
-
-    // Valentine's Long-tail
-    "luxury ferrero rocher valentine's hampers Nairobi",
-    "romantic valentine's chocolate collections Nairobi",
-    "personalized valentine's chocolate gifts Nairobi",
-    "thoughtful valentine's chocolate hampers Nairobi",
-
-    // Valentine's Seasonal
-    "february valentine's chocolates Nairobi",
-    "2025 valentine's chocolates Nairobi",
-    "love month chocolates Nairobi Kenya",
-
-    // Keeping traditional keywords
-    "chocolates Kenya",
-    "chocolate gift hampers Nairobi",
-    "Ferrero Rocher chocolates",
-    "premium chocolates Kenya",
-    "gift chocolates Nairobi",
-  ],
+    "Ferrero Rocher, Lindt and gift chocolates delivered same day in Nairobi. Add them to a bouquet or hamper, or send them alone with a card.",
   alternates: {
     canonical: `${baseUrl}/collections/chocolates`,
   },
   openGraph: {
-    title: "Valentine's Chocolates Nairobi | Premium Ferrero Rocher Chocolate Hampers & Romantic Gifts for Wife, Girlfriend",
-    description: "Best Valentine's chocolates Nairobi: premium Ferrero Rocher, romantic chocolate hampers for your wife, girlfriend, mom. Pre-Valentine's orders, same-day delivery across Nairobi.",
+    title: "Chocolates Nairobi | Ferrero Rocher | Floral Whispers",
+    description: "Ferrero Rocher, Lindt and gift chocolates delivered same day in Nairobi. Add them to a bouquet or hamper, or send them alone with a card.",
     url: `${baseUrl}/collections/chocolates`,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Valentine's Chocolates Nairobi | Premium Ferrero Rocher Hampers",
-    description: "Best Valentine's chocolates Nairobi: premium Ferrero Rocher, romantic chocolate hampers for your wife, girlfriend, mom. Pre-Valentine's orders, same-day delivery across Nairobi.",
+    title: "Chocolates Nairobi | Ferrero Rocher | Floral Whispers",
+    description: "Ferrero Rocher, Lindt and gift chocolates delivered same day in Nairobi. Add them to a bouquet or hamper, or send them alone with a card.",
   },
 };
 

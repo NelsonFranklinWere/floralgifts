@@ -3,7 +3,6 @@ Allow: /
 Disallow: /admin/
 Disallow: /cart
 Disallow: /order/
-Disallow: /_next/
 Disallow: /api/
 Disallow: /blog?tag=
 Disallow: /blog?*

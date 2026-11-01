@@ -5,10 +5,10 @@ import { getBlogPosts, getBlogTags } from "@/lib/blogData";
 import JsonLd from "@/components/JsonLd";
 import { format } from "date-fns";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Nairobi Gift Ideas, Flower Delivery Tips & Occasion Guides | Floral Whispers Blog",
+  title: "Nairobi Gift Ideas & Flower Guides | Floral Whispers",
   description:
     "Gift ideas and flower guides for Nairobi — discover how to choose bouquets, hampers and teddy bears for every occasion. Floral Whispers Gifts Blog sharing delivery tips, gifting advice and Nairobi florist insights.",
   keywords: [

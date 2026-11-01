@@ -3,10 +3,10 @@ import CakesPageClient from "./CakesPageClient";
 import { getProducts } from "@/lib/db";
 import { CAKE_PRODUCTS, getPredefinedProducts } from "@/lib/predefinedProducts";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Cakes Nairobi | Birthday Cakes, Anniversary Cakes & Celebration Cakes | Same-Day Delivery",
+  title: "Birthday Cakes Nairobi | Floral Whispers",
   description:
     "Order cakes in Nairobi: birthday cakes, anniversary cakes and celebration cakes. Pair cakes with flowers, wine and chocolates for the perfect gift. Same-day delivery available.",
   alternates: {

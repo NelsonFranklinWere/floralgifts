@@ -636,6 +636,12 @@ export default async function HomePage() {
       <div className="bg-green-100">
         <HeroCarousel />
 
+        <div className="mx-auto max-w-4xl px-4 pt-8 text-center sm:px-6 lg:px-8">
+          <h1 className="font-heading text-2xl font-bold text-brand-gray-900 md:text-3xl">
+            {seasonal.homeTitle}
+          </h1>
+        </div>
+
         {/* Nairobi Gift Hampers */}
         <RotatingProductSection
           title="Gift Hampers Nairobi — Flowers, Chocolates & More"

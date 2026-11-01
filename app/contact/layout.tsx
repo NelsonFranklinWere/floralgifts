@@ -1,9 +1,9 @@
 import { Metadata } from "next";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Contact Floral Whispers Gifts Nairobi — Order via WhatsApp",
+  title: "Contact Us | Order via WhatsApp | Floral Whispers",
   description:
     "Contact Floral Whispers Gifts Nairobi via WhatsApp, phone or email to order flowers, gift hampers and teddy bears with same-day delivery across Nairobi.",
   keywords: [

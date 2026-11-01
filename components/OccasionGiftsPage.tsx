@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { formatSeoTitle } from "@/lib/seo/base";
 import RecipientGiftsClient from "@/components/RecipientGiftsClient";
 import { getAllCatalogProducts } from "@/lib/catalog-products";
 import {
@@ -13,7 +14,7 @@ const baseUrl =
 export function occasionMetadata(occasion: GiftOccasion): Metadata {
   const meta = getOccasionMeta(occasion);
   return {
-    title: `${meta.label} Nairobi | Same-Day Delivery | Floral Whispers Gifts`,
+    title: formatSeoTitle(`${meta.label} Nairobi`),
     description: meta.description,
     alternates: { canonical: `${baseUrl}/collections/${occasion}` },
     openGraph: {

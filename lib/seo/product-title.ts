@@ -1,3 +1,4 @@
+import { formatSeoTitle } from "./base";
 /**
  * Strips location/SEO suffixes from product titles for clean H1 display.
  * Location intent belongs in meta descriptions, not visible headings.
@@ -56,7 +57,7 @@ export function buildProductMetaDescription(product: {
   return combined.length > 160 ? `${combined.slice(0, 157)}…` : combined;
 }
 
-/** Strict SEO title: `[Clean Name] | Floral Whispers Gifts Nairobi` */
+/** SEO title for a product page; see formatSeoTitle for the format. */
 export function buildProductSeoTitle(title: string): string {
-  return `${cleanProductTitle(title)} | Floral Whispers Gifts Nairobi`;
+  return formatSeoTitle(cleanProductTitle(title));
 }

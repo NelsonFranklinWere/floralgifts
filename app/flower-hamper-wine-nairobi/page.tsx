@@ -5,10 +5,10 @@ import { getProducts } from "@/lib/db";
 import { getPredefinedProducts } from "@/lib/predefinedProducts";
 
 const baseUrl =
-  process.env.NEXT_PUBLIC_BASE_URL || "https://www.floralwhispersgifts.co.ke";
+  process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
 
 export const metadata: Metadata = {
-  title: "Nairobi Flower Hamper + Wine Same-Day Delivery | Floral Whispers Gifts",
+  title: "Flower Hamper & Wine Nairobi | Floral Whispers",
   description:
     "Order flower hamper and wine gifts in Nairobi with same-day delivery. Premium roses, chocolates, wine and teddy bundles for birthdays, anniversaries and romantic surprises.",
   alternates: {
