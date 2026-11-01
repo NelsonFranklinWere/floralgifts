@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import sharp from "sharp";
-import { promises as fs } from "fs";
-import path from "path";
+import { writePublicUpload } from "@/lib/upload-paths";
 
 export const dynamic = "force-dynamic";
 
@@ -50,8 +49,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Basic type guard – still allow all image types from phone storage
-    if (!file.type.startsWith("image/")) {
+    // Phones sometimes send an empty MIME type; allow by extension too
+    const nameLower = (file.name || "").toLowerCase();
+    const looksLikeImage =
+      (file.type && file.type.startsWith("image/")) ||
+      /\.(jpe?g|png|gif|webp|heic|heif|avif|bmp|tiff?)$/i.test(nameLower);
+    if (!looksLikeImage) {
       return NextResponse.json(
         { message: "Please upload an image file" },
         {
@@ -109,9 +112,7 @@ export async function POST(request: NextRequest) {
     const filename = `${timestamp}-${randomStr}-${safeName}.jpg`;
 
     try {
-      const absoluteDir = path.join(process.cwd(), "public", "images", "blog-images");
-      await fs.mkdir(absoluteDir, { recursive: true });
-      await fs.writeFile(path.join(absoluteDir, filename), processedBuffer);
+      await writePublicUpload(["images", "blog-images"], filename, processedBuffer);
     } catch (writeError: any) {
       console.error("Local image write error:", writeError);
       return NextResponse.json(

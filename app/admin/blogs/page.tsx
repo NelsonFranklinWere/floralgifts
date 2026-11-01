@@ -78,6 +78,21 @@ export default function AdminBlogsPage() {
     e.preventDefault();
     try {
       const token = localStorage.getItem("admin_token");
+      if (!token) {
+        alert("Please log in again.");
+        router.push("/admin/login");
+        return;
+      }
+
+      if (!formData.slug.trim() || !formData.title.trim() || !formData.excerpt.trim() || !formData.content.trim()) {
+        alert("Slug, title, excerpt and content are required.");
+        return;
+      }
+      if (!formData.category.trim()) {
+        alert("Category is required.");
+        return;
+      }
+
       const tagsArray = formData.tags
         .split(",")
         .map((tag) => tag.trim())
@@ -90,9 +105,10 @@ export default function AdminBlogsPage() {
 
       const payload = {
         ...formData,
+        image: formData.image.trim() || "/images/products/hampers/giftamper.jpg",
         publishedAt: publishedAtISO,
         tags: tagsArray,
-        readTime: parseInt(String(formData.readTime)),
+        readTime: parseInt(String(formData.readTime)) || 5,
       };
 
       if (editingPost) {
@@ -458,7 +474,7 @@ export default function AdminBlogsPage() {
                   <input
                     ref={fileInputRef}
                     type="file"
-                    accept="image/*"
+                    accept="image/*,.heic,.heif,.jpg,.jpeg,.png,.webp"
                     onChange={handleImageUpload}
                     className="hidden"
                     disabled={isUploading}
@@ -473,7 +489,7 @@ export default function AdminBlogsPage() {
                     disabled={isUploading}
                     className="btn-outline text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isUploading ? "Uploading..." : "+ Upload Image from Device"}
+                    {isUploading ? "Uploading..." : "+ Upload from phone / device"}
                   </button>
                 </div>
               </div>
