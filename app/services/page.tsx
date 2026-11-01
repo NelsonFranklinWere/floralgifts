@@ -33,11 +33,11 @@ const services = [
       "Flowers for your day, from the bride’s bouquet to the tables, planned around your colours and your venue.",
     image: "/images/products/flowers/BouquetFlowers2.jpg",
     features: [
-      "Bridal bouquets",
-      "Bridal party flowers",
-      "Ceremony arrangements",
-      "Reception centerpieces",
-      "Boutonnières & corsages",
+      "A bouquet for the bride",
+      "Flowers for bridesmaids and family",
+      "Flowers for the church or garden",
+      "Table flowers for the reception",
+      "Buttonholes for the groom's party",
     ],
   },
   {
@@ -46,10 +46,10 @@ const services = [
       "Bright bouquets, money bouquets with graduation toppers and teddy bears that look great in ceremony photos.",
     image: "/images/products/flowers/BouquetFlowers3.jpg",
     features: [
-      "Graduation bouquets",
-      "Congratulations hampers",
-      "Teddy bears with graduation accessories",
-      "Custom arrangements",
+      "Bouquets from PP2 to campus",
+      "Hampers that say well done",
+      "Bears dressed for the ceremony",
+      "Something made just for you",
     ],
   },
   {
@@ -58,11 +58,11 @@ const services = [
       "Hampers and office flowers for clients and staff, with branded cards and delivery planned across your locations.",
     image: "/images/products/hampers/giftamper.jpg",
     features: [
-      "Corporate gift hampers",
-      "Executive bouquets",
-      "Employee appreciation gifts",
-      "Client thank-you arrangements",
-      "Bulk ordering available",
+      "Hampers for clients and staff",
+      "Flowers for the boss's office",
+      "Thank-you gifts for your team",
+      "Flowers to thank a client",
+      "Large orders welcome",
     ],
   },
   {
@@ -71,11 +71,11 @@ const services = [
       "Tell us the mood and the budget, and we will design something made only for that occasion.",
     image: "/images/products/flowers/BouquetFlowers4.jpg",
     features: [
-      "Event styling",
-      "Custom arrangements",
-      "Theme-based designs",
-      "Seasonal collections",
-      "Consultation services",
+      "Flowers styled for your event",
+      "Something made just for you",
+      "Designs built around your theme",
+      "Seasonal flower choices",
+      "Advice before you decide",
     ],
   },
   {
@@ -84,10 +84,10 @@ const services = [
       "Heart and round wreaths and casket flowers, prepared with care and delivered to the home, church or funeral venue.",
     image: "/images/products/flowers/BouquetFlowers5.jpg",
     features: [
-      "Funeral wreaths",
-      "Sympathy bouquets",
-      "Casket arrangements",
-      "Memorial tributes",
+      "Heart and round wreaths",
+      "Flowers for a grieving family",
+      "Flowers for the casket",
+      "Tributes for a loved one",
     ],
   },
   {
@@ -96,11 +96,11 @@ const services = [
       "Birthdays, anniversaries, new babies and quick recoveries: gifts chosen for the person, then delivered across Kenya.",
     image: "/images/products/flowers/BouquetFlowers6.jpg",
     features: [
-      "Birthday bouquets",
-      "Anniversary arrangements",
-      "Valentine&apos;s Day specials",
-      "Mother&apos;s Day collections",
-      "Get well soon flowers",
+      "Flowers for a birthday",
+      "Roses for your anniversary",
+      "Gifts for 14 February",
+      "Gifts for Mum on her day",
+      "Flowers and fruit for recovery",
     ],
   },
 ];
@@ -186,20 +186,20 @@ export default function ServicesPage() {
               <span className="text-2xl">🎊</span>
             </div>
             <h2 className="font-heading font-bold text-3xl md:text-4xl mb-4">
-              Ready to Make Your Event Special?
+              Have Something in Mind?
             </h2>
             <p className="text-lg mb-8 text-white/90 max-w-2xl mx-auto leading-relaxed">
-              Contact us to discuss your needs. We offer consultations and custom quotes for all our
-              services.
+              Tell us the date, the place and your budget. We will suggest what fits and give you a price
+              before you commit.
             </p>
             <div className="flex flex-row gap-4 justify-center">
               <Link href="/contact" className="inline-flex items-center gap-2 bg-white text-brand-green hover:bg-brand-gray-100 hover:text-brand-red px-6 py-3 rounded-full font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg">
                 <span>💬</span>
-                Contact Us
+                Talk to Us
               </Link>
               <Link href="/collections" className="inline-flex items-center gap-2 bg-transparent border-2 border-white text-white hover:bg-white hover:text-brand-green px-6 py-3 rounded-full font-semibold transition-all duration-200 transform hover:scale-105">
                 <span>🌸</span>
-                Browse Collections
+                See What We Sell
               </Link>
             </div>
           </div>
@@ -212,21 +212,21 @@ export default function ServicesPage() {
                 <span className="text-xl">🚚</span>
               </div>
               <h3 className="font-heading font-bold text-xl text-brand-gray-900">
-                Delivery Information
+                How Delivery Works
               </h3>
             </div>
             <ul className="space-y-3 text-brand-gray-700 mb-6">
               <li className="bg-brand-green/10 p-3 rounded-lg border border-brand-green/20">
-                <span className="font-semibold text-brand-green">Nairobi CBD:</span> Complimentary same-day delivery - your gifts arrive fresh and on time
+                <span className="font-semibold text-brand-green">Nairobi CBD:</span> Free, and same-day when you order by 6PM
               </li>
               <li className="bg-brand-red/10 p-3 rounded-lg border border-brand-red/20">
-                <span className="font-semibold text-brand-red">Outside Nairobi:</span> Swift next-day delivery with transparent, location-based pricing
+                <span className="font-semibold text-brand-red">Outside Nairobi:</span> Usually arrives the next day, and the fee depends on the town
               </li>
               <li className="bg-brand-gray-100 p-3 rounded-lg border border-brand-gray-200">
-                <span className="font-semibold">Nationwide:</span> Reliable 24-hour delivery service across Kenya, bringing joy everywhere
+                <span className="font-semibold">Across Kenya:</span> We have delivered as far as Nakuru and Mombasa. We confirm the date with you first
               </li>
               <li className="bg-yellow-50 p-3 rounded-lg border border-yellow-200">
-                <span className="font-semibold text-yellow-700">Rush Orders:</span> Express delivery available - we&apos;ll make it happen when you need it most
+                <span className="font-semibold text-yellow-700">Rush Orders:</span> Running late? Message us and we will tell you if express delivery is possible
               </li>
             </ul>
             <div className="mt-6 pt-6 border-t border-brand-gray-200 bg-gradient-to-r from-brand-green/5 to-brand-red/5 p-4 rounded-lg">
@@ -242,12 +242,12 @@ export default function ServicesPage() {
                 <span className="text-xl">💳</span>
               </div>
               <h3 className="font-heading font-bold text-xl text-brand-gray-900">
-                Payment Options
+                How to Pay
               </h3>
             </div>
             <ul className="space-y-3 text-brand-gray-700">
               <li className="bg-brand-green/10 p-3 rounded-lg border border-brand-green/20">
-                <span className="font-semibold text-brand-green">M-Pesa:</span> Pay via STK Push on checkout
+                <span className="font-semibold text-brand-green">M-Pesa:</span> Pay at checkout with M-Pesa or card
               </li>
               <li className="bg-brand-red/10 p-3 rounded-lg border border-brand-red/20">
                 <span className="font-semibold text-brand-red">Till Number:</span>{" "}
@@ -258,13 +258,13 @@ export default function ServicesPage() {
                 <span className="font-mono font-bold text-brand-green bg-white px-2 py-1 rounded">{SHOP_INFO.mpesa.paybill}</span>
               </li>
               <li className="bg-brand-gray-100 p-3 rounded-lg border border-brand-gray-200">
-                <span className="font-semibold">WhatsApp:</span> Order and arrange payment via WhatsApp
+                <span className="font-semibold">WhatsApp:</span> Send your order on WhatsApp, and we will sort out payment there
               </li>
               <li className="bg-brand-gray-100 p-3 rounded-lg border border-brand-gray-200">
-                <span className="font-semibold">Corporate:</span> Credit terms available for bulk orders
+                <span className="font-semibold">Corporate:</span> Ask us about credit terms on large orders
               </li>
               <li className="bg-yellow-50 p-3 rounded-lg border border-yellow-200">
-                <span className="font-semibold text-yellow-700">Cash on Delivery:</span> Available for Nairobi orders
+                <span className="font-semibold text-yellow-700">Cash on Delivery:</span> You can pay the rider on Nairobi orders
               </li>
             </ul>
           </div>
