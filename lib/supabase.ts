@@ -37,6 +37,13 @@ export type PostgrestResult = {
   error: { message?: string; details?: string; hint?: string; code?: string } | null;
 };
 
+/** pg sends JS arrays as Postgres arrays, which json columns reject. Encode arrays of objects as JSON. */
+function toPgValue(value: any) {
+  return Array.isArray(value) && value.some(v => v !== null && typeof v === 'object')
+    ? JSON.stringify(value)
+    : value;
+}
+
 class QueryBuilder implements PromiseLike<PostgrestResult> {
   private table: string;
   private selectCols: string = '*';
@@ -46,6 +53,7 @@ class QueryBuilder implements PromiseLike<PostgrestResult> {
   private limitVal: number | null = null;
   private singleMode: boolean = false;
   private insertData: any = null;
+  private conflictCol: string | null = null;
   private updateData: any = null;
   private deleteMode: boolean = false;
 
@@ -73,6 +81,7 @@ class QueryBuilder implements PromiseLike<PostgrestResult> {
   limit(n: number) { this.limitVal = n; return this; }
   single() { this.singleMode = true; return this; }
   insert(data: any) { this.insertData = data; return this; }
+  upsert(data: any, opts: { onConflict: string }) { this.insertData = data; this.conflictCol = opts.onConflict; return this; }
   update(data: any) { this.updateData = data; return this; }
   delete() { this.deleteMode = true; return this; }
 
@@ -102,15 +111,21 @@ class QueryBuilder implements PromiseLike<PostgrestResult> {
     return { data: rows, error: null };
   }
 
+  private conflictClause(keys: string[]) {
+    if (!this.conflictCol) return '';
+    const sets = keys.filter(k => k !== this.conflictCol).map(k => '"' + k + '" = EXCLUDED."' + k + '"');
+    return ' ON CONFLICT ("' + this.conflictCol + '") DO ' + (sets.length ? 'UPDATE SET ' + sets.join(', ') : 'NOTHING');
+  }
+
   private async doInsert(): Promise<PostgrestResult> {
     const items = Array.isArray(this.insertData) ? this.insertData : [this.insertData];
     const results: any[] = [];
     for (const item of items) {
       const keys = Object.keys(item).filter(k => item[k] !== undefined);
       const colNames = keys.map(k => '"' + k + '"').join(', ');
-      const vals = keys.map(k => item[k]);
+      const vals = keys.map(k => toPgValue(item[k]));
       const ph = vals.map((_, i) => '$' + (i + 1)).join(', ');
-      const res = await pool.query('INSERT INTO "' + this.table + '" (' + colNames + ') VALUES (' + ph + ') RETURNING *', vals);
+      const res = await pool.query('INSERT INTO "' + this.table + '" (' + colNames + ') VALUES (' + ph + ')' + this.conflictClause(keys) + ' RETURNING *', vals);
       results.push(res.rows[0]);
     }
     return { data: Array.isArray(this.insertData) ? results : results[0], error: null };
@@ -120,7 +135,7 @@ class QueryBuilder implements PromiseLike<PostgrestResult> {
     const data = this.updateData;
     const keys = Object.keys(data).filter(k => data[k] !== undefined);
     const vals: any[] = [...this.params];
-    const sets = keys.map(k => { vals.push(data[k]); return '"' + k + '" = $' + vals.length; });
+    const sets = keys.map(k => { vals.push(toPgValue(data[k])); return '"' + k + '" = $' + vals.length; });
     const sql = 'UPDATE "' + this.table + '" SET ' + sets.join(', ') + this.buildWhere() + ' RETURNING *';
     const res = await pool.query(sql, vals);
     if (!res.rows.length) {
