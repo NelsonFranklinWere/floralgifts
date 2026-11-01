@@ -10,6 +10,8 @@ import { getPredefinedProducts } from "@/lib/predefinedProducts";
 import { formatCurrency } from "@/lib/utils";
 import { supabaseAdmin } from "@/lib/supabase";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import { resolveCategoryLink } from "@/lib/seo/category-pages";
+import Link from "next/link";
 import {
   buildProductMetaDescription,
   cleanProductTitle,
@@ -132,6 +134,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   const displayTitle = cleanProductTitle(product.title);
 
+  const categoryLink = resolveCategoryLink(`${product.slug} ${product.title} ${product.category}`);
+
   return (
     <>
       <ProductSchema
@@ -221,6 +225,15 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <ProductDetailClient product={product} />
             </div>
           </div>
+
+          {categoryLink ? (
+            <p className="mt-10 font-semibold">
+              More choices:{" "}
+              <Link href={categoryLink.href} className="text-[#D4617A] underline">
+                {categoryLink.label}
+              </Link>
+            </p>
+          ) : null}
 
           {relatedProducts.length > 0 && (
             <div className="mt-12">

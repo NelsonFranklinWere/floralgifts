@@ -1,4 +1,4 @@
-import { SHOP_INFO } from "@/lib/constants";
+import { DELIVERY_LOCATIONS, SHOP_INFO } from "@/lib/constants";
 import { SEO_BASE_URL, canonicalUrl } from "./base";
 import { getSeasonalCopy } from "./seasonal-config";
 
@@ -185,6 +185,25 @@ const CATEGORY_SCHEMA: Record<string, string> = {
   cakes: "Product",
 };
 
+/** Delivery fees come from checkout; the fee depends on the area. */
+const SHIPPING_DETAILS_SCHEMA = {
+  "@type": "OfferShippingDetails",
+  shippingRate: {
+    "@type": "MonetaryAmount",
+    maxValue: Math.max(...DELIVERY_LOCATIONS.map((l) => l.fee)),
+    currency: "KES",
+  },
+  shippingDestination: { "@type": "DefinedRegion", addressCountry: "KE" },
+};
+
+/** Matches /returns: fresh and made-to-order items are final sale. */
+const RETURN_POLICY_SCHEMA = {
+  "@type": "MerchantReturnPolicy",
+  applicableCountry: "KE",
+  returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
+  merchantReturnLink: `${SEO_BASE_URL}/returns`,
+};
+
 /** Product JSON-LD — clean description, exact KES price, stock status. */
 export function buildProductSchema(product: ProductSchemaInput) {
   const url = `${SEO_BASE_URL}/product/${product.slug}`;
@@ -219,6 +238,8 @@ export function buildProductSchema(product: ProductSchemaInput) {
       availability: inStock
         ? "https://schema.org/InStock"
         : "https://schema.org/OutOfStock",
+      shippingDetails: SHIPPING_DETAILS_SCHEMA,
+      hasMerchantReturnPolicy: RETURN_POLICY_SCHEMA,
       seller: { "@type": "Organization", name: SHOP_INFO.name },
     },
   };

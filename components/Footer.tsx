@@ -74,6 +74,116 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
+                    href="/gift-hampers-nairobi"
+                  className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
+                  >
+                  <span className="flex items-center gap-2">
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
+                    Gift Hampers
+                  </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/corporate-gift-hampers-nairobi"
+                  className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
+                  >
+                  <span className="flex items-center gap-2">
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
+                    Corporate Hampers
+                  </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/money-bouquet-nairobi"
+                  className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
+                  >
+                  <span className="flex items-center gap-2">
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
+                    Money Bouquets
+                  </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/funeral-wreaths-nairobi"
+                  className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
+                  >
+                  <span className="flex items-center gap-2">
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
+                    Funeral Wreaths
+                  </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/get-well-soon-gifts-nairobi"
+                  className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
+                  >
+                  <span className="flex items-center gap-2">
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
+                    Get Well Gifts
+                  </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/giant-teddy-bears-nairobi"
+                  className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
+                  >
+                  <span className="flex items-center gap-2">
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
+                    Giant Teddy Bears
+                  </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/graduation-gifts-nairobi"
+                  className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
+                  >
+                  <span className="flex items-center gap-2">
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
+                    Graduation Gifts
+                  </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/red-roses-nairobi"
+                  className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
+                  >
+                  <span className="flex items-center gap-2">
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
+                    Red Roses
+                  </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/period-care-package-kenya"
+                  className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
+                  >
+                  <span className="flex items-center gap-2">
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
+                    Period Care Package
+                  </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/send-gifts-to-kenya"
+                  className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
+                  >
+                  <span className="flex items-center gap-2">
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
+                    Send Gifts from Abroad
+                  </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     href="/same-day-delivery-nairobi"
                   className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
                   >

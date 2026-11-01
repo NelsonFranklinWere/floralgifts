@@ -1,6 +1,15 @@
 import { MetadataRoute } from "next";
 import { supabaseAdmin } from "@/lib/supabase";
 
+/** These posts now 301 to one page each; see redirects in next.config.js. */
+const MERGED_BLOG_SLUGS = [
+  "money-bouquet-nairobi",
+  "luxury-money-bouquet-nairobi",
+  "period-care-package",
+  "period-care-package-self-care-box",
+  "surprise-gifts-for-wife-nairobi",
+];
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts.co.ke";
@@ -35,9 +44,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     staticPage("/flower-delivery-nairobi", 0.9),
     staticPage("/same-day-delivery-nairobi", 0.9),
     staticPage("/flower-hamper-wine-nairobi", 0.9),
-    staticPage("/corporate-gift-hampers-nairobi", 0.8),
-    staticPage("/send-gifts-to-kenya", 0.8),
-    staticPage("/period-care-package-kenya", 0.8),
+    staticPage("/gift-hampers-nairobi", 0.9),
+    staticPage("/corporate-gift-hampers-nairobi", 0.9),
+    staticPage("/money-bouquet-nairobi", 0.9),
+    staticPage("/funeral-wreaths-nairobi", 0.9),
+    staticPage("/get-well-soon-gifts-nairobi", 0.9),
+    staticPage("/period-care-package-kenya", 0.9),
+    staticPage("/giant-teddy-bears-nairobi", 0.9),
+    staticPage("/graduation-gifts-nairobi", 0.9),
+    staticPage("/red-roses-nairobi", 0.9),
+    staticPage("/send-gifts-to-kenya", 0.9),
     staticPage("/new-arrivals", 0.6),
     staticPage("/blog", 0.8),
     staticPage("/case-studies", 0.9),
@@ -69,7 +85,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     );
 
     const blogUrls: MetadataRoute.Sitemap = (posts ?? [])
-      .filter((p: { slug: string }) => /^[A-Za-z0-9-]+$/.test(p.slug))
+      .filter((p: { slug: string }) => /^[A-Za-z0-9-]+$/.test(p.slug) && !MERGED_BLOG_SLUGS.includes(p.slug))
       .map(
       (p: { slug: string; updated_at: string }) => ({
         url: `${baseUrl}/blog/${p.slug}`,

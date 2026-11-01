@@ -5,6 +5,7 @@ import Image from "next/image";
 import { format } from "date-fns";
 import { getBlogPost, getBlogPosts } from "@/lib/blogData";
 import { markdownToHtml } from "@/lib/markdown";
+import { resolveCategoryLink } from "@/lib/seo/category-pages";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import JsonLdScript from "@/components/seo/JsonLdScript";
 import BlogInternalLinks from "@/components/seo/BlogInternalLinks";
@@ -46,6 +47,13 @@ export async function generateStaticParams() {
   }));
 }
 
+/** The page template renders the H1, so drop a leading H1 from the body and demote any others. */
+function blogBodyHtml(content: string): string {
+  return markdownToHtml(content.replace(/^\s*#\s+[^\n]*\n/, ""))
+    .replace(/<h1(\s|>)/g, "<h2$1")
+    .replace(/<\/h1>/g, "</h2>");
+}
+
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
   const post = await getBlogPost(slug);
@@ -53,6 +61,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   if (!post) {
     notFound();
   }
+
+  const categoryLink = resolveCategoryLink(`${post.slug} ${post.title}`);
 
   const articleJsonLd = {
     "@context": "https://schema.org",
@@ -161,10 +171,20 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           {/* Article Content */}
           <div
             className="prose prose-lg max-w-none prose-headings:font-heading prose-headings:text-brand-gray-900 prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-p:text-brand-gray-700 prose-p:leading-relaxed prose-p:mb-6 prose-a:text-brand-green prose-a:no-underline hover:prose-a:underline prose-strong:text-brand-gray-900 prose-strong:font-semibold prose-ul:text-brand-gray-700 prose-ol:text-brand-gray-700 prose-li:text-brand-gray-700 prose-li:mb-2 prose-ul:list-disc prose-ol:list-decimal prose-ul:ml-6 prose-ol:ml-6"
-            dangerouslySetInnerHTML={{ __html: markdownToHtml(post.content) }}
+            dangerouslySetInnerHTML={{ __html: blogBodyHtml(post.content) }}
           />
 
           <BlogInternalLinks post={post} />
+
+          {categoryLink ? (
+            <p className="mt-8 rounded-2xl bg-[#FAF7F2] p-5 font-semibold">
+              Ready to order? See{" "}
+              <Link href={categoryLink.href} className="text-[#D4617A] underline">
+                {categoryLink.label}
+              </Link>
+              .
+            </p>
+          ) : null}
 
           {/* Conversion CTA from blog reader to buyer */}
           <div className="mt-10 rounded-2xl border border-[#F0E8E8] bg-[#FAF7F2] p-6 md:p-8">

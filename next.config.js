@@ -58,6 +58,11 @@ const nextConfig = {
         destination: '/blog/beyond-cash-bouquets-girlfriends-day-2026',
         permanent: true,
       },
+      { source: '/blog/money-bouquet-nairobi', destination: '/money-bouquet-nairobi', permanent: true },
+      { source: '/blog/luxury-money-bouquet-nairobi', destination: '/money-bouquet-nairobi', permanent: true },
+      { source: '/blog/period-care-package', destination: '/period-care-package-kenya', permanent: true },
+      { source: '/blog/period-care-package-self-care-box', destination: '/period-care-package-kenya', permanent: true },
+      { source: '/blog/surprise-gifts-for-wife-nairobi', destination: '/blog/best-gifts-for-wives-nairobi', permanent: true },
     ];
   },
   // Webpack configuration for path aliases
