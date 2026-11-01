@@ -93,7 +93,7 @@ export default function ContactPage() {
             Contact Us
           </h1>
           <p className="text-brand-gray-600 text-lg">
-            We&apos;d love to hear from you. Get in touch with us today.
+            Call, WhatsApp or write to us, and we will help you pick the right gift.
           </p>
         </div>
 
@@ -103,51 +103,51 @@ export default function ContactPage() {
             <div className="card p-3 md:p-6 text-center">
               <div className="text-2xl md:text-4xl mb-2 md:mb-3">🎯</div>
               <h3 className="font-heading font-bold text-xs md:text-lg text-brand-gray-900 mb-1 md:mb-2">Trusted by Thousands</h3>
-              <p className="text-brand-gray-600 text-xs md:text-sm">10,000+ happy customers trust us for their special moments</p>
+              <p className="text-brand-gray-600 text-xs md:text-sm">More than 10,000 customers have sent gifts through us</p>
             </div>
             <div className="card p-3 md:p-6 text-center">
               <div className="text-2xl md:text-4xl mb-2 md:mb-3">⚡</div>
               <h3 className="font-heading font-bold text-xs md:text-lg text-brand-gray-900 mb-1 md:mb-2">Fast & Reliable</h3>
-              <p className="text-brand-gray-600 text-xs md:text-sm">Free same-day delivery in CBD. Your gifts arrive fresh and on time</p>
+              <p className="text-brand-gray-600 text-xs md:text-sm">Order by 6PM for same-day Nairobi delivery, free within the CBD</p>
             </div>
             <div className="card p-3 md:p-6 text-center col-span-2 md:col-span-1">
               <div className="text-2xl md:text-4xl mb-2 md:mb-3">💎</div>
               <h3 className="font-heading font-bold text-xs md:text-lg text-brand-gray-900 mb-1 md:mb-2">Premium Quality</h3>
-              <p className="text-brand-gray-600 text-xs md:text-sm">Only the finest flowers and carefully curated gift hampers</p>
+              <p className="text-brand-gray-600 text-xs md:text-sm">Fresh flowers and hampers, put together when you order</p>
             </div>
           </div>
 
           <div className="bg-brand-green/5 border border-brand-green/20 rounded-lg p-6 md:p-8 mb-8">
             <h2 className="font-heading font-bold text-2xl md:text-3xl text-brand-gray-900 mb-4 text-center">
-              Why Choose Floral Whispers Gifts?
+              What Customers Get From Us
             </h2>
             <div className="grid md:grid-cols-2 gap-6 text-brand-gray-700">
               <div className="flex items-start gap-3">
                 <div className="text-2xl flex-shrink-0">✨</div>
                 <div>
-                  <h4 className="font-semibold text-brand-gray-900 mb-1">Experience & Expertise</h4>
-                  <p className="text-sm">Over 5 years of creating beautiful moments. We understand what makes a gift special.</p>
+                  <h4 className="font-semibold text-brand-gray-900 mb-1">Years of Delivery</h4>
+                  <p className="text-sm">More than 5 years of gift delivery, including orders from customers abroad to Kilimani, Nakuru and Mombasa.</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <div className="text-2xl flex-shrink-0">🌹</div>
                 <div>
-                  <h4 className="font-semibold text-brand-gray-900 mb-1">Fresh & Beautiful</h4>
-                  <p className="text-sm">Every bouquet is hand-arranged with care. Every hamper thoughtfully curated for perfection.</p>
+                  <h4 className="font-semibold text-brand-gray-900 mb-1">Made to Order</h4>
+                  <p className="text-sm">Each order is made up in our University Way shop on the day it goes out.</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <div className="text-2xl flex-shrink-0">🎁</div>
                 <div>
-                  <h4 className="font-semibold text-brand-gray-900 mb-1">Personalized Service</h4>
-                  <p className="text-sm">We listen to your needs and create custom arrangements that express your emotions perfectly.</p>
+                  <h4 className="font-semibold text-brand-gray-900 mb-1">Help Choosing</h4>
+                  <p className="text-sm">Tell us who it is for and your budget. We will suggest something that fits, then add your message.</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <div className="text-2xl flex-shrink-0">💚</div>
                 <div>
-                  <h4 className="font-semibold text-brand-gray-900 mb-1">Customer Care</h4>
-                  <p className="text-sm">98% satisfaction rate. We&apos;re here to ensure your gift experience is flawless from start to finish.</p>
+                  <h4 className="font-semibold text-brand-gray-900 mb-1">Real Support</h4>
+                  <p className="text-sm">A 98% satisfaction rate, and a real person on WhatsApp if anything needs sorting out.</p>
                 </div>
               </div>
             </div>
@@ -162,7 +162,7 @@ export default function ContactPage() {
 
             {submitStatus === "success" && (
               <div className="mb-6 p-4 bg-brand-green/10 border border-brand-green rounded-lg text-brand-green">
-                Thank you for your message! We&apos;ll get back to you soon.
+                Message received. We will reply shortly.
               </div>
             )}
 

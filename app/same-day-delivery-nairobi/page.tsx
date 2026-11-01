@@ -6,7 +6,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://floralwhispersgifts
 export const metadata: Metadata = {
   title: "Same Day Delivery Nairobi | Floral Whispers",
   description:
-    "Same day delivery Nairobi for flowers, gift hampers and teddy bears. Learn how our cutoff times, delivery areas and WhatsApp ordering work with Floral Whispers Gifts.",
+    "Same day delivery Nairobi for flowers, gift hampers and teddy bears. Order by 6PM and we will confirm your delivery window on WhatsApp.",
   alternates: {
     canonical: `${baseUrl}/same-day-delivery-nairobi`,
   },
@@ -25,7 +25,7 @@ export default function SameDayDeliveryNairobiPage() {
           Karen, Kilimani, Lavington, Langata and surrounding estates.
         </p>
         <p className="text-brand-gray-700 text-base md:text-lg mb-4">
-          Place your order on WhatsApp before our daily cut-off time and our team will confirm the delivery
+          Place your order on WhatsApp by 6PM East Africa Time and our team will confirm the delivery
           window, rider availability and payment. Once confirmed, we hand-arrange your bouquet or hamper and
           dispatch it immediately so it reaches your recipient the same day.
         </p>

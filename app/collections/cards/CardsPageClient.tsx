@@ -36,7 +36,7 @@ export default function CardsPageClient() {
             Gift Cards
           </h1>
           <p className="text-brand-gray-600 text-lg max-w-2xl mx-auto">
-            Perfect gift cards for any occasion. Let them choose their favorite flowers, teddy bears, and gifts from our collection.
+            Add a card to your order so that your own words arrive with the gift.
           </p>
         </div>
 
@@ -75,7 +75,7 @@ export default function CardsPageClient() {
         ) : (
           <div className="text-center py-12">
             <p className="text-brand-gray-600 text-lg">
-              Gift cards coming soon! Check back later for our digital and physical gift card options.
+              We are adding new card designs. Message us on WhatsApp and we will include a card with your gift.
             </p>
           </div>
         )}

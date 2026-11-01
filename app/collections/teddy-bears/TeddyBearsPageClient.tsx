@@ -181,16 +181,16 @@ export default function TeddyBearsPageClient({ products, allTeddyImages = [], te
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-6">
           <h1 className="font-heading font-bold text-2xl md:text-3xl lg:text-4xl text-brand-gray-900 mb-2">
-            Teddy Bear Shop Nairobi — Soft Toys Delivered Same Day
+            Teddy Bears Nairobi: 25cm to 200cm
           </h1>
           <p className="text-brand-gray-600 text-sm md:text-base mb-2">
-            Looking for teddy bears in Nairobi? Floral Whispers Gifts delivers soft toys, giant teddy bears and bear-and-flower gift combos across Nairobi same day. Perfect for birthdays, anniversaries and surprises — order on WhatsApp now.
+            Pick a size, pick a colour, and order by 6PM for delivery today. See our size guide on the giant teddy bears page.
           </p>
           <h2 className="font-heading font-semibold text-base md:text-lg text-brand-gray-900">
-            Giant Teddy Bears Delivered in Nairobi
+            Our Biggest Bears Go Up to 200cm
           </h2>
           <h2 className="font-heading font-semibold text-base md:text-lg text-brand-gray-900">
-            Teddy Bear and Flower Combos — Nairobi Delivery
+            Add Flowers to Any Bear
           </h2>
           <p className="text-brand-gray-500 text-xs md:text-sm mt-1">
             <span>

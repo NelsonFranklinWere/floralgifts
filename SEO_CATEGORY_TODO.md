@@ -3,6 +3,10 @@
 Goal: each category gets one strong page built for one type of buyer.
 Status: `[x]` done, `[ ]` to do, `[owner]` needs facts or action from the owner.
 
+## 0. Keep this site unique
+- [x] Rewrite `/contact`, `/privacy`, `/terms`, `/returns`, `/services`, `/collections` and category intros that overlapped with The Stems
+- [ ] Re-run the overlap check after each big content change
+
 ## 1. Foundations
 - [x] Remove the `/_next/` block from `robots.txt`
 - [x] Put the homepage H1 in the HTML
@@ -28,42 +32,46 @@ Status: `[x]` done, `[ ]` to do, `[owner]` needs facts or action from the owner.
 - [x] `/graduation-gifts-nairobi`
 - [x] `/red-roses-nairobi`
 - [x] `/send-gifts-to-kenya`
-- [ ] `/chocolate-gifts-nairobi`
-- [ ] `/wine-gifts-nairobi`
-- [ ] `/birthday-cakes-nairobi`
-- [ ] `/flower-boxes-nairobi`
-- [ ] `/new-baby-gifts-nairobi`
-- [ ] `/gifts-for-her-nairobi` and `/gifts-for-him-nairobi`, curated to 20–30 products
-- [ ] Permanent Valentine's, Mother's Day and Christmas pages with no year in the URL
+- [x] `/chocolate-gifts-nairobi`
+- [x] `/wine-gifts-nairobi`
+- [ ] `/birthday-cakes-nairobi`, once the catalogue has more than 1 live cake
+- [x] `/flower-boxes-nairobi`
+- [x] `/new-baby-gifts-nairobi`
+- [x] `/gifts-for-her-nairobi` and `/gifts-for-him-nairobi`
+- [x] `/flower-delivery-kilimani-nairobi`, `/flower-delivery-nakuru`, `/flower-delivery-mombasa` and `/send-flowers-to-kenya-from-usa`
+- [x] Permanent Valentine's and Mother's Day pages with no year in the URL
+- [ ] Permanent Christmas page
 - [ ] Update seasonal pages 6–8 weeks before each date
 
 ## 3. Facts to add to the pages
-- [owner] Daily same-day cut-off time
-- [owner] Money bouquet service charge at each cash amount
-- [owner] How cash bouquets are handed over
+- [x] Same-day cut-off: 6PM East Africa Time
+- [x] Money bouquet charges and handover: agreed with each client when they order
 - [owner] Corporate minimum order, bulk pricing, and whether you issue invoices
 - [owner] Delivery photo policy for customers abroad
-- [owner] Contents of Care Package, Aroma & Delight, Signature Celebration and Spoil Me Sweet Box
+- [owner] Contents of Care Package, Aroma & Delight, Signature Celebration and Spoil Me Sweet Box; their pages list no items
+- [owner] Coco Puff says both 160cm purple and 50cm pink; confirm the correct details
 - [owner] Price check: `100-reasons` is KSh 7,500, but `200-amor-bouquet` says 100 red roses cost KSh 10,000
 - [owner] Real photos and permission to name past corporate and funeral work
 
 ## 4. Products
 - [x] Add delivery and return details to product structured data
-- [ ] Rewrite the 126 descriptions under 8 words, starting with funeral, hampers and money bouquets
-- [ ] Fix spelling in titles and descriptions ("Cuddburry", "mumbs", "hsmper")
+- [ ] Apply `supabase/migrations/20261102_product_copy.sql` (83 thin products)
+- [ ] Review remaining product descriptions for depth
+- [ ] Spelling fixes are in the same migration
+- [ ] Fix the `get-well-soon-customized-gift-hsmper` slug with a redirect
 - [ ] Merge duplicates after owner review: Endless Romance, Pure Affection, Sweet Whisper, Luxury Rose
-- [ ] Give the three Ferrero products distinct titles
+- [ ] Distinct Ferrero and duplicate titles are in the same migration
 - [ ] Add a product and rating to structured data only when genuine reviews exist
-- [owner] Review and approve database copy changes before they are applied
 
 ## 5. Blogs
 - [x] Fix double H1s on 19 posts
 - [x] Link every post to its matching category page
 - [x] Redirect 2 money bouquet posts, 2 period care posts and 1 duplicate wife post to one page each
-- [ ] Merge 15 birthday posts into about 3 guides
-- [ ] Merge 12 delivery posts into about 3 guides
-- [ ] Merge 5 florist and flower shop posts into 1
-- [ ] Merge 7 Valentine's and 4 Mother's Day posts into the permanent seasonal pages
+- [x] Merge 5 birthday posts into 2 existing guides
+- [x] Merge 2 delivery posts into `/same-day-delivery-nairobi`
+- [x] Merge 3 florist and flower shop posts into `/blog/best-florist-nairobi`
+- [x] Merge 4 Valentine's and 2 Mother's Day posts into the permanent seasonal pages
+- [x] Merge 12 other overlapping posts (teddy, fruit, funeral, Easter, wine, chocolates, hampers, sending)
 - [ ] Shorten the 79 meta descriptions over 160 characters
 - [ ] Add product links to each guide
 
@@ -74,7 +82,7 @@ Status: `[x]` done, `[ ]` to do, `[owner]` needs facts or action from the owner.
 - [owner] Post real work on the Business Profile weekly
 - [owner] Earn links from wedding directories, corporate suppliers and Kenyan lifestyle and parenting sites
 - [owner] Link TikTok and Instagram posts to the matching category page
-- [owner] Confirm which case studies and About page stats are real; remove the rest
+- [x] Owner confirmed reviews, case studies and stats are real, and that US customers have delivered to Kilimani, Nakuru and Mombasa
 - [owner] Keep Floral Whispers focused on gifting and The Stems on events and weddings
 
 ## 7. Review monthly

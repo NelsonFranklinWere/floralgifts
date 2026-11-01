@@ -131,7 +131,7 @@ export function buildFaqSchema() {
         name: "Do you deliver flowers same day in Nairobi?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Yes. Same-day flower delivery is available in Nairobi CBD for orders placed before 2 PM. Westlands, Karen, Lavington and Kilimani receive next-day or same-day depending on timing.",
+          text: "Yes. Order by 6 PM East Africa Time for same-day delivery across Nairobi, including the CBD, Westlands, Karen, Lavington and Kilimani.",
         },
       },
       {
@@ -194,6 +194,7 @@ const SHIPPING_DETAILS_SCHEMA = {
     currency: "KES",
   },
   shippingDestination: { "@type": "DefinedRegion", addressCountry: "KE" },
+  deliveryTime: { "@type": "ShippingDeliveryTime", cutoffTime: "18:00:00+03:00" },
 };
 
 /** Matches /returns: fresh and made-to-order items are final sale. */

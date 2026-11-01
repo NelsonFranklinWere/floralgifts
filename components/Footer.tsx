@@ -184,6 +184,72 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
+                    href="/send-flowers-to-kenya-from-usa"
+                  className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
+                  >
+                  <span className="flex items-center gap-2">
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
+                    Send from the USA
+                  </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/flower-delivery-nakuru"
+                  className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
+                  >
+                  <span className="flex items-center gap-2">
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
+                    Delivery to Nakuru
+                  </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/flower-delivery-mombasa"
+                  className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
+                  >
+                  <span className="flex items-center gap-2">
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
+                    Delivery to Mombasa
+                  </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/gifts-for-her-nairobi"
+                  className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
+                  >
+                  <span className="flex items-center gap-2">
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
+                    Gifts for Her
+                  </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/gifts-for-him-nairobi"
+                  className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
+                  >
+                  <span className="flex items-center gap-2">
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
+                    Gifts for Him
+                  </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/flower-boxes-nairobi"
+                  className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
+                  >
+                  <span className="flex items-center gap-2">
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
+                    Flower Boxes
+                  </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     href="/same-day-delivery-nairobi"
                   className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
                   >

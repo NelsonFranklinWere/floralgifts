@@ -6,7 +6,7 @@ import { buildPageMetadata } from "@/lib/seo/metadata";
 export const metadata: Metadata = buildPageMetadata({
   title: "Returns & Refund Policy",
   description:
-    "Refunds and returns at Floral Whispers Gifts for flowers, hampers and gifts, including wrong items, damaged orders and how to contact us.",
+    "What to do if a Floral Whispers Gifts order arrives wrong or damaged: tell us within one hour with photos, and we'll look at a replacement or credit.",
   path: "/returns",
 });
 
@@ -14,65 +14,59 @@ export default function ReturnsPage() {
   return (
     <PolicyPage
       title="Returns & Refund Policy"
-      intro="Our products are fresh, made to order and often perishable, so we handle returns carefully. If something goes wrong, we will do our best to make it right."
+      intro="Flowers and food can't go back on the shelf, so we can't take returns for a change of mind. If we get something wrong, though, tell us and we will work it out with you."
       sections={[
         {
-          heading: "1. General policy",
+          heading: "If something is wrong",
+          body: (
+            <>
+              <p>
+                Contact us <strong>within 1 hour of delivery</strong> if the item is wrong, damaged or not fresh. Send us:
+              </p>
+              <ul>
+                <li>Your order reference</li>
+                <li>Clear photos of the gift, with the packaging if you still have it</li>
+                <li>A short description of the problem</li>
+              </ul>
+            </>
+          ),
+        },
+        {
+          heading: "How we put it right",
           body: (
             <p>
-              All purchases are final. We do not offer cash refunds or returns for change of mind, late changes
-              to orders, or items delivered in good condition to the address and contact details you gave us.
+              Once we have looked into it and agreed that the mistake is ours, we will replace or fix the item where we can.
+              Otherwise, we may offer store credit or a partial refund, depending on what happened.
             </p>
           ),
         },
         {
-          heading: "2. Wrong item",
-          body: (
-            <p>
-              If you receive a significantly wrong item, contact us within <strong>1 hour</strong> of delivery
-              with clear photos and your order reference. Where we agree there has been a mistake on our side, we
-              will arrange a replacement or correction where practical, or offer store credit or a partial refund.
-            </p>
-          ),
-        },
-        {
-          heading: "3. Damage or freshness",
-          body: (
-            <p>
-              If your order arrives damaged or not fresh, contact us within <strong>1 hour</strong> of delivery
-              with clear photos, including the packaging if possible. If we agree it was faulty on arrival, we
-              will arrange a replacement or store credit.
-            </p>
-          ),
-        },
-        {
-          heading: "4. Items we cannot refund",
+          heading: "When we can't refund",
           body: (
             <ul>
-              <li>Fresh flowers, bouquets and other perishable arrangements delivered in good condition</li>
-              <li>Chocolates, wines and food items delivered in good condition</li>
-              <li>Custom or personalised gifts</li>
-              <li>Orders delivered correctly where the recipient is unavailable or refuses delivery</li>
-              <li>Sale items, discounted promotions and gift cards</li>
+              <li>Orders that arrived in good condition, including flowers, chocolates, wine and food</li>
+              <li>Personalized or custom-made gifts</li>
+              <li>Gift cards, sale items and discounted promotions</li>
+              <li>Deliveries refused by the recipient, or made correctly when nobody was available</li>
+              <li>Changing your mind, or changing an order after we have started on it</li>
             </ul>
           ),
         },
         {
-          heading: "5. Delivery problems",
+          heading: "Problems with delivery details",
           body: (
             <p>
-              We cannot be responsible for failed or delayed deliveries caused by incorrect addresses, unreachable
-              phone numbers, an unavailable recipient, or events beyond our control. We will try to help, for
-              example by arranging re-delivery at an extra fee.
+              A wrong address, an unreachable phone number or an unavailable recipient can stop a delivery. Bad weather and
+              major traffic can delay one too. We will still help, for example by delivering again for an extra fee.
             </p>
           ),
         },
         {
-          heading: "6. Contact us",
+          heading: "Reach us",
           body: (
             <p>
-              Call or WhatsApp <a href={`tel:+${SHOP_INFO.phone}`}>+{SHOP_INFO.phone}</a> or email{" "}
-              <a href={`mailto:${SHOP_INFO.email}`}>{SHOP_INFO.email}</a> with your order reference.
+              The quickest way is WhatsApp or a call to <a href={`tel:+${SHOP_INFO.phone}`}>+{SHOP_INFO.phone}</a>. You can
+              also email <a href={`mailto:${SHOP_INFO.email}`}>{SHOP_INFO.email}</a>.
             </p>
           ),
         },

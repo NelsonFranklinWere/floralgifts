@@ -70,12 +70,12 @@ export function validateDeliveryDate(
 
   if (isNairobi) {
     const sameDayCutoff = new Date(today);
-    sameDayCutoff.setHours(14, 0, 0, 0); // 2 PM cutoff
+    sameDayCutoff.setHours(18, 0, 0, 0); // 6 PM cutoff
 
     if (deliveryDateTime.toDateString() === today.toDateString() && now > sameDayCutoff) {
       return {
         valid: false,
-        message: "Same-day delivery orders must be placed before 2 PM",
+        message: "Same-day delivery orders must be placed before 6 PM",
       };
     }
   } else {

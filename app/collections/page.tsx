@@ -74,7 +74,7 @@ export default function CollectionsPage() {
             Our Collections
           </h1>
           <p className="text-brand-gray-600 text-lg">
-            Explore our beautiful range of flowers, teddy bears, gift hampers, wines, chocolates and gifts for men, women and kids
+            Start with what you want to send or who it is for, and we will deliver it across Nairobi and beyond
           </p>
           <div className="flex flex-wrap justify-center gap-2 mt-4">
             <Link href="/flower-hamper-wine-nairobi" className="text-sm text-brand-red hover:underline">
@@ -109,7 +109,7 @@ export default function CollectionsPage() {
                 Flowers
               </h2>
               <p className="text-brand-gray-600 mb-2 md:mb-4 text-xs md:text-base line-clamp-2 md:line-clamp-none">
-                Beautiful bouquets for every occasion - birthdays, anniversaries, get well soon, funerals, and more
+                Roses, mixed bouquets, flower boxes and wreaths, made to order
               </p>
               <span className="text-brand-green font-medium text-xs md:text-base">Shop Flowers →</span>
             </div>
@@ -134,7 +134,7 @@ export default function CollectionsPage() {
                 Teddy Bears
               </h2>
               <p className="text-brand-gray-600 mb-2 md:mb-4 text-xs md:text-base line-clamp-2 md:line-clamp-none">
-                Soft and adorable companions in various sizes and colors - perfect for Valentine's gifts
+                From a 25cm cuddle to a 200cm giant, in five colours
               </p>
               <span className="text-brand-green font-medium text-xs md:text-base">Shop Teddy Bears →</span>
             </div>
@@ -159,7 +159,7 @@ export default function CollectionsPage() {
                 Gift Hampers
               </h2>
               <p className="text-brand-gray-600 mb-2 md:mb-4 text-xs md:text-base line-clamp-2 md:line-clamp-none">
-                Luxury gift hampers filled with curated items - perfect for corporate gifts and celebrations
+                Sets that combine flowers, chocolates, wine and teddy bears
               </p>
               <span className="text-brand-green font-medium text-xs md:text-base">Shop Gift Hampers →</span>
             </div>
@@ -184,7 +184,7 @@ export default function CollectionsPage() {
                 Gifts for Men
               </h2>
               <p className="text-brand-gray-600 mb-2 md:mb-4 text-xs md:text-base line-clamp-2 md:line-clamp-none">
-                Wines, hampers and curated gifts perfect for dads, husbands, boyfriends and colleagues
+                Watches, wine and hampers for dads, husbands and colleagues
               </p>
               <span className="text-brand-green font-medium text-xs md:text-base">Shop Men →</span>
             </div>
@@ -209,7 +209,7 @@ export default function CollectionsPage() {
                 Wines
               </h2>
               <p className="text-brand-gray-600 mb-2 md:mb-4 text-xs md:text-base line-clamp-2 md:line-clamp-none">
-                Premium wines for every occasion - perfect for celebrations, gifts, and special moments
+                Red, sweet and sparkling bottles to send alone or with flowers
               </p>
               <span className="text-brand-green font-medium text-xs md:text-base">Shop Wines →</span>
             </div>
@@ -234,7 +234,7 @@ export default function CollectionsPage() {
                 Chocolates
               </h2>
               <p className="text-brand-gray-600 mb-2 md:mb-4 text-xs md:text-base line-clamp-2 md:line-clamp-none">
-                Delicious premium chocolates - perfect for gifts, celebrations, and sweet moments
+                Ferrero Rocher, Lindt, Raffaello and Cadbury
               </p>
               <span className="text-brand-green font-medium text-xs md:text-base">Shop Chocolates →</span>
             </div>
@@ -259,7 +259,7 @@ export default function CollectionsPage() {
                 Gifts for Women
               </h2>
               <p className="text-brand-gray-600 mb-2 md:mb-4 text-xs md:text-base line-clamp-2 md:line-clamp-none">
-                Flowers, hampers and teddy bears for moms, wives, girlfriends and the special women in your life
+                Gifts for wives, girlfriends, mums, sisters and friends
               </p>
               <span className="text-brand-green font-medium text-xs md:text-base">Shop Women →</span>
             </div>
@@ -284,7 +284,7 @@ export default function CollectionsPage() {
                 Gifts for Kids
               </h2>
               <p className="text-brand-gray-600 mb-2 md:mb-4 text-xs md:text-base line-clamp-2 md:line-clamp-none">
-                Soft toys, sweet treats and celebration gifts kids love — no alcohol, just fun
+                Teddy bears, treats and graduation gifts for children
               </p>
               <span className="text-brand-green font-medium text-xs md:text-base">Shop Kids →</span>
             </div>

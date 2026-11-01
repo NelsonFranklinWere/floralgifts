@@ -7,7 +7,7 @@ import { buildPageMetadata } from "@/lib/seo/metadata";
 export const metadata: Metadata = buildPageMetadata({
   title: "Privacy Policy",
   description:
-    "How Floral Whispers Gifts collects, uses and protects your personal data when you order flowers and gifts, chat with us or browse our website.",
+    "What Floral Whispers Gifts does with your details and your recipient's details when you order, chat with us or visit the site, and how to contact us.",
   path: "/privacy",
 });
 
@@ -15,94 +15,91 @@ export default function PrivacyPage() {
   return (
     <PolicyPage
       title="Privacy Policy"
-      intro={`This policy explains how ${SHOP_INFO.name} handles personal data when you use our website, place an order or contact us.`}
+      intro="To deliver a gift we need some details from you and about the person receiving it. This page explains what we keep, why we keep it, and what you can ask us to do with it."
       sections={[
         {
-          heading: "1. What we collect",
+          heading: "Details you give us",
           body: (
             <ul>
-              <li>Your name, phone number and email address when you order, subscribe or contact us</li>
-              <li>Recipient details you give us for delivery: name, phone number, address and gift message</li>
-              <li>Order details: items, amounts, delivery date and payment status</li>
-              <li>Messages you send through our chat, WhatsApp, email or contact form</li>
-              <li>Browsing data such as pages viewed, device type, approximate location and referring website</li>
+              <li>Your name, phone and email, when you buy something, sign up or write to us</li>
+              <li>The recipient&apos;s name, phone and address, along with your gift message</li>
+              <li>What you ordered, the delivery date and whether payment went through</li>
+              <li>Anything you tell us on WhatsApp, on our chat or through the contact form</li>
             </ul>
           ),
         },
         {
-          heading: "2. How we use it",
+          heading: "Details collected as you browse",
           body: (
-            <ul>
-              <li>To prepare and deliver your order and to contact you or the recipient about it</li>
-              <li>To confirm payments and send order updates</li>
-              <li>To answer your questions and handle complaints or refund requests</li>
-              <li>To send offers, only if you subscribed; you can unsubscribe at any time</li>
-              <li>To understand how our website is used, improve it and measure our advertising</li>
-            </ul>
+            <p>
+              Our site records things like the pages you open, your type of device, your rough location and the
+              site that sent you here. Cookies and browser storage also remember your cart. Blocking them in your
+              browser is fine, but the cart may not work as it should.
+            </p>
           ),
         },
         {
-          heading: "3. Who we share it with",
+          heading: "Why we need them",
+          body: (
+            <p>
+              We use your details to make and deliver the order, confirm the payment, keep you informed and sort out
+              any problem. If you sign up for offers we will email you, and you can opt out whenever you like. Browsing
+              data shows us what is working on the site and in our adverts.
+            </p>
+          ),
+        },
+        {
+          heading: "Who else sees them",
           body: (
             <>
-              <p>We do not sell your personal data. We share it only as needed with:</p>
+              <p>Nobody buys your details from us. A few others handle parts of the job:</p>
               <ul>
-                <li>Our delivery riders, who receive what they need to complete the delivery</li>
-                <li>Payment providers, including Pesapal and M-Pesa, who process your payment</li>
-                <li>Email and chat providers, including Tawk.to, and WhatsApp when you message us there</li>
-                <li>Google Analytics and Meta (Facebook Pixel), who help us measure site use and advertising</li>
-                <li>Authorities, where the law requires it</li>
+                <li>Riders see what they need to find the recipient</li>
+                <li>Pesapal and M-Pesa handle payments</li>
+                <li>Tawk.to and WhatsApp carry our chats, and an email service sends our messages</li>
+                <li>Google Analytics and the Meta Pixel measure visits and advertising</li>
+                <li>Government bodies, if the law requires us to share something</li>
               </ul>
             </>
           ),
         },
         {
-          heading: "4. Cookies and similar tools",
+          heading: "If someone sent you a gift",
           body: (
             <p>
-              We use cookies and browser storage to keep your cart and to run analytics and advertising
-              measurement. You can block or delete cookies in your browser settings, though parts of the site
-              such as the cart may stop working properly.
+              The sender gave us your details so that we could reach you. We use them only for that delivery. Contact
+              us if you would like them removed afterwards. Anyone ordering for someone else should only share details
+              they are entitled to share.
             </p>
           ),
         },
         {
-          heading: "5. How long we keep it",
+          heading: "How long we hold them",
           body: (
             <p>
-              We keep order records for as long as we need them to serve you and to meet tax, accounting and
-              legal requirements. We keep other data only as long as it is useful for the purpose it was
-              collected for.
+              Order records stay for as long as tax, accounting and legal rules require. Everything else is removed once
+              we no longer have a use for it.
             </p>
           ),
         },
         {
-          heading: "6. Your rights",
+          heading: "What you can ask us",
           body: (
             <p>
-              Under Kenya&apos;s Data Protection Act, 2019, you can ask to see the personal data we hold about
-              you, correct it, ask us to delete it, or object to its use, including for marketing. You may also
-              complain to the Office of the Data Protection Commissioner.
+              Kenya&apos;s Data Protection Act, 2019 lets you see what we hold on you, correct it, have it deleted or stop
+              us using it for marketing. If we don&apos;t resolve your concern, you can complain to the Office of the Data
+              Protection Commissioner.
             </p>
           ),
         },
         {
-          heading: "7. Sending a gift to someone else",
+          heading: "Getting in touch",
           body: (
             <p>
-              When you order for another person, you give us their details so we can deliver the gift. Please
-              only share details you are entitled to share.
-            </p>
-          ),
-        },
-        {
-          heading: "8. Changes and contact",
-          body: (
-            <p>
-              We may update this policy, and the latest version will always be on this page. For any privacy
-              question, email <a href={`mailto:${SHOP_INFO.email}`}>{SHOP_INFO.email}</a> or call{" "}
-              <a href={`tel:+${SHOP_INFO.phone}`}>+{SHOP_INFO.phone}</a>. See also our{" "}
-              <Link href="/terms">terms</Link> and <Link href="/returns">returns policy</Link>.
+              Email <a href={`mailto:${SHOP_INFO.email}`}>{SHOP_INFO.email}</a> or call{" "}
+              <a href={`tel:+${SHOP_INFO.phone}`}>+{SHOP_INFO.phone}</a>. Any changes to this policy will appear on this
+              page. You may also want to read our <Link href="/terms">terms</Link> and{" "}
+              <Link href="/returns">returns policy</Link>.
             </p>
           ),
         },

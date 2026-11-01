@@ -30,7 +30,7 @@ const services = [
   {
     title: "Wedding Flowers",
     description:
-      "Complete wedding floral services including bridal bouquets, centerpieces, ceremony arrangements, and reception decorations. Let us bring your dream wedding to life.",
+      "Flowers for your day, from the bride’s bouquet to the tables, planned around your colours and your venue.",
     image: "/images/products/flowers/BouquetFlowers2.jpg",
     features: [
       "Bridal bouquets",
@@ -43,7 +43,7 @@ const services = [
   {
     title: "Graduation Celebrations",
     description:
-      "Celebrate academic achievements with stunning graduation bouquets and gift hampers. Perfect for congratulating graduates on their success.",
+      "Bright bouquets, money bouquets with graduation toppers and teddy bears that look great in ceremony photos.",
     image: "/images/products/flowers/BouquetFlowers3.jpg",
     features: [
       "Graduation bouquets",
@@ -55,7 +55,7 @@ const services = [
   {
     title: "Corporate Gifts",
     description:
-      "Professional gift solutions for your business needs. Luxury hampers, elegant arrangements, and branded gifts that impress clients and employees.",
+      "Hampers and office flowers for clients and staff, with branded cards and delivery planned across your locations.",
     image: "/images/products/hampers/giftamper.jpg",
     features: [
       "Corporate gift hampers",
@@ -68,7 +68,7 @@ const services = [
   {
     title: "Flower Styling & Design",
     description:
-      "Professional floral design services for events, parties, and special occasions. Custom arrangements tailored to your style and theme.",
+      "Tell us the mood and the budget, and we will design something made only for that occasion.",
     image: "/images/products/flowers/BouquetFlowers4.jpg",
     features: [
       "Event styling",
@@ -81,7 +81,7 @@ const services = [
   {
     title: "Sympathy & Condolences",
     description:
-      "Thoughtful and respectful arrangements for expressing condolences. Elegant funeral flowers and sympathy bouquets delivered with care.",
+      "Heart and round wreaths and casket flowers, prepared with care and delivered to the home, church or funeral venue.",
     image: "/images/products/flowers/BouquetFlowers5.jpg",
     features: [
       "Funeral wreaths",
@@ -92,7 +92,8 @@ const services = [
   },
   {
     title: "Special Occasions",
-    description: "Same-day flower and gift delivery in Nairobi: bouquets, hampers, wedding and corporate flowers, and sympathy arrangements from Floral Whispers Gifts.",
+    description:
+      "Birthdays, anniversaries, new babies and quick recoveries: gifts chosen for the person, then delivered across Kenya.",
     image: "/images/products/flowers/BouquetFlowers6.jpg",
     features: [
       "Birthday bouquets",
@@ -135,10 +136,10 @@ export default function ServicesPage() {
             <span className="text-2xl">🎉</span>
           </div>
           <h1 className="font-heading font-bold text-4xl md:text-5xl bg-gradient-to-r from-brand-green to-brand-red bg-clip-text text-transparent mb-6">
-            Our Event Services
+            What We Do
           </h1>
           <p className="text-brand-gray-700 text-lg max-w-3xl mx-auto bg-white/60 backdrop-blur-sm p-4 rounded-xl border border-brand-gray-200 shadow-md">
-            Comprehensive floral and gift services for every occasion in Nairobi and beyond. From intimate celebrations to grand corporate events.
+            What we make for people across Nairobi and the rest of Kenya, whether the moment is big, quiet or last-minute.
           </p>
         </div>
 

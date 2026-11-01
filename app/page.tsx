@@ -137,7 +137,7 @@ To make your anniversary flowers even more special:
 
 ## Same-Day Delivery in Nairobi
 
-We offer same-day delivery across Nairobi, including CBD, Westlands, Karen, Lavington, and surrounding areas. Place your order before 2 PM for same-day delivery and make your anniversary celebration even more special.
+We offer same-day delivery across Nairobi, including CBD, Westlands, Karen, Lavington, and surrounding areas. Place your order by 6 PM for same-day delivery and make your anniversary celebration even more special.
 
 For the perfect anniversary flowers in Nairobi, trust Floral Whispers Gifts. Our expert florists will help you create a memorable arrangement that perfectly expresses your love.`,
       author: "Floral Whispers Team",
@@ -170,7 +170,7 @@ Life in Nairobi moves fast, and sometimes you need flowers delivered the same da
 Our process is designed to be seamless and efficient:
 
 1. **Browse Our Collections**: Explore our wide range of exquisite flower bouquets, arrangements, and gift hampers.
-2. **Place Your Order**: Select your desired flowers, add a personalized message, and proceed to checkout. Ensure you place your order before our daily cut-off time (usually 2 PM EAT for Nairobi deliveries).
+2. **Place Your Order**: Select your desired flowers, add a personalized message, and proceed to checkout. Ensure you place your order before our daily cut-off time (6 PM EAT for Nairobi deliveries).
 3. **Provide Delivery Details**: Accurately fill in the recipient's name, phone number, and a precise delivery address within Nairobi.
 4. **Secure Payment**: Complete your purchase using our convenient M-Pesa STK Push option.
 5. **Relax and Track**: Once your order is confirmed, our dedicated team will meticulously prepare your bouquet and dispatch it for delivery.

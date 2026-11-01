@@ -19,7 +19,7 @@ export const GIFT_OCCASIONS: {
     shortLabel: "Graduation",
     href: "/collections/graduation",
     description:
-      "Celebrate Form Four results, university and college graduation with flowers, teddy bears and hampers.",
+      "From PP2 to campus: money bouquets with graduation toppers, flowers, teddy bears and hampers.",
   },
   {
     id: "wedding",
@@ -27,7 +27,7 @@ export const GIFT_OCCASIONS: {
     shortLabel: "Wedding",
     href: "/collections/wedding",
     description:
-      "Wedding and bridal gifts — bouquets, hampers and premium wine sets for the couple.",
+      "Something for the couple to share: wine sets, hampers and bouquets, delivered before or after the big day.",
   },
   {
     id: "valentines",
@@ -35,7 +35,7 @@ export const GIFT_OCCASIONS: {
     shortLabel: "Valentines",
     href: "/collections/valentines",
     description:
-      "Romantic Valentine's gifts — roses, teddy bears, chocolates and love-ready hampers for Nairobi.",
+      "Roses by the hundred, giant bears and chocolates for the person you love.",
   },
   {
     id: "corporate",
@@ -43,7 +43,7 @@ export const GIFT_OCCASIONS: {
     shortLabel: "Corporate",
     href: "/collections/corporate",
     description:
-      "Office, client and colleague gifts — professional hampers, wine and floral sets for business.",
+      "Hampers, wine and flowers for clients, teams and colleagues.",
   },
 ];
 

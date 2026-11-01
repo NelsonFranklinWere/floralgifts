@@ -31,8 +31,7 @@ export default function FlowerDeliveryNairobiPage() {
           your flowers can be prepared and dispatched quickly.
         </p>
         <p className="text-brand-gray-700 text-base md:text-lg mb-6">
-          Same-day flower delivery in Nairobi is available for orders placed within our daily cut-off window,
-          subject to location and stock. We coordinate closely with riders to keep you updated so you can
+          Order by 6PM for same-day flower delivery in Nairobi, subject to location and stock. We coordinate closely with riders to keep you updated so you can
           relax while we handle every detail of your delivery.
         </p>
 

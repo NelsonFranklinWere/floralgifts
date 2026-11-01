@@ -7,7 +7,7 @@ import { buildPageMetadata } from "@/lib/seo/metadata";
 export const metadata: Metadata = buildPageMetadata({
   title: "Terms of Service",
   description:
-    "The terms for using the Floral Whispers Gifts website and ordering flowers, hampers, wines, chocolates and gifts for delivery in Kenya.",
+    "The agreement between you and Floral Whispers Gifts when you order: pricing, payment, same-day cut-off, deliveries across Kenya and buying alcohol.",
   path: "/terms",
 });
 
@@ -15,93 +15,83 @@ export default function TermsPage() {
   return (
     <PolicyPage
       title="Terms of Service"
-      intro={`These terms govern your use of the ${SHOP_INFO.name} website and any order you place with us. By using the site or placing an order, you agree to them.`}
+      intro="When you use this site or place an order, you are agreeing to the points below. If anything is unclear, ask us before you pay."
       sections={[
         {
-          heading: "1. Your details",
+          heading: "Ordering",
           body: (
             <p>
-              By ordering, you confirm that you are at least 18 years old and that the name, phone number,
-              email, delivery address and recipient details you give us are accurate.
+              You must be 18 or older to order. Please check the recipient&apos;s name, phone number and address, since
+              we rely on them to deliver. Your order is confirmed once we have received your payment.
             </p>
           ),
         },
         {
-          heading: "2. Using our website",
+          heading: "Prices and payment",
           body: (
             <p>
-              You agree not to use our website for any unlawful purpose or to transmit malicious code. We may
-              refuse or cancel orders where we reasonably suspect fraud, abuse or misuse of the site.
+              We charge in Kenyan Shillings, and your bank sets the exchange rate if you pay from abroad. Delivery appears
+              at checkout. For some orders, such as money bouquets and deliveries outside Nairobi, we agree the final
+              amount with you before you pay.
             </p>
           ),
         },
         {
-          heading: "3. Products and availability",
+          heading: "What you receive",
           body: (
             <p>
-              We make every effort to show products and prices accurately. Because flowers and gifts are
-              perishable and seasonal, arrangements may vary slightly from the photos, and we may need to
-              substitute flowers, packaging or accessories to protect freshness, quality or delivery time.
-              Products and prices may change without notice.
+              Flowers change with the season, so your arrangement may look a little different from the photo. If a flower,
+              wrap or extra is unavailable, we will use something of similar quality or get in touch with you.
             </p>
           ),
         },
         {
-          heading: "4. Orders and payment",
+          heading: "Same-day and upcountry delivery",
           body: (
             <p>
-              Prices are in Kenyan Shillings (KES). Delivery fees are shown at checkout based on your delivery
-              location. An order is confirmed once payment is received. If we cancel an order after payment, we
-              will tell you and offer an alternative or a refund.
+              Order by 6PM East Africa Time for same-day delivery in Nairobi. Deliveries outside Nairobi usually arrive
+              from the next day onwards, on a date we confirm with you. Traffic, weather and wrong details can cause
+              delays that are outside our control, so delivery windows are estimates and not exact times.
             </p>
           ),
         },
         {
-          heading: "5. Delivery",
-          body: (
-            <>
-              <p>
-                You are responsible for giving us a complete address, a reachable phone number and the delivery
-                date. We deliver within the agreed window but cannot guarantee an exact time. If the recipient is
-                unavailable, we may:
-              </p>
-              <ul>
-                <li>Leave the order with a receptionist, security guard, neighbour or colleague where reasonable</li>
-                <li>Contact you or the recipient to rearrange delivery</li>
-                <li>Return the order to our shop for collection</li>
-              </ul>
-              <p className="mt-2">
-                Extra delivery attempts or address changes may cost more. We are not responsible for delays caused
-                by incorrect details, unreachable numbers, severe weather or other events beyond our control.
-              </p>
-            </>
-          ),
-        },
-        {
-          heading: "6. Alcohol",
+          heading: "If nobody is available",
           body: (
             <p>
-              Where an order includes alcohol, you confirm that you and the recipient are of legal drinking age
-              in Kenya. We may refuse to hand over alcohol where proof of age is not available.
+              We will try to reach you or the recipient. With reasonable care, we may leave the order with reception,
+              security, a neighbour or a colleague, or bring it back to our shop for collection. A second trip or a new
+              address may cost extra.
             </p>
           ),
         },
         {
-          heading: "7. Cancellations and refunds",
+          heading: "Alcohol",
           body: (
             <p>
-              Most of our products are made to order and perishable, so cancellations, returns and refunds follow
-              our <Link href="/returns">returns policy</Link>. Our <Link href="/privacy">privacy policy</Link>{" "}
-              explains how we handle your data.
+              Wine and sparkling wine are for adults only. By ordering them, you confirm that you and the recipient are of
+              legal drinking age, and our rider may ask for proof before handing them over.
             </p>
           ),
         },
         {
-          heading: "8. Contact",
+          heading: "Refusing or cancelling orders",
           body: (
             <p>
-              Questions about these terms? Email <a href={`mailto:${SHOP_INFO.email}`}>{SHOP_INFO.email}</a> or
-              call <a href={`tel:+${SHOP_INFO.phone}`}>+{SHOP_INFO.phone}</a>.
+              We may decline an order if something looks fraudulent, a price is clearly wrong, or we cannot source the
+              items. If you have already paid, we will offer an alternative or a refund. Other cancellations and refunds
+              follow our <Link href="/returns">returns policy</Link>.
+            </p>
+          ),
+        },
+        {
+          heading: "Using this website",
+          body: (
+            <p>
+              Please don&apos;t misuse the site, attack it or copy our content for resale. Our{" "}
+              <Link href="/privacy">privacy policy</Link> explains how we use your data. Questions go to{" "}
+              <a href={`mailto:${SHOP_INFO.email}`}>{SHOP_INFO.email}</a> or{" "}
+              <a href={`tel:+${SHOP_INFO.phone}`}>+{SHOP_INFO.phone}</a>.
             </p>
           ),
         },
